@@ -7,5 +7,5 @@ Concept project to intergrate physical hardware to Coffee Stain Studio's Satisfa
 
 Thanks to the following:<br>
 UE4Dunio for the libraries<br>
-Satisfatory Modding Community Development Team for SMM/SML (Satisfactory Mod Manager/Loader)<br>
+Satisfactory Modding Community Development Team for SMM/SML (Satisfactory Mod Manager/Loader)<br>
 Coffee Stain Studios for Satisfactory<br>
