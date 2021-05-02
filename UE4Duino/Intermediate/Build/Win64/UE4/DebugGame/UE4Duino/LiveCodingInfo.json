@@ -1,0 +1,13 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.UE4Duino.cpp.obj": [
+			"Serial.cpp.obj",
+			"UE4DuinoModule.cpp.obj"
+		],
+		"Module.UE4Duino.gen.cpp.obj": [
+			"Serial.gen.cpp.obj",
+			"UE4Duino.init.gen.cpp.obj"
+		]
+	}
+}
