@@ -1,0 +1,17 @@
+{
+  "name": "documentation",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "repository": "https://github.com/satisfactorymodding/Documentation.git",
+  "scripts": {
+    "build": "antora antora-playbook.yml --clean --fetch",
+    "build:ci": "antora antora-playbook-ci.yml --clean --fetch",
+    "build:dev": "antora antora-playbook-dev.yml --clean --fetch",
+    "serve": "ws -d build/site"
+  },
+  "devDependencies": {
+    "@antora/cli": "^2.3.4",
+    "@antora/site-generator-default": "^2.3.4",
+    "local-web-server": "^4.2.1"
+  }
+}
