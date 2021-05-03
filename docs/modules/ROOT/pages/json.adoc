@@ -1,0 +1,61 @@
+= JSON Table
+Darth Porisius
+:url-repo: https://www.github.com/porisius/RS232_SF_Project
+
+Please note that there are no nested JSONs. The table below are only grouped for easy lookup. List to be expanded upon feedback and able.
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+4+|*Power Monitoring:*
+
+|PowerConsumed
+|Power consumed on selected power circuit
+|Float
+|Output
+
+|PowerCapacity
+|Power capacity on selected power circuit
+|Float
+|Output
+	
+|PowerMaxConsumed
+|Maximum Power that can be consumed on selected power circuit
+|Float
+|Output
+	
+|BatteryDifferential
+|Amount of power in excess/deficit going into or out of the battery bank(s). Positive = Charges batteries, Negative = Drains batteries
+|Float
+|Output
+	
+|BatteryPercent
+|Percentage of battery bank(s) charge
+|Float
+|Output
+	
+|BatteryCapacity
+|Total capacity of battery bank(s)
+|Float
+|Output
+	
+|BatteryTimeEmpty
+|Time (in seconds "needs confirmed") until Batteries are empty
+|Float
+|Output
+|===
+|===
+4+|**Power Management: NOT YET IMPLEMENTED**
+	
+|FuseBlown
+|Is the fuse blown for selected circuit
+|Boolean (true/false)
+|Output
+	
+|ResetFuse
+|Command received to reset blown fuse
+|Boolean (true/false)
+|Input
+	
+|===

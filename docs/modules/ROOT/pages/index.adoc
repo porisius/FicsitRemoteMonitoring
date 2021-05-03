@@ -1,0 +1,7 @@
+= Ficsit Remote Management
+Darth Porisius
+:url-repo: https://www.github.com/porisius/RS232_SF_Project
+
+**Mod is not yet released, finishing final touches (as well as this guide) before beta version.**
+
+**Mod only works in SML 3.1.0 and above due to changes in SML**
