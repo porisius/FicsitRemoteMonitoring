@@ -1,0 +1,46 @@
+site:
+  title: Satisfactory Modding Documentation
+  start_page: satisfactory-modding::index.adoc
+
+  ## Used for prod
+  url: https://docs.ficsit.app
+
+  ## Used for dev
+  #url: http://localhost:8000
+
+content:
+  sources:
+    ## Used for prod
+    - url: https://github.com/satisfactorymodding/Documentation.git
+      branches: master, v2.2.1, v2.1.1, v2.0.0, v1.0.2
+      edit_url: '{web_url}/blob/{refname}/{path}'
+
+    ## Used for dev
+    #- url: ./
+    #  branches: HEAD
+
+    - url: https://github.com/CoderDE/FicsIt-Networks.git
+      branches: master
+      edit_url: '{web_url}/blob/{refname}/{path}'
+      start_path: docs
+
+    - url: https://github.com/mrhid6/SF_Mod_RefinedPower.git
+      branches: master
+      edit_url: '{web_url}/blob/{refname}/{path}'
+      start_path: docs
+
+    - url: https://github.com/Feyko/Tweaker.git
+      branches: main
+      edit_url: '{web_url}/blob/{refname}/{path}'
+      start_path: docs
+      
+    - url: https://github.com/porisius/RS232_SF_Project.git
+      branches: main
+      edit_url: '{web_url}/blob/{refname}/{path}'
+      start_path: docs
+
+ui:
+  bundle:
+    url: https://gitlab.com/vilsol/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+  supplemental_files: ./supplemental-ui
