@@ -4,5 +4,3 @@ Darth Porisius
 
 **WebSockets is a WIP function. I am not sure when it will be implemented, don't ask for an ETA.**
 WebSockets functionality uses the Socket.IO client to communicate with a server. You will need a server-side application to receive the data, and then display it in a manner either as a .Net application or web server. **Websockets is NOT my specialty, so please don't ask me.** I am, hopefully, providing the ability to allow the mod to be more flexible. If you want to contribute, I will add it to the mod and provide credit.
-
-Data from Websockets or Serial is in JSON and read as a string, but their true data types are listed in the table. Input/Output is from the perspective of the FRM mod. Output, FRM sends data. Input, FRM listens for data.
