@@ -1,7 +1,7 @@
-A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Definitions.UE4Duino.h
-A:/workspace/SatisfactoryModLoader-sml-dev/Plugins/UE4Duino/Source/UE4Duino/Private/Serial.cpp
-A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Source\UE4Duino\Public\Serial.h
-A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Inc\UE4Duino\Serial.generated.h
+A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Definitions.UE4Duino.h
+A:/workspace/SatisfactoryModLoader-master/Plugins/UE4Duino/Source/UE4Duino/Private/Serial.cpp
+A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Source\UE4Duino\Public\Serial.h
+A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Inc\UE4Duino\Serial.generated.h
 A:\workspace\Unreal Engine - CSS\Engine\Source\Runtime\Core\Public\Windows/AllowWindowsPlatformTypes.h
 A:\workspace\Unreal Engine - CSS\Engine\Source\Runtime\Core\Public\Windows/WindowsHWrapper.h
 A:\workspace\Unreal Engine - CSS\Engine\Source\Runtime\Core\Public\Windows/PreWindowsApi.h
@@ -104,5 +104,5 @@ C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um\imm.h
 C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um\ime_cmodes.h
 A:\workspace\Unreal Engine - CSS\Engine\Source\Runtime\Core\Public\Windows/PostWindowsApi.h
 A:\workspace\Unreal Engine - CSS\Engine\Source\Runtime\Core\Public\Windows/HideWindowsPlatformTypes.h
-A:/workspace/SatisfactoryModLoader-sml-dev/Plugins/UE4Duino/Source/UE4Duino/Private/UE4DuinoModule.cpp
-A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Source\UE4Duino\Public\UE4DuinoModule.h
+A:/workspace/SatisfactoryModLoader-master/Plugins/UE4Duino/Source/UE4Duino/Private/UE4DuinoModule.cpp
+A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Source\UE4Duino\Public\UE4DuinoModule.h

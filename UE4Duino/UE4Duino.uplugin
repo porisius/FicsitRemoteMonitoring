@@ -7,18 +7,24 @@
 	"CreatedBy":		"Rodrigo Villani",
 	"Description":		"Enables communication between UE4 and COM ports",
 	"Category":			"Input",
-	
+	"Installed":		true,
 	"EnabledByDefault":	false,
+
+	"SemVersion":		"2.2.4",
+
+	"Plugins": [
+        {
+            "Name": "SML",
+            "SemVersion": "^3.1.0",
+            "Enabled": true
+        }
+    ],
 
 	"Modules": [
 		{
 			"Name":					"UE4Duino",
 			"Type":					"Runtime",
-			"LoadingPhase":			"PreDefault",
-			"WhitelistPlatforms":	[
-				"Win32",
-				"Win64"
-			]
+			"LoadingPhase":			"PostDefault"
 		}
 	]
 }

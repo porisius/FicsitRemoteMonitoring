@@ -33,10 +33,10 @@
 /NODEFAULTLIB:"LIBCD"
 /NODEFAULTLIB:"LIBCPD"
 /FUNCTIONPADMIN
-"A:\workspace\SatisfactoryModLoader-sml-dev\Intermediate\Build\Win64\FactoryGameEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.obj"
-"A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Module.UE4Duino.cpp.obj"
-"A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Module.UE4Duino.gen.cpp.obj"
-"A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Default.rc2.res"
+"A:\workspace\SatisfactoryModLoader-master\Intermediate\Build\Win64\FactoryGameEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.obj"
+"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Module.UE4Duino.cpp.obj"
+"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Module.UE4Duino.gen.cpp.obj"
+"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Default.rc2.res"
 "delayimp.lib"
 "wininet.lib"
 "rpcrt4.lib"
@@ -64,8 +64,8 @@
 "A:\workspace\Unreal Engine - CSS\Engine\Intermediate\Build\Win64\UE4Editor\Development\Engine\UE4Editor-Engine.lib"
 "A:\workspace\Unreal Engine - CSS\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\UE4Editor-Core.lib"
 "A:\workspace\Unreal Engine - CSS\Engine\Intermediate\Build\Win64\UE4Editor\Development\CoreUObject\UE4Editor-CoreUObject.lib"
-/OUT:"A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Binaries\Win64\UE4Editor-UE4Duino.dll"
-/IMPLIB:"A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\UE4Editor-UE4Duino.suppressed.lib"
-/PDB:"A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Binaries\Win64\UE4Editor-UE4Duino.pdb"
+/OUT:"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Binaries\Win64\UE4Editor-UE4Duino.dll"
+/IMPLIB:"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\UE4Editor-UE4Duino.suppressed.lib"
+/PDB:"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Binaries\Win64\UE4Editor-UE4Duino.pdb"
 /ignore:4078
 /INCLUDE:IMPLEMENT_MODULE_UE4Duino

@@ -32,7 +32,7 @@
 /wd4244
 /wd4838
 /I .
-/I A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Source\UE4Duino\Private
+/I A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Source\UE4Duino\Private
 /I ..\Intermediate\Build\Win64\UE4Editor\Inc\Engine
 /I Runtime
 /I Runtime\Engine\Classes
@@ -231,9 +231,9 @@
 /I Runtime\Experimental\GeometryCollectionSimulationCore\Public
 /I ..\Intermediate\Build\Win64\UE4Editor\Inc\ClothingSystemRuntimeInterface
 /I Runtime\ClothingSystemRuntimeInterface\Public
-/I A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Inc\UE4Duino
-/I A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Source
-/I A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Source\UE4Duino\Public
+/I A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Inc\UE4Duino
+/I A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Source
+/I A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Source\UE4Duino\Public
 /I ThirdParty\PhysX3\PxShared\include
 /I ThirdParty\PhysX3\PxShared\include\cudamanager
 /I ThirdParty\PhysX3\PxShared\include\filebuf
@@ -263,12 +263,12 @@
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\shared"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\winrt"
-/FI"A:\workspace\SatisfactoryModLoader-sml-dev\Intermediate\Build\Win64\FactoryGameEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
-/Yu"A:\workspace\SatisfactoryModLoader-sml-dev\Intermediate\Build\Win64\FactoryGameEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
-/Fp"A:\workspace\SatisfactoryModLoader-sml-dev\Intermediate\Build\Win64\FactoryGameEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.pch"
-"A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Module.UE4Duino.cpp"
-/FI"A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Definitions.UE4Duino.h"
-/Fo"A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Module.UE4Duino.cpp.obj"
+/FI"A:\workspace\SatisfactoryModLoader-master\Intermediate\Build\Win64\FactoryGameEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
+/Yu"A:\workspace\SatisfactoryModLoader-master\Intermediate\Build\Win64\FactoryGameEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
+/Fp"A:\workspace\SatisfactoryModLoader-master\Intermediate\Build\Win64\FactoryGameEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.pch"
+"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Module.UE4Duino.cpp"
+/FI"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Definitions.UE4Duino.h"
+/Fo"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Module.UE4Duino.cpp.obj"
 /TP
 /GR-
 /W4

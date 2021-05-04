@@ -1,7 +1,7 @@
-A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Definitions.UE4Duino.h
-A:/workspace/SatisfactoryModLoader-sml-dev/Plugins/UE4Duino/Intermediate/Build/Win64/UE4Editor/Inc/UE4Duino/Serial.gen.cpp
+A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Definitions.UE4Duino.h
+A:/workspace/SatisfactoryModLoader-master/Plugins/UE4Duino/Intermediate/Build/Win64/UE4Editor/Inc/UE4Duino/Serial.gen.cpp
 A:\workspace\Unreal Engine - CSS\Engine\Source\Runtime\CoreUObject\Public\UObject/GeneratedCppIncludes.h
 A:\workspace\Unreal Engine - CSS\Engine\Source\Runtime\CoreUObject\Public\UObject/MetaData.h
-A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Source\UE4Duino/Public/Serial.h
-A:\workspace\SatisfactoryModLoader-sml-dev\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Inc\UE4Duino\Serial.generated.h
-A:/workspace/SatisfactoryModLoader-sml-dev/Plugins/UE4Duino/Intermediate/Build/Win64/UE4Editor/Inc/UE4Duino/UE4Duino.init.gen.cpp
+A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Source\UE4Duino/Public/Serial.h
+A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Inc\UE4Duino\Serial.generated.h
+A:/workspace/SatisfactoryModLoader-master/Plugins/UE4Duino/Intermediate/Build/Win64/UE4Editor/Inc/UE4Duino/UE4Duino.init.gen.cpp

@@ -2,29 +2,28 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "0.0.1",
-	"FriendlyName": "FicsitRemoteMonitoring",
-	"Description": "",
+	"FriendlyName": "Ficsit Remote Monitoring",
+	"Description": "Enables communicatation between Satisfactory and external devices (RPi/Arduino/Websockets)",
 	"Category": "Input",
-	"CreatedBy": "",
-	"CreatedByURL": "",
-	"DocsURL": "",
+	"CreatedBy": "Darth Porisius",
+	"CreatedByURL": "https://www.github.com/porisius",
+	"DocsURL": "https://docs.ficsit.app/ficsitremotemonitoring/0.0.1-dev/index.html",
 	"MarketplaceURL": "",
 	"SupportURL": "",
 	"CanContainContent": true,
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
 	"Installed": false,
-	"Plugins": [
-		{
-			"Name": "SML",
-			"Enabled": true
-		},
-		{
-			"Name": "SocketIOClient",
-			"Enabled": true
-		},
+    "Plugins": [
+        {
+            "Name": "SML",
+            "SemVersion": "^3.1.0",
+            "Enabled": true
+        },
 		{
 			"Name": "UE4Duino",
+			"SemVersion": "^2.2.4",
+			"bIsOptional": false,
 			"Enabled": true
 		}
 	]
