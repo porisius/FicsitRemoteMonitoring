@@ -34,7 +34,7 @@ content:
       edit_url: '{web_url}/blob/{refname}/{path}'
       start_path: docs
       
-    - url: https://github.com/porisius/RS232_SF_Project.git
+    - url: https://github.com/porisius/FicsitRemoteMonitoring.git
       branches: main
       edit_url: '{web_url}/blob/{refname}/{path}'
       start_path: docs
