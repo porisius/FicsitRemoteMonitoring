@@ -1,0 +1,119 @@
+= Web Server
+Darth Porisius
+:url-repo: https://www.github.com/porisius/RS232_SF_Project
+
+FRM provides a HTTP server that can be configured on a port of your choosing (Default: 8080). This can be modified by either modifying the HTTP_Root value in %SatisfactoryRootFolder%\FactoryGame\Configs\FicsitRemoteMonitoring.cfg (Config File Method), or by Satisfactory's Main Menu > Mods > FicsitRemoteMonitoring > HTTP Port (Game UI Method).
+
+Accessing the web server can be done via a browser (Tested on Chrome and Opera) at http://localhost:<port> (Ex. http://localhost:8080)
+
+The web server, by default, is not activated until the appropriate chat command is provided. You may also have the web server auto-start by enabling the Autostart Web Server in Game UI Method, or changing the Web_Autostart in the Config File Method to true.
+
+Chat Commands:
+
+/frmweb start - Starts Web Server
+/frmweb stop - Stops Web Server
+
+Web Documents:
+
+The HTML/JS Code for FRM's Web Server can be found at %SatisfactoryRootFolder%\FactoryGame\Mods\FicsitRemoteMonitoring\www. An alternate path for customization without fear of overwrite is being worked on, once a reliable method is found.
+
+URI Handlers:
+
+There are currently three URI Handlers configured, but more are planned. All paths are referenced from the URL root. These may be seen in their output by adding them to the root URL.
+
+URI Handler: /
+Redirects to /index.html
+
+URI Handler: /getPowerData
+This grabs the circuit power information from the in-game systems and provides it in a JSON format.
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+4+|*Power Monitoring:*
+
+|CircuitID
+|Identification number for the power circuit
+|Integer
+|Output
+
+|PowerConsumed
+|Power consumed on selected power circuit
+|Integer
+|Output
+
+|PowerCapacity
+|Power capacity on selected power circuit
+|Integer
+|Output
+	
+|PowerMaxConsumed
+|Maximum Power that can be consumed on selected power circuit
+|Integer
+|Output
+	
+|BatteryDifferential
+|Amount of power in excess/deficit going into or out of the battery bank(s). Positive = Charges batteries, Negative = Drains batteries
+|Integer
+|Output
+	
+|BatteryPercent
+|Percentage of battery bank(s) charge
+|Integer
+|Output
+	
+|BatteryCapacity
+|Total capacity of battery bank(s)
+|Integer
+|Output
+	
+|BatteryTimeEmpty
+|Time (in hh:mm:ss) until Batteries are empty
+|Float
+|Output
+|===
+
+URI Handler: /getPlayerData
+Player meta-data
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+4+|*Player Information:*
+
+|features/type
+|GeoJSON to setup for marker, set permanently to Feature
+|String
+|Output
+
+|features/geometry/type
+|TGeoJSON type of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y for map marking
+|[Float, Float]
+|Output
+
+|features/properties/name
+|Player Name
+|String
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/properties/marker-color
+|Color for the marker (Not yet Implemented)
+|String
+|Output
+
+|features/properties/Degree
+|Compass Pointing for Object (Not yet implemented)
+|Integer
+|Output
