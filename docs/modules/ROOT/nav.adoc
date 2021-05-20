@@ -1,4 +1,3 @@
-* xref:index.adoc[Presentation]
+* xref:index.adoc[General]
 * xref:serial.adoc[Serial]
 * xref:webserver.adoc[Web Server]
-* xref:json.adoc[JSON]
