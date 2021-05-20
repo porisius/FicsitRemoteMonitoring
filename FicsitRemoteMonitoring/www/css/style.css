@@ -1,0 +1,65 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  bottom: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#map {
+  position: absolute;
+  bottom: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+.leaflet-container .leaflet-control-mouseposition {
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 5px #bbb;
+  padding: 0 5px;
+  margin: 0;
+  color: #333;
+  font: 11px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+.leaflet-control-measure {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 21px;
+}
+
+.leaflet-bar-part-top-and-bottom {
+  -webkit-border-radius: 4px 4px 4px 4px;
+  border-radius: 4px 4px 4px 4px;
+  border-bottom: none;
+}
+
+.leaflet-touch .leaflet-bar-part-top-and-bottom {
+  -webkit-border-radius: 7px 7px 7px 7px;
+  border-radius: 7px 7px 7px 7px;
+  border-bottom: none;
+}
+
+.leaflet-control-measure-on .leaflet-control-measure {
+  box-shadow: 0 0 8px rgba(10, 10, 10, 1);
+}
+
+.leaflet-measure-tooltip {
+  font: 9px/1.25 "Helvetica Neue", Arial, Helvetica, sans-serif;
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 5px #bbb;
+  margin: 0;
+  padding: 2px;
+  width: auto !important;
+  height: auto !important;
+  white-space: nowrap;
+}
+
+.leaflet-measure-tooltip-total {
+  font-weight: bold;
+}
+
+.leaflet-measure-tooltip-difference {
+  color: #777;
+}

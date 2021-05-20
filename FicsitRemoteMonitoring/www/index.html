@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css'
+        rel='stylesheet' />
+
+    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script> -->
+
+    <script src="https://unpkg.com/leaflet.featuregroup.subgroup"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/all.css">
+    <script src="/js/leaflet.measure.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-realtime/2.2.0/leaflet-realtime.js"></script>
+    <script src="/js/leaflet-color-markers.js"></script>
+</head>
+
+<body onload="reloadPower()">
+	
+	<div id = "map" style = "width: 900px; height: 580px"></div>
+    <script src="js/main.js"></script>	
+	
+	<br><br>
+	
+	<div id="PowerTable"></div>
+	<script>
+
+		var timeout = setInterval(reloadPower, 5000);
+
+		function reloadPower() {
+
+		var xmlhttp = new XMLHttpRequest();
+		var url = "/getPowerData";
+
+		xmlhttp.onreadystatechange = function() {
+		  if (this.readyState == 4 && this.status == 200) {
+			var myArr = JSON.parse(this.responseText);
+			displayPower(myArr);
+		  }
+		};
+		xmlhttp.open("GET", url, true);
+		xmlhttp.send();
+		
+		};
+		
+		function displayPower(data) {
+			
+			var i, txt;
+
+			txt = "<table border=1>";
+			txt += "<tr>";
+			txt += "<td><b>Circuit ID:</b></td><td><b>Power Capacity:</b></td><td><b>Power Production:</b></td><td><b>Power Consumed:</b></td><td><b>Max Consumed:</b></td><td><b>Battery Differential:</b></td><td><b>Battery Percent:</b></td><td><b>Battery Capacity:</b></td><td><b>Time Remaining:</b></td></tr>";
+
+			for (i in data)
+			{
+				txt += '<tr>';
+				txt += '<td>' + data[i].CircuitID + '</td>';
+				txt += '<td>' + data[i].PowerCapacity + '</td>';
+				txt += '<td>' + data[i].PowerProductiuon + '</td>';
+				txt += '<td>' + data[i].PowerConsumed + '</td>';
+				txt += '<td>' + data[i].PowerMaxConsumed + '</td>';
+				txt += '<td>' + data[i].BatteryDifferential + '</td>';
+				txt += '<td>' + data[i].BatteryPercent + '</td>';
+				txt += '<td>' + data[i].BatteryCapacity + '</td>';
+				txt += '<td>' + data[i].BatteryTimeEmpty + '</td>';
+				txt += '</tr>';
+			};
+				
+			txt += "</table>";
+			document.getElementById("PowerTable").innerHTML = txt;
+				
+		};
+		
+	</script>
+	
+	<!--var decimalTimeString = "1.6578";
+	var n = new Date(0,0);
+	n.setSeconds(+decimalTimeString * 60 * 60);
+	document.write(n.toTimeString().slice(0, 8));-->
+</body>
+
+</html>
