@@ -19,7 +19,7 @@ Note: If the item is not being produced or extracted, it will not be displayed.
 |String
 |Output
 
-|ProdPerMind
+|ProdPerMin
 |Production/Consumption per minute (Format: P: Actual/Max /min - C: Actual/Max /min)
 |String
 |Output
