@@ -2,10 +2,10 @@
 * xref:serial.adoc[Serial]
 * xref:webserver.adoc[Web Server]
 
-* xref:json\json.adoc[JSON]
+* xref:json/json.adoc[JSON]
 
-** xref:json\getPowerData.adoc[getPowerData]
-** xref:json\getPlayerData.adoc[getPlayerData]
-** xref:json\getDroneStats.adoc[getDroneStats]
-** xref:json\getDroneGeo.adoc[getDroneGeo]
-** xref:json\getProdStats.adoc[getProdStats]
+** xref:json/getPowerData.adoc[getPowerData]
+** xref:json/getPlayerData.adoc[getPlayerData]
+** xref:json//getDroneStats.adoc[getDroneStats]
+** xref:json/getDroneGeo.adoc[getDroneGeo]
+** xref:json/getProdStats.adoc[getProdStats]
