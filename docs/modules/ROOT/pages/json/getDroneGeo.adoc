@@ -1,4 +1,4 @@
-= WebSockets/Socket.IO
+= Drone GeoJSON
 Darth Porisius
 :url-repo: https://www.github.com/porisius/RS232_SF_Project
 
