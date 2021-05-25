@@ -1,4 +1,4 @@
-= Drone GeoJSON
+= getDroneGeo
 Darth Porisius
 :url-repo: https://www.github.com/porisius/RS232_SF_Project
 
