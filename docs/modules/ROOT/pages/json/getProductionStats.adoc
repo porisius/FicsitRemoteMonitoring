@@ -1,0 +1,35 @@
+= 
+Darth Porisius
+:url-repo: https://www.github.com/porisius/RS232_SF_Project
+
+URI Handler: /getProdStats +
+Production Stats by Andre Aquila of Aquila Industrial +
+Production Stats Mod: https://ficsit.app/mod/3tsvcG3A6gqKX1
+
+Note: If the item is not being produced or extracted, it will not be displayed.
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+4+|*Production Stats:*
+
+|ItemName
+|Name of the item mined/extracted/produced
+|String
+|Output
+
+|ProdPerMind
+|Production/Consumption per minute (Format: P: Actual/Max /min - C: Actual/Max /min)
+|String
+|Output
+
+|ProdPercent
+|Efficiency percentage produced
+|Float
+|Output
+
+|ConsPercent
+|Efficiency percentage Consumed
+|Float
+|Output
