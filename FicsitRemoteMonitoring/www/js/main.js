@@ -58,7 +58,7 @@ window.onload = function () {
         "Default", "Beacon", "Crate", "Hub",
         "Ping", "Player", "Radar Tower", "Resource",
         "Space Elevator", "Starting Pod", "Train", "Train Station",
-        "Vehicle", "Vehicle Docking Station"
+        "Vehicle", "Vehicle Docking Station", "Drone"
     ];
 
     function setupMap() {
@@ -94,12 +94,22 @@ window.onload = function () {
         // var subgroup1 = L.featureGroup.subGroup(clusterGroup);
         // var realtime1 = createRealtimeLayer('/api/actors', subgroup1).addTo(map);
         var realtime1 = createRealtimeLayer("/getPlayerData").addTo(map);
+		var realtime2 = createRealtimeLayer("/getDroneGeo").addTo(map);
+		var realtime3 = createRealtimeLayer("/getTrainGeo").addTo(map);
         L.control.layers(null, {
             'Markers': realtime1,
+			'Drones': realtime2,
+			'Trains': realtime2,
         }).addTo(map);
 
         realtime1.once('update', function () {
             map.fitBounds(realtime1.getBounds(), { maxZoom: 1 });
+        });
+		realtime2.once('update', function () {
+           map.fitBounds(realtime2.getBounds(), { maxZoom: 1 });
+        });
+		realtime3.once('update', function () {
+           map.fitBounds(realtime3.getBounds(), { maxZoom: 1 });
         });
 
         setTimeout(() => {if (playerLocation) map.setView(playerLocation, -6);}, 1500);
@@ -118,7 +128,7 @@ window.onload = function () {
 
     function createRealtimeLayer(url, container = null) {
         return L.realtime(url, {
-            interval: 1 * 1000, // 1 sec
+            interval: 2.5 * 1000, // 2.5 sec
             getFeatureId: function (f) {
                 return f.properties.index;
             },

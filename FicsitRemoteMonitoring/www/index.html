@@ -27,13 +27,13 @@
     <script src="/js/leaflet-color-markers.js"></script>
 </head>
 
-<body onload="reloadPower()">
+<body>
 	
 	<div id = "map" style = "width: 900px; height: 580px"></div>
     <script src="js/main.js"></script>	
 	
 	<br><br>
-	
+
 	<div id="PowerTable"></div>
 	<script>
 
@@ -85,6 +85,53 @@
 		
 	</script>
 	
+	<div id="DroneTable"></div>
+	<script>
+
+		var timeout = setInterval(reloadDrone, 5000);
+
+		function reloadDrone() {
+
+		var xmlhttp = new XMLHttpRequest();
+		var url = "/getDroneStats";
+
+		xmlhttp.onreadystatechange = function() {
+		  if (this.readyState == 4 && this.status == 200) {
+			var myArr = JSON.parse(this.responseText);
+			displayDrone(myArr);
+		  }
+		};
+		xmlhttp.open("GET", url, true);
+		xmlhttp.send();
+		
+		};
+		
+		function displayDrone(data) {
+			
+			var i, txt;
+
+			txt = "<table border=1>";
+			txt += "<tr>";
+			txt += "<td><b>Home Station:</b></td><td><b>Paired Station:</b></td><td><b>Drone Status:</b></td><td><b>Transfer Rate:</b></td><td><b>Battery Usage Rate:</b></td></tr>";
+
+			for (i in data)
+			{
+				txt += '<tr>';
+				txt += '<td>' + data[i].HomeStation + '</td>';
+				txt += '<td>' + data[i].PairedStation + '</td>';
+				txt += '<td>' + data[i].DroneStatus + '</td>';
+				txt += '<td>' + data[i].TransferRate + '</td>';
+				txt += '<td>' + data[i].BatteryRate + '</td>';
+				txt += '</tr>';
+			};
+				
+			txt += "</table>";
+			document.getElementById("DroneTable").innerHTML = txt;
+				
+		};
+		
+	</script>
+
 	<!--var decimalTimeString = "1.6578";
 	var n = new Date(0,0);
 	n.setSeconds(+decimalTimeString * 60 * 60);
