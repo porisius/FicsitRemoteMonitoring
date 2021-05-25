@@ -1,6 +1,6 @@
 = getDroneStats
 Darth Porisius
-:url-repo: https://www.github.com/porisius/RS232_SF_Project
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getDroneStats +
 Drone Stats

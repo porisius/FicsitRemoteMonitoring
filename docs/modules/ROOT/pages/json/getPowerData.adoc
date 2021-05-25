@@ -1,6 +1,6 @@
 = getPowerData
 Darth Porisius
-:url-repo: https://www.github.com/porisius/RS232_SF_Project
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getPowerData +
 This grabs the circuit power information from the in-game systems and provides it in a JSON format.

@@ -1,6 +1,6 @@
 = getDroneGeo
 Darth Porisius
-:url-repo: https://www.github.com/porisius/RS232_SF_Project
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getDroneGeo +
 Drone GeoJSON
@@ -17,7 +17,7 @@ Drone GeoJSON
 |Output
 
 |features/geometry/type
-|TGeoJSON type of map marking (Point, Line, Circle, etc)
+|GeoJSON type of map marking (Point, Line, Circle, etc)
 |String
 |Output
 

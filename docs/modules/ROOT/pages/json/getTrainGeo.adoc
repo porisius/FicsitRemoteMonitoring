@@ -1,15 +1,15 @@
-= getPlayerData
+= getTrainGeo
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getPlayerData +
-Player meta-data
+URI Handler: /getTrainGeo +
+Drone GeoJSON
 
 [cols="1,1,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-4+|*Player Information:*
+4+|*Train Information:*
 
 |features/type
 |GeoJSON to setup for marker, set permanently to Feature
@@ -17,7 +17,7 @@ Player meta-data
 |Output
 
 |features/geometry/type
-|TGeoJSON type of map marking (Point, Line, Circle, etc)
+|GeoJSON type of map marking (Point, Line, Circle, etc)
 |String
 |Output
 
@@ -26,13 +26,8 @@ Player meta-data
 |[Float, Float]
 |Output
 
-|features/properties/name
-|Player Name
-|String
-|Output
-
 |features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|Type of item being marked (Player, Train Track, Notable Building, etc)
 |String
 |Output
 
