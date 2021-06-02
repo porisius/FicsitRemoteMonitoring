@@ -3,12 +3,12 @@ Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getTrainStats +
+Train Stats
 
 [cols="1,1,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-4+|*Production Stats:*
 
 |TrainName
 |Name of the train

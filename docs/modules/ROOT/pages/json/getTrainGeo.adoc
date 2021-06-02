@@ -9,8 +9,6 @@ Drone GeoJSON
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-4+|*Train Information:*
-
 |features/type
 |GeoJSON to setup for marker, set permanently to Feature
 |String

@@ -9,8 +9,6 @@ Drone Stats
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-4+|*Drone Stats:*
-
 |HomeStation
 |Drone Station
 |String

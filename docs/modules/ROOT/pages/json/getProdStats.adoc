@@ -12,8 +12,6 @@ Note: If the item is not being produced or extracted, it will not be displayed.
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-4+|*Production Stats:*
-
 |ItemName
 |Name of the item mined/extracted/produced
 |String

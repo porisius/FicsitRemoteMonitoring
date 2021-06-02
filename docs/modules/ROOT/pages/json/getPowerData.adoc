@@ -9,8 +9,6 @@ This grabs the circuit power information from the in-game systems and provides i
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-4+|*Power Monitoring:*
-
 |CircuitID
 |Identification number for the power circuit
 |Integer
