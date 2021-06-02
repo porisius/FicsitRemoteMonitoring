@@ -33,3 +33,28 @@ Note: If the item is not being produced or extracted, it will not be displayed.
 |Efficiency percentage Consumed
 |Float
 |Output
+
+|Type
+|Denotes how item is transferred. Item on belt, or fluid/gas on pipe
+|String
+|Output
+
+|CurrentProd
+|Current production
+|Float
+|Output
+
+|MaxProd
+|Maximum production based on machines, Type Pipe is set to -1
+|Float
+|Output
+
+|CurrentProd
+|Current consumption
+|Float
+|Output
+
+|MaxConsumed
+|Maximum consumption based on machines, Type Pipe is set to -1
+|Float
+|Output

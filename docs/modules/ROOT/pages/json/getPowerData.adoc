@@ -50,4 +50,14 @@ This grabs the circuit power information from the in-game systems and provides i
 |Time (in hh:mm:ss) until Batteries are empty
 |Float
 |Output
+	
+|BatteryTimeFull
+|Time (in hh:mm:ss) until Batteries are full
+|Float
+|Output
+	
+|FuseTriggered
+|Has the fuse been triggered
+|Boolean (true/false)
+|Output
 |===

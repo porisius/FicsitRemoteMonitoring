@@ -16,6 +16,9 @@ Chat Commands:
 Web Documents: +
 The HTML/JS Code for FRM's Web Server can be found at %SatisfactoryRootFolder%\FactoryGame\Mods\FicsitRemoteMonitoring\www. An alternate path for customization without fear of overwrite is being worked on, once a reliable method is found.
 
+Private Web Server (Apache/Nginx/IIS) +
+You are able to use a separate web server if you wish to leverage technologies not available to FRM's Web Server library.
+
 URI Handlers: +
 There are currently several URI Handlers configured, but more are planned. All paths are referenced from the URL root, and may be seen in their output by adding them to the root URL.
 

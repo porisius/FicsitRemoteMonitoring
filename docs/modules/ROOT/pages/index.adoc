@@ -2,6 +2,6 @@
 Darth Porisius
 :url-repo: https://www.github.com/porisius/RS232_SF_Project
 
-**Mod is in alpha, final touches in UI, and Bug Fixes.**
+**Mod is in beta.**
 
 **Mod only works in SML 3.1.0 and above due to changes in SML**

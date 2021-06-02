@@ -40,3 +40,8 @@ Drone GeoJSON
 |Compass Pointing for Object (Not yet implemented)
 |Integer
 |Output
+
+|features/properties/ForwardSpeed
+|Forward going speed of train in km/h
+|Float
+|Output

@@ -9,3 +9,5 @@
 ** xref:json/getDroneStats.adoc[getDroneStats]
 ** xref:json/getDroneGeo.adoc[getDroneGeo]
 ** xref:json/getProdStats.adoc[getProdStats]
+** xref:json/getTrainStats.adoc[getTrainStats]
+** xref:json/getTrainGeo.adoc[getTrainGeo]
