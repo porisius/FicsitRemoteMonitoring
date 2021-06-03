@@ -1,0 +1,30 @@
+import json
+import requests
+
+url = 'http://localhost:8080/getProdStats'
+r = requests.get(url)
+data = json.loads(r.content.decode())
+
+#for i in data:
+   #print (data[0]['ItemName'])
+    #print(i['ItemName'])
+
+for dict_ in data:
+    item = dict_['ItemName']
+    prod = dict_['ProdPerMin']
+    effprod = dict_['ProdPercent']
+    effcons = dict_['ConsPercent']
+    current = dict_['CurrentProd']
+
+    #print ("Your {} is being produced at {:.1%} efficiency ".format(item, effprod))
+    #print ("You are producing {} at a rate of {} U/Pm ".format(item, current))
+
+    if effprod < 0.95:
+        print("{} production is operating at capacity. You are producing {} at a rate of {} U/pm".format(item, item, current))
+
+    else:
+        print ("Your {} production is operating below 50% of capacity. Your current production rate is {} U/pm This is not very efficient ".format(item, current))
+
+
+
+
