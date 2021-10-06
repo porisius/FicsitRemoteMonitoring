@@ -15,8 +15,8 @@ class USerial;
 #endif
 #define UE4DUINO_Serial_generated_h
 
-#define SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_SPARSE_DATA
-#define SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_RPC_WRAPPERS \
+#define SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_SPARSE_DATA
+#define SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_RPC_WRAPPERS \
  \
 	DECLARE_FUNCTION(execLineEndToStr); \
 	DECLARE_FUNCTION(execGetBaud); \
@@ -44,7 +44,7 @@ class USerial;
 	DECLARE_FUNCTION(execOpenComPort);
 
 
-#define SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_RPC_WRAPPERS_NO_PURE_DECLS \
+#define SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_RPC_WRAPPERS_NO_PURE_DECLS \
  \
 	DECLARE_FUNCTION(execLineEndToStr); \
 	DECLARE_FUNCTION(execGetBaud); \
@@ -72,7 +72,7 @@ class USerial;
 	DECLARE_FUNCTION(execOpenComPort);
 
 
-#define SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_INCLASS_NO_PURE_DECLS \
+#define SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesUSerial(); \
 	friend struct Z_Construct_UClass_USerial_Statics; \
@@ -81,7 +81,7 @@ public: \
 	DECLARE_SERIALIZER(USerial)
 
 
-#define SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_INCLASS \
+#define SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_INCLASS \
 private: \
 	static void StaticRegisterNativesUSerial(); \
 	friend struct Z_Construct_UClass_USerial_Statics; \
@@ -90,7 +90,7 @@ public: \
 	DECLARE_SERIALIZER(USerial)
 
 
-#define SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_STANDARD_CONSTRUCTORS \
+#define SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_STANDARD_CONSTRUCTORS \
 	/** Standard constructor, called after all reflected properties have been initialized */ \
 	NO_API USerial(const FObjectInitializer& ObjectInitializer); \
 	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(USerial) \
@@ -103,7 +103,7 @@ private: \
 public:
 
 
-#define SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_ENHANCED_CONSTRUCTORS \
+#define SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	NO_API USerial(USerial&&); \
@@ -114,28 +114,40 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(USerial); \
 	DEFINE_DEFAULT_CONSTRUCTOR_CALL(USerial)
 
 
-#define SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_PRIVATE_PROPERTY_OFFSET
-#define SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_28_PROLOG
-#define SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_GENERATED_BODY_LEGACY \
+#define SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_PRIVATE_PROPERTY_OFFSET
+#define SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_28_PROLOG
+#define SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_FRIENDS \
+private:
+
+
+#define SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_INLINE_ACCESSORS \
+public:
+
+
+#define SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_GENERATED_BODY_LEGACY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_PRIVATE_PROPERTY_OFFSET \
-	SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_SPARSE_DATA \
-	SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_RPC_WRAPPERS \
-	SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_INCLASS \
-	SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_STANDARD_CONSTRUCTORS \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_PRIVATE_PROPERTY_OFFSET \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_SPARSE_DATA \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_RPC_WRAPPERS \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_INCLASS \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_STANDARD_CONSTRUCTORS \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_FRIENDS \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_INLINE_ACCESSORS \
 public: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 
-#define SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_GENERATED_BODY \
+#define SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_PRIVATE_PROPERTY_OFFSET \
-	SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_SPARSE_DATA \
-	SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_RPC_WRAPPERS_NO_PURE_DECLS \
-	SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_INCLASS_NO_PURE_DECLS \
-	SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_ENHANCED_CONSTRUCTORS \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_PRIVATE_PROPERTY_OFFSET \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_SPARSE_DATA \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_RPC_WRAPPERS_NO_PURE_DECLS \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_INCLASS_NO_PURE_DECLS \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_ENHANCED_CONSTRUCTORS \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_FRIENDS \
+	SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h_31_INLINE_ACCESSORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
@@ -143,7 +155,7 @@ PRAGMA_ENABLE_DEPRECATION_WARNINGS
 template<> UE4DUINO_API UClass* StaticClass<class USerial>();
 
 #undef CURRENT_FILE_ID
-#define CURRENT_FILE_ID SatisfactoryModLoader_master_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h
+#define CURRENT_FILE_ID SatisfactoryModLoader_Git_Plugins_UE4Duino_Source_UE4Duino_Public_Serial_h
 
 
 #define FOREACH_ENUM_ELINEEND(op) \

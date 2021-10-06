@@ -33,7 +33,7 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 		return ELineEnd_StaticEnum();
 	}
 	static FCompiledInDeferEnum Z_CompiledInDeferEnum_UEnum_ELineEnd(ELineEnd_StaticEnum, TEXT("/Script/UE4Duino"), TEXT("ELineEnd"), false, nullptr, nullptr);
-	uint32 Get_Z_Construct_UEnum_UE4Duino_ELineEnd_Hash() { return 3308591507U; }
+	uint32 Get_Z_Construct_UEnum_UE4Duino_ELineEnd_Hash() { return 963233376U; }
 	UEnum* Z_Construct_UEnum_UE4Duino_ELineEnd()
 	{
 #if WITH_HOT_RELOAD
@@ -73,6 +73,7 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 				Enumerators,
 				UE_ARRAY_COUNT(Enumerators),
 				RF_Public|RF_Transient|RF_MarkAsNative,
+				EEnumFlags::None,
 				UE4CodeGen_Private::EDynamicType::NotDynamic,
 				(uint8)UEnum::ECppForm::EnumClass,
 				METADATA_PARAMS(Enum_MetaDataParams, UE_ARRAY_COUNT(Enum_MetaDataParams))
@@ -309,22 +310,22 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			TArray<uint8> Bytes;
 			float ReturnValue;
 		};
-		static const UE4CodeGen_Private::FFloatPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FArrayPropertyParams NewProp_Bytes;
 		static const UE4CodeGen_Private::FBytePropertyParams NewProp_Bytes_Inner;
+		static const UE4CodeGen_Private::FArrayPropertyParams NewProp_Bytes;
+		static const UE4CodeGen_Private::FFloatPropertyParams NewProp_ReturnValue;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
-	const UE4CodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_USerial_BytesToFloat_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventBytesToFloat_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_USerial_BytesToFloat_Statics::NewProp_Bytes = { "Bytes", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventBytesToFloat_Parms, Bytes), EArrayPropertyFlags::None, METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_BytesToFloat_Statics::NewProp_Bytes_Inner = { "Bytes", nullptr, (EPropertyFlags)0x0000000000000000, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_USerial_BytesToFloat_Statics::NewProp_Bytes = { "Bytes", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventBytesToFloat_Parms, Bytes), EArrayPropertyFlags::None, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_USerial_BytesToFloat_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventBytesToFloat_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_BytesToFloat_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_BytesToFloat_Statics::NewProp_ReturnValue,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_BytesToFloat_Statics::NewProp_Bytes,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_BytesToFloat_Statics::NewProp_Bytes_Inner,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_BytesToFloat_Statics::NewProp_Bytes,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_BytesToFloat_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_BytesToFloat_Statics::Function_MetaDataParams[] = {
@@ -353,22 +354,22 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			TArray<uint8> Bytes;
 			int32 ReturnValue;
 		};
-		static const UE4CodeGen_Private::FIntPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FArrayPropertyParams NewProp_Bytes;
 		static const UE4CodeGen_Private::FBytePropertyParams NewProp_Bytes_Inner;
+		static const UE4CodeGen_Private::FArrayPropertyParams NewProp_Bytes;
+		static const UE4CodeGen_Private::FIntPropertyParams NewProp_ReturnValue;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
-	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_BytesToInt_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventBytesToInt_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_USerial_BytesToInt_Statics::NewProp_Bytes = { "Bytes", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventBytesToInt_Parms, Bytes), EArrayPropertyFlags::None, METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_BytesToInt_Statics::NewProp_Bytes_Inner = { "Bytes", nullptr, (EPropertyFlags)0x0000000000000000, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_USerial_BytesToInt_Statics::NewProp_Bytes = { "Bytes", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventBytesToInt_Parms, Bytes), EArrayPropertyFlags::None, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_BytesToInt_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventBytesToInt_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_BytesToInt_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_BytesToInt_Statics::NewProp_ReturnValue,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_BytesToInt_Statics::NewProp_Bytes,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_BytesToInt_Statics::NewProp_Bytes_Inner,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_BytesToInt_Statics::NewProp_Bytes,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_BytesToInt_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_BytesToInt_Statics::Function_MetaDataParams[] = {
@@ -424,30 +425,30 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			float Float;
 			TArray<uint8> ReturnValue;
 		};
-		static const UE4CodeGen_Private::FArrayPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FBytePropertyParams NewProp_ReturnValue_Inner;
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_Float_MetaData[];
 #endif
 		static const UE4CodeGen_Private::FFloatPropertyParams NewProp_Float;
+		static const UE4CodeGen_Private::FBytePropertyParams NewProp_ReturnValue_Inner;
+		static const UE4CodeGen_Private::FArrayPropertyParams NewProp_ReturnValue;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
-	const UE4CodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_USerial_FloatToBytes_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventFloatToBytes_Parms, ReturnValue), EArrayPropertyFlags::None, METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_FloatToBytes_Statics::NewProp_ReturnValue_Inner = { "ReturnValue", nullptr, (EPropertyFlags)0x0000000000000000, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_FloatToBytes_Statics::NewProp_Float_MetaData[] = {
 		{ "NativeConst", "" },
 	};
 #endif
 	const UE4CodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_USerial_FloatToBytes_Statics::NewProp_Float = { "Float", nullptr, (EPropertyFlags)0x0010000008000182, UE4CodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventFloatToBytes_Parms, Float), METADATA_PARAMS(Z_Construct_UFunction_USerial_FloatToBytes_Statics::NewProp_Float_MetaData, UE_ARRAY_COUNT(Z_Construct_UFunction_USerial_FloatToBytes_Statics::NewProp_Float_MetaData)) };
+	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_FloatToBytes_Statics::NewProp_ReturnValue_Inner = { "ReturnValue", nullptr, (EPropertyFlags)0x0000000000000000, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_USerial_FloatToBytes_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventFloatToBytes_Parms, ReturnValue), EArrayPropertyFlags::None, METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_FloatToBytes_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_FloatToBytes_Statics::NewProp_ReturnValue,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_FloatToBytes_Statics::NewProp_ReturnValue_Inner,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_FloatToBytes_Statics::NewProp_Float,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_FloatToBytes_Statics::NewProp_ReturnValue_Inner,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_FloatToBytes_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_FloatToBytes_Statics::Function_MetaDataParams[] = {
@@ -574,30 +575,30 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			int32 Int;
 			TArray<uint8> ReturnValue;
 		};
-		static const UE4CodeGen_Private::FArrayPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FBytePropertyParams NewProp_ReturnValue_Inner;
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_Int_MetaData[];
 #endif
 		static const UE4CodeGen_Private::FIntPropertyParams NewProp_Int;
+		static const UE4CodeGen_Private::FBytePropertyParams NewProp_ReturnValue_Inner;
+		static const UE4CodeGen_Private::FArrayPropertyParams NewProp_ReturnValue;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
-	const UE4CodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_USerial_IntToBytes_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventIntToBytes_Parms, ReturnValue), EArrayPropertyFlags::None, METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_IntToBytes_Statics::NewProp_ReturnValue_Inner = { "ReturnValue", nullptr, (EPropertyFlags)0x0000000000000000, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_IntToBytes_Statics::NewProp_Int_MetaData[] = {
 		{ "NativeConst", "" },
 	};
 #endif
 	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_IntToBytes_Statics::NewProp_Int = { "Int", nullptr, (EPropertyFlags)0x0010000008000182, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventIntToBytes_Parms, Int), METADATA_PARAMS(Z_Construct_UFunction_USerial_IntToBytes_Statics::NewProp_Int_MetaData, UE_ARRAY_COUNT(Z_Construct_UFunction_USerial_IntToBytes_Statics::NewProp_Int_MetaData)) };
+	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_IntToBytes_Statics::NewProp_ReturnValue_Inner = { "ReturnValue", nullptr, (EPropertyFlags)0x0000000000000000, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_USerial_IntToBytes_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventIntToBytes_Parms, ReturnValue), EArrayPropertyFlags::None, METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_IntToBytes_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_IntToBytes_Statics::NewProp_ReturnValue,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_IntToBytes_Statics::NewProp_ReturnValue_Inner,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_IntToBytes_Statics::NewProp_Int,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_IntToBytes_Statics::NewProp_ReturnValue_Inner,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_IntToBytes_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_IntToBytes_Statics::Function_MetaDataParams[] = {
@@ -667,22 +668,22 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			ELineEnd LineEnd;
 			FString ReturnValue;
 		};
-		static const UE4CodeGen_Private::FStrPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FEnumPropertyParams NewProp_LineEnd;
 		static const UE4CodeGen_Private::FBytePropertyParams NewProp_LineEnd_Underlying;
+		static const UE4CodeGen_Private::FEnumPropertyParams NewProp_LineEnd;
+		static const UE4CodeGen_Private::FStrPropertyParams NewProp_ReturnValue;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
-	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_USerial_LineEndToStr_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventLineEndToStr_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FEnumPropertyParams Z_Construct_UFunction_USerial_LineEndToStr_Statics::NewProp_LineEnd = { "LineEnd", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventLineEndToStr_Parms, LineEnd), Z_Construct_UEnum_UE4Duino_ELineEnd, METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_LineEndToStr_Statics::NewProp_LineEnd_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FEnumPropertyParams Z_Construct_UFunction_USerial_LineEndToStr_Statics::NewProp_LineEnd = { "LineEnd", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventLineEndToStr_Parms, LineEnd), Z_Construct_UEnum_UE4Duino_ELineEnd, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_USerial_LineEndToStr_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventLineEndToStr_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_LineEndToStr_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_LineEndToStr_Statics::NewProp_ReturnValue,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_LineEndToStr_Statics::NewProp_LineEnd,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_LineEndToStr_Statics::NewProp_LineEnd_Underlying,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_LineEndToStr_Statics::NewProp_LineEnd,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_LineEndToStr_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_LineEndToStr_Statics::Function_MetaDataParams[] = {
@@ -712,27 +713,27 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			int32 BaudRate;
 			bool ReturnValue;
 		};
+		static const UE4CodeGen_Private::FIntPropertyParams NewProp_Port;
+		static const UE4CodeGen_Private::FIntPropertyParams NewProp_BaudRate;
 		static void NewProp_ReturnValue_SetBit(void* Obj);
 		static const UE4CodeGen_Private::FBoolPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FIntPropertyParams NewProp_BaudRate;
-		static const UE4CodeGen_Private::FIntPropertyParams NewProp_Port;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
+	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_Open_Statics::NewProp_Port = { "Port", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventOpen_Parms, Port), METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_Open_Statics::NewProp_BaudRate = { "BaudRate", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventOpen_Parms, BaudRate), METADATA_PARAMS(nullptr, 0) };
 	void Z_Construct_UFunction_USerial_Open_Statics::NewProp_ReturnValue_SetBit(void* Obj)
 	{
 		((Serial_eventOpen_Parms*)Obj)->ReturnValue = 1;
 	}
 	const UE4CodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_USerial_Open_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Bool | UE4CodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, 1, sizeof(bool), sizeof(Serial_eventOpen_Parms), &Z_Construct_UFunction_USerial_Open_Statics::NewProp_ReturnValue_SetBit, METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_Open_Statics::NewProp_BaudRate = { "BaudRate", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventOpen_Parms, BaudRate), METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_Open_Statics::NewProp_Port = { "Port", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventOpen_Parms, Port), METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_Open_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Open_Statics::NewProp_ReturnValue,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Open_Statics::NewProp_BaudRate,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Open_Statics::NewProp_Port,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Open_Statics::NewProp_BaudRate,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Open_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_Open_Statics::Function_MetaDataParams[] = {
@@ -765,30 +766,30 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			int32 BaudRate;
 			USerial* ReturnValue;
 		};
-		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FIntPropertyParams NewProp_BaudRate;
-		static const UE4CodeGen_Private::FIntPropertyParams NewProp_Port;
 		static void NewProp_bOpened_SetBit(void* Obj);
 		static const UE4CodeGen_Private::FBoolPropertyParams NewProp_bOpened;
+		static const UE4CodeGen_Private::FIntPropertyParams NewProp_Port;
+		static const UE4CodeGen_Private::FIntPropertyParams NewProp_BaudRate;
+		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_ReturnValue;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
-	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventOpenComPort_Parms, ReturnValue), Z_Construct_UClass_USerial_NoRegister, METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_BaudRate = { "BaudRate", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventOpenComPort_Parms, BaudRate), METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_Port = { "Port", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventOpenComPort_Parms, Port), METADATA_PARAMS(nullptr, 0) };
 	void Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_bOpened_SetBit(void* Obj)
 	{
 		((Serial_eventOpenComPort_Parms*)Obj)->bOpened = 1;
 	}
 	const UE4CodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_bOpened = { "bOpened", nullptr, (EPropertyFlags)0x0010000000000180, UE4CodeGen_Private::EPropertyGenFlags::Bool | UE4CodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, 1, sizeof(bool), sizeof(Serial_eventOpenComPort_Parms), &Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_bOpened_SetBit, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_Port = { "Port", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventOpenComPort_Parms, Port), METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_BaudRate = { "BaudRate", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventOpenComPort_Parms, BaudRate), METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventOpenComPort_Parms, ReturnValue), Z_Construct_UClass_USerial_NoRegister, METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_OpenComPort_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_ReturnValue,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_BaudRate,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_Port,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_bOpened,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_Port,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_BaudRate,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_OpenComPort_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_OpenComPort_Statics::Function_MetaDataParams[] = {
@@ -819,24 +820,24 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			FString String;
 			bool ReturnValue;
 		};
+		static const UE4CodeGen_Private::FStrPropertyParams NewProp_String;
 		static void NewProp_ReturnValue_SetBit(void* Obj);
 		static const UE4CodeGen_Private::FBoolPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FStrPropertyParams NewProp_String;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
+	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_USerial_Print_Statics::NewProp_String = { "String", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventPrint_Parms, String), METADATA_PARAMS(nullptr, 0) };
 	void Z_Construct_UFunction_USerial_Print_Statics::NewProp_ReturnValue_SetBit(void* Obj)
 	{
 		((Serial_eventPrint_Parms*)Obj)->ReturnValue = 1;
 	}
 	const UE4CodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_USerial_Print_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Bool | UE4CodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, 1, sizeof(bool), sizeof(Serial_eventPrint_Parms), &Z_Construct_UFunction_USerial_Print_Statics::NewProp_ReturnValue_SetBit, METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_USerial_Print_Statics::NewProp_String = { "String", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventPrint_Parms, String), METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_Print_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Print_Statics::NewProp_ReturnValue,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Print_Statics::NewProp_String,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Print_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_Print_Statics::Function_MetaDataParams[] = {
@@ -865,24 +866,24 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			FString String;
 			bool ReturnValue;
 		};
+		static const UE4CodeGen_Private::FStrPropertyParams NewProp_String;
 		static void NewProp_ReturnValue_SetBit(void* Obj);
 		static const UE4CodeGen_Private::FBoolPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FStrPropertyParams NewProp_String;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
+	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_USerial_Println_Statics::NewProp_String = { "String", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventPrintln_Parms, String), METADATA_PARAMS(nullptr, 0) };
 	void Z_Construct_UFunction_USerial_Println_Statics::NewProp_ReturnValue_SetBit(void* Obj)
 	{
 		((Serial_eventPrintln_Parms*)Obj)->ReturnValue = 1;
 	}
 	const UE4CodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_USerial_Println_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Bool | UE4CodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, 1, sizeof(bool), sizeof(Serial_eventPrintln_Parms), &Z_Construct_UFunction_USerial_Println_Statics::NewProp_ReturnValue_SetBit, METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_USerial_Println_Statics::NewProp_String = { "String", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventPrintln_Parms, String), METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_Println_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Println_Statics::NewProp_ReturnValue,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Println_Statics::NewProp_String,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Println_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_Println_Statics::Function_MetaDataParams[] = {
@@ -911,24 +912,24 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			bool bSuccess;
 			uint8 ReturnValue;
 		};
-		static const UE4CodeGen_Private::FBytePropertyParams NewProp_ReturnValue;
 		static void NewProp_bSuccess_SetBit(void* Obj);
 		static const UE4CodeGen_Private::FBoolPropertyParams NewProp_bSuccess;
+		static const UE4CodeGen_Private::FBytePropertyParams NewProp_ReturnValue;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
-	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_ReadByte_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventReadByte_Parms, ReturnValue), nullptr, METADATA_PARAMS(nullptr, 0) };
 	void Z_Construct_UFunction_USerial_ReadByte_Statics::NewProp_bSuccess_SetBit(void* Obj)
 	{
 		((Serial_eventReadByte_Parms*)Obj)->bSuccess = 1;
 	}
 	const UE4CodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_USerial_ReadByte_Statics::NewProp_bSuccess = { "bSuccess", nullptr, (EPropertyFlags)0x0010000000000180, UE4CodeGen_Private::EPropertyGenFlags::Bool | UE4CodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, 1, sizeof(bool), sizeof(Serial_eventReadByte_Parms), &Z_Construct_UFunction_USerial_ReadByte_Statics::NewProp_bSuccess_SetBit, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_ReadByte_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventReadByte_Parms, ReturnValue), nullptr, METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_ReadByte_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadByte_Statics::NewProp_ReturnValue,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadByte_Statics::NewProp_bSuccess,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadByte_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_ReadByte_Statics::Function_MetaDataParams[] = {
@@ -957,22 +958,22 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			int32 Limit;
 			TArray<uint8> ReturnValue;
 		};
-		static const UE4CodeGen_Private::FArrayPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FBytePropertyParams NewProp_ReturnValue_Inner;
 		static const UE4CodeGen_Private::FIntPropertyParams NewProp_Limit;
+		static const UE4CodeGen_Private::FBytePropertyParams NewProp_ReturnValue_Inner;
+		static const UE4CodeGen_Private::FArrayPropertyParams NewProp_ReturnValue;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
-	const UE4CodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_USerial_ReadBytes_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventReadBytes_Parms, ReturnValue), EArrayPropertyFlags::None, METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_ReadBytes_Statics::NewProp_ReturnValue_Inner = { "ReturnValue", nullptr, (EPropertyFlags)0x0000000000000000, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_ReadBytes_Statics::NewProp_Limit = { "Limit", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventReadBytes_Parms, Limit), METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_ReadBytes_Statics::NewProp_ReturnValue_Inner = { "ReturnValue", nullptr, (EPropertyFlags)0x0000000000000000, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_USerial_ReadBytes_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventReadBytes_Parms, ReturnValue), EArrayPropertyFlags::None, METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_ReadBytes_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadBytes_Statics::NewProp_ReturnValue,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadBytes_Statics::NewProp_ReturnValue_Inner,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadBytes_Statics::NewProp_Limit,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadBytes_Statics::NewProp_ReturnValue_Inner,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadBytes_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_ReadBytes_Statics::Function_MetaDataParams[] = {
@@ -1002,24 +1003,24 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			bool bSuccess;
 			float ReturnValue;
 		};
-		static const UE4CodeGen_Private::FFloatPropertyParams NewProp_ReturnValue;
 		static void NewProp_bSuccess_SetBit(void* Obj);
 		static const UE4CodeGen_Private::FBoolPropertyParams NewProp_bSuccess;
+		static const UE4CodeGen_Private::FFloatPropertyParams NewProp_ReturnValue;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
-	const UE4CodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_USerial_ReadFloat_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventReadFloat_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
 	void Z_Construct_UFunction_USerial_ReadFloat_Statics::NewProp_bSuccess_SetBit(void* Obj)
 	{
 		((Serial_eventReadFloat_Parms*)Obj)->bSuccess = 1;
 	}
 	const UE4CodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_USerial_ReadFloat_Statics::NewProp_bSuccess = { "bSuccess", nullptr, (EPropertyFlags)0x0010000000000180, UE4CodeGen_Private::EPropertyGenFlags::Bool | UE4CodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, 1, sizeof(bool), sizeof(Serial_eventReadFloat_Parms), &Z_Construct_UFunction_USerial_ReadFloat_Statics::NewProp_bSuccess_SetBit, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_USerial_ReadFloat_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventReadFloat_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_ReadFloat_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadFloat_Statics::NewProp_ReturnValue,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadFloat_Statics::NewProp_bSuccess,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadFloat_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_ReadFloat_Statics::Function_MetaDataParams[] = {
@@ -1048,24 +1049,24 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			bool bSuccess;
 			int32 ReturnValue;
 		};
-		static const UE4CodeGen_Private::FIntPropertyParams NewProp_ReturnValue;
 		static void NewProp_bSuccess_SetBit(void* Obj);
 		static const UE4CodeGen_Private::FBoolPropertyParams NewProp_bSuccess;
+		static const UE4CodeGen_Private::FIntPropertyParams NewProp_ReturnValue;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
-	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_ReadInt_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventReadInt_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
 	void Z_Construct_UFunction_USerial_ReadInt_Statics::NewProp_bSuccess_SetBit(void* Obj)
 	{
 		((Serial_eventReadInt_Parms*)Obj)->bSuccess = 1;
 	}
 	const UE4CodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_USerial_ReadInt_Statics::NewProp_bSuccess = { "bSuccess", nullptr, (EPropertyFlags)0x0010000000000180, UE4CodeGen_Private::EPropertyGenFlags::Bool | UE4CodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, 1, sizeof(bool), sizeof(Serial_eventReadInt_Parms), &Z_Construct_UFunction_USerial_ReadInt_Statics::NewProp_bSuccess_SetBit, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_ReadInt_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventReadInt_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_ReadInt_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadInt_Statics::NewProp_ReturnValue,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadInt_Statics::NewProp_bSuccess,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadInt_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_ReadInt_Statics::Function_MetaDataParams[] = {
@@ -1094,24 +1095,24 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			bool bSuccess;
 			FString ReturnValue;
 		};
-		static const UE4CodeGen_Private::FStrPropertyParams NewProp_ReturnValue;
 		static void NewProp_bSuccess_SetBit(void* Obj);
 		static const UE4CodeGen_Private::FBoolPropertyParams NewProp_bSuccess;
+		static const UE4CodeGen_Private::FStrPropertyParams NewProp_ReturnValue;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
-	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_USerial_Readln_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventReadln_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
 	void Z_Construct_UFunction_USerial_Readln_Statics::NewProp_bSuccess_SetBit(void* Obj)
 	{
 		((Serial_eventReadln_Parms*)Obj)->bSuccess = 1;
 	}
 	const UE4CodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_USerial_Readln_Statics::NewProp_bSuccess = { "bSuccess", nullptr, (EPropertyFlags)0x0010000000000180, UE4CodeGen_Private::EPropertyGenFlags::Bool | UE4CodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, 1, sizeof(bool), sizeof(Serial_eventReadln_Parms), &Z_Construct_UFunction_USerial_Readln_Statics::NewProp_bSuccess_SetBit, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_USerial_Readln_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventReadln_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_Readln_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Readln_Statics::NewProp_ReturnValue,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Readln_Statics::NewProp_bSuccess,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_Readln_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_Readln_Statics::Function_MetaDataParams[] = {
@@ -1140,24 +1141,24 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			bool bSuccess;
 			FString ReturnValue;
 		};
-		static const UE4CodeGen_Private::FStrPropertyParams NewProp_ReturnValue;
 		static void NewProp_bSuccess_SetBit(void* Obj);
 		static const UE4CodeGen_Private::FBoolPropertyParams NewProp_bSuccess;
+		static const UE4CodeGen_Private::FStrPropertyParams NewProp_ReturnValue;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
-	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_USerial_ReadString_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventReadString_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
 	void Z_Construct_UFunction_USerial_ReadString_Statics::NewProp_bSuccess_SetBit(void* Obj)
 	{
 		((Serial_eventReadString_Parms*)Obj)->bSuccess = 1;
 	}
 	const UE4CodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_USerial_ReadString_Statics::NewProp_bSuccess = { "bSuccess", nullptr, (EPropertyFlags)0x0010000000000180, UE4CodeGen_Private::EPropertyGenFlags::Bool | UE4CodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, 1, sizeof(bool), sizeof(Serial_eventReadString_Parms), &Z_Construct_UFunction_USerial_ReadString_Statics::NewProp_bSuccess_SetBit, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_USerial_ReadString_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventReadString_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_ReadString_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadString_Statics::NewProp_ReturnValue,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadString_Statics::NewProp_bSuccess,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_ReadString_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_ReadString_Statics::Function_MetaDataParams[] = {
@@ -1186,24 +1187,24 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			uint8 Value;
 			bool ReturnValue;
 		};
+		static const UE4CodeGen_Private::FBytePropertyParams NewProp_Value;
 		static void NewProp_ReturnValue_SetBit(void* Obj);
 		static const UE4CodeGen_Private::FBoolPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FBytePropertyParams NewProp_Value;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
+	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_WriteByte_Statics::NewProp_Value = { "Value", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventWriteByte_Parms, Value), nullptr, METADATA_PARAMS(nullptr, 0) };
 	void Z_Construct_UFunction_USerial_WriteByte_Statics::NewProp_ReturnValue_SetBit(void* Obj)
 	{
 		((Serial_eventWriteByte_Parms*)Obj)->ReturnValue = 1;
 	}
 	const UE4CodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_USerial_WriteByte_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Bool | UE4CodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, 1, sizeof(bool), sizeof(Serial_eventWriteByte_Parms), &Z_Construct_UFunction_USerial_WriteByte_Statics::NewProp_ReturnValue_SetBit, METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_WriteByte_Statics::NewProp_Value = { "Value", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventWriteByte_Parms, Value), nullptr, METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_WriteByte_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteByte_Statics::NewProp_ReturnValue,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteByte_Statics::NewProp_Value,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteByte_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_WriteByte_Statics::Function_MetaDataParams[] = {
@@ -1232,27 +1233,27 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			TArray<uint8> Buffer;
 			bool ReturnValue;
 		};
+		static const UE4CodeGen_Private::FBytePropertyParams NewProp_Buffer_Inner;
+		static const UE4CodeGen_Private::FArrayPropertyParams NewProp_Buffer;
 		static void NewProp_ReturnValue_SetBit(void* Obj);
 		static const UE4CodeGen_Private::FBoolPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FArrayPropertyParams NewProp_Buffer;
-		static const UE4CodeGen_Private::FBytePropertyParams NewProp_Buffer_Inner;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
+	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_WriteBytes_Statics::NewProp_Buffer_Inner = { "Buffer", nullptr, (EPropertyFlags)0x0000000000000000, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
+	const UE4CodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_USerial_WriteBytes_Statics::NewProp_Buffer = { "Buffer", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventWriteBytes_Parms, Buffer), EArrayPropertyFlags::None, METADATA_PARAMS(nullptr, 0) };
 	void Z_Construct_UFunction_USerial_WriteBytes_Statics::NewProp_ReturnValue_SetBit(void* Obj)
 	{
 		((Serial_eventWriteBytes_Parms*)Obj)->ReturnValue = 1;
 	}
 	const UE4CodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_USerial_WriteBytes_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Bool | UE4CodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, 1, sizeof(bool), sizeof(Serial_eventWriteBytes_Parms), &Z_Construct_UFunction_USerial_WriteBytes_Statics::NewProp_ReturnValue_SetBit, METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FArrayPropertyParams Z_Construct_UFunction_USerial_WriteBytes_Statics::NewProp_Buffer = { "Buffer", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventWriteBytes_Parms, Buffer), EArrayPropertyFlags::None, METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UFunction_USerial_WriteBytes_Statics::NewProp_Buffer_Inner = { "Buffer", nullptr, (EPropertyFlags)0x0000000000000000, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_WriteBytes_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteBytes_Statics::NewProp_ReturnValue,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteBytes_Statics::NewProp_Buffer,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteBytes_Statics::NewProp_Buffer_Inner,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteBytes_Statics::NewProp_Buffer,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteBytes_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_WriteBytes_Statics::Function_MetaDataParams[] = {
@@ -1281,24 +1282,24 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			float Value;
 			bool ReturnValue;
 		};
+		static const UE4CodeGen_Private::FFloatPropertyParams NewProp_Value;
 		static void NewProp_ReturnValue_SetBit(void* Obj);
 		static const UE4CodeGen_Private::FBoolPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FFloatPropertyParams NewProp_Value;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
+	const UE4CodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_USerial_WriteFloat_Statics::NewProp_Value = { "Value", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventWriteFloat_Parms, Value), METADATA_PARAMS(nullptr, 0) };
 	void Z_Construct_UFunction_USerial_WriteFloat_Statics::NewProp_ReturnValue_SetBit(void* Obj)
 	{
 		((Serial_eventWriteFloat_Parms*)Obj)->ReturnValue = 1;
 	}
 	const UE4CodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_USerial_WriteFloat_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Bool | UE4CodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, 1, sizeof(bool), sizeof(Serial_eventWriteFloat_Parms), &Z_Construct_UFunction_USerial_WriteFloat_Statics::NewProp_ReturnValue_SetBit, METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FFloatPropertyParams Z_Construct_UFunction_USerial_WriteFloat_Statics::NewProp_Value = { "Value", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventWriteFloat_Parms, Value), METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_WriteFloat_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteFloat_Statics::NewProp_ReturnValue,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteFloat_Statics::NewProp_Value,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteFloat_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_WriteFloat_Statics::Function_MetaDataParams[] = {
@@ -1327,24 +1328,24 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 			int32 Value;
 			bool ReturnValue;
 		};
+		static const UE4CodeGen_Private::FIntPropertyParams NewProp_Value;
 		static void NewProp_ReturnValue_SetBit(void* Obj);
 		static const UE4CodeGen_Private::FBoolPropertyParams NewProp_ReturnValue;
-		static const UE4CodeGen_Private::FIntPropertyParams NewProp_Value;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Function_MetaDataParams[];
 #endif
 		static const UE4CodeGen_Private::FFunctionParams FuncParams;
 	};
+	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_WriteInt_Statics::NewProp_Value = { "Value", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventWriteInt_Parms, Value), METADATA_PARAMS(nullptr, 0) };
 	void Z_Construct_UFunction_USerial_WriteInt_Statics::NewProp_ReturnValue_SetBit(void* Obj)
 	{
 		((Serial_eventWriteInt_Parms*)Obj)->ReturnValue = 1;
 	}
 	const UE4CodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_USerial_WriteInt_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Bool | UE4CodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, 1, sizeof(bool), sizeof(Serial_eventWriteInt_Parms), &Z_Construct_UFunction_USerial_WriteInt_Statics::NewProp_ReturnValue_SetBit, METADATA_PARAMS(nullptr, 0) };
-	const UE4CodeGen_Private::FIntPropertyParams Z_Construct_UFunction_USerial_WriteInt_Statics::NewProp_Value = { "Value", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Int, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(Serial_eventWriteInt_Parms, Value), METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_USerial_WriteInt_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteInt_Statics::NewProp_ReturnValue,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteInt_Statics::NewProp_Value,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_USerial_WriteInt_Statics::NewProp_ReturnValue,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_USerial_WriteInt_Statics::Function_MetaDataParams[] = {
@@ -1377,11 +1378,11 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam Class_MetaDataParams[];
 #endif
+		static const UE4CodeGen_Private::FBytePropertyParams NewProp_WriteLineEnd_Underlying;
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_WriteLineEnd_MetaData[];
 #endif
 		static const UE4CodeGen_Private::FEnumPropertyParams NewProp_WriteLineEnd;
-		static const UE4CodeGen_Private::FBytePropertyParams NewProp_WriteLineEnd_Underlying;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 		static const FCppClassTypeInfoStatic StaticCppClassTypeInfo;
 		static const UE4CodeGen_Private::FClassParams ClassParams;
@@ -1391,30 +1392,30 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 		(UObject* (*)())Z_Construct_UPackage__Script_UE4Duino,
 	};
 	const FClassFunctionLinkInfo Z_Construct_UClass_USerial_Statics::FuncInfo[] = {
-		{ &Z_Construct_UFunction_USerial_BytesToFloat, "BytesToFloat" }, // 945856623
-		{ &Z_Construct_UFunction_USerial_BytesToInt, "BytesToInt" }, // 3484049074
+		{ &Z_Construct_UFunction_USerial_BytesToFloat, "BytesToFloat" }, // 2129967569
+		{ &Z_Construct_UFunction_USerial_BytesToInt, "BytesToInt" }, // 2969873403
 		{ &Z_Construct_UFunction_USerial_Close, "Close" }, // 3436734167
-		{ &Z_Construct_UFunction_USerial_FloatToBytes, "FloatToBytes" }, // 77187870
+		{ &Z_Construct_UFunction_USerial_FloatToBytes, "FloatToBytes" }, // 707516258
 		{ &Z_Construct_UFunction_USerial_Flush, "Flush" }, // 4159348829
 		{ &Z_Construct_UFunction_USerial_GetBaud, "GetBaud" }, // 2818308664
 		{ &Z_Construct_UFunction_USerial_GetPort, "GetPort" }, // 2609609758
-		{ &Z_Construct_UFunction_USerial_IntToBytes, "IntToBytes" }, // 3419960544
+		{ &Z_Construct_UFunction_USerial_IntToBytes, "IntToBytes" }, // 1192112113
 		{ &Z_Construct_UFunction_USerial_IsOpened, "IsOpened" }, // 3591230975
-		{ &Z_Construct_UFunction_USerial_LineEndToStr, "LineEndToStr" }, // 3315941817
-		{ &Z_Construct_UFunction_USerial_Open, "Open" }, // 1773772079
-		{ &Z_Construct_UFunction_USerial_OpenComPort, "OpenComPort" }, // 1095628882
-		{ &Z_Construct_UFunction_USerial_Print, "Print" }, // 3624550788
-		{ &Z_Construct_UFunction_USerial_Println, "Println" }, // 902271478
-		{ &Z_Construct_UFunction_USerial_ReadByte, "ReadByte" }, // 2852108593
-		{ &Z_Construct_UFunction_USerial_ReadBytes, "ReadBytes" }, // 2088297352
-		{ &Z_Construct_UFunction_USerial_ReadFloat, "ReadFloat" }, // 957498449
-		{ &Z_Construct_UFunction_USerial_ReadInt, "ReadInt" }, // 459988499
-		{ &Z_Construct_UFunction_USerial_Readln, "Readln" }, // 2217210781
-		{ &Z_Construct_UFunction_USerial_ReadString, "ReadString" }, // 3055448538
-		{ &Z_Construct_UFunction_USerial_WriteByte, "WriteByte" }, // 1833209976
-		{ &Z_Construct_UFunction_USerial_WriteBytes, "WriteBytes" }, // 3444058018
-		{ &Z_Construct_UFunction_USerial_WriteFloat, "WriteFloat" }, // 1989386248
-		{ &Z_Construct_UFunction_USerial_WriteInt, "WriteInt" }, // 3215570694
+		{ &Z_Construct_UFunction_USerial_LineEndToStr, "LineEndToStr" }, // 2668830949
+		{ &Z_Construct_UFunction_USerial_Open, "Open" }, // 4269348613
+		{ &Z_Construct_UFunction_USerial_OpenComPort, "OpenComPort" }, // 3142672355
+		{ &Z_Construct_UFunction_USerial_Print, "Print" }, // 125437888
+		{ &Z_Construct_UFunction_USerial_Println, "Println" }, // 357238754
+		{ &Z_Construct_UFunction_USerial_ReadByte, "ReadByte" }, // 2826527536
+		{ &Z_Construct_UFunction_USerial_ReadBytes, "ReadBytes" }, // 3314763299
+		{ &Z_Construct_UFunction_USerial_ReadFloat, "ReadFloat" }, // 306051459
+		{ &Z_Construct_UFunction_USerial_ReadInt, "ReadInt" }, // 4290069671
+		{ &Z_Construct_UFunction_USerial_Readln, "Readln" }, // 2835149199
+		{ &Z_Construct_UFunction_USerial_ReadString, "ReadString" }, // 1513917651
+		{ &Z_Construct_UFunction_USerial_WriteByte, "WriteByte" }, // 3302828677
+		{ &Z_Construct_UFunction_USerial_WriteBytes, "WriteBytes" }, // 1636710533
+		{ &Z_Construct_UFunction_USerial_WriteFloat, "WriteFloat" }, // 2355645373
+		{ &Z_Construct_UFunction_USerial_WriteInt, "WriteInt" }, // 1744618447
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_USerial_Statics::Class_MetaDataParams[] = {
@@ -1425,6 +1426,7 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 		{ "ModuleRelativePath", "Public/Serial.h" },
 	};
 #endif
+	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UClass_USerial_Statics::NewProp_WriteLineEnd_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_USerial_Statics::NewProp_WriteLineEnd_MetaData[] = {
 		{ "Category", "UE4Duino | String" },
@@ -1434,10 +1436,9 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 	};
 #endif
 	const UE4CodeGen_Private::FEnumPropertyParams Z_Construct_UClass_USerial_Statics::NewProp_WriteLineEnd = { "WriteLineEnd", nullptr, (EPropertyFlags)0x0010000000000004, UE4CodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(USerial, WriteLineEnd), Z_Construct_UEnum_UE4Duino_ELineEnd, METADATA_PARAMS(Z_Construct_UClass_USerial_Statics::NewProp_WriteLineEnd_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_USerial_Statics::NewProp_WriteLineEnd_MetaData)) };
-	const UE4CodeGen_Private::FBytePropertyParams Z_Construct_UClass_USerial_Statics::NewProp_WriteLineEnd_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UE4CodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, 1, 0, nullptr, METADATA_PARAMS(nullptr, 0) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_USerial_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_USerial_Statics::NewProp_WriteLineEnd,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_USerial_Statics::NewProp_WriteLineEnd_Underlying,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_USerial_Statics::NewProp_WriteLineEnd,
 	};
 	const FCppClassTypeInfoStatic Z_Construct_UClass_USerial_Statics::StaticCppClassTypeInfo = {
 		TCppClassTypeTraits<USerial>::IsAbstract,
@@ -1466,7 +1467,7 @@ void EmptyLinkFunctionForGeneratedCodeSerial() {}
 		}
 		return OuterClass;
 	}
-	IMPLEMENT_CLASS(USerial, 1918826335);
+	IMPLEMENT_CLASS(USerial, 3398703119);
 	template<> UE4DUINO_API UClass* StaticClass<USerial>()
 	{
 		return USerial::StaticClass();

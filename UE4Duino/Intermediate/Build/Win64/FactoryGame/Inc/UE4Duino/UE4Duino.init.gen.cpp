@@ -21,7 +21,7 @@ void EmptyLinkFunctionForGeneratedCodeUE4Duino_init() {}
 				nullptr,
 				0,
 				PKG_CompiledIn | 0x00000000,
-				0x58B76B8E,
+				0x5EB4C8D3,
 				0x97DF5735,
 				METADATA_PARAMS(nullptr, 0)
 			};

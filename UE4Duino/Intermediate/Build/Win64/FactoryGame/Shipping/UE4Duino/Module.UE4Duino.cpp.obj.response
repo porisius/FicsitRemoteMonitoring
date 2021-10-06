@@ -12,11 +12,12 @@
 /D_DISABLE_EXTENDED_ALIGNED_STORAGE
 /source-charset:utf-8
 /execution-charset:utf-8
+/Ob2
 /Ox
 /Ot
 /GF
-/Ob2
 /errorReport:prompt
+/D_HAS_EXCEPTIONS=0
 /Z7
 /MD
 /bigobj
@@ -27,11 +28,10 @@
 /we4458
 /we4459
 /wd4463
-/we4668
 /wd4244
 /wd4838
 /I .
-/I A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Source\UE4Duino\Private
+/I A:\workspace\SatisfactoryModLoader-Git\Plugins\UE4Duino\Source\UE4Duino\Private
 /I ..\Intermediate\Build\Win64\FactoryGame\Inc\Engine
 /I Runtime
 /I Runtime\Engine\Classes
@@ -63,6 +63,7 @@
 /I Runtime\Analytics\AnalyticsET\Public
 /I Runtime\Analytics\Analytics\Public
 /I Runtime\Sockets\Public
+/I Runtime\Net\Common\Public
 /I ..\Intermediate\Build\Win64\FactoryGame\Inc\AssetRegistry
 /I Runtime\AssetRegistry\Public
 /I ..\Intermediate\Build\Win64\FactoryGame\Inc\EngineMessages
@@ -76,6 +77,8 @@
 /I ..\Intermediate\Build\Win64\FactoryGame\Inc\GameplayTags
 /I Runtime\GameplayTags\Classes
 /I Runtime\GameplayTags\Public
+/I ..\Intermediate\Build\Win64\FactoryGame\Inc\DeveloperSettings
+/I Runtime\DeveloperSettings\Public
 /I ..\Intermediate\Build\Win64\FactoryGame\Inc\PacketHandler
 /I Runtime\PacketHandlers
 /I Runtime\PacketHandlers\PacketHandler\Classes
@@ -93,25 +96,19 @@
 /I Runtime\NetworkReplayStreaming\NetworkReplayStreaming\Public
 /I ..\Intermediate\Build\Win64\FactoryGame\Inc\PhysicsCore
 /I Runtime\PhysicsCore\Public
+/I ..\Intermediate\Build\Win64\FactoryGame\Inc\Chaos
 /I Runtime\Experimental
 /I Runtime\Experimental\Chaos\Public
 /I Runtime\Experimental\ChaosCore\Public
-/I ThirdParty
+/I ThirdParty\Intel
 /I Runtime\Experimental\Voronoi\Public
-/I ..\Intermediate\Build\Win64\FactoryGame\Inc\FieldSystemCore
-/I Runtime\Experimental\FieldSystem\Source
-/I Runtime\Experimental\FieldSystem\Source\FieldSystemCore\Public
+/I ThirdParty
 /I Runtime\SignalProcessing\Public
 /I ..\Intermediate\Build\Win64\FactoryGame\Inc\AudioExtensions
 /I Runtime\AudioExtensions\Public
 /I Runtime\AudioMixerCore\Public
-/I Runtime\PhysicsSQ\Public
-/I ..\Intermediate\Build\Win64\FactoryGame\Inc\ChaosSolvers
-/I Runtime\Experimental\ChaosSolvers\Public
-/I ..\Intermediate\Build\Win64\FactoryGame\Inc\GeometryCollectionCore
-/I Runtime\Experimental\GeometryCollectionCore\Public
-/I ..\Intermediate\Build\Win64\FactoryGame\Inc\GeometryCollectionSimulationCore
-/I Runtime\Experimental\GeometryCollectionSimulationCore\Public
+/I ..\Intermediate\Build\Win64\FactoryGame\Inc\PropertyAccess
+/I Runtime\PropertyAccess\Public
 /I ..\Intermediate\Build\Win64\FactoryGame\Inc\ClothingSystemRuntimeInterface
 /I Runtime\ClothingSystemRuntimeInterface\Public
 /I ..\Intermediate\Build\Win64\FactoryGame\Inc\AudioMixer
@@ -121,9 +118,9 @@
 /I Developer\TargetPlatform\Public
 /I ..\Intermediate\Build\Win64\FactoryGame\Inc\AnimationCore
 /I Runtime\AnimationCore\Public
-/I A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\FactoryGame\Inc\UE4Duino
-/I A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Source
-/I A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Source\UE4Duino\Public
+/I A:\workspace\SatisfactoryModLoader-Git\Plugins\UE4Duino\Intermediate\Build\Win64\FactoryGame\Inc\UE4Duino
+/I A:\workspace\SatisfactoryModLoader-Git\Plugins\UE4Duino\Source
+/I A:\workspace\SatisfactoryModLoader-Git\Plugins\UE4Duino\Source\UE4Duino\Public
 /I ThirdParty\PhysX3\PxShared\include
 /I ThirdParty\PhysX3\PxShared\include\cudamanager
 /I ThirdParty\PhysX3\PxShared\include\filebuf
@@ -147,19 +144,18 @@
 /I ThirdParty\PhysX3\APEX_1.4\shared\general\RenderDebug\public
 /I ThirdParty\PhysX3\APEX_1.4\shared\general\PairFilter\include
 /I ThirdParty\PhysX3\APEX_1.4\shared\internal\include
-/I "A:\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29910\INCLUDE"
+/I "A:\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\INCLUDE"
 /I "C:\Program Files (x86)\Windows Kits\NETFXSDK\4.6.1\include\um"
-/I "C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt"
-/I "C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\shared"
-/I "C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um"
-/I "C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\winrt"
-/D_HAS_EXCEPTIONS=0
-/FI"A:\workspace\SatisfactoryModLoader-master\Intermediate\Build\Win64\FactoryGame\Shipping\Engine\SharedPCH.Engine.ShadowErrors.h"
-/Yu"A:\workspace\SatisfactoryModLoader-master\Intermediate\Build\Win64\FactoryGame\Shipping\Engine\SharedPCH.Engine.ShadowErrors.h"
-/Fp"A:\workspace\SatisfactoryModLoader-master\Intermediate\Build\Win64\FactoryGame\Shipping\Engine\SharedPCH.Engine.ShadowErrors.h.pch"
-"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\FactoryGame\Shipping\UE4Duino\Module.UE4Duino.cpp"
-/FI"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\FactoryGame\Shipping\UE4Duino\Definitions.UE4Duino.h"
-/Fo"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\FactoryGame\Shipping\UE4Duino\Module.UE4Duino.cpp.obj"
+/I "C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt"
+/I "C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared"
+/I "C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um"
+/I "C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt"
+/FI"A:\workspace\SatisfactoryModLoader-Git\Intermediate\Build\Win64\FactoryGame\Shipping\Engine\SharedPCH.Engine.ShadowErrors.h"
+/Yu"A:\workspace\SatisfactoryModLoader-Git\Intermediate\Build\Win64\FactoryGame\Shipping\Engine\SharedPCH.Engine.ShadowErrors.h"
+/Fp"A:\workspace\SatisfactoryModLoader-Git\Intermediate\Build\Win64\FactoryGame\Shipping\Engine\SharedPCH.Engine.ShadowErrors.h.pch"
+"A:\workspace\SatisfactoryModLoader-Git\Plugins\UE4Duino\Intermediate\Build\Win64\FactoryGame\Shipping\UE4Duino\Module.UE4Duino.cpp"
+/FI"A:\workspace\SatisfactoryModLoader-Git\Plugins\UE4Duino\Intermediate\Build\Win64\FactoryGame\Shipping\UE4Duino\Definitions.UE4Duino.h"
+/Fo"A:\workspace\SatisfactoryModLoader-Git\Plugins\UE4Duino\Intermediate\Build\Win64\FactoryGame\Shipping\UE4Duino\Module.UE4Duino.cpp.obj"
 /TP
 /GR-
 /W4

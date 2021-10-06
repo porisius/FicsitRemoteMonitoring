@@ -6,9 +6,9 @@
 /NAME:"UE4Editor-UE4Duino.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"A:\workspace\SatisfactoryModLoader-master\Intermediate\Build\Win64\FactoryGameEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.obj"
-"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Module.UE4Duino.cpp.obj"
-"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Module.UE4Duino.gen.cpp.obj"
-"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Default.rc2.res"
-/OUT:"A:\workspace\SatisfactoryModLoader-master\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\UE4Editor-UE4Duino.lib"
+"A:\workspace\SatisfactoryModLoader-Git\Intermediate\Build\Win64\FactoryGameEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.obj"
+"A:\workspace\SatisfactoryModLoader-Git\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Module.UE4Duino.cpp.obj"
+"A:\workspace\SatisfactoryModLoader-Git\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Module.UE4Duino.gen.cpp.obj"
+"A:\workspace\SatisfactoryModLoader-Git\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\Default.rc2.res"
+/OUT:"A:\workspace\SatisfactoryModLoader-Git\Plugins\UE4Duino\Intermediate\Build\Win64\UE4Editor\Development\UE4Duino\UE4Editor-UE4Duino.lib"
 /INCLUDE:IMPLEMENT_MODULE_UE4Duino
