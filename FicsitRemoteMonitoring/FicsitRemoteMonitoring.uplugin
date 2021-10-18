@@ -15,6 +15,7 @@
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
 	"Installed": false,
+	"AcceptsAnyRemoteVersion": true,
 	"Modules": [
 		{
 			"Name": "BlueprintHttpServer",
