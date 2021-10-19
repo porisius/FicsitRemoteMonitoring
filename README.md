@@ -1,4 +1,4 @@
-# RS232_SF_Project
+# Ficsit Remote Monitoring
 
 UE4Duino is a dependency for this plugin:
 https://github.com/RVillani/UE4Duino
