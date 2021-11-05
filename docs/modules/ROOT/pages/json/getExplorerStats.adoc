@@ -1,0 +1,55 @@
+= getExplorerStats
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getExplorerStats +
+Explorer Stats
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|ExplorerID
+|ID number of Explorer
+|Integer
+|Output
+
+|ForwardSpeed
+|Float in kph
+|String
+|Output
+
+|CurrentGear
+|Transmission Gear
+|String
+|Output
+
+|EngineRPM
+|RPM of Engine
+|Integer
+|Output
+
+|Airborne
+|Is the Explorer making a jump
+|Boolean
+|Output
+
+|AutoPilot
+|Auto pilot engaged?
+|Boolean
+|Output
+
+|FuelType
+|Fuel Type
+|String
+|Output
+
+|FuelInventory
+|Fuel remaining
+|Integer
+|Output
+
+|VehicleType
+|I'm a Explorer
+|String
+|Output
