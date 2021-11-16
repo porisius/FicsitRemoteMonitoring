@@ -9,7 +9,6 @@ Train Stats
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-
 |TrainName
 |Name of the train
 |String
