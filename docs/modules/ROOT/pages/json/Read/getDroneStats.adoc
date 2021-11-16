@@ -1,0 +1,35 @@
+= getDroneStats
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getDroneStats +
+Drone Stats
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|HomeStation
+|Drone Station
+|String
+|Output
+
+|Paired Station
+|Drone Station paired to Home Station
+|String
+|Output
+
+|Drone Status
+|Drone flight status (Taking off, loading/unloading, En route, etc) Note that any drones that are queued to land are described as En Route.
+|String
+|Output
+
+|Transfer Rate
+|Transfer rate of the station (Adds input and output)
+|Integer
+|Output
+
+|Battery Rate
+|Amount of batteries/min used for flight.
+|Float
+|Output

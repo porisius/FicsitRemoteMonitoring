@@ -1,0 +1,58 @@
+= getProdStats
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getProdStats +
+Production Stats by Andre Aquila of Aquila Industrial +
+Production Stats Mod: https://ficsit.app/mod/3tsvcG3A6gqKX1
+
+Note: If the item is not being produced or extracted, it will not be displayed.
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|ItemName
+|Name of the item mined/extracted/produced
+|String
+|Output
+
+|ProdPerMin
+|Production/Consumption per minute (Format: P: Actual/Max /min - C: Actual/Max /min)
+|String
+|Output
+
+|ProdPercent
+|Efficiency percentage produced
+|Float
+|Output
+
+|ConsPercent
+|Efficiency percentage Consumed
+|Float
+|Output
+
+|Type
+|Denotes how item is transferred. Item on belt, or fluid/gas on pipe
+|String
+|Output
+
+|CurrentProd
+|Current production
+|Float
+|Output
+
+|MaxProd
+|Maximum production based on machines, Type Pipe is set to -1
+|Float
+|Output
+
+|CurrentProd
+|Current consumption
+|Float
+|Output
+
+|MaxConsumed
+|Maximum consumption based on machines, Type Pipe is set to -1
+|Float
+|Output

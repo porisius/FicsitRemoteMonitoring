@@ -5,7 +5,7 @@ Darth Porisius
 URI Handler: /getAllStats +
 Contains all the Statistical JSON in FRM. Warning: Be careful with use as it may cause performance issues.
 
-[cols="1,1,1,1"]
+[cols="1,1"]
 |===
 |JSON/JSON Group: |URI Handler:
 

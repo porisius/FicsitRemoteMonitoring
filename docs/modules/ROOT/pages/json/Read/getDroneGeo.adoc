@@ -1,0 +1,40 @@
+= getDroneGeo
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getDroneGeo +
+Drone GeoJSON
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|features/type
+|GeoJSON to setup for marker, set permanently to Feature
+|String
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y for map marking
+|[Float, Float]
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track, Notable Building, etc)
+|String
+|Output
+
+|features/properties/marker-color
+|Color for the marker (Not yet Implemented)
+|String
+|Output
+
+|features/properties/Degree
+|Compass Pointing for Object (Not yet implemented)
+|Integer
+|Output
