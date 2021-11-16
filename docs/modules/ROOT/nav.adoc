@@ -20,7 +20,7 @@
 *** xref:json/Read/getTruckStats.adoc[getTruckStats]
 *** xref:json/Read/getTruckStation.adoc[getTruckStation]
 
-** xref:json/Write/Write.adoc[Write[
+** xref:json/Write/Write.adoc[Write]
 
 *** xref:json/Write/setCircuit.adoc[setCircuit]
 
