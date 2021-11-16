@@ -1,0 +1,60 @@
+= getTruckStation
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getTruckStation +
+Vehicle Station Stats (Requires U5)
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|TruckStationID
+|ID number of Truck
+|Integer
+|Output
+
+|StationName
+|Name of Vehicle Station
+|String
+|Output
+
+|DockVehicleCount
+|# of vehicles docked
+|Integer
+|Output
+
+|LoadMode
+|Load/Unload Mode Set
+|String
+|Output
+
+|StackRate
+|Rate of item stacks transferred
+|Float
+|Output
+
+|StationStatus
+|Status of Station (Idle/Loading/Unloading)
+|String
+|Output
+
+|FuelRate
+|Amount of fuel used per vehicle
+|String
+|Output
+
+|StationActivity
+|Transferring/Idle
+|String
+|Output
+
+|Inventory
+|Item name in Station
+|String
+|Output
+
+|InvCount
+|# of Item in Station
+|Integer
+|Output

@@ -1,0 +1,26 @@
+= setCircuit
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+** Requires U5 FicsitRemoteMonitoring support
+
+URI Handler: /setCircuit +
+Allows to take action on a power circuit (Requires U5)
+
+Example URI: /setCircuit?circuit=3&action=reset
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|circuit
+|Identification number for the power circuit
+|Integer
+|Input
+
+|action
+|Action to take: + reset - Reset circuit
+|String
+|input
+
+|===

@@ -1,9 +1,9 @@
-= getProdStats
+= getTrainStats
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getTrainStats +
-Train Stats
+Train Stats (Requires U5)
 
 [cols="1,1,1,1"]
 |===

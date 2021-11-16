@@ -3,7 +3,7 @@ Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getTrainGeo +
-Drone GeoJSON
+Train GeoJSON
 
 [cols="1,1,1,1"]
 |===

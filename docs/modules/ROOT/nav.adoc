@@ -4,13 +4,28 @@
 
 * xref:json/json.adoc[JSON]
 
-** xref:json/getPowerData.adoc[getPowerData]
-** xref:json/getPlayerData.adoc[getPlayerData]
-** xref:json/getDroneStats.adoc[getDroneStats]
-** xref:json/getDroneGeo.adoc[getDroneGeo]
-** xref:json/getProdStats.adoc[getProdStats]
-** xref:json/getTrainStats.adoc[getTrainStats]
-** xref:json/getTrainGeo.adoc[getTrainGeo]
-** xref:json/getTruckStats.adoc[getTruckStats]
-** xref:json/getTractorStats.adoc[getTractorStats]
-** xref:json/getExplorerStats.adoc[getExplorerStats]
+** xref:json/Read
+
+*** xref:json/getPowerData.adoc[getPowerData]
+*** xref:json/getPlayerData.adoc[getPlayerData]
+*** xref:json/getDroneStats.adoc[getDroneStats]
+*** xref:json/getDroneGeo.adoc[getDroneGeo]
+*** xref:json/getProdStats.adoc[getProdStats]
+*** xref:json/getTrainStats.adoc[getTrainStats]
+*** xref:json/getTrainStation.adoc[getTrainStation]
+*** xref:json/getTrainGeo.adoc[getTrainGeo]
+*** xref:json/getTruckStats.adoc[getTruckStats]
+*** xref:json/getTractorStats.adoc[getTractorStats]
+*** xref:json/getExplorerStats.adoc[getExplorerStats]
+*** xref:json/getTruckStation.adoc[getTruckStation]
+*** xref:json/getDropPod.adoc[getDropPod]
+
+** xref:json/Write
+
+*** xref:json/setCircuit.adoc[setCircuit]
+
+** xref:json/Groups
+
+*** xref:json/getAll.adoc[getAll]
+*** xref:json/getAllStats.adoc[getAllStats]
+*** xref:json/getAllGeo.adoc[getAllGeo]

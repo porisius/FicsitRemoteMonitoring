@@ -1,0 +1,52 @@
+= getAll
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getAll +
+Contains all the JSON in FRM. Warning: Be careful with use as it may cause performance issues.
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |URI Handler: |Data Type: |Input/Output:
+
+|geo-player
+|getPlayerData
+|Various
+|Output
+
+|geo-drone
+|getDroneGeo
+|Various
+|Output
+
+|geo-train
+|getTrainGeo
+|Various
+|Output
+
+|geo-truck
+|getTruckGeo
+|Various
+|Output
+
+|geo-tractor
+|getTractorGeo
+|Various
+|Output
+
+|geo-explorer
+|getExplorerGeo
+|Various
+|Output
+
+|geo-special
+|getSpecialGeo
+|Various
+|Output
+
+|geo-droppod
+|getDropPod
+|Various
+|Output
+
+|===
