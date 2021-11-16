@@ -4,7 +4,7 @@
 
 * xref:json/json.adoc[JSON]
 
-** Read
+** xref:json/Read/Read.adoc[Read]
 
 *** xref:json/Read/getDroneStats.adoc[getDroneStats]
 *** xref:json/Read/getDroneGeo.adoc[getDroneGeo]
@@ -20,12 +20,11 @@
 *** xref:json/Read/getTruckStats.adoc[getTruckStats]
 *** xref:json/Read/getTruckStation.adoc[getTruckStation]
 
-
-** Write
+** xref:json/Write/Write.adoc[Write[
 
 *** xref:json/Write/setCircuit.adoc[setCircuit]
 
-** Groups
+** xref:json/Groups/Groups.adoc[Groups]
 
 *** xref:json/Groups/getAll.adoc[getAll]
 *** xref:json/Groups/getAllStats.adoc[getAllStats]
