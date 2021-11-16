@@ -3,11 +3,12 @@ Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getAllGeo +
-Contains all Geo URIs the JSON in FRM. Warning: Be careful with use as it may cause performance issues.
+Contains all Geo URIs the JSON in FRM. +
+Warning: Be careful with use as it may cause performance issues.
 
 [cols="1,1"]
 |===
-|JSON/JSON Group: |URI Handler: |Data Type: |Input/Output:
+|JSON/JSON Group: |URI Handler:
 
 |geo-player
 |getPlayerData

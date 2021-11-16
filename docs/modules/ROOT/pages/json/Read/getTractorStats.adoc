@@ -3,7 +3,7 @@ Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getTractorStats +
-Truck Stats
+Tractor Stats
 
 [cols="1,1,1,1"]
 |===

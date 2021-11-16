@@ -2,10 +2,9 @@
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-** Requires U5 FicsitRemoteMonitoring support
-
 URI Handler: /setCircuit +
-Allows to take action on a power circuit (Requires U5)
+Allows to take action on a power circuit +
+(Requires U5)
 
 Example URI: /setCircuit?circuit=3&action=reset
 
@@ -19,7 +18,8 @@ Example URI: /setCircuit?circuit=3&action=reset
 |Input
 
 |action
-|Action to take: + reset - Reset circuit
+|Action to take: +
+reset - Reset circuit
 |String
 |input
 

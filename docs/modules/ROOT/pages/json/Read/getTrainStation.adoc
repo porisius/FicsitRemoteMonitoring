@@ -1,0 +1,44 @@
+= getTrainStation
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getTrainStation +
+Train Station Stats + 
+(Requires U5) +
+**WORK IN PROGRESS!!! DOES NOT FUNCTION AT THIS TIME!!!**
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|StationName
+|Name of the Station
+|Integer
+|Output
+
+|InflowRate
+|Rate of items incoming to the station
+|Float
+|Output
+
+|OutflowRate
+|Rate of items outgoing from the station
+|Float
+|Output
+
+|LoadMode
+|Load/Unload Mode Set
+|String
+|Output
+
+|LoadingStatus
+|Idle/Loading/Unloading
+|String
+|Output
+
+|DockingStatus
+|Status of Station (Idle/Loading/Unloading)
+|String
+|Output
+
+|===

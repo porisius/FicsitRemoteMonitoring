@@ -3,7 +3,8 @@ Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getAllStats +
-Contains all the Statistical JSON in FRM. Warning: Be careful with use as it may cause performance issues.
+Contains all the Statistical JSON in FRM. +
+Warning: Be careful with use as it may cause performance issues.
 
 [cols="1,1"]
 |===

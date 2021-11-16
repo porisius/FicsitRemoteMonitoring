@@ -2,8 +2,9 @@
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getDropPod + (Requires U5)
-Drop Pod/Crash Site GeoJSON
+URI Handler: /getDropPod + 
+Drop Pod/Crash Site GeoJSON +
+(Requires U5)
 
 [cols="1,1,1,1"]
 |===
