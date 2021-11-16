@@ -3,7 +3,7 @@ Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getTrainStats +
-Train Stats (Requires U5)
+Train Stats 
 
 [cols="1,1,1,1"]
 |===

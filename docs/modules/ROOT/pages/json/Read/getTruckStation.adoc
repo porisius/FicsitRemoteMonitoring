@@ -3,7 +3,8 @@ Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getTruckStation +
-Vehicle Station Stats (Requires U5)
+Vehicle Station Stats +
+(Requires U5)
 
 [cols="1,1,1,1"]
 |===
