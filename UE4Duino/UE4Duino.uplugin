@@ -1,20 +1,33 @@
 {
-	"FileVersion":		3,
-	"SemVersion":		"2.2.5",
-	"FriendlyName":		"UE4Duino",
-	"Version":			2,
-	"VersionName":		"2.2.5",
-	"CreatedBy":		"Rodrigo Villani",
-	"Description":		"Enables communication between UE4 and COM ports",
-	"Category":			"Input",
-	"Installed":		true,
-	"EnabledByDefault":	false,
-
+	"FileVersion": 3,
+	"Version": 2,
+	"SemVersion": "2.2.6",
+	"VersionName": "2.2.6",
+	"FriendlyName": "UE4Duino",
+	"Description": "Enables communication between UE4 and COM ports",
+	"Category": "Input",
+	"CreatedBy": "Rodrigo Villani",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EnabledByDefault": false,
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": true,
+		"Plugins": [
+		{
+			"Name": "SML",
+			"SemVersion": "^3.2.0",
+			"Enabled": true
+		}
+	],
 	"Modules": [
 		{
-			"Name":					"UE4Duino",
-			"Type":					"Runtime",
-			"LoadingPhase":			"PostDefault"
+			"Name": "UE4Duino",
+			"Type": "Runtime",
+			"LoadingPhase": "PostDefault"
 		}
 	]
 }

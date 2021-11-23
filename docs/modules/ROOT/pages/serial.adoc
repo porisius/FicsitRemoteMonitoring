@@ -4,7 +4,7 @@ Darth Porisius
 
 **This mod's Serial functionality is only expected to be supported on Windows due to the third-party library's compatibility.** That is not to say that this will not work on Mac or Linux, but I cannot confirm. If you would like to test and let me know and how it is done, I will be glad to update this to reflect as well as provide credit.
 
-** Changes to come in this area in U5, ability to call more data similiar to the Web groups.
+** U4: Serial is 8-N-1 / U5: 8-E-1 - Investigating reason why this changed
 
 Communications with a Serial Port requires either a virtual Serial driver or physical hardware. Any serial device (Arduino/RPi/PLC) should work, it will be the code on the device that may need to be customized to match. Examples will be provided in my GitHub (https://www.github.com/porisius/FicsitRemoteMonitoring) and is open for anyone wanting to provide their update/config.
 

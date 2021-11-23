@@ -31,12 +31,12 @@
 	"Plugins": [
 		{
 			"Name": "SML",
-			"SemVersion": "^3.1.1",
+			"SemVersion": "^3.2.0",
 			"Enabled": true
 		},
 		{
 			"Name": "UE4Duino",
-			"SemVersion": "^2.2.4",
+			"SemVersion": "^2.2.6",
 			"Enabled": true
 		}
 	]

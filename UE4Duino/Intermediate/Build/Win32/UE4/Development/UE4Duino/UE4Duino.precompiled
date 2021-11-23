@@ -1,8 +1,0 @@
-{
-	"OutputFiles": [
-		"Serial.cpp.obj",
-		"UE4DuinoModule.cpp.obj",
-		"Serial.gen.cpp.obj",
-		"UE4Duino.init.gen.cpp.obj"
-	]
-}
