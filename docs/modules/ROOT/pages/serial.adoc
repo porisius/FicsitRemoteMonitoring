@@ -21,58 +21,7 @@ Data from Serial is in JSON and presented as a string, but their true data types
 
 Please note that there are no nested JSONs. The table below are only grouped for easy lookup. List to be expanded upon feedback and able.
 
-[cols="1,1,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+You may have FRM auto-send getPowerData to you every delay per the settings in the FRM config.
 
-4+|*Power Monitoring:*
-
-|PowerConsumed
-|Power consumed on selected power circuit
-|Float
-|Output
-
-|PowerCapacity
-|Power capacity on selected power circuit
-|Float
-|Output
-	
-|PowerMaxConsumed
-|Maximum Power that can be consumed on selected power circuit
-|Float
-|Output
-	
-|BatteryDifferential
-|Amount of power in excess/deficit going into or out of the battery bank(s). Positive = Charges batteries, Negative = Drains batteries
-|Float
-|Output
-	
-|BatteryPercent
-|Percentage of battery bank(s) charge
-|Float
-|Output
-	
-|BatteryCapacity
-|Total capacity of battery bank(s)
-|Float
-|Output
-	
-|BatteryTimeEmpty
-|Time (in seconds) until Batteries are empty
-|Float
-|Output
-|===
-|===
-4+|**Power Management: NOT YET IMPLEMENTED**
-	
-|FuseBlown
-|Is the fuse blown for selected circuit
-|Boolean (true/false)
-|Output
-	
-|ResetFuse
-|Command received to reset blown fuse
-|Boolean (true/false)
-|Input
-	
-|===
+You may also have your own delay on your serial device and send URI handlers to FRM to get an output. URIs may be sent manually or programmicly, but require a "copy/paste" approach. +
+Developer's Note: Tests show that all the data is sent, however, my terminal program only shows 4KB of data regardless of attempts. More information is required.

@@ -6,7 +6,9 @@ URI Handler: /setCircuit +
 Allows to take action on a power circuit +
 (Requires U5)
 
-Example URI: /setCircuit?circuit=3&action=reset
+Example URI: +
+Web: /setCircuit?circuit=3&action=reset
+RS232: setCircuit,3,reset
 
 [cols="1,1,1,1"]
 |===
