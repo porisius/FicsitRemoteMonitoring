@@ -1,0 +1,165 @@
+= getDroneStats
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getDroneStats +
+Drone Stats
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|ID
+|ID Number
+|String
+|Output
+
+|HomeStation
+|Drone Station
+|String
+|Output
+
+|location/x
+|X Location of Building
+|Float
+|Output
+
+|location/y
+|Y Location of Building
+|Float
+|Output
+
+|location/z
+|Z Location of Building
+|Float
+|Output
+
+|location/Rotation
+|Compass Heading of Building
+|Float
+|Output
+
+|Paired Station
+|Drone Station paired to Home Station
+|String
+|Output
+
+|Drone Status
+|Drone flight status (Taking off, loading/unloading, En route, etc) Note that any drones that are queued to land are described as En Route.
+|String
+|Output
+
+|AvgIncRate
+|Average Incoming Rate
+|Float
+|Output
+
+|AvgIncStack
+|Average Incoming Stack Rate
+|Float
+|Output
+
+|AvgOutRate
+|Average Outgoing Rate
+|Float
+|Output
+
+|AvgOutStack
+|Average Outgoing Stack Rate
+|Float
+|Output
+
+|AvgRngTrip
+|Average Round Trip Time
+|String
+|Output
+
+|AvgTotalIncRate
+|Average Total Incoming Rate
+|Float
+|Output
+
+|AvgTotalIncStack
+|Average Total Incoming Stack
+|Float
+|Output
+
+|AvgTotalOutRate
+|Average Total Outgoing Rate
+|Float
+|Output
+
+|AvgTotalOutStack
+|Average Total Outgoing Stack
+|Float
+|Output
+
+|AvgTripIncAmt
+|Average Trip Incoming Amount
+|Float
+|Output
+
+|EstRndTrip
+|Estimated Round Trip Time
+|String
+|Output
+
+|EstTotalTransRate
+|Estimated Total Transfer Rate
+|Float
+|Output
+
+|EstLatestTotalIncStack
+|Estimated Latest Total Incoming Stack Rate
+|Float
+|Output
+
+|EstLatestTotalOutStack
+|Estimated Latest Total Outgoing Stack Rate
+|Float
+|Output
+
+|LatestIncStack
+|Latest Incoming Item Stack Rate
+|Float
+|Output
+
+|LatestOutStack
+|Latest Outgoing Item Stack Rate
+|Float
+|Output
+
+|LatestRndTrip
+|Latest Round Trip Time
+|String
+|Output
+
+|LatestTripIncAmt
+|Latest Trip Incoming Item Amount
+|Integer
+|Output
+
+|LatestTripOutAmt
+|Latest Trip Outgoing Item Amount
+|Integer
+|Output
+
+|MedianRndTrip
+|Median Round Trip Time
+|String
+|Output
+
+|MedianTripIncAmt
+|Median Trip Incoming Item Amount
+|Float
+|Output
+
+|MedianTripOutAmt
+|Median Trip Outgoing Item Amount
+|Float
+|Output
+
+|EstBatteryRate
+|Estimated Battery Requirement Rate
+|Float
+|Output

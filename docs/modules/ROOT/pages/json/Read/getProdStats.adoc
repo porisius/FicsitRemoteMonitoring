@@ -43,7 +43,7 @@ Note: If the item is not being produced or extracted, it will not be displayed.
 |Output
 
 |MaxProd
-|Maximum production based on machines, Type Pipe is set to -1
+|Maximum production based on machines
 |Float
 |Output
 
@@ -53,6 +53,6 @@ Note: If the item is not being produced or extracted, it will not be displayed.
 |Output
 
 |MaxConsumed
-|Maximum consumption based on machines, Type Pipe is set to -1
+|Maximum consumption based on machines
 |Float
 |Output

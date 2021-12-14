@@ -1,0 +1,85 @@
+= getTruckStats
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getExtractor +
+Resource Extractor Stats +
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|building
+|Type of Extractor Building
+|String
+|Output
+
+|location/x
+|X Location of Extractor
+|Float
+|Output
+
+|location/y
+|Y Location of Extractor
+|Float
+|Output
+
+|location/z
+|Z Location of Extractor
+|Float
+|Output
+
+|location/Rotation
+|Compass Heading of Extractor
+|Float
+|Output
+
+|Recipe
+|Item to be Produced
+|String
+|Output
+
+|production/Name
+|Item Output
+|String Array
+|Output
+
+|production/CurrentProd
+|Current Production
+|Float Array
+|Output
+
+|production/MaxProd
+|Max Production
+|Float Array
+|Output
+
+|production/ProdPercent
+|Efficentcy Percentage
+|Float Array
+|Output
+
+|ManuSpeed
+|Configured Speed
+|Float
+|Output
+
+|IsConfigured
+|Is Extractor configured?
+|Boolean
+|Output
+
+|IsProducing
+|Is extracting now?
+|Boolean
+|Output
+
+|IsPaused
+|Is paused?
+|Boolean
+|Output
+
+|CircuitID
+|Circuit ID of the Extractor
+|Integar
+|Output

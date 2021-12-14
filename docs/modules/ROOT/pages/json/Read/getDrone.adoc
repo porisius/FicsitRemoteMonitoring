@@ -1,0 +1,55 @@
+= getDrone
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getDrone +
+Drone Stats
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|ID
+|ID Number of Drone
+|Integer
+|Output
+
+|VehicleType
+|Vehicle Name
+|String
+|Output
+
+|location/x
+|X Location of Drone
+|Float
+|Output
+
+|location/y
+|Y Location of Drone
+|Float
+|Output
+
+|location/z
+|Z Location of Drone
+|Float
+|Output
+
+|location/Rotation
+|Compass Heading of Drone
+|Float
+|Output
+
+|CurrentDestination
+|Current Destination Drone Station
+|String
+|Output
+
+|FlyingSpeed
+|Flying Speed of Drone
+|Integer
+|Output
+
+|CurrentFlyingMode
+|Current ENUM Status
+|String
+|Output

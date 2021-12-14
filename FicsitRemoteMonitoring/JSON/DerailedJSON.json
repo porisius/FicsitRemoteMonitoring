@@ -1,0 +1,14 @@
+{
+	"username": "Ficsit Remote Monitoring: Train Notification",
+	"avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
+	"embeds": [{
+		"title": "Alarm: Train Alert!",
+		"description": "A train has derailed and requires assistance.}",
+		"fields": [
+			{"name": "Train Name:", "value": "{TrainName}", "inline": true},
+			{"name": "Next Stop:", "value": "{TrainStation}", "inline": true},
+			{"name": "Additional Info:", "value": "Please seek and resolve train signaling issue"}
+		],
+		"footer": {"text": "Remember, Ficsit Management may dock pay for lost revenue."}
+	}]
+}

@@ -1,17 +1,16 @@
-= getDropPod
+= getResourceNode
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getDropPod + 
-Drop Pod/Crash Site GeoJSON +
-(Requires U5)
+URI Handler: /getResourceNode +
+Resource Sink Stats
 
 [cols="1,1,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|ID
-|DropPod ID
+|NodeName
+|Node Name
 |String
 |Output
 
@@ -30,27 +29,22 @@ Drop Pod/Crash Site GeoJSON +
 |Float
 |Output
 
-|location/Rotation
-|Compass Heading of Building
-|Float
-|Output
-
-|Looted
-|Is Looted
-|Boolean
-|Output
-
-|Repair Item
-|Item Required to Repair DropPod
+|EnumPurity
+|Enum Purity of Node
 |String
 |Output
 
-|RepairAmount
-|# of Repair Item required to open DropPod/Crash Site
+|Purity
+|Purity of Node
+|String
+|Output
+
+|NodeType
+|Node Type
 |Integer
 |Output
 
-|PowerRequired
-|Power Required to open DropPod/Crash Site
-|Float
+|Exploited
+|Is the Resource being extracted
+|Boolean
 |Output

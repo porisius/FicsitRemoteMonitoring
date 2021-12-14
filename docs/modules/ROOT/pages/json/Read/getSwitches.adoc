@@ -1,0 +1,40 @@
+= getTrainGeo
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getSwitchStatus +
+Power Switch Status
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|SwitchID
+|ID Number of Power Switch
+|Integer
+|Output
+
+|SwitchTag
+|Name Tag for Power Switch
+|String
+|Output
+
+|Connected
+|Is Connected
+|Boolean
+|Output
+
+|IsOn
+|Is the Switch On
+|Boolean
+|Output
+
+|CircuitID/Primary
+|Primary Circuit Connection ID
+|Integer
+|Output
+
+|CircuitID/Secondary
+|Primary Circuit Connection ID
+|Integer
+|Output

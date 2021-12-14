@@ -2,16 +2,45 @@
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getTruckStats +
-Truck Stats
+URI Handler: /getVehicles +
+Vehicles Stats +
+
+getExplorer only retrieves Explorers +
+getTractor only retrieves Tractors +
+getTruck only retrieves Trucks +
 
 [cols="1,1,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|TruckID
-|ID number of Truck
+|ID
+|ID number of Vehicle
 |Integer
+|Output
+
+|VehicleType
+|Name of vehicle type
+|String
+|Output
+
+|location/x
+|X Location of Vehicle
+|Float
+|Output
+
+|location/y
+|Y Location of Vehicle
+|Float
+|Output
+
+|location/z
+|Z Location of Vehicle
+|Float
+|Output
+
+|location/Rotation
+|Compass Heading of Vehicle
+|Float
 |Output
 
 |ForwardSpeed
@@ -49,7 +78,3 @@ Truck Stats
 |Integer
 |Output
 
-|VehicleType
-|I'm a truck
-|String
-|Output

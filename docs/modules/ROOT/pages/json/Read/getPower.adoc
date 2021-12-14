@@ -1,8 +1,8 @@
-= getPowerData
+= getPower
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getPowerData +
+URI Handler: /getPower +
 This grabs the circuit power information from the in-game systems and provides it in a JSON format.
 
 [cols="1,1,1,1"]

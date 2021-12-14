@@ -5,7 +5,7 @@
 	"SemVersion": "0.6.6",
 	"FriendlyName": "Ficsit Remote Monitoring",
 	"Description": "",
-	"Category": "Input",
+	"Category": "Modding",
 	"CreatedBy": "Porisius",
 	"CreatedByURL": "",
 	"DocsURL": "",
@@ -26,17 +26,27 @@
 				"Win64",
 				"Linux"
 			]
+		},
+		{
+			"Name": "FicsitRemoteMonitoring",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Mac",
+				"Win64",
+				"Linux"
+			]
 		}
 	],
 	"Plugins": [
 		{
 			"Name": "SML",
-			"SemVersion": "^3.1.2",
+			"SemVersion": "^3.2.0",
 			"Enabled": true
 		},
 		{
 			"Name": "UE4Duino",
-			"SemVersion": "^2.2.4",
+			"SemVersion": "^2.2.6",
 			"Enabled": true
 		}
 	]
