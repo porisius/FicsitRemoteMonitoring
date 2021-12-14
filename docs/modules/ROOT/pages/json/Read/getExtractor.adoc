@@ -1,4 +1,4 @@
-= getTruckStats
+= getExtractor
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 

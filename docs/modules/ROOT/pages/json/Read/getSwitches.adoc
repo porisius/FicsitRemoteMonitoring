@@ -1,8 +1,8 @@
-= getTrainGeo
+= getSwitches
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getSwitchStatus +
+URI Handler: /getSwitches +
 Power Switch Status
 
 [cols="1,1,1,1"]

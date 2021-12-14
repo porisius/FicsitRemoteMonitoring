@@ -1,8 +1,8 @@
-= getDroneStats
+= getDroneStation
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getDroneStats +
+URI Handler: /getDroneStation +
 Drone Stats
 
 [cols="1,1,1,1"]
