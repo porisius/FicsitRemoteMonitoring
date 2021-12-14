@@ -1,4 +1,4 @@
-= getTruckStation
+= Vehicle Station Stats
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
