@@ -2,35 +2,40 @@
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getExtractor +
-Resource Extractor Stats +
+URI Handler: /getFactory +
+Factory Stats +
+
+getAssembler only retrieves Assemblers +
+getConstructor only retrieves Constructors +
+getParticle only retrieves Particle Accelerators +
+... +
 
 [cols="1,1,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
 |building
-|Type of Extractor Building
+|Type of Factory Building
 |String
 |Output
 
 |location/x
-|X Location of Extractor
+|X Location of Building
 |Float
 |Output
 
 |location/y
-|Y Location of Extractor
+|Y Location of Building
 |Float
 |Output
 
 |location/z
-|Z Location of Extractor
+|Z Location of Building
 |Float
 |Output
 
 |location/Rotation
-|Compass Heading of Extractor
+|Compass Heading of Building
 |Float
 |Output
 
@@ -59,18 +64,38 @@ Resource Extractor Stats +
 |Float Array
 |Output
 
+|ingredients/Name
+|Item Output
+|String Array
+|Output
+
+|ingredients/CurrentConsumed
+|Current Consumption
+|Float Array
+|Output
+
+|ingredients/MaxConsumed
+|Max Consumption
+|Float Array
+|Output
+
+|ingredients/ConsPercent
+|Efficentcy Percentage
+|Float Array
+|Output
+
 |ManuSpeed
 |Configured Speed
 |Float
 |Output
 
 |IsConfigured
-|Is Extractor configured?
+|Is a recipe configured?
 |Boolean
 |Output
 
 |IsProducing
-|Is extracting now?
+|Is the building producing now?
 |Boolean
 |Output
 
@@ -80,6 +105,6 @@ Resource Extractor Stats +
 |Output
 
 |CircuitID
-|Circuit ID of the Extractor
+|Circuit ID of the Building
 |Integar
 |Output

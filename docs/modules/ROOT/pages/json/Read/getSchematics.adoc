@@ -1,4 +1,4 @@
-= Schematics Stats
+= getSchematics
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
@@ -43,5 +43,3 @@ Schematics Stats
 |Dependency Lock for Schematic/Milestone
 |Boolean
 |Output
-
-|===

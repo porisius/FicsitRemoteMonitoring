@@ -15,6 +15,26 @@ Train Station Stats +
 |Integer
 |Output
 
+|location/x
+|X Location of Drone
+|Float
+|Output
+
+|location/y
+|Y Location of Drone
+|Float
+|Output
+
+|location/z
+|Z Location of Drone
+|Float
+|Output
+
+|location/Rotation
+|Compass Heading of Drone
+|Float
+|Output
+
 |TransferRate
 |Rate of solid items transferring at the station
 |Float
