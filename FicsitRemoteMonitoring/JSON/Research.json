@@ -1,0 +1,12 @@
+{
+	"username": "Ficsit Remote Monitoring: Research Notification",
+	"avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
+	"embeds": [{
+		"title": "Notification: Hard Drive Scan Complete",
+		"fields": [
+			{"name": "Schematics Available:", "value": "{Schematic}", "inline": true},
+			{"name": "Additional Info:", "value": "Blame Robb#6731 AGAIN"}
+		],
+		"footer": {"text": "{Flavor}"}
+	}]
+}

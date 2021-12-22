@@ -1,0 +1,8 @@
+{
+	"username": "Ficsit Remote Monitoring: Player Notification",
+	"avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
+	"embeds": [{
+		"title": "Player: {Player} is online!",
+		"footer": {"text": "{Flavor}"}
+	}]
+}

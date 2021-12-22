@@ -1,0 +1,110 @@
+= Webhook Notifications
+Darth Porisius
+:url-repo: https://github.com/porisius/FicsitRemoteMonitoring
+
+Requires Disc-IT to be installed and configured. This page addresses the unique features of Remote Monitoring's usage of Webhook Notifications.
+
+A standard set of JSON files is located at %SatisfactoryRootFolder%\FactoryGame\Mods\FicsitRemoteMonitoring\JSON. You have set your own custom set of JSON files placed anywhere on your system so that they are not tampered with. Please note the below variables for each notification system. More are planned, as well more data to be used in notifications.
+
+Flavor text is provided as a randomizer to keep Webhook notifications from being bland. The FlavorText.json file allows for setting up different situations with random flavor.
+
+Customized JSON files can be made as long as they are valid JSON files. It is recommended to keep these custom files in an unique location not in the game files for save keeping. Configurations for file locations are located in the Mod Configuration page. All JSON files are completely open to customization, but the flavor text randomizer does use the arrays stated in the default file.
+
+Discord Webhooks can be done with text. I strongly recommend this guide for assistance in setting them up. +
+https://birdie0.github.io/discord-webhooks-guide/index.html
+
+Battery Notification Varibles - Action: Power operational, but on backup power. Also appears on each battery remaining trigger.
+Default File: UPSPower.json
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
+
+|{CircuitID}
+|Circuit ID Number
+
+|{TimeEmpty}
+|Time in HH:MM:SS until battery(ies) depletion
+
+|{BattPercent}
+|% of battery charge remaining
+
+|{Flavor}
+|Randomized Flavor Text (Battery/Determintal)
+
+===|
+
+Player Notification Varibles - Action: Player connected/disconnected notification
+Default File: PlayerOnline.json / PlayerOffline.json
+[cols="2,2"]
+|===
+|Varible Name |Purpose/Data:
+
+|{PlayerName}
+|Username (Based on Steam/Epic Username} that connected/disconnected. Note: Non-server logouts by host are not triggered.
+
+|{Flavor}
+|Randomized Flavor Text (Player/Positive)
+
+===|
+
+Power Notification Varibles - Action: Power fuse has tripped
+Default File: Outage.json
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
+
+|{CircuitID}
+|Circuit ID Number
+
+|{Flavor}
+|Randomized Flavor Text (Power/Determintal)
+
+===|
+
+Research Notification Varibles - Action: Milestone/M.A.M. Research Completed
+Default File: Research.json
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
+
+|{Schematic}
+|Milestone/M.A.M. Research Name
+
+|{Recipes}
+|Recipes Unlocked
+
+|{Flavor}
+|Randomized Flavor Text (Research/Positive)
+
+===|
+
+Hard Drive Notification Varibles - Action: Hard Drive Research Completed, but not selected
+Default File: Schematic.json
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
+
+|{Schematic}
+|Available schematics found from HDD
+
+|{Flavor}
+|Randomized Flavor Text (Research/Positive)
+
+===|
+
+Train Derailment Notificaion - Action: Train has derailed (Warning: Will trigger twice if two trains. WIP: make both trains one notification)
+Default File: Derail.json
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
+
+|{TrainName}
+|Name of Train derailed
+
+|{TrainStation}
+|Name of Train Station the Train was heading to
+
+|{Flavor}
+|Randomized Flavor Text (Train/Determintal)
+
+===|

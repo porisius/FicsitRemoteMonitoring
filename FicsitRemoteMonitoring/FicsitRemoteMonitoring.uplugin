@@ -1,16 +1,16 @@
 {
 	"FileVersion": 3,
 	"Version": 0,
-	"VersionName": "0.6.6",
-	"SemVersion": "0.6.6",
+	"VersionName": "0.6.9-420",
+	"SemVersion": "0.6.9-420",
 	"FriendlyName": "Ficsit Remote Monitoring",
-	"Description": "",
+	"Description": "Statistical and GeoLocation Monitoring for Satisfactory",
 	"Category": "Modding",
 	"CreatedBy": "Porisius",
 	"CreatedByURL": "",
-	"DocsURL": "",
+	"DocsURL": "https://docs.ficsit.app/ficsitremotemonitoring/latest/index.html",
 	"MarketplaceURL": "",
-	"SupportURL": "",
+	"SupportURL": "https://github.com/porisius/FicsitRemoteMonitoring",
 	"CanContainContent": true,
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
@@ -28,25 +28,20 @@
 			]
 		},
 		{
+			"Name" : "VaRest",
+			"Type" : "Runtime",
+			"LoadingPhase": "PreDefault"
+		},
+		{
 			"Name": "FicsitRemoteMonitoring",
 			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"WhitelistPlatforms": [
-				"Mac",
-				"Win64",
-				"Linux"
-			]
+			"LoadingPhase": "Default"
 		}
 	],
 	"Plugins": [
 		{
 			"Name": "SML",
-			"SemVersion": "^3.2.0",
-			"Enabled": true
-		},
-		{
-			"Name": "UE4Duino",
-			"SemVersion": "^2.2.6",
+			"SemVersion": "^3.3.0",
 			"Enabled": true
 		}
 	]

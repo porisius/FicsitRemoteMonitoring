@@ -4,8 +4,6 @@ Darth Porisius
 
 **This mod's Serial functionality is only expected to be supported on Windows due to the third-party library's compatibility.** That is not to say that this will not work on Mac or Linux, but I cannot confirm. If you would like to test and let me know and how it is done, I will be glad to update this to reflect as well as provide credit.
 
-** Changes to come in this area in U5, ability to call more data similiar to the Web groups.
-
 Communications with a Serial Port requires either a virtual Serial driver or physical hardware. Any serial device (Arduino/RPi/PLC) should work, it will be the code on the device that may need to be customized to match. Examples will be provided in my GitHub (https://www.github.com/porisius/FicsitRemoteMonitoring) and is open for anyone wanting to provide their update/config.
 
 FRM serial communication can be configured on a serial port of your choosing (Default: COM3). This can be modified by either modifying the COM_Port value in %SatisfactoryRootFolder%\FactoryGame\Configs\FicsitRemoteMonitoring.cfg (Config File Method), or by Satisfactory's Main Menu > Mods > FicsitRemoteMonitoring > Serial Port (Game UI Method).
@@ -18,61 +16,3 @@ Chat Commands:
 /frmserial stop - Stops the serial driver
 
 Data from Serial is in JSON and presented as a string, but their true data types are listed in the table. Input/Output is from the perspective of the FRM mod. Output, FRM sends data. Input, FRM listens for data.
-
-Please note that there are no nested JSONs. The table below are only grouped for easy lookup. List to be expanded upon feedback and able.
-
-[cols="1,1,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
-
-4+|*Power Monitoring:*
-
-|PowerConsumed
-|Power consumed on selected power circuit
-|Float
-|Output
-
-|PowerCapacity
-|Power capacity on selected power circuit
-|Float
-|Output
-	
-|PowerMaxConsumed
-|Maximum Power that can be consumed on selected power circuit
-|Float
-|Output
-	
-|BatteryDifferential
-|Amount of power in excess/deficit going into or out of the battery bank(s). Positive = Charges batteries, Negative = Drains batteries
-|Float
-|Output
-	
-|BatteryPercent
-|Percentage of battery bank(s) charge
-|Float
-|Output
-	
-|BatteryCapacity
-|Total capacity of battery bank(s)
-|Float
-|Output
-	
-|BatteryTimeEmpty
-|Time (in seconds) until Batteries are empty
-|Float
-|Output
-|===
-|===
-4+|**Power Management: NOT YET IMPLEMENTED**
-	
-|FuseBlown
-|Is the fuse blown for selected circuit
-|Boolean (true/false)
-|Output
-	
-|ResetFuse
-|Command received to reset blown fuse
-|Boolean (true/false)
-|Input
-	
-|===
