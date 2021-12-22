@@ -43,3 +43,5 @@ Resource Sink Stats
 |Total Number of Points Accrued
 |Integer64
 |Output
+
+|===

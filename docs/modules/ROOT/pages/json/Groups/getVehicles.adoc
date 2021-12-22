@@ -5,8 +5,6 @@ Darth Porisius
 URI Handler: /getVehicles +
 Vehicles Stats +
 
-*ADVISORY:* Due to performance, all vehicle calls use a caching system. Therefore, you will not always get the most up-to-date info on your vehicles. Please consult the Configuration page to set caching delays.
-
 getExplorer only retrieves Explorers +
 getTractor only retrieves Tractors +
 getTruck only retrieves Trucks +
@@ -78,6 +76,21 @@ getTruck only retrieves Trucks +
 |FuelInventory
 |Fuel remaining
 |Integer
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y,Z for map marking
+|[Float, Float, Float]
 |Output
 
 |===

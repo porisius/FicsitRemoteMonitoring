@@ -6,7 +6,7 @@ Configuration for Remote Monitoring
 
 This will show the UI option as well as the FicsitRemoteMonitoring.cfg file option for manual/headless changes.
 
-[cols="2,2,2,2"]
+[cols="2,2,1,4"]
 |===
 |Configuration |Headless |Type |Description
 
@@ -104,11 +104,6 @@ This will show the UI option as well as the FicsitRemoteMonitoring.cfg file opti
 |SmelterCacheDelay
 |Integer
 |Delay between updating getSmelter Cache. Only active if Factory Cache Seperate is Enabled
-
-|Vehicle Cache Delay
-|VehicleCacheDelay
-|Integer
-|Delay between updating getVehicle Cache.
 
 |Train Derailment JSON File
 |DerailJSON

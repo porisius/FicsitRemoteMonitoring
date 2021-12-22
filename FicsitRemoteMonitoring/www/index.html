@@ -42,7 +42,7 @@
 		function reloadPower() {
 
 		var xmlhttp = new XMLHttpRequest();
-		var url = "/getPowerData";
+		var url = "/getPower";
 
 		xmlhttp.onreadystatechange = function() {
 		  if (this.readyState == 4 && this.status == 200) {
@@ -93,7 +93,7 @@
 		function reloadDrone() {
 
 		var xmlhttp = new XMLHttpRequest();
-		var url = "/getDroneStats";
+		var url = "/getDrone";
 
 		xmlhttp.onreadystatechange = function() {
 		  if (this.readyState == 4 && this.status == 200) {

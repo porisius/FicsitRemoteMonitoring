@@ -6,7 +6,6 @@
 		"description": "Schematic: {Schematic}",
 		"fields": [
 			{"name": "Recipes Unlocked:", "value": "{Recipes}", "inline": true},
-			{"name": "Additional Info:", "value": "Blame Robb#6731"}
 		],
 		"footer": {"text": "{Flavor}"}
 	}]
