@@ -38,3 +38,5 @@ Power Switch Status
 |Primary Circuit Connection ID
 |Integer
 |Output
+
+|===
