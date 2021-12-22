@@ -5,6 +5,8 @@ Darth Porisius
 URI Handler: /getVehicles +
 Vehicles Stats +
 
+*ADVISORY:* Due to performance, all vehicle calls use a caching system. Therefore, you will not always get the most up-to-date info on your vehicles. Please consult the Configuration page to set caching delays.
+
 getExplorer only retrieves Explorers +
 getTractor only retrieves Tractors +
 getTruck only retrieves Trucks +
@@ -78,3 +80,4 @@ getTruck only retrieves Trucks +
 |Integer
 |Output
 
+|===

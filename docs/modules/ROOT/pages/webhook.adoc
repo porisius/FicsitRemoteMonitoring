@@ -17,7 +17,9 @@ https://birdie0.github.io/discord-webhooks-guide/index.html
 Battery Notification Varibles +
 Action: Power operational, but on backup power. Also appears on each battery remaining trigger. +
 Default File: UPSPower.json
-[cols="2,4"]|===|Varible Name |Purpose/Data:
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
 
 |{CircuitID}
 |Circuit ID Number
@@ -36,7 +38,9 @@ Default File: UPSPower.json
 Player Notification Varibles +
 Action: Player connected/disconnected notification +
 Default File: PlayerOnline.json / PlayerOffline.json
-[cols="2,4"]|===|Varible Name |Purpose/Data:
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
 
 |{PlayerName}
 |Username (Based on Steam/Epic Username} that connected/disconnected. Note: Non-server logouts by host are not triggered.
@@ -49,7 +53,9 @@ Default File: PlayerOnline.json / PlayerOffline.json
 Power Notification Varibles +
 Action: Power fuse has tripped +
 Default File: Outage.json
-[cols="2,4"]|===|Varible Name |Purpose/Data:
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
 
 |{CircuitID}
 |Circuit ID Number
@@ -62,7 +68,9 @@ Default File: Outage.json
 Research Notification Varibles +
 Action: Milestone/M.A.M. Research Completed +
 Default File: Research.json
-[cols="2,4"]|===|Varible Name |Purpose/Data:
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
 
 |{Schematic}
 |Milestone/M.A.M. Research Name
@@ -78,7 +86,9 @@ Default File: Research.json
 Hard Drive Notification Varibles +
 Action: Hard Drive Research Completed, but not selected +
 Default File: Schematic.json
-[cols="2,4"]|===|Varible Name |Purpose/Data:
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
 
 |{Schematic}
 |Available schematics found from HDD
@@ -91,7 +101,9 @@ Default File: Schematic.json
 Train Derailment Notificaion +
 Action: Train has derailed (Warning: Will trigger twice if two trains. WIP: make both trains one notification) +
 Default File: Derail.json
-[cols="2,4"]|===|Varible Name |Purpose/Data:
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
 
 |{TrainName}
 |Name of Train derailed
