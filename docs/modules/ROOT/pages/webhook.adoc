@@ -13,7 +13,6 @@ Customized JSON files can be made as long as they are valid JSON files. It is re
 Discord Webhooks can be done with text. I strongly recommend this guide for assistance in setting them up. +
 https://birdie0.github.io/discord-webhooks-guide/index.html
 
-```
 
 Battery Notification Varibles +
 Action: Power operational, but on backup power. Also appears on each battery remaining trigger. +
@@ -35,9 +34,7 @@ Default File: UPSPower.json
 |Randomized Flavor Text (Battery/Detrimental)
 
 |===
-
-```
-
+'''
 Player Notification Varibles +
 Action: Player connected/disconnected notification +
 Default File: PlayerOnline.json / PlayerOffline.json
@@ -52,9 +49,7 @@ Default File: PlayerOnline.json / PlayerOffline.json
 |Randomized Flavor Text (Player/Positive)
 
 |===
-
-```
-
+'''
 Power Notification Varibles +
 Action: Power fuse has tripped +
 Default File: Outage.json
@@ -69,9 +64,7 @@ Default File: Outage.json
 |Randomized Flavor Text (Power/Detrimental)
 
 |===
-
-```
-
+'''
 Research Notification Varibles +
 Action: Milestone/M.A.M. Research Completed +
 Default File: Research.json
@@ -89,9 +82,7 @@ Default File: Research.json
 |Randomized Flavor Text (Research/Positive)
 
 |===
-
-```
-
+'''
 Hard Drive Notification Varibles +
 Action: Hard Drive Research Completed, but not selected +
 Default File: Schematic.json
@@ -106,9 +97,7 @@ Default File: Schematic.json
 |Randomized Flavor Text (Research/Positive)
 
 |===
-
-```
-
+'''
 Train Derailment Notificaion +
 Action: Train has derailed (Warning: Will trigger twice if two trains. WIP: make both trains one notification) +
 Default File: Derail.json
