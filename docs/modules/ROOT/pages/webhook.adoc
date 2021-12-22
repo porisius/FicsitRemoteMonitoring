@@ -13,6 +13,8 @@ Customized JSON files can be made as long as they are valid JSON files. It is re
 Discord Webhooks can be done with text. I strongly recommend this guide for assistance in setting them up. +
 https://birdie0.github.io/discord-webhooks-guide/index.html
 
+```
+
 Battery Notification Varibles +
 Action: Power operational, but on backup power. Also appears on each battery remaining trigger. +
 Default File: UPSPower.json
@@ -34,6 +36,8 @@ Default File: UPSPower.json
 
 |===
 
+```
+
 Player Notification Varibles +
 Action: Player connected/disconnected notification +
 Default File: PlayerOnline.json / PlayerOffline.json
@@ -49,8 +53,10 @@ Default File: PlayerOnline.json / PlayerOffline.json
 
 |===
 
+```
+
 Power Notification Varibles +
-Action: Power fuse has tripped+
+Action: Power fuse has tripped +
 Default File: Outage.json
 [cols="2,4"]
 |===
@@ -64,8 +70,10 @@ Default File: Outage.json
 
 |===
 
+```
+
 Research Notification Varibles +
-Action: Milestone/M.A.M. Research Completed+
+Action: Milestone/M.A.M. Research Completed +
 Default File: Research.json
 [cols="2,4"]
 |===
@@ -82,8 +90,10 @@ Default File: Research.json
 
 |===
 
+```
+
 Hard Drive Notification Varibles +
-Action: Hard Drive Research Completed, but not selected+
+Action: Hard Drive Research Completed, but not selected +
 Default File: Schematic.json
 [cols="2,4"]
 |===
@@ -97,8 +107,10 @@ Default File: Schematic.json
 
 |===
 
+```
+
 Train Derailment Notificaion +
-Action: Train has derailed (Warning: Will trigger twice if two trains. WIP: make both trains one notification)+
+Action: Train has derailed (Warning: Will trigger twice if two trains. WIP: make both trains one notification) +
 Default File: Derail.json
 [cols="2,4"]
 |===
