@@ -2,8 +2,3 @@
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-**Mod is in beta.**
-
-** Seeking a web developer for assistance **
-
-**Mod only works in SML 3.1.0 and above due to changes in SML**

@@ -1,4 +1,4 @@
-= getTrainStation
+= Train Station Stats 
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
@@ -13,6 +13,26 @@ Train Station Stats +
 |StationName
 |Name of the Station
 |Integer
+|Output
+
+|location/x
+|X Location of Drone
+|Float
+|Output
+
+|location/y
+|Y Location of Drone
+|Float
+|Output
+
+|location/z
+|Z Location of Drone
+|Float
+|Output
+
+|location/Rotation
+|Compass Heading of Drone
+|Float
 |Output
 
 |TransferRate

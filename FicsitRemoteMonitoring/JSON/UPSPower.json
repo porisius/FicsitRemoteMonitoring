@@ -1,0 +1,13 @@
+{
+	"username": "Ficsit Remote Monitoring: Power Alert",
+	"avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
+	"embeds": [{
+		"title": "Alarm: Circuit #{CircuitID} on Backup",
+		"fields": [
+			{"name": "Circuit Info:", "value": "Battery Remaining: {BattPercent}
+			Time Remaining: {TimeEmpty}", "inline": true},
+			{"name": "Additional Info:", "value": "Blame SirDigby"}
+		],
+		"footer": {"text": "{Flavor}"}
+	}]
+}

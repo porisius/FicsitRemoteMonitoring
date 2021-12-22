@@ -1,0 +1,33 @@
+{
+	"Any": [
+		"Please return any recovered Begbyrangs in your next Space Elevator shipment",
+		"I'm a big fan of beer flavored things."
+	],
+	"Battery": [
+		"Emergency Systems Active"
+	],
+	"Player": [
+		""
+	],
+	"Power": [
+		"FICSIT would like to remind you that wasted grid capacity is wasted potential",
+		"Please try turning it off and back on again.",
+		"Come on, don't be lazy, go fix the outage."
+	],
+	"Research": [
+		"Analyzing Developer Mental Capacity... Error: NULL"
+	],
+	"Train": [
+		"Choo choo!"
+	],
+	"Positive": [
+		"Praise Alpaca",
+		"Dispensing caffeine-based liquid stimulant...",
+		"We look forward to your continued conformity with the 110% Effort protocol.",
+		"Ficsit Management appreciate your efforts towards efficiency and exploitation."
+	],
+	"Detrimental": [
+		"Blame Simon",
+		"Ficsit Management may dock pay for lost revenue."
+	]
+}

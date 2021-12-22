@@ -1,51 +1,58 @@
-= getDropPod
+= Drop Pod/Crash Site
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getDropPod + 
-Drop Pod/Crash Site GeoJSON +
+Drop Pod/Crash Site +
 (Requires U5)
 
 [cols="1,1,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|features/type
-|GeoJSON to setup for marker, set permanently to Feature
+|ID
+|DropPod ID
 |String
 |Output
 
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
+|location/x
+|X Location of Building
+|Float
+|Output
+
+|location/y
+|Y Location of Building
+|Float
+|Output
+
+|location/z
+|Z Location of Building
+|Float
+|Output
+
+|location/Rotation
+|Compass Heading of Building
+|Float
+|Output
+
+|Looted
+|Is Looted
+|Boolean
+|Output
+
+|Repair Item
+|Item Required to Repair DropPod
 |String
 |Output
 
-|features/geometry/coordinates
-|X,Y for map marking
-|[Float, Float]
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track, Notable Building, etc)
-|String
-|Output
-
-|features/properties/DropPodID
-|ID Number of the DropPod (Believed to not be consistent between restart/loads)
-|Integer
-|Output
-
-|features/properties/RepairItem
-|Repair Item required to open DropPod/Crash Site
-|String
-|Output
-
-|features/properties/RepairAmount
+|RepairAmount
 |# of Repair Item required to open DropPod/Crash Site
 |Integer
 |Output
 
-|features/properties/PowerRequired
+|PowerRequired
 |Power Required to open DropPod/Crash Site
 |Float
 |Output
+
+|===

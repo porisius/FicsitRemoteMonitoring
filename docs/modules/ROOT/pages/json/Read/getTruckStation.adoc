@@ -1,4 +1,4 @@
-= getTruckStation
+= Vehicle Station Stats
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
@@ -10,7 +10,7 @@ Vehicle Station Stats +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|TruckStationID
+|ID
 |ID number of Truck
 |Integer
 |Output
@@ -18,6 +18,26 @@ Vehicle Station Stats +
 |StationName
 |Name of Vehicle Station
 |String
+|Output
+
+|location/x
+|X Location of Building
+|Float
+|Output
+
+|location/y
+|Y Location of Building
+|Float
+|Output
+
+|location/z
+|Z Location of Building
+|Float
+|Output
+
+|location/Rotation
+|Compass Heading of Building
+|Float
 |Output
 
 |DockVehicleCount
@@ -30,8 +50,13 @@ Vehicle Station Stats +
 |String
 |Output
 
-|StackRate
+|TransferRate
 |Rate of item stacks transferred
+|Float
+|Output
+
+|MaxTransferRate
+|Combined Max Stacks/Sec for All Vehicles at station
 |Float
 |Output
 
@@ -43,6 +68,16 @@ Vehicle Station Stats +
 |FuelRate
 |Amount of fuel used per vehicle
 |String
+|Output
+
+|FuelType
+|Type of fuel stored
+|String
+|Output
+
+|FuelInventory
+|Amount of fuel stored
+|Integer
 |Output
 
 |StationActivity

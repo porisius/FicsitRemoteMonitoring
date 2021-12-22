@@ -1,0 +1,114 @@
+= Factory Building Stats
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getFactory +
+Factory Stats +
+
+*ADVISORY:* Due to performance, all factory calls use a caching system. Therefore, you will not always get the most up-to-date info on your factory. Please consult the Configuration page to set caching delays.
+
+getAssembler only retrieves Assemblers +
+getConstructor only retrieves Constructors +
+getParticle only retrieves Particle Accelerators +
+... +
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|building
+|Type of Factory Building
+|String
+|Output
+
+|location/x
+|X Location of Building
+|Float
+|Output
+
+|location/y
+|Y Location of Building
+|Float
+|Output
+
+|location/z
+|Z Location of Building
+|Float
+|Output
+
+|location/Rotation
+|Compass Heading of Building
+|Float
+|Output
+
+|Recipe
+|Item to be Produced
+|String
+|Output
+
+|production/Name
+|Item Output
+|String Array
+|Output
+
+|production/CurrentProd
+|Current Production
+|Float Array
+|Output
+
+|production/MaxProd
+|Max Production
+|Float Array
+|Output
+
+|production/ProdPercent
+|Efficentcy Percentage
+|Float Array
+|Output
+
+|ingredients/Name
+|Item Output
+|String Array
+|Output
+
+|ingredients/CurrentConsumed
+|Current Consumption
+|Float Array
+|Output
+
+|ingredients/MaxConsumed
+|Max Consumption
+|Float Array
+|Output
+
+|ingredients/ConsPercent
+|Efficentcy Percentage
+|Float Array
+|Output
+
+|ManuSpeed
+|Configured Speed
+|Float
+|Output
+
+|IsConfigured
+|Is a recipe configured?
+|Boolean
+|Output
+
+|IsProducing
+|Is the building producing now?
+|Boolean
+|Output
+
+|IsPaused
+|Is paused?
+|Boolean
+|Output
+
+|CircuitID
+|Circuit ID of the Building
+|Integar
+|Output
+
+|===
