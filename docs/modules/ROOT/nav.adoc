@@ -1,6 +1,8 @@
 * xref:index.adoc[General]
 * xref:serial.adoc[Serial]
 * xref:webserver.adoc[Web Server]
+* xref:config.adoc[Configuration]
+* xref:webhook.adoc[Webhook Notifications]
 
 * xref:json/json.adoc[JSON]
 

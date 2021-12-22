@@ -1,6 +1,3 @@
-// Copyright Coffee Stain Studios. All Rights Reserved.
-
-
 #include "NotificationLoader.h"
 
 #include "FicsitRemoteMonitoringModule.h"
