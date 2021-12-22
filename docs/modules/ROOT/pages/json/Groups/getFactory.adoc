@@ -5,6 +5,8 @@ Darth Porisius
 URI Handler: /getFactory +
 Factory Stats +
 
+*ADVISORY:* Due to performance, all factory calls use a caching system. Therefore, you will not always get the most up-to-date info on your factory. Please consult the Configuration page to set caching delays.
+
 getAssembler only retrieves Assemblers +
 getConstructor only retrieves Constructors +
 getParticle only retrieves Particle Accelerators +
@@ -108,3 +110,5 @@ getParticle only retrieves Particle Accelerators +
 |Circuit ID of the Building
 |Integar
 |Output
+
+|===
