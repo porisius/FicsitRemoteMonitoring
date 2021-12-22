@@ -1,5 +1,9 @@
 
+<<<<<<< Updated upstream
 FicsitRemoteMonitoring/Source/BlueprintHttpServer/BlueprintHttpServer.Build.cs
+=======
+*.cs
+>>>>>>> Stashed changes
 FicsitRemoteMonitoring/Source/BlueprintHttpServer/Private/BlueprintHttpNodes.cpp
 FicsitRemoteMonitoring/Source/BlueprintHttpServer/Private/BlueprintHttpNodes.h
 FicsitRemoteMonitoring/Source/BlueprintHttpServer/Private/BlueprintHttpServer.cpp
