@@ -1,82 +1,81 @@
-= Train Stats 
+= Vehicles Stats
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getTrain +
-Train Stats 
+URI Handler: /getVehicles +
+Vehicles Stats +
+
+getExplorer only retrieves Explorers +
+getTractor only retrieves Tractors +
+getTruck only retrieves Trucks +
 
 [cols="1,1,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|TrainName
-|Name of the train
+|ID
+|ID number of Vehicle
+|Integer
+|Output
+
+|VehicleType
+|Name of vehicle type
 |String
 |Output
 
 |location/x
-|X Location of Drone
+|X Location of Vehicle
 |Float
 |Output
 
 |location/y
-|Y Location of Drone
+|Y Location of Vehicle
 |Float
 |Output
 
 |location/z
-|Z Location of Drone
+|Z Location of Vehicle
 |Float
 |Output
 
 |location/Rotation
-|Compass Heading of Drone
+|Compass Heading of Vehicle
 |Float
 |Output
 
 |ForwardSpeed
-|Speed in km/h
-|Float
-|Output
-
-|TotalMass
-|(Testing required), total mass of train
-|Float
-|Output
-
-|PayloadMass
-|Payload Mass for Train (More testing required)
-|Float
-|Output
-
-|PowerConsumed
-|Power used by train
-|Float
-|Output
-
-|TrainStation
-|Current or Next Stop for Train
+|Float in kph
 |String
 |Output
 
-|ThrottlePercent
-|Train's Throttle Setting
-|Float
-|Output
-
-|Derailed
-|Is Derailed
-|Boolean
-|Output
-
-|PendingDerail
-|Is Pending Derail
-|Boolean
-|Output
-
-|Status
-|Status of Train
+|CurrentGear
+|Transmission Gear
 |String
+|Output
+
+|EngineRPM
+|RPM of Engine
+|Integer
+|Output
+
+|Airborne
+|Is the truck making a jump
+|Boolean
+|Output
+
+|AutoPilot
+|Auto pilot engaged?
+|Boolean
+|Output
+
+|FuelType
+|Fuel Type
+|String
+|Output
+
+|FuelInventory
+|Fuel remaining
+|Integer
 |Output
 
 |features/properties/type

@@ -1,48 +1,52 @@
-= getTrainStation
+= getResourceNode
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getTrainStation +
-Train Station Stats + 
-(Requires U5) +
+URI Handler: /getResourceNode +
+Resource Sink Stats
 
 [cols="1,1,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|StationName
-|Name of the Station
+|NodeName
+|Node Name
+|String
+|Output
+
+|location/x
+|X Location of Building
+|Float
+|Output
+
+|location/y
+|Y Location of Building
+|Float
+|Output
+
+|location/z
+|Z Location of Building
+|Float
+|Output
+
+|EnumPurity
+|Enum Purity of Node
+|String
+|Output
+
+|Purity
+|Purity of Node
+|String
+|Output
+
+|NodeType
+|Node Type
 |Integer
 |Output
 
-|TransferRate
-|Rate of solid items transferring at the station
-|Float
-|Output
-
-|InflowRate
-|Rate of fluids incoming to the station
-|Float
-|Output
-
-|OutflowRate
-|Rate of fluids outgoing from the station
-|Float
-|Output
-
-|LoadMode
-|Load/Unload Mode Set
-|String
-|Output
-
-|LoadingStatus
-|Idle/Loading/Unloading
-|String
-|Output
-
-|DockingStatus
-|Status of Station (Idle/Loading/Unloading)
-|String
+|Exploited
+|Is the Resource being extracted
+|Boolean
 |Output
 
 |features/properties/type

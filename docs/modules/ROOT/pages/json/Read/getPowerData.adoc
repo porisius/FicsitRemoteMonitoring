@@ -58,4 +58,5 @@ This grabs the circuit power information from the in-game systems and provides i
 |Has the fuse been triggered
 |Boolean (true/false)
 |Output
+
 |===

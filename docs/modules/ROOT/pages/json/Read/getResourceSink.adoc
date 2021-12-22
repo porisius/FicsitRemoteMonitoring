@@ -1,0 +1,47 @@
+= getResourceSink
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getResourceSink +
+Resource Sink Stats
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|Name
+|A.W.E.S.O.M.E.
+|String
+|Output
+
+|NumCoupon
+|Number of Coupons in the Sink
+|Integer
+|Output
+
+|Percent
+|Percent of Progress towards next coupon
+|[Float, Float]
+|Output
+
+|GraphPoints/Index
+|Index of Value/Min of Points Earned
+|Integer
+|Output
+
+|GraphPoints/Value
+|Value/Min of Points Earned
+|Integer
+|Output
+
+|PointsToCoupon
+|Points Until Next Coupons
+|Integer64
+|Output
+
+|TotalPoints
+|Total Number of Points Accrued
+|Integer64
+|Output
+
+|===

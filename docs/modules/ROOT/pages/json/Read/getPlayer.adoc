@@ -1,48 +1,57 @@
-= getTrainStation
+= getPlayer
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getTrainStation +
-Train Station Stats + 
-(Requires U5) +
+URI Handler: /getPlayer +
+Player meta-data
 
 [cols="1,1,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|StationName
-|Name of the Station
+|ID
+|Player ID
 |Integer
 |Output
 
-|TransferRate
-|Rate of solid items transferring at the station
-|Float
-|Output
-
-|InflowRate
-|Rate of fluids incoming to the station
-|Float
-|Output
-
-|OutflowRate
-|Rate of fluids outgoing from the station
-|Float
-|Output
-
-|LoadMode
-|Load/Unload Mode Set
+|PlayerName
+|Player Name
 |String
 |Output
 
-|LoadingStatus
-|Idle/Loading/Unloading
+|location/x
+|X Location of Building
+|Float
+|Output
+
+|location/y
+|Y Location of Building
+|Float
+|Output
+
+|location/z
+|Z Location of Building
+|Float
+|Output
+
+|location/Rotation
+|Compass Heading of Building
+|Float
+|Output
+
+|PingTime
+|Ping Time of Player
+|Byte
+|Output
+
+|MapArea
+|Map Area Name (Future Feature)
 |String
 |Output
 
-|DockingStatus
-|Status of Station (Idle/Loading/Unloading)
-|String
+|TagColor
+|Player COlor
+|RGBA
 |Output
 
 |features/properties/type

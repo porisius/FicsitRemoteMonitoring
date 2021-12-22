@@ -1,82 +1,87 @@
-= Train Stats 
+= getExtractor
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getTrain +
-Train Stats 
+URI Handler: /getExtractor +
+Resource Extractor Stats +
 
 [cols="1,1,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|TrainName
-|Name of the train
+|building
+|Type of Extractor Building
 |String
 |Output
 
 |location/x
-|X Location of Drone
+|X Location of Extractor
 |Float
 |Output
 
 |location/y
-|Y Location of Drone
+|Y Location of Extractor
 |Float
 |Output
 
 |location/z
-|Z Location of Drone
+|Z Location of Extractor
 |Float
 |Output
 
 |location/Rotation
-|Compass Heading of Drone
+|Compass Heading of Extractor
 |Float
 |Output
 
-|ForwardSpeed
-|Speed in km/h
-|Float
-|Output
-
-|TotalMass
-|(Testing required), total mass of train
-|Float
-|Output
-
-|PayloadMass
-|Payload Mass for Train (More testing required)
-|Float
-|Output
-
-|PowerConsumed
-|Power used by train
-|Float
-|Output
-
-|TrainStation
-|Current or Next Stop for Train
+|Recipe
+|Item to be Produced
 |String
 |Output
 
-|ThrottlePercent
-|Train's Throttle Setting
+|production/Name
+|Item Output
+|String Array
+|Output
+
+|production/CurrentProd
+|Current Production
+|Float Array
+|Output
+
+|production/MaxProd
+|Max Production
+|Float Array
+|Output
+
+|production/ProdPercent
+|Efficentcy Percentage
+|Float Array
+|Output
+
+|ManuSpeed
+|Configured Speed
 |Float
 |Output
 
-|Derailed
-|Is Derailed
+|IsConfigured
+|Is Extractor configured?
 |Boolean
 |Output
 
-|PendingDerail
-|Is Pending Derail
+|IsProducing
+|Is extracting now?
 |Boolean
 |Output
 
-|Status
-|Status of Train
-|String
+|IsPaused
+|Is paused?
+|Boolean
+|Output
+
+|CircuitID
+|Circuit ID of the Extractor
+|Integar
 |Output
 
 |features/properties/type

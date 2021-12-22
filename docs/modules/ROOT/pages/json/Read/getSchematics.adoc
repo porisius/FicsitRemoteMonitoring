@@ -1,0 +1,47 @@
+= Schematics Stats
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getSchematics +
+Schematics Stats
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|SchematicName
+|Schematic/Milestone Name
+|String
+|Output
+
+|TechTier
+|Tech Tier
+|Integer
+|Output
+
+|Type
+|Schematic/Milestone Type
+|[Float, Float]
+|Output
+
+|Recipes/RecipeName
+|Name of Item Associated with Schematic/Milestone
+|String
+|Output
+
+|Locked
+|Is the Schematic/Milestone Locked (Unsure of what CSS Defines)
+|Boolean
+|Output
+
+|Purchased
+|Is Schematic/Milestone Purchased
+|Boolean
+|Output
+
+|DepLocked
+|Dependency Lock for Schematic/Milestone
+|Boolean
+|Output
+
+|===
