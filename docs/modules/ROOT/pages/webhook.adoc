@@ -32,7 +32,7 @@ Default File: UPSPower.json
 |{Flavor}
 |Randomized Flavor Text (Battery/Detrimental)
 
-|
+|===
 
 Player Notification Varibles +
 Action: Player connected/disconnected notification +
@@ -47,7 +47,7 @@ Default File: PlayerOnline.json / PlayerOffline.json
 |{Flavor}
 |Randomized Flavor Text (Player/Positive)
 
-|
+|===
 
 Power Notification Varibles +
 Action: Power fuse has tripped+
@@ -62,7 +62,7 @@ Default File: Outage.json
 |{Flavor}
 |Randomized Flavor Text (Power/Detrimental)
 
-|
+|===
 
 Research Notification Varibles +
 Action: Milestone/M.A.M. Research Completed+
@@ -80,7 +80,7 @@ Default File: Research.json
 |{Flavor}
 |Randomized Flavor Text (Research/Positive)
 
-|
+|===
 
 Hard Drive Notification Varibles +
 Action: Hard Drive Research Completed, but not selected+
@@ -95,7 +95,7 @@ Default File: Schematic.json
 |{Flavor}
 |Randomized Flavor Text (Research/Positive)
 
-|
+|===
 
 Train Derailment Notificaion +
 Action: Train has derailed (Warning: Will trigger twice if two trains. WIP: make both trains one notification)+
@@ -113,4 +113,4 @@ Default File: Derail.json
 |{Flavor}
 |Randomized Flavor Text (Train/Detrimental)
 
-|
+|===
