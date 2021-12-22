@@ -6,7 +6,7 @@ Configuration for Remote Monitoring
 
 This will show the UI option as well as the FicsitRemoteMonitoring.cfg file option for manual/headless changes.
 
-[cols="2,4"]
+[cols="2,2,2,2"]
 |===
 |Configuration |Headless |Type |Description
 
