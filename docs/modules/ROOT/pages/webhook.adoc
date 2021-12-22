@@ -13,7 +13,8 @@ Customized JSON files can be made as long as they are valid JSON files. It is re
 Discord Webhooks can be done with text. I strongly recommend this guide for assistance in setting them up. +
 https://birdie0.github.io/discord-webhooks-guide/index.html
 
-Battery Notification Varibles - Action: Power operational, but on backup power. Also appears on each battery remaining trigger.
+Battery Notification Varibles +
+Action: Power operational, but on backup power. Also appears on each battery remaining trigger. +
 Default File: UPSPower.json
 [cols="2,4"]
 |===
@@ -29,11 +30,12 @@ Default File: UPSPower.json
 |% of battery charge remaining
 
 |{Flavor}
-|Randomized Flavor Text (Battery/Determintal)
+|Randomized Flavor Text (Battery/Detrimental)
 
-===|
+|
 
-Player Notification Varibles - Action: Player connected/disconnected notification
+Player Notification Varibles +
+Action: Player connected/disconnected notification +
 Default File: PlayerOnline.json / PlayerOffline.json
 [cols="2,2"]
 |===
@@ -45,9 +47,10 @@ Default File: PlayerOnline.json / PlayerOffline.json
 |{Flavor}
 |Randomized Flavor Text (Player/Positive)
 
-===|
+|
 
-Power Notification Varibles - Action: Power fuse has tripped
+Power Notification Varibles +
+Action: Power fuse has tripped+
 Default File: Outage.json
 [cols="2,4"]
 |===
@@ -57,11 +60,12 @@ Default File: Outage.json
 |Circuit ID Number
 
 |{Flavor}
-|Randomized Flavor Text (Power/Determintal)
+|Randomized Flavor Text (Power/Detrimental)
 
-===|
+|
 
-Research Notification Varibles - Action: Milestone/M.A.M. Research Completed
+Research Notification Varibles +
+Action: Milestone/M.A.M. Research Completed+
 Default File: Research.json
 [cols="2,4"]
 |===
@@ -76,9 +80,10 @@ Default File: Research.json
 |{Flavor}
 |Randomized Flavor Text (Research/Positive)
 
-===|
+|
 
-Hard Drive Notification Varibles - Action: Hard Drive Research Completed, but not selected
+Hard Drive Notification Varibles +
+Action: Hard Drive Research Completed, but not selected+
 Default File: Schematic.json
 [cols="2,4"]
 |===
@@ -90,9 +95,10 @@ Default File: Schematic.json
 |{Flavor}
 |Randomized Flavor Text (Research/Positive)
 
-===|
+|
 
-Train Derailment Notificaion - Action: Train has derailed (Warning: Will trigger twice if two trains. WIP: make both trains one notification)
+Train Derailment Notificaion +
+Action: Train has derailed (Warning: Will trigger twice if two trains. WIP: make both trains one notification)+
 Default File: Derail.json
 [cols="2,4"]
 |===
@@ -105,6 +111,6 @@ Default File: Derail.json
 |Name of Train Station the Train was heading to
 
 |{Flavor}
-|Randomized Flavor Text (Train/Determintal)
+|Randomized Flavor Text (Train/Detrimental)
 
-===|
+|
