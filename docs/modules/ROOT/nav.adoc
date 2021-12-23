@@ -29,7 +29,7 @@
 *** xref:json/Groups/getFactory.adoc[getSmelter]
 *** xref:json/Read/getSwitches.adoc[getSwitches]
 *** xref:json/Groups/getVehicles.adoc[getTractor]
-*** xref:json/Read/getTrains.adoc[getTrains]
+*** xref:json/Read/getTrain.adoc[getTrain]
 *** xref:json/Read/getTrainStation.adoc[getTrainStation]
 *** xref:json/Groups/getVehicles.adoc[getTruck]
 *** xref:json/Read/getTruckStation.adoc[getTruckStation]
