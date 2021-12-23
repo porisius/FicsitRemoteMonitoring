@@ -18,6 +18,7 @@
 *** xref:json/Read/getExtractor.adoc[getExtractor]
 *** xref:json/Groups/getFactory.adoc[getFoundry]
 *** xref:json/Groups/getFactory.adoc[getManufacturer]
+*** xref:json/Read/getModList.adoc[getModList]
 *** xref:json/Groups/getFactory.adoc[getParticle]
 *** xref:json/Read/getPower.adoc[getPower]
 *** xref:json/Read/getPlayer.adoc[getPlayer]
