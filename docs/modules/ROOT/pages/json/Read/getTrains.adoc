@@ -2,7 +2,7 @@
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getTrain +
+URI Handler: /getTrains +
 Train Stats 
 
 [cols="1,1,1,1"]
