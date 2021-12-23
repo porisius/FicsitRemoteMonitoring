@@ -1,0 +1,32 @@
+= getModList
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getModList +
+Listing of mods installed
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|SMRName
+|Name of Mod as Mod Repository and Unreal Engine see it as
+|String
+|Output
+
+|ModName
+|Common Name of Mod
+|String
+|Output
+
+|ModVersion
+|SemVer of Mod
+|String
+|Output
+	
+|AcceptAnyRemoteVersion
+|If true, mod is not required on all clients, else mod is required on all clients.
+|Boolean
+|Output
+	
+|===
