@@ -29,7 +29,7 @@ window.onload = function () {
 			centerToPlayer = false;
 		});
 		
-		var realtime1 = createRealtimeLayer('/getPlayer').addTo(map);
+		var realtime1 = createRealtimeLayer('/getPlayerData').addTo(map);
 		L.control.layers(null, {
 			'Markers': realtime1,
 		}).addTo(map);

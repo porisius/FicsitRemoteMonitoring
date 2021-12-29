@@ -93,9 +93,9 @@ window.onload = function () {
         // var clusterGroup = L.markerClusterGroup().addTo(map);
         // var subgroup1 = L.featureGroup.subGroup(clusterGroup);
         // var realtime1 = createRealtimeLayer('/api/actors', subgroup1).addTo(map);
-        var realtime1 = createRealtimeLayer("/getPlayerData").addTo(map);
-		var realtime2 = createRealtimeLayer("/getDroneGeo").addTo(map);
-		var realtime3 = createRealtimeLayer("/getTrainGeo").addTo(map);
+        var realtime1 = createRealtimeLayer("/getPlayer").addTo(map);
+		var realtime2 = createRealtimeLayer("/getDrone").addTo(map);
+		var realtime3 = createRealtimeLayer("/getTrains").addTo(map);
         L.control.layers(null, {
             'Markers': realtime1,
 			'Drones': realtime2,

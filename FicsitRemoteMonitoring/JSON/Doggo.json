@@ -1,0 +1,12 @@
+{
+	"username": "Ficsit Remote Monitoring: Lizard Doggo Notification",
+	"avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
+	"embeds": [{
+		"title": "Notification: A Lizard Doggo has gained an item!",
+		"fields": [
+			{"name": "Item Name:", "value": "{ItemName}", "inline": true},
+			{"name": "Quantity:", "value": "{ItemNum}", "inline": true}
+		],
+		"footer": {"text": "{Flavor}"}
+	}]
+}
