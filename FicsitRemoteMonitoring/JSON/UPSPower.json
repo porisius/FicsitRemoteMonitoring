@@ -5,8 +5,7 @@
 		"title": "Alarm: Circuit #{CircuitID} on Backup",
 		"fields": [
 			{"name": "Circuit Info:", "value": "Battery Remaining: {BattPercent}
-			Time Remaining: {TimeEmpty}", "inline": true},
-			{"name": "Additional Info:", "value": "Blame SirDigby"}
+			Time Remaining: {TimeEmpty}", "inline": true}
 		],
 		"footer": {"text": "{Flavor}"}
 	}]

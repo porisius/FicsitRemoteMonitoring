@@ -1,9 +1,8 @@
-= Schematics Stats
+= Schematics Status
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getSchematics +
-Schematics Stats
 
 [cols="1,1,1,1"]
 |===

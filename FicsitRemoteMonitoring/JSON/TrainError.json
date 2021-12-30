@@ -1,0 +1,14 @@
+{
+	"username": "Ficsit Remote Monitoring: Train Notification",
+	"avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
+	"embeds": [{
+		"title": "Alarm: Train Error!",
+		"description": "A train has an error and requires assistance.",
+		"fields": [
+			{"name": "Train Name:", "value": "{TrainName}", "inline": true},
+			{"name": "Next Stop:", "value": "{TrainStation}", "inline": true},
+			{"name": "Error Message:", "value": "{SelfDriving}"}
+		],
+		"footer": {"text": "{Flavor}"}
+	}]
+}

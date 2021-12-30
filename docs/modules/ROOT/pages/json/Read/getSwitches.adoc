@@ -1,9 +1,8 @@
-= getSwitches
+= Power Switch Status
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getSwitches +
-Power Switch Status
 
 [cols="1,1,1,1"]
 |===
@@ -29,12 +28,12 @@ Power Switch Status
 |Boolean
 |Output
 
-|CircuitID/Primary
+|Primary
 |Primary Circuit Connection ID
 |Integer
 |Output
 
-|CircuitID/Secondary
+|Secondary
 |Primary Circuit Connection ID
 |Integer
 |Output

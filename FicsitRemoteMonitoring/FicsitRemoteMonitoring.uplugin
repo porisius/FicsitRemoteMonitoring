@@ -1,8 +1,8 @@
 {
 	"FileVersion": 3,
 	"Version": 0,
-	"VersionName": "0.6.9-420",
-	"SemVersion": "0.6.9-420",
+	"VersionName": "0.7.4",
+	"SemVersion": "0.7.4",
 	"FriendlyName": "Ficsit Remote Monitoring",
 	"Description": "Statistical and GeoLocation Monitoring for Satisfactory",
 	"Category": "Modding",
@@ -28,8 +28,8 @@
 			]
 		},
 		{
-			"Name" : "VaRest",
-			"Type" : "Runtime",
+			"Name": "VaRest",
+			"Type": "Runtime",
 			"LoadingPhase": "PreDefault"
 		},
 		{
