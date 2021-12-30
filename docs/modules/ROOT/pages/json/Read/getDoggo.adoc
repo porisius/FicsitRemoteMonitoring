@@ -1,21 +1,16 @@
-= Player Info
+= Lizard Doggo Info
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getPlayer +
+URI Handler: /getDoggo +
 
 [cols="1,1,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
 |ID
-|Player ID
+|Doggo ID
 |Integer
-|Output
-
-|PlayerName
-|Player Name
-|String
 |Output
 
 |location/x
@@ -38,19 +33,19 @@ URI Handler: /getPlayer +
 |Float
 |Output
 
-|PingTime
-|Ping Time of Player
-|Byte
+|ItemName
+|Item in Doggo's Inventory
+|String
+|Output
+
+|ItemAmt
+|# of Item in Doggo's Inventory
+|Integer
 |Output
 
 |MapArea
 |Map Area Name (Future Feature)
 |String
-|Output
-
-|TagColor
-|Player COlor
-|RGBA
 |Output
 
 |===

@@ -150,4 +150,18 @@ This will show the UI option as well as the FicsitRemoteMonitoring.cfg file opti
 |String
 |Absolute path of Webhook JSON File. If Blank/"", then uses the default.
 
+|Doggo JSON File
+|DoggoJSON
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
+
+|Train Error JSON File
+|TrainErrorJSON
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
+
+|Train Error Type JSON File
+|TrainErrorMessage
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
 |===

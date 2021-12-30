@@ -1,0 +1,71 @@
+= Belt Stats/GeoLocation
+Darth Porisius
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: /getBelts +
+
+[cols="1,1,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|PipeName
+|Pipe Type
+|String
+|Output
+
+|FluidName
+|Fluid/Gas in Pipe
+|String
+|Output
+
+|location0/x
+|X Location of Building
+|Float
+|Output
+
+|location0/y
+|Y Location of Building
+|Float
+|Output
+
+|location0/z
+|Z Location of Building
+|Float
+|Output
+
+|Connected0
+|Is Pipe Connected at starting point?
+|Boolean
+|Output
+
+|location1/x
+|X Location of Building
+|Float
+|Output
+
+|location1/y
+|Y Location of Building
+|Float
+|Output
+
+|location1/z
+|Z Location of Building
+|Float
+|Output
+
+|Connected1
+|Is Belt Connected at starting point?
+|Boolean
+|Output
+
+|Flow
+|Flow Speed
+|Float
+|Output
+
+|FlowPct
+|Flow Speed Percentage
+|Float
+|Output
+
+|===

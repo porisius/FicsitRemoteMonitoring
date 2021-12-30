@@ -98,6 +98,27 @@ Default File: Schematic.json
 
 |===
 '''
+Doggo Item Notificaion +
+Action: A lizard doggo has found something +
+Default File: Doggo.json
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
+
+|{ItemName}
+|Name of Item Found
+
+|{ItemNum}
+|Quantity of Item Found
+
+|{FriendName}
+|Lizard Doggo's owner (Future Feature)
+
+|{Flavor}
+|Randomized Flavor Text (Doggo/Positive)
+
+|===
+'''
 Train Derailment Notificaion +
 Action: Train has derailed (Warning: Will trigger twice if two trains. WIP: make both trains one notification) +
 Default File: Derail.json
@@ -107,6 +128,28 @@ Default File: Derail.json
 
 |{TrainName}
 |Name of Train derailed
+
+|{TrainStation}
+|Name of Train Station the Train was heading to
+
+|{Flavor}
+|Randomized Flavor Text (Train/Detrimental)
+
+|===
+'''
+Train Error Notificaion +
+Action: Train has suffered an error +
+Default File: TrainError.json
+Self-Driving Error Types: TrainErrorMessage.json
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
+
+|{TrainName}
+|Name of Train with error
+
+|{SelfDriving}
+|Self-Driving Error Type
 
 |{TrainStation}
 |Name of Train Station the Train was heading to

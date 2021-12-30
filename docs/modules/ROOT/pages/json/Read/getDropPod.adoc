@@ -3,8 +3,6 @@ Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getDropPod + 
-Drop Pod/Crash Site +
-(Requires U5)
 
 [cols="1,1,1,1"]
 |===

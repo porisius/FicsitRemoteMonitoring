@@ -1,9 +1,8 @@
-= getModList
+= Installed Mod List
 Darth Porisius
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /getModList +
-Listing of mods installed
 
 [cols="1,1,1,1"]
 |===
