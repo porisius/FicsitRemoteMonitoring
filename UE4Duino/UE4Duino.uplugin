@@ -1,8 +1,8 @@
 {
 	"FileVersion": 3,
 	"Version": 2,
-	"SemVersion": "2.2.9",
-	"VersionName": "2.2.9",
+	"SemVersion": "2.2.6",
+	"VersionName": "2.2.6",
 	"FriendlyName": "UE4Duino",
 	"Description": "Enables communication between UE4 and COM ports",
 	"Category": "Input",
@@ -11,14 +11,15 @@
 	"DocsURL": "",
 	"MarketplaceURL": "",
 	"SupportURL": "",
-	"CanContainContent": true,
+	"EnabledByDefault": false,
+	"CanContainContent": false,
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
 	"Installed": true,
 		"Plugins": [
 		{
 			"Name": "SML",
-			"SemVersion": "^3.3.0",
+			"SemVersion": "^3.2.0",
 			"Enabled": true
 		}
 	],
