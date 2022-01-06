@@ -12,3 +12,5 @@ FicsitRemoteMonitoring/Source/BlueprintHttpServer/Private/BlueprintHttpsServer.c
 FicsitRemoteMonitoring/Source/BlueprintHttpServer/Public/BlueprintHttpServer.h
 FicsitRemoteMonitoring/Source/BlueprintHttpServer/Public/BlueprintHttpServerModule.h
 FicsitRemoteMonitoring/Source/BlueprintHttpServer/Public/BlueprintHttpsServer.h
+FicsitRemoteMonitoring/Source/ThirdParty/cpp-httplib/include/httplib.h
+FicsitRemoteMonitoring/Source/ThirdParty/cpp-httplib/LICENSE.txt
