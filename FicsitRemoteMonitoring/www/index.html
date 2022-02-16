@@ -1,141 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
-	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
-    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css'
-        rel='stylesheet' />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+	integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+	crossorigin=""/>
 
-    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
-    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+	integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+	crossorigin=""></script>
 
-    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script> -->
+	<script src="js/leaflet.measure.js"></script>
+	<script src="js/leaflet-color-markers.js"></script>
+	<script src="js/easy-button.js"></script>
 
-    <script src="https://unpkg.com/leaflet.featuregroup.subgroup"></script>
+	<style>
+		.button {
+		  background-color: #FA9549;
+		  border: none;
+		  color: #b81085;
+		  padding: 15px 32px;
+		  text-align: center;
+		  text-decoration: none;
+		  display: inline-block;
+		  font-size: 16px;
+		  margin: 4px 2px;
+		  cursor: pointer;
+		}
+	</style>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
-    <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
-
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/all.css">
-    <script src="/js/leaflet.measure.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-realtime/2.2.0/leaflet-realtime.js"></script>
-    <script src="/js/leaflet-color-markers.js"></script>
+	<title>Ficsit Remote Monitoring</title> 
 </head>
 
-<body>
-	
-	<div id = "map" style = "width: 900px; height: 580px"></div>
-    <script src="js/main.js"></script>	
-	
+<body bgcolor="black" style="color: #FA9549;">
+
+	<div id="menu" style="height: 5%; width: 100%;">
+		<center>
+		<button onclick="menuShow('map')" class="button">Map</button>
+		<button onclick="menuShow('PowerTable')" class="button">Power</button>
+		<button onclick="menuShow('DroneTable')" class="button">Drone</button>
+		<button onclick="menuShow('ProductionTable')" class="button">Overall Production</button>
+		<button onclick="menuShow('FactoryTable')" class="button">Detailed Production</button>
+		</center>
+	</div>
+
 	<br><br>
 
+	<div id="map" style="width: 100%; height: 580px"></div>
+	<script src="js/map.js"></script>
 	<div id="PowerTable"></div>
-	<script>
-
-		var timeout = setInterval(reloadPower, 5000);
-
-		function reloadPower() {
-
-		var xmlhttp = new XMLHttpRequest();
-		var url = "/getPower";
-
-		xmlhttp.onreadystatechange = function() {
-		  if (this.readyState == 4 && this.status == 200) {
-			var myArr = JSON.parse(this.responseText);
-			displayPower(myArr);
-		  }
-		};
-		xmlhttp.open("GET", url, true);
-		xmlhttp.send();
-		
-		};
-		
-		function displayPower(data) {
-			
-			var i, txt;
-
-			txt = "<table border=1>";
-			txt += "<tr>";
-			txt += "<td><b>Circuit ID:</b></td><td><b>Power Capacity:</b></td><td><b>Power Production:</b></td><td><b>Power Consumed:</b></td><td><b>Max Consumed:</b></td><td><b>Battery Differential:</b></td><td><b>Battery Percent:</b></td><td><b>Battery Capacity:</b></td><td><b>Time Remaining:</b></td></tr>";
-
-			for (i in data)
-			{
-				txt += '<tr>';
-				txt += '<td>' + data[i].CircuitID + '</td>';
-				txt += '<td>' + data[i].PowerCapacity + '</td>';
-				txt += '<td>' + data[i].PowerProduction + '</td>';
-				txt += '<td>' + data[i].PowerConsumed + '</td>';
-				txt += '<td>' + data[i].PowerMaxConsumed + '</td>';
-				txt += '<td>' + data[i].BatteryDifferential + '</td>';
-				txt += '<td>' + data[i].BatteryPercent + '</td>';
-				txt += '<td>' + data[i].BatteryCapacity + '</td>';
-				txt += '<td>' + data[i].BatteryTimeEmpty + '</td>';
-				txt += '</tr>';
-			};
-				
-			txt += "</table>";
-			document.getElementById("PowerTable").innerHTML = txt;
-				
-		};
-		
-	</script>
-	
 	<div id="DroneTable"></div>
+	<div id="ProductionTable"></div>
+	<div id="FactoryTable"></div>
+	<script src="js/getPower.js"></script>
+	<script src="js/getDrone.js"></script>
+	<script src="js/getProdStats.js"></script>
+	<script src="js/getFactory.js"></script>
+
+
 	<script>
+		function menuShow(show) {
+		document.getElementById("map").style.display = "none";
+		document.getElementById("PowerTable").style.display = "none";
+		document.getElementById("DroneTable").style.display = "none";
+		document.getElementById("ProductionTable").style.display = "none";
+		document.getElementById("FactoryTable").style.display = "none";
 
-		var timeout = setInterval(reloadDrone, 5000);
+		document.getElementById(show).style.display = "";
+		}
 
-		function reloadDrone() {
-
-		var xmlhttp = new XMLHttpRequest();
-		var url = "/getDrone";
-
-		xmlhttp.onreadystatechange = function() {
-		  if (this.readyState == 4 && this.status == 200) {
-			var myArr = JSON.parse(this.responseText);
-			displayDrone(myArr);
-		  }
-		};
-		xmlhttp.open("GET", url, true);
-		xmlhttp.send();
-		
-		};
-		
-		function displayDrone(data) {
-			
-			var i, txt;
-
-			txt = "<table border=1>";
-			txt += "<tr>";
-			txt += "<td><b>Home Station:</b></td><td><b>Paired Station:</b></td><td><b>Drone Status:</b></td><td><b>Transfer Rate:</b></td><td><b>Battery Usage Rate:</b></td></tr>";
-
-			for (i in data)
-			{
-				txt += '<tr>';
-				txt += '<td>' + data[i].HomeStation + '</td>';
-				txt += '<td>' + data[i].PairedStation + '</td>';
-				txt += '<td>' + data[i].DroneStatus + '</td>';
-				txt += '<td>' + data[i].TransferRate + '</td>';
-				txt += '<td>' + data[i].BatteryRate + '</td>';
-				txt += '</tr>';
-			};
-				
-			txt += "</table>";
-			document.getElementById("DroneTable").innerHTML = txt;
-				
-		};
-		
+		menuShow("map")
 	</script>
 
-	<!--var decimalTimeString = "1.6578";
-	var n = new Date(0,0);
-	n.setSeconds(+decimalTimeString * 60 * 60);
-	document.write(n.toTimeString().slice(0, 8));-->
 </body>
 
 </html>

@@ -1,0 +1,10 @@
+{
+	"NoPower": "No Power Available",
+	"NoTimeTable": "No Time Table Configured",
+	"InvalidNextStop": "Invalid Next Stop",
+	"InvalidLocomotivePlacement": "Locomotive Placement Invalid",
+	"NoPath": "No Path",
+	"StationUnreachable": "Station Unreachable",
+	"StationUnreachableWithSignals": "Station Unreachable with Signals",
+	"LongWaitAtSignal": "Long Wait at Signal"
+}
