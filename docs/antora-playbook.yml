@@ -35,7 +35,7 @@ content:
       start_path: docs
       
     - url: https://github.com/porisius/FicsitRemoteMonitoring.git
-      branches: main,dev
+      branches: main
       edit_url: '{web_url}/blob/{refname}/{path}'
       start_path: docs
 

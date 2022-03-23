@@ -1,5 +1,5 @@
 name: ficsitremotemonitoring
-version: 'Development'
+version: 'latest'
 title: 'Ficsit Remote Monitoring'
 nav:
 - modules/ROOT/nav.adoc
