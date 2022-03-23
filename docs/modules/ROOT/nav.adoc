@@ -1,8 +1,13 @@
 * xref:index.adoc[General]
 * xref:serial.adoc[Serial]
 * xref:webserver.adoc[Web Server]
-* xref:config.adoc[Configuration]
 * xref:webhook.adoc[Webhook Notifications]
+
+* xref:group/config.adoc[Config Files]
+* xref:group/DiscIT.adoc[Config Files]
+* xref:group/Monitoring.adoc[Config Files]
+* xref:group/Serial.adoc[Config Files]
+* xref:group/Web.adoc[Config Files]
 
 * xref:json/json.adoc[JSON]
 

@@ -1,0 +1,73 @@
+= DiscIT Configurations
+Darth Porisius
+:url-repo: https://github.com/porisius/FicsitRemoteMonitoring
+
+DiscIT Configuration for Remote Monitoring
+
+File: Config/FicsitRemoteMonitoring/DiscIT.cfg
+
+[cols="2,2,1,4"]
+|===
+|Configuration |Headless |Type |Description
+
+|Train Derailment JSON File
+|DerailJSON
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
+
+|Power Outage JSON File
+|OutageJSON
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
+
+|Battery Notification JSON File
+|PwrUPSJSON
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
+
+|Battery Notification Levels
+|PwrUPSArray
+|Array
+|Array of float values to trigger Battery Notification webhook at certain Battery Levels (in %)
+
+|Player Online JSON File
+|PlayerOnline
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
+
+|Player Online JSON File
+|PlayerOffline
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
+
+|MileStone/MAM JSON File
+|SchematicJSON
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
+
+|Hard Drive JSON File
+|ResearchJSON
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
+
+|Flavor Text JSON File
+|ResearchJSON
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
+
+|Doggo JSON File
+|DoggoJSON
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
+
+|Train Error JSON File
+|TrainErrorJSON
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
+
+|Train Error Type JSON File
+|TrainErrorMessage
+|String
+|Absolute path of Webhook JSON File. If Blank/"", then uses the default.
+
+|===

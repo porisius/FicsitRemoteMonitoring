@@ -38,6 +38,11 @@ URI Handler: /getPlayer +
 |Float
 |Output
 
+|PlayerHP
+|Player Hitpoints/HP
+|Integer
+|Output
+
 |PingTime
 |Ping Time of Player
 |Byte
@@ -49,7 +54,7 @@ URI Handler: /getPlayer +
 |Output
 
 |TagColor
-|Player COlor
+|Player Color
 |RGBA
 |Output
 

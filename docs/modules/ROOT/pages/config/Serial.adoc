@@ -1,0 +1,38 @@
+= Serial/RS232 Configurations
+Darth Porisius
+:url-repo: https://github.com/porisius/FicsitRemoteMonitoring
+
+Serial/RS232 Configuration for Remote Monitoring
+
+File: Config/FicsitRemoteMonitoring/SerialDevices.cfg
+
+[cols="2,2,1,4"]
+|===
+|Configuration |Headless |Type |Description
+
+|Serial Port
+|COM_Port
+|String
+|Serial/RS232 Port (Requires ArduinoKit). Changes from UE4Duino, you must specify the device name (i.e. COM3) Linux/Mac operations have not been explored at this time to document, but are supported.
+
+|Baud Rate
+|Baud_Rate
+|Integer
+|Serial/RS232 Baud Rate (Requires ArduinoKit)
+
+|Autostart Serial Device
+|COM_Autostart
+|Boolean
+|True = Starts serial communication at startup (Requires ArduinoKit)
+
+|Serial Tick Delay
+|Serial_Delay
+|Float
+|Delay between updates (in seconds) to serial device (Requires ArduinoKit)
+
+|Serial Stack Size
+|SerialStackSize
+|Integer
+|Maximum buffer size (Requires ArduinoKit)
+
+|===

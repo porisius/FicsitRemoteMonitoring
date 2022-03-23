@@ -1,0 +1,68 @@
+= Monitoring Configurations
+Darth Porisius
+:url-repo: https://github.com/porisius/FicsitRemoteMonitoring
+
+Monitoring Configuration for Remote Monitoring
+
+File: Config/FicsitRemoteMonitoring/MonitoringConfig.cfg
+
+[cols="2,2,1,4"]
+|===
+|Configuration |Headless |Type |Description
+
+|Factory Cache Seperate
+|FactoryCacheSeperate
+|Boolean
+|False: Cache Factory buildings as one, True: Cache Factory buildings in seperate processes
+
+|Factory Cache Delay
+|FactoryCacheDelay
+|Integer
+|Delay between updating getFactory Cache. Only active if Factory Cache Seperate is Disabled
+
+|Assembler Cache Delay
+|AssemblerCacheDelay
+|Integer
+|Delay between updating getAssembler Cache. Only active if Factory Cache Seperate is Enabled
+
+|Blender Cache Delay
+|BlenderCacheDelay
+|Integer
+|Delay between updating getBlender Cache. Only active if Factory Cache Seperate is Enabled
+
+|Constuctor Cache Delay
+|ConstructorCacheDelay
+|Integer
+|Delay between updating getConstructor Cache. Only active if Factory Cache Seperate is Enabled
+
+|Extractor Cache Delay
+|ExtractorCacheDelay
+|Integer
+|Delay between updating getExtractor Cache. Only active if Factory Cache Seperate is Enabled
+
+|Foundry Cache Delay
+|FoundryCacheDelay
+|Integer
+|Delay between updating getFoundry Cache. Only active if Factory Cache Seperate is Enabled
+
+|Manufacturer Cache Delay
+|ManufacturerCacheDelay
+|Integer
+|Delay between updating getManufacturer Cache. Only active if Factory Cache Seperate is Enabled
+
+|Particle Accelerator Cache Delay
+|AccelCacheDelay
+|Integer
+|Delay between updating getParticle Cache. Only active if Factory Cache Seperate is Enabled
+
+|Refinery Cache Delay
+|RefineryCacheDelay
+|Integer
+|Delay between updating getRefinery Cache. Only active if Factory Cache Seperate is Enabled
+
+|Smelter Cache Delay
+|SmelterCacheDelay
+|Integer
+|Delay between updating getSmelter Cache. Only active if Factory Cache Seperate is Enabled
+
+|===

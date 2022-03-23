@@ -2,7 +2,7 @@
 Darth Porisius
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
-FRM provides a HTTP server that can be configured on a port of your choosing (Default: 8080). This can be modified by either modifying the HTTP_Root value in %SatisfactoryRootFolder%\FactoryGame\Configs\FicsitRemoteMonitoring.cfg (Config File Method), or by Satisfactory's Main Menu > Mods > FicsitRemoteMonitoring > HTTP Port (Game UI Method).
+FRM provides a HTTP server that can be configured on a port of your choosing (Default: 8080). This can be modified by either modifying the HTTP_Root value in %SatisfactoryRootFolder%\FactoryGame\Configs\FicsitRemoteMonitoring\WebServer.cfg (Config File Method), or by Satisfactory's Main Menu > Mods > FicsitRemoteMonitoring > HTTP Port (Game UI Method).
 
 Accessing the web server can be done via a browser (Tested on Chrome and Opera) at http://localhost:<port> (Ex. http://localhost:8080)
 

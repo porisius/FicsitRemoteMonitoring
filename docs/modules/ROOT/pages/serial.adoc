@@ -2,15 +2,11 @@
 Darth Porisius
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
-**This mod's Serial functionality is only expected to be supported on Windows due to the third-party library's compatibility.** That is not to say that this will not work on Mac or Linux, but I cannot confirm. If you would like to test and let me know and how it is done, I will be glad to update this to reflect as well as provide credit.
-
-** U4: Serial is 8-N-1 / U5: 8-E-1 - Investigating reason why this changed
-
 Communications with a Serial Port requires either a virtual Serial driver or physical hardware. Any serial device (Arduino/RPi/PLC) should work, it will be the code on the device that may need to be customized to match. Examples will be provided in my GitHub (https://www.github.com/porisius/FicsitRemoteMonitoring) and is open for anyone wanting to provide their update/config.
 
-FRM serial communication can be configured on a serial port of your choosing (Default: COM3). This can be modified by either modifying the COM_Port value in %SatisfactoryRootFolder%\FactoryGame\Configs\FicsitRemoteMonitoring.cfg (Config File Method), or by Satisfactory's Main Menu > Mods > FicsitRemoteMonitoring > Serial Port (Game UI Method).
+FRM serial communication can be configured on a serial port of your choosing (Default: COM3). This can be modified by either modifying the COM_Port value in %SatisfactoryRootFolder%\FactoryGame\Configs\FicsitRemoteMonitoring\SerialDevices.cfg (Config File Method).
 
-The serial driver, by default, is not activated until the appropriate chat command is provided. You may also have the serial driver auto-start by enabling the Autostart Serial Port in Game UI Method, or changing the COM_Autostart in the Config File Method to true.
+The serial driver, by default, is not activated until the appropriate chat command is provided. You may also have the serial driver auto-start by changing the COM_Autostart to true.
 
 Chat Commands:
 
