@@ -10,9 +10,6 @@
 <li>The web server may be started/stopped by using "/frmweb {start/stop}" in the chat window.
 <li>The serial communication may be started/stopped by using "/frmserial {start/stop}" in the chat window.
 <li>For Serial, specify the Serial port associated (Windows Device Manager helps with this), then set the Baud Rate
-<ul>
-<li>Due to the library used, only the baud rate can be change, you must use 8-N-1 (8 bits, no parity, 1 stop bit) 
-</ul>
 
 <p><h3>Features:</h3>
 <li>Power Monitoring on a selected circuit
