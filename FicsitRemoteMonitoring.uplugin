@@ -1,0 +1,48 @@
+{
+	"FileVersion": 3,
+	"Version": 0,
+	"VersionName": "0.7.5",
+	"SemVersion": "0.7.5",
+	"FriendlyName": "Ficsit Remote Monitoring",
+	"Description": "Statistical and GeoLocation Monitoring for Satisfactory",
+	"Category": "Modding",
+	"CreatedBy": "Porisius",
+	"CreatedByURL": "",
+	"DocsURL": "https://docs.ficsit.app/ficsitremotemonitoring/latest/index.html",
+	"MarketplaceURL": "",
+	"SupportURL": "https://github.com/porisius/FicsitRemoteMonitoring",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"AcceptsAnyRemoteVersion": true,
+	"Modules": [
+		{
+			"Name": "BlueprintHttpServer",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Mac",
+				"Win64",
+				"Linux"
+			]
+		},
+		{
+			"Name": "VaRest",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault"
+		},
+		{
+			"Name": "FicsitRemoteMonitoring",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "SML",
+			"SemVersion": "^3.3.0",
+			"Enabled": true
+		}
+	]
+}
