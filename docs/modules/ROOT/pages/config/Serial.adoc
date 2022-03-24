@@ -2,8 +2,6 @@
 Darth Porisius
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
-Serial/RS232 Configuration for Remote Monitoring
-
 File: Config/FicsitRemoteMonitoring/SerialDevices.cfg
 
 [cols="2,2,1,4"]

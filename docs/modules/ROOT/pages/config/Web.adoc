@@ -2,8 +2,6 @@
 Darth Porisius
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
-DiscIT Configuration for Remote Monitoring
-
 File: Config/FicsitRemoteMonitoring/WebServer.cfg
 
 [cols="2,2,1,4"]
