@@ -47,7 +47,7 @@ Note: If the item is not being produced or extracted, it will not be displayed.
 |Float
 |Output
 
-|CurrentProd
+|CurrentConsumed
 |Current consumption
 |Float
 |Output
