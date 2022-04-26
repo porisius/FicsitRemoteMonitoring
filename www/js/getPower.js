@@ -16,7 +16,7 @@ function displayPower(getPower) {
     
     var i, txt;
 
-    txt = "<table border=1 width=100%>";
+    txt = "<table class='table' width=100%>";
     txt += "<tr>";
     txt += "<td><b>Circuit ID:</b></td><td><b>Power Capacity:</b></td><td><b>Power Production:</b></td><td><b>Power Consumed:</b></td><td><b>Max Consumed:</b></td><td><b>Battery Differential:</b></td><td><b>Battery Percent:</b></td><td><b>Battery Capacity:</b></td><td><b>Time Remaining:</b></td></tr>";
 
@@ -37,5 +37,4 @@ function displayPower(getPower) {
         
     txt += "</table>";
     document.getElementById("PowerTable").innerHTML = txt;
-        
 };

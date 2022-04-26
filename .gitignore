@@ -1,18 +1,9 @@
 
 <<<<<<< Updated upstream
-FicsitRemoteMonitoring/Source/BlueprintHttpServer/BlueprintHttpServer.Build.cs
+/Source/BlueprintHttpServer/BlueprintHttpServer.Build.cs
 =======
 *.cs
 >>>>>>> Stashed changes
-FicsitRemoteMonitoring/Source/BlueprintHttpServer/Private/BlueprintHttpNodes.cpp
-FicsitRemoteMonitoring/Source/BlueprintHttpServer/Private/BlueprintHttpNodes.h
-FicsitRemoteMonitoring/Source/BlueprintHttpServer/Private/BlueprintHttpServer.cpp
-FicsitRemoteMonitoring/Source/BlueprintHttpServer/Private/BlueprintHttpServerModule.cpp
-FicsitRemoteMonitoring/Source/BlueprintHttpServer/Private/BlueprintHttpsServer.cpp
-FicsitRemoteMonitoring/Source/BlueprintHttpServer/Public/BlueprintHttpServer.h
-FicsitRemoteMonitoring/Source/BlueprintHttpServer/Public/BlueprintHttpServerModule.h
-FicsitRemoteMonitoring/Source/BlueprintHttpServer/Public/BlueprintHttpsServer.h
-FicsitRemoteMonitoring/Source/ThirdParty/cpp-httplib/include/httplib.h
-FicsitRemoteMonitoring/Source/ThirdParty/cpp-httplib/LICENSE.txt
-Source/ThirdParty/cpp-httplib/LICENSE.txt
-Source/ThirdParty/cpp-httplib/include/httplib.h
+Source/BlueprintHttpServer/*
+Source/ThirdParty/cpp-httplib/*
+Source/BlueprintWebSocket/*

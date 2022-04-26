@@ -16,7 +16,7 @@ function displayDrone(getDrone) {
 			
     var i, txt;
 
-    txt = "<table border=1 width=100%>";
+    txt = "<table class='table' width=100%>";
     txt += "<tr>";
     txt += "<td><b>Home Station:</b></td><td><b>Paired Station:</b></td><td><b>Drone Status:</b></td><td><b>Incoming Transfer Rate:</b></td><td><b>Outgoing Transfer Rate:</b></td><td><b>Battery Usage Rate:</b></td></tr>";
 

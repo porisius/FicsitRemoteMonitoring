@@ -13,15 +13,14 @@ async function catchProdStats() {
 };
 
 function displayProdStats(getProdStats) {
-			
+
     var i, txt;
 
-    txt = "<table border=1 width=100%>";
+    txt = "<table class='table' width=100%>";
     txt += "<tr>";
     txt += "<td><b>Item Name:</b></td><td><b>ProdPerMin:</b></td><td><b>Production Percent:</b></td><td><b>Consumption Percent:</b></td><td><b>Current Production:</b></td><td><b>Maximum Production:</b></td><td><b>Current Consumed:</b></td><td><b>Maximum Consumed:</b></td></tr>";
 
-    for (i in getProdStats)
-    {
+    for (i in getProdStats) {
         txt += '<tr>';
         txt += '<td align="left">' + getProdStats[i].ItemName + '</td>';
         txt += '<td align="center">' + getProdStats[i].ProdPerMin + '</td>';
@@ -33,8 +32,8 @@ function displayProdStats(getProdStats) {
         txt += '<td align="center">' + getProdStats[i].MaxConsumed.toFixed(2) + '</td>';
         txt += '</tr>';
     };
-        
+
     txt += "</table>";
     document.getElementById("ProductionTable").innerHTML = txt;
-        
+
 };

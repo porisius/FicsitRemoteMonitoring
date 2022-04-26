@@ -16,7 +16,7 @@ function displayFactory(getFactory) {
 			
     var i, p, n, txt, prod, need, eff;
 
-    txt = "<table border=1 width=100%>";
+    txt = "<table class='table' width=100%>";
     txt += "<tr>";
     txt += "<td><b>Building Type:</b></td><td><b>Recipe:</b></td><td><b>Efficiently:</b></td><td><b>Recipe / Current Production:</b></td><td><b>Ingredients / Current Consumption:</b></td><td><b>Manufacturing Speed:</b></td><td><b>Producing:</b></td><td><b>Paused:</b></td></tr>";
 

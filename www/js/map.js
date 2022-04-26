@@ -8,7 +8,7 @@ const map = new L.map("map", {
 function setupMousePos() {
     L.Control.MousePosition = L.Control.extend({
         options: {
-            position: "bottomleft",
+            position: "topleft",
             emptyString: "Unavailable",
             numDigits: 5,
         },
