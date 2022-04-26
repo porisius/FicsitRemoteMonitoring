@@ -1,26 +1,36 @@
-html,
+html, 
 body {
   padding: 0;
   margin: 0;
   bottom: 0;
   height: 100vh;
-  overflow: hidden;
 }
 
 #map {
   position: absolute;
-  bottom: 0;
-  height: 100vh;
-  width: 100vw;
+  width: 100%;
+  height: 100%;
+  background-color: #121212;
 }
 
-.leaflet-container .leaflet-control-mouseposition {
-  background-color: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 0 5px #bbb;
-  padding: 0 5px;
-  margin: 0;
-  color: #333;
-  font: 11px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+.button {
+  background-color: #4717f6;
+  border-radius: 5px;
+  border-color: #4717f6;
+  color: #e7dfdd;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-weight: bold;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #4316e6;
+  border-color: #4316e6;
 }
 
 .leaflet-control-measure {
@@ -48,7 +58,7 @@ body {
 .leaflet-measure-tooltip {
   font: 9px/1.25 "Helvetica Neue", Arial, Helvetica, sans-serif;
   background-color: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 0 5px #bbb;
+  box-shadow: 0 0 5px white;
   margin: 0;
   padding: 2px;
   width: auto !important;
@@ -62,4 +72,33 @@ body {
 
 .leaflet-measure-tooltip-difference {
   color: #777;
+}
+
+table, th, td {
+  border: 2px solid #4717f6;
+  border-radius: 10px;
+  text-align: center;
+  padding: 5px;
+}
+
+.creditText {
+  font-size: 20px;
+}
+
+.text {
+  font-size: 20px;
+  color: white;
+}
+
+#About {
+  text-align: center;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  width: 100vw;
+}
+
+:root {
+  color-scheme: dark;
 }
