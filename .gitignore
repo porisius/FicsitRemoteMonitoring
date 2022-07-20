@@ -7,3 +7,6 @@
 Source/BlueprintHttpServer/*
 Source/ThirdParty/cpp-httplib/*
 Source/BlueprintWebSocket/*
+Binaries/*
+Intermediate/*
+Saved/*
