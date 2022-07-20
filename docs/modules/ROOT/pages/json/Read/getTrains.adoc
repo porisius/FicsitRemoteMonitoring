@@ -78,4 +78,9 @@ URI Handler: /getTrains +
 |String
 |Output
 
+|TimeTable/StationName
+|Name of Stations in Train's Timetable
+|String
+|Output
+
 |===
