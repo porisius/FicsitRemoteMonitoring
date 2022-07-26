@@ -4,7 +4,7 @@ Darth Porisius
 
 URI Handler: /getTrainStation +
 
-[cols="1,1,1,1"]
+[cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
@@ -14,22 +14,22 @@ URI Handler: /getTrainStation +
 |Output
 
 |location/x
-|X Location of Drone
+|X Location of Station
 |Float
 |Output
 
 |location/y
-|Y Location of Drone
+|Y Location of Station
 |Float
 |Output
 
 |location/z
-|Z Location of Drone
+|Z Location of Station
 |Float
 |Output
 
 |location/Rotation
-|Compass Heading of Drone
+|Compass Heading of Station
 |Float
 |Output
 

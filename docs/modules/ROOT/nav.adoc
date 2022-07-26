@@ -13,8 +13,8 @@
 
 ** xref:json/Read/Read.adoc[Read]
 
-*** xref:json/Read/getBelts.adoc[getBelts]
 *** xref:json/Groups/getFactory.adoc[getAssembler]
+*** xref:json/Read/getBelts.adoc[getBelts]
 *** xref:json/Groups/getFactory.adoc[getBlender]
 *** xref:json/Groups/getFactory.adoc[getConstructor]
 *** xref:json/Read/getDoggo.adoc[getDoggo]

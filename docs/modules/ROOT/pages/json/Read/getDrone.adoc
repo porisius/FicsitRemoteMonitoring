@@ -4,7 +4,7 @@ Darth Porisius
 
 URI Handler: /getDrone +
 
-[cols="1,1,1,1"]
+[cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
@@ -14,7 +14,7 @@ URI Handler: /getDrone +
 |Output
 
 |VehicleType
-|Vehicle Name
+|Drone Name
 |String
 |Output
 

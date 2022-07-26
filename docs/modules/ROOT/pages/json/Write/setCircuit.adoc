@@ -10,7 +10,7 @@ Example URI: +
 Web: /setCircuit?circuit=3&action=reset
 RS232: setCircuit,3,reset
 
-[cols="1,1,1,1"]
+[cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 

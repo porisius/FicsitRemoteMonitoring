@@ -4,7 +4,7 @@ Darth Porisius
 
 URI Handler: /getBelts +
 
-[cols="1,1,1,1"]
+[cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
@@ -19,17 +19,17 @@ URI Handler: /getBelts +
 |Output
 
 |location0/x
-|X Location of Building
+|X Location of Belt
 |Float
 |Output
 
 |location0/y
-|Y Location of Building
+|Y Location of Belt
 |Float
 |Output
 
 |location0/z
-|Z Location of Building
+|Z Location of Belt
 |Float
 |Output
 
@@ -39,17 +39,17 @@ URI Handler: /getBelts +
 |Output
 
 |location1/x
-|X Location of Building
+|X Location of Belt
 |Float
 |Output
 
 |location1/y
-|Y Location of Building
+|Y Location of Belt
 |Float
 |Output
 
 |location1/z
-|Z Location of Building
+|Z Location of Belt
 |Float
 |Output
 

@@ -9,7 +9,7 @@ getExplorer only retrieves Explorers +
 getTractor only retrieves Tractors +
 getTruck only retrieves Trucks +
 
-[cols="1,1,1,1"]
+[cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 

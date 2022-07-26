@@ -4,7 +4,7 @@ Darth Porisius
 
 URI Handler: /getTruckStation +
 
-[cols="1,1,1,1"]
+[cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
@@ -19,22 +19,22 @@ URI Handler: /getTruckStation +
 |Output
 
 |location/x
-|X Location of Building
+|X Location of Station
 |Float
 |Output
 
 |location/y
-|Y Location of Building
+|Y Location of Station
 |Float
 |Output
 
 |location/z
-|Z Location of Building
+|Z Location of Station
 |Float
 |Output
 
 |location/Rotation
-|Compass Heading of Building
+|Compass Heading of Station
 |Float
 |Output
 

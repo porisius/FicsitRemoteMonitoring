@@ -8,7 +8,7 @@ Production Stats Mod: https://ficsit.app/mod/3tsvcG3A6gqKX1
 
 Note: If the item is not being produced or extracted, it will not be displayed.
 
-[cols="1,1,1,1"]
+[cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
