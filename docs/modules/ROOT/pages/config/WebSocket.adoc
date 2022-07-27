@@ -1,4 +1,4 @@
-= Web Server Configurations
+= WebSocket Server Configurations
 
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
