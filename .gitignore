@@ -6,7 +6,8 @@
 >>>>>>> Stashed changes
 Source/BlueprintHttpServer/*
 Source/ThirdParty/cpp-httplib/*
-Source/BlueprintWebSocket/*
+Source/ThirdParty/uWebSockets/*
+Source/WebSocketServer/*
 Binaries/*
 Intermediate/*
 Saved/*

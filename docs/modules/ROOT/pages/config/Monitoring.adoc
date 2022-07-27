@@ -1,5 +1,5 @@
 = Monitoring Configurations
-Darth Porisius
+
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
 File: Config/FicsitRemoteMonitoring/MonitoringConfig.cfg

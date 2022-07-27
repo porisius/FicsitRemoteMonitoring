@@ -1,13 +1,13 @@
 = Resource Node Stats
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: +
-/getResourceNode - Mining/Oil +
-/getResourceGeyser - Geothermal Geyser +
-/getResourceWell - Fracking/Resource Well +
+getResourceNode - Mining/Oil +
+getResourceGeyser - Geothermal Geyser +
+getResourceWell - Fracking/Resource Well +
 
-[cols="1,1,1,1"]
+[cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
@@ -17,32 +17,32 @@ URI Handler: +
 |Output
 
 |location/x
-|X Location of Building
+|X Location of Resource Node
 |Float
 |Output
 
 |location/y
-|Y Location of Building
+|Y Location of Resource Node
 |Float
 |Output
 
 |location/z
-|Z Location of Building
+|Z Location of Resource Node
 |Float
 |Output
 
 |EnumPurity
-|Enum Purity of Node
+|Enum Purity of Resource Node
 |String
 |Output
 
 |Purity
-|Purity of Node
+|Purity of Resource Node
 |String
 |Output
 
 |NodeType
-|Node Type
+|Resource Node Type
 |Integer
 |Output
 

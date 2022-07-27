@@ -1,5 +1,5 @@
-= DiscIT Configurations
-Darth Porisius
+= Web Server Configurations
+
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
 File: Config/FicsitRemoteMonitoring/WebServer.cfg
@@ -16,10 +16,25 @@ File: Config/FicsitRemoteMonitoring/WebServer.cfg
 |Web Server Port
 |HTTP_Port
 |Integer
-|TCP Port for Web Server
+|TCP Port for Web Server, Default: 8080
 
 |Autostart Web Server
 |Web_Autostart
+|Boolean
+|True = Autostarts Web Server at Game Start/Load
+
+|WebSocket URI Root
+|WebSocket_URI
+|String
+|Root URI location. Default: /* Ex. ws://localhost:8081/
+
+|WebSocket Server Port
+|WebSocket_Port
+|Integer
+|TCP Port for WebSocket Server, Default: 8081
+
+|Autostart Web Server
+|WebSocket_Autostart
 |Boolean
 |True = Autostarts Web Server at Game Start/Load
 

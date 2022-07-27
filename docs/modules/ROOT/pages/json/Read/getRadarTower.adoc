@@ -1,50 +1,50 @@
-= Lizard Doggo Info
+= Power Slug
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: getDoggo +
+URI Handler: getPowerSlug +
 
 [cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
 |ID
-|Doggo ID
+|Slug ID
 |Integer
 |Output
 
 |location/x
-|X Location of Lizard Doggo
+|X Location of Slug
 |Float
 |Output
 
 |location/y
-|Y Location of Lizard Doggo
+|Y Location of Slug
 |Float
 |Output
 
 |location/z
-|Z Location of Lizard Doggo
+|Z Location of Slug
 |Float
 |Output
 
 |location/Rotation
-|Compass Heading of Lizard Doggo
+|Compass Heading of Slug
 |Float
 |Output
 
-|ItemName
-|Item in Doggo's Inventory
+|Fauna/FaunaName
+|Fauna's Name
 |String
 |Output
 
-|ItemAmt
-|# of Item in Doggo's Inventory
-|Integer
+|Signal/WeakSignal
+|Name of Object Tower scanned
+|String
 |Output
 
-|MapArea
-|Map Area Name (Future Feature)
+|Flora/FloraName
+|Flora's Name
 |String
 |Output
 

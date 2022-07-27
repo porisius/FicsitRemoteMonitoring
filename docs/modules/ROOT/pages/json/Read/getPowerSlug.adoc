@@ -1,61 +1,46 @@
-= Player Info
+= Power Slug
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: getPlayer +
+URI Handler: getPowerSlug +
 
 [cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
 |ID
-|Player ID
+|Slug ID
 |Integer
 |Output
 
-|PlayerName
-|Player Name
-|String
-|Output
-
 |location/x
-|X Location of Player
+|X Location of Slug
 |Float
 |Output
 
 |location/y
-|Y Location of Player
+|Y Location of Slug
 |Float
 |Output
 
 |location/z
-|Z Location of Player
+|Z Location of Slug
 |Float
 |Output
 
 |location/Rotation
-|Compass Heading of Player
+|Compass Heading of Slug
 |Float
 |Output
 
-|PlayerHP
-|Player Hitpoints/HP
-|Integer
-|Output
-
-|PingTime
-|Ping Time of Player
-|Byte
+|SlugType
+|Type of Power Slug (Green, Yellow, Purple)
+|String
 |Output
 
 |MapArea
 |Map Area Name (Future Feature)
 |String
-|Output
-
-|TagColor
-|Player Color
-|RGBA
 |Output
 
 |===

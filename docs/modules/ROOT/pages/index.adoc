@@ -1,4 +1,4 @@
 = Ficsit Remote Management
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 

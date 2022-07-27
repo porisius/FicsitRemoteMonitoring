@@ -1,8 +1,8 @@
 = getAllGeo
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getAllGeo +
+URI Handler: getAllGeo +
 Contains all Geo URIs the JSON in FRM. +
 Warning: Be careful with use as it may cause performance issues.
 

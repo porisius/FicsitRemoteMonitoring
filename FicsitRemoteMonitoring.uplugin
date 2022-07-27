@@ -1,8 +1,8 @@
 {
 	"FileVersion": 3,
 	"Version": 0,
-	"VersionName": "0.8.4",
-	"SemVersion": "0.8.4",
+	"VersionName": "0.8.5",
+	"SemVersion": "0.8.5",
 	"FriendlyName": "Ficsit Remote Monitoring",
 	"Description": "Statistical and GeoLocation Monitoring for Satisfactory",
 	"Category": "Modding",
@@ -28,9 +28,14 @@
 			]
 		},
 		{
-			"Name": "VaRest",
+			"Name": "WebSocketServer",
 			"Type": "Runtime",
-			"LoadingPhase": "PreDefault"
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win64",
+				"Linux",
+				"Mac"
+			]
 		},
 		{
 			"Name": "FicsitRemoteMonitoring",
@@ -41,7 +46,12 @@
 	"Plugins": [
 		{
 			"Name": "SML",
-			"SemVersion": "^3.3.0",
+			"SemVersion": "^3.3.2",
+			"Enabled": true
+		},
+		{
+			"Name": "JSONQuery",
+			"SemVersion": "^1.0.5",
 			"Enabled": true
 		}
 	]

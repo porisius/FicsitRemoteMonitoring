@@ -1,10 +1,10 @@
 = Resource Extractor Stats
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getExtractor +
+URI Handler: getExtractor +
 
-[cols="1,1,1,1"]
+[cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 

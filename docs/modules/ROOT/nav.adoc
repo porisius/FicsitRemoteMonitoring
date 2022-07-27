@@ -1,6 +1,7 @@
 * xref:index.adoc[General]
 * xref:serial.adoc[Serial]
 * xref:webserver.adoc[Web Server]
+* xref:websockets.adoc[Web Sockets]
 * xref:webhook.adoc[Webhook Notifications]
 
 * xref:config/config.adoc[Config]
@@ -13,8 +14,8 @@
 
 ** xref:json/Read/Read.adoc[Read]
 
-*** xref:json/Read/getBelts.adoc[getBelts]
 *** xref:json/Groups/getFactory.adoc[getAssembler]
+*** xref:json/Read/getBelts.adoc[getBelts]
 *** xref:json/Groups/getFactory.adoc[getBlender]
 *** xref:json/Groups/getFactory.adoc[getConstructor]
 *** xref:json/Read/getDoggo.adoc[getDoggo]
