@@ -1,8 +1,8 @@
 = Vehicles Stats
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getVehicles +
+URI Handler: getVehicles +
 Vehicles Stats +
 
 getExplorer only retrieves Explorers +

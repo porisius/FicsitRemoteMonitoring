@@ -1,6 +1,7 @@
 * xref:index.adoc[General]
 * xref:serial.adoc[Serial]
 * xref:webserver.adoc[Web Server]
+* xref:websockets.adoc[Web Sockets]
 * xref:webhook.adoc[Webhook Notifications]
 
 * xref:config/config.adoc[Config]

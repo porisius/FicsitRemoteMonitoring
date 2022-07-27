@@ -1,8 +1,8 @@
 = Lizard Doggo Info
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getDoggo +
+URI Handler: getDoggo +
 
 [cols="1,2,1,1"]
 |===

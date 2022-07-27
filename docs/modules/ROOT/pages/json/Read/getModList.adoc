@@ -1,8 +1,8 @@
 = Installed Mod List
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getModList +
+URI Handler: getModList +
 
 [cols="1,2,1,1"]
 |===

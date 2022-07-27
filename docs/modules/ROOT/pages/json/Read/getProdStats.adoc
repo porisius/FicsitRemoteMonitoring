@@ -1,8 +1,8 @@
 = Production Stats by Andre Aquila of Aquila Industrial
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getProdStats +
+URI Handler: getProdStats +
 Production Stats by Andre Aquila of Aquila Industrial +
 Production Stats Mod: https://ficsit.app/mod/3tsvcG3A6gqKX1
 

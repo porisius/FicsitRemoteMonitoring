@@ -1,8 +1,8 @@
 = Power Generation/Consumption Stats
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getPower +
+URI Handler: getPower +
 
 [cols="1,2,1,1"]
 |===

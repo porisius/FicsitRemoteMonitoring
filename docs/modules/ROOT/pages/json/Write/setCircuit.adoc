@@ -1,5 +1,5 @@
 = setCircuit
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 URI Handler: /setCircuit +

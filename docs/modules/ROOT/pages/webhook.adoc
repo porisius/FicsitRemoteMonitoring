@@ -1,5 +1,5 @@
 = Webhook Notifications
-Darth Porisius
+
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
 Requires Disc-IT to be installed and configured. This page addresses the unique features of Remote Monitoring's usage of Webhook Notifications.

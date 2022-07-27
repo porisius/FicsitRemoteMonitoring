@@ -1,8 +1,8 @@
 = Resource Sink Stats
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getResourceSink +
+URI Handler: getResourceSink +
 
 [cols="1,2,1,1"]
 |===

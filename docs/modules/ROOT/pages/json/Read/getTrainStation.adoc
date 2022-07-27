@@ -1,8 +1,8 @@
 = Train Station Stats 
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getTrainStation +
+URI Handler: getTrainStation +
 
 [cols="1,2,1,1"]
 |===

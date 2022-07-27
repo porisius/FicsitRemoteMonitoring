@@ -1,8 +1,8 @@
 = Player Info
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getPlayer +
+URI Handler: getPlayer +
 
 [cols="1,2,1,1"]
 |===

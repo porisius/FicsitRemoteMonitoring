@@ -1,8 +1,8 @@
 = Power Switch Status
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getSwitches +
+URI Handler: getSwitches +
 
 [cols="1,2,1,1"]
 |===

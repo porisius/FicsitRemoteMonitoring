@@ -1,8 +1,8 @@
 = Drop Pod/Crash Site
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getDropPod + 
+URI Handler: getDropPod + 
 
 [cols="1,2,1,1"]
 |===

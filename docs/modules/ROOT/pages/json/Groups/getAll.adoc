@@ -1,7 +1,7 @@
 = getAll
-Darth Porisius
+
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: /getAll +
+URI Handler: getAll +
 Contains all the JSON in FRM. +
 Warning: Be careful with use as it may cause performance issues.

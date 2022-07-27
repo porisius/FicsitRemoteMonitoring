@@ -1,5 +1,5 @@
 = Serial/COM/RS-232
-Darth Porisius
+
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
 Communications with a Serial Port requires either a virtual Serial driver or physical hardware. Any serial device (Arduino/RPi/PLC) should work, it will be the code on the device that may need to be customized to match. Examples will be provided in my GitHub (https://www.github.com/porisius/FicsitRemoteMonitoring) and is open for anyone wanting to provide their update/config.
