@@ -9,6 +9,7 @@
 *** xref:config/Monitoring.adoc[Monitoring]
 *** xref:config/Serial.adoc[Serial Devices]
 *** xref:config/Web.adoc[Web Server]
+*** xref:config/WebSocket.adoc[WebSocket Server]
 
 * xref:json/json.adoc[JSON]
 
