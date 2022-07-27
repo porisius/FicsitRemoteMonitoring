@@ -1,0 +1,77 @@
+= WebSocket Server
+
+:url-repo: https://github.com/porisius/FicsitRemoteMonitoring
+
+FRM provides a WebSocket server that can be configured on a port of your choosing (Default: 8081). This can be modified by either modifying the HTTP_Root value in %SatisfactoryRootFolder%\FactoryGame\Configs\FicsitRemoteMonitoring\WebServer.cfg (Config File Method), or by Satisfactory's Main Menu > Mods > FicsitRemoteMonitoring > WebSocket Port (Game UI Method).
+
+Accessing the websocket server can be done via a browser that is using a WebSockets Tester (I recommend https://www.piesocket.com/websocket-tester). The default WebSocket connection is ws://<IP Address or 127.0.0.1>/
+
+The websocket server, by default, is not activated until the appropriate chat command is provided. You may also have the websocket server auto-start by enabling the Autostart WebSocket Server in Game UI Method, or changing the WebSocket_Autostart in the Config File Method to true.
+
+Chat Commands:
+
+/frmsocket start - Starts WebSocket Server +
+/frmsocket stop - Stops WebSocket Server
+
+URI Handlers: +
+There are currently several URI Handlers configured, but more are planned. Arguments are reserved for future use and are not currently implemented.
+
+URI Usage:
+
+Usage Example:
+
+* Client Request to Server:
++
+[source,json]
+-----------------
+{
+   "command":"URI_Name",
+   "arguments":{
+      "argument1": "string1",
+      "argument2": 1234
+   }
+}
+-----------------
+
+Live use case: (Example is URI: getPower)
+
+* Client Request to Server:
++
+[source,json]
+-----------------
+{
+   "command":"URI_Name"
+}
+-----------------
+
+* Server Return to Client:
++
+[source,json]
+-----------------
+[{
+      "CircuitID":0,
+      "PowerCapacity":9.0,
+      "PowerProduction":9.0,
+      "PowerConsumed":9.0,
+      "PowerMaxConsumed":9.0,
+      "BatteryDifferential":0.0,
+      "BatteryPercent":0.0,
+      "BatteryCapacity":0,
+      "BatteryTimeEmpty":"00:00:00",
+      "BatteryTimeFull":"00:00:00",
+      "FuseTriggered":false
+},
+{
+      "CircuitID":1,
+      "PowerCapacity":9.0,
+      "PowerProduction":9.0,
+      "PowerConsumed":9.0,
+      "PowerMaxConsumed":9.0,
+      "BatteryDifferential":0.0,
+      "BatteryPercent":0.0,
+      "BatteryCapacity":0,
+      "BatteryTimeEmpty":"00:00:00",
+      "BatteryTimeFull":"00:00:00",
+      "FuseTriggered":false
+}]
+-----------------

@@ -1,0 +1,51 @@
+= Power Slug
+
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+URI Handler: getPowerSlug +
+
+[cols="1,2,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|ID
+|Slug ID
+|Integer
+|Output
+
+|location/x
+|X Location of Slug
+|Float
+|Output
+
+|location/y
+|Y Location of Slug
+|Float
+|Output
+
+|location/z
+|Z Location of Slug
+|Float
+|Output
+
+|location/Rotation
+|Compass Heading of Slug
+|Float
+|Output
+
+|Fauna/FaunaName
+|Fauna's Name
+|String
+|Output
+
+|Signal/WeakSignal
+|Name of Object Tower scanned
+|String
+|Output
+
+|Flora/FloraName
+|Flora's Name
+|String
+|Output
+
+|===
