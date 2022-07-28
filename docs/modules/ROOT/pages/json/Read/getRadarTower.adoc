@@ -49,3 +49,77 @@ URI Handler: getPowerSlug +
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+{
+   "RadarName":"Radar Tower",
+   "location":{
+      "x":243762.46875,
+      "y":-717.745972,
+      "z":14969.500977
+   },
+   "Fauna":[
+      {
+         "FaunaName":"Fluffy-tailed Hog"
+      },
+      {
+         "FaunaName":"Alpha Stinger"
+      },
+      {
+         "FaunaName":"Non-flying Birb"
+      },
+      {
+         "FaunaName":"Alpha Hog"
+      },
+      {
+         "FaunaName":"Unknown File Error #6265616e"
+      },
+      {
+         "FaunaName":"Lizard Doggo"
+      },
+      {
+         "FaunaName":"Gas Stinger"
+      },
+      {
+         "FaunaName":"Small Stinger"
+      }
+   ],
+   "Signal":[
+      {
+         "WeakSignal":"Somersloop WIP"
+      },
+      {
+         "WeakSignal":"Blue Power Slug"
+      },
+      {
+         "WeakSignal":"Mercer Sphere WIP"
+      },
+      {
+         "WeakSignal":"Hard Drive"
+      }
+   ],
+   "Flora":[
+      {
+         "FloraName":"Berry Bush Plant"
+      },
+      {
+         "FloraName":"Nut Bush Plant"
+      },
+      {
+         "FloraName":"Bacon Agaric"
+      }
+   ],
+   "features":{
+      "geometry":{
+         "coordinates":{
+            "x":243762.46875,
+            "y":-717.745972,
+            "z":14969.500977
+         },
+         "type":"Point"
+      }
+   }
+}
+-----------------
