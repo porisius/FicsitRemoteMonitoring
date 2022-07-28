@@ -33,6 +33,7 @@
 *** xref:json/Read/getPower.adoc[getPower]
 *** xref:json/Read/getPlayer.adoc[getPlayer]
 *** xref:json/Read/getProdStats.adoc[getProdStats]
+*** xref:json/Read/getRadarTower.adoc[getRadarTower]
 *** xref:json/Groups/getFactory.adoc[getRefinery]
 *** xref:json/Read/getResourceNode.adoc[getResourceGeyser]
 *** xref:json/Read/getResourceNode.adoc[getResourceNode]
