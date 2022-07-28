@@ -2,8 +2,8 @@ name: Push
 
 on:
   push:
-    branch:
-      - main
+    if: 
+    branches: main
     paths:
       - 'docs/**'
 
