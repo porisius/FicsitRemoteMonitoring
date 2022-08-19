@@ -2,3 +2,4 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
+Ficsit Remote Management is a mod that is for statistical data collection and minor control via a Web Server/Socket and/or RS232/Serial Devices.

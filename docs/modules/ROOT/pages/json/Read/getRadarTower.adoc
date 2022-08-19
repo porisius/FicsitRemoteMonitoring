@@ -38,9 +38,19 @@ URI Handler: getPowerSlug +
 |String
 |Output
 
+|Fauna/Remaining
+|Fauna Remaining
+|Integer
+|Output
+
 |Signal/WeakSignal
 |Name of Object Tower scanned
 |String
+|Output
+
+|Signal/Remaining
+|Signal Remaining
+|Integer
 |Output
 
 |Flora/FloraName
@@ -48,78 +58,68 @@ URI Handler: getPowerSlug +
 |String
 |Output
 
+|Flora/Remaining
+|Flora Remaining
+|Integer
+|Output
+
 |===
 
 Example:
 [source,json]
 -----------------
-{
+▼ {
    "RadarName":"Radar Tower",
    "location":{
-      "x":243762.46875,
-      "y":-717.745972,
-      "z":14969.500977
+      "x": -56196.222656,
+      "y": 229989.75,
+      "z": 5349.920898
    },
-   "Fauna":[
-      {
-         "FaunaName":"Fluffy-tailed Hog"
-      },
-      {
-         "FaunaName":"Alpha Stinger"
-      },
-      {
-         "FaunaName":"Non-flying Birb"
-      },
-      {
-         "FaunaName":"Alpha Hog"
-      },
-      {
-         "FaunaName":"Unknown File Error #6265616e"
-      },
-      {
-         "FaunaName":"Lizard Doggo"
-      },
-      {
-         "FaunaName":"Gas Stinger"
-      },
-      {
-         "FaunaName":"Small Stinger"
-      }
-   ],
-   "Signal":[
-      {
-         "WeakSignal":"Somersloop WIP"
-      },
-      {
-         "WeakSignal":"Blue Power Slug"
-      },
-      {
-         "WeakSignal":"Mercer Sphere WIP"
-      },
-      {
-         "WeakSignal":"Hard Drive"
-      }
-   ],
-   "Flora":[
-      {
-         "FloraName":"Berry Bush Plant"
-      },
-      {
-         "FloraName":"Nut Bush Plant"
-      },
-      {
-         "FloraName":"Bacon Agaric"
-      }
-   ],
-   "features":{
-      "geometry":{
-         "coordinates":{
-            "x":243762.46875,
-            "y":-717.745972,
-            "z":14969.500977
+   "Fauna": [       {
+            "Fauna":"Alpha Stinger"
+            "Remaining":"1"
+      },        {
+            "Fauna":"Fluffy-tailed Hog"
+            "Remaining":"1"
+      },        {
+            "Fauna":"Small Stinger"
+            "Remaining":"1"
+      },        {
+            "Fauna":"Non-flying Birb"
+            "Remaining":"1"
+      },        {
+            "Fauna":"Unknown File Error #6265616e"
+            "Remaining":"1"
+      }],
+   "Signal": [       {
+            "WeakSignal":"Somersloop WIP",
+            "Remaining": 10
+      },       {
+            "WeakSignal":"Blue Power Slug",
+            "Remaining": 16
+      },       {
+            "WeakSignal":"Mercer Sphere WIP",
+            "Remaining": 13
+      }],
+   "Flora": [       {
+            "Flora":"Berry Bush Plant"
+            "Remaining":"1"
+      },        {
+            "Flora":"Nut Bush Plant"
+            "Remaining":"1"
+      },        {
+            "Flora":"Bacon Agaric"
+            "Remaining":"1"
+      }],
+   "features": {
+      "geometry": {
+         "coordinates": {
+         "x": -56196.222656,
+         "y": 229989.75,
+         "z": 5349.920898
          },
-         "type":"Point"
+         "type": "Point"
       }
-   }
+	}	
 }
 -----------------

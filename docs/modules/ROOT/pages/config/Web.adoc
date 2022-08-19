@@ -23,4 +23,10 @@ File: Config/FicsitRemoteMonitoring/WebServer.cfg
 |Boolean
 |True = Autostarts Web Server at Game Start/Load
 
+|Web Root Location
+|Web_Root
+|String
+|File location of web root, Default: <empty>
+Leave blank or "" for default location.
+
 |===

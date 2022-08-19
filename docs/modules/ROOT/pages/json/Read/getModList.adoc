@@ -27,5 +27,9 @@ URI Handler: getModList +
 |If true, mod is not required on all clients, else mod is required on all clients.
 |Boolean
 |Output
-	
+
+|RemoteVersionRange
+|Acceptable Version Range of other client/server mod versions
+|String
+|Output	
 |===
