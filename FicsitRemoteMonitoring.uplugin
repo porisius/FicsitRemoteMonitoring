@@ -1,8 +1,8 @@
 {
 	"FileVersion": 3,
 	"Version": 0,
-	"VersionName": "0.8.5",
-	"SemVersion": "0.8.5",
+	"VersionName": "0.8.7",
+	"SemVersion": "0.8.7",
 	"FriendlyName": "Ficsit Remote Monitoring",
 	"Description": "Statistical and GeoLocation Monitoring for Satisfactory",
 	"Category": "Modding",
@@ -46,7 +46,7 @@
 	"Plugins": [
 		{
 			"Name": "SML",
-			"SemVersion": "^3.3.2",
+			"SemVersion": "^3.3.1",
 			"Enabled": true
 		},
 		{
