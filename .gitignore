@@ -1,9 +1,3 @@
-
-<<<<<<< Updated upstream
-/Source/BlueprintHttpServer/BlueprintHttpServer.Build.cs
-=======
-*.cs
->>>>>>> Stashed changes
 Source/BlueprintHttpServer/*
 Source/ThirdParty/cpp-httplib/*
 Source/ThirdParty/uWebSockets/*
