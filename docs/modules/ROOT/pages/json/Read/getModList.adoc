@@ -33,3 +33,45 @@ URI Handler: getModList +
 |String
 |Output	
 |===
+
+Example:
+[source,json]
+-----------------
+[{
+"SMRName": "ArduinoKit",
+"ModName": "ArduinoKit",
+"ModVersion": "1.0.2",
+"AcceptAnyRemoteVersion": true,
+"RemoteVersionRange": ">=1.0.2"
+} ,{
+"SMRName": "DiscIT",
+"ModName": "DiscIT",
+"ModVersion": "1.0.2",
+"AcceptAnyRemoteVersion": true,
+"RemoteVersionRange": ">=1.0.2"
+} ,{
+"SMRName": "FicsitRemoteMonitoring",
+"ModName": "Ficsit Remote Monitoring",
+"ModVersion": "0.8.8",
+"AcceptAnyRemoteVersion": true,
+"RemoteVersionRange": ">=0.8.8"
+} ,{
+"SMRName": "JSONQuery",
+"ModName": "JSON Query",
+"ModVersion": "1.0.5",
+"AcceptAnyRemoteVersion": false,
+"RemoteVersionRange": ">=1.0.5"
+} ,{
+"SMRName": "SML",
+"ModName": "Satisfactory Mod Loader",
+"ModVersion": "3.4.1",
+"AcceptAnyRemoteVersion": false,
+"RemoteVersionRange": ">=3.4.1"
+} ,{
+"SMRName": "UtilityMod",
+"ModName": "UtilityMod",
+"ModVersion": "0.7.1",
+"AcceptAnyRemoteVersion": false,
+"RemoteVersionRange": ">=0.7.1"
+}]
+-----------------

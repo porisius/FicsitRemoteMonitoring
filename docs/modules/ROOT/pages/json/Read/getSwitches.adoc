@@ -34,8 +34,28 @@ URI Handler: getSwitches +
 |Output
 
 |Secondary
-|Primary Circuit Connection ID
+|Secondary Circuit Connection ID
 |Integer
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+[{
+      "SwitchID":"0",
+      "SwitchTag":"Power Switch",
+      "Connected":"true",
+      "IsOn":true,
+      "Primary":58,
+      "Secondary":44
+},{
+      "SwitchID":"1",
+      "SwitchTag":"Power Switch",
+      "Connected":"true",
+      "IsOn":true,
+      "Primary":44,
+      "Secondary":5
+}]
+-----------------

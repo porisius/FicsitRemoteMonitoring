@@ -15,7 +15,7 @@ File: Config/FicsitRemoteMonitoring/SerialDevices.cfg
 
 |Baud Rate
 |Baud_Rate
-|Integer
+|String
 |Serial/RS232 Baud Rate (Requires ArduinoKit)
 
 |Autostart Serial Device
@@ -23,10 +23,15 @@ File: Config/FicsitRemoteMonitoring/SerialDevices.cfg
 |Boolean
 |True = Starts serial communication at startup (Requires ArduinoKit)
 
+|Pulsing Power Stats
+|Auto_Serial
+|Boolean
+|If True, FRM ignores inputs and sends the output of the getPower URI. (Requires ArduinoKit)
+
 |Serial Tick Delay
 |Serial_Delay
 |Float
-|Delay between updates (in seconds) to serial device (Requires ArduinoKit)
+|Delay between updates (in seconds) to serial device. This is only used for cases with Auto_Serial. (Requires ArduinoKit)
 
 |Serial Stack Size
 |SerialStackSize

@@ -58,3 +58,29 @@ Note: If the item is not being produced or extracted, it will not be displayed.
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+[{
+      "ItemName":"Actual Snow",
+      "ProdPerMin":"P: 30.0/30.0/min - C: 0.0/30.0/min",
+      "ProdPercent":99.610001,
+      "ConsPercent":0.0,
+      "CurrentProd":30.0,
+      "MaxProd":30.0,
+      "CurrentConsumed":0.0,
+      "MaxConsumed":30.0,
+      "Type":"Belt"
+}, {
+      "ItemName":"AI Limiter",
+      "ProdPerMin":"P: 5.0/5.0/min - C: 0.0/8.0/min",
+      "ProdPercent":100.0,
+      "ConsPercent":0.0,
+      "CurrentProd":5.0,
+      "MaxProd":5.0,
+      "CurrentConsumed":0.0,
+      "MaxConsumed":8.0,
+      "Type":"Belt"
+}]
+-----------------

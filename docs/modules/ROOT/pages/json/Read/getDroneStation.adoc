@@ -164,3 +164,95 @@ URI Handler: getDroneStation +
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+[{
+    "ID":"0",
+    "HomeStation":"Aluminium Drone",
+    "location":{
+		"x":-102771.085938,"y":-85182.867188,"z":2589.842285,
+        "rotation":"90"
+    },
+    "PairedStation":"Storage Import 2",
+    "DroneStatus":"EDS_TAKEOFF",
+    "AvgIncRate":0.0,
+	"AvgIncStack":0.0,
+	"AvgOutRate":217.800003,
+	"AvgOutStack":1.2,
+	"AvgRndTrip":"00:02:54",
+	"AvgTotalIncRate":0.0,
+	"AvgTotalIncStack":0.0,
+	"AvgTotalOutRate":217.800003,
+	"AvgTotalOutStack":1.2,
+	"AvgTripIncAmt":0.0,
+	"EstRndTrip":"00:02:10",
+	"EstTotalTransRate":4.1,
+	"EstTransRate":4.1,
+	"EstLatestTotalIncStack":0.0,
+	"EstLatestTotalOutStack":1.2,
+	"LatestIncStack":0.0,
+	"LatestOutStack":1.2,
+	"LatestRndTrip":"00:02:54",
+	"LatestTripIncAmt":0,
+	"LatestTripOutAmt":634,
+	"MedianRndTrip":"00:02:54",
+	"MedianTripIncAmt":0.0,
+	"MedianTripOutAmt":634.0,
+	"EstBatteryRate":2.8,
+    "features": {
+		"properties":
+			{"type": "Drone Station"},
+		"geometry": {
+			"coordinates": {
+					"x":-102771.085938,"y":-85182.867188,"z":2589.842285
+			},
+			"type": "Point"
+		}
+	}	
+},{
+    "ID":"1",
+    "HomeStation":"Battery Port",
+    "location":{
+		"x":-105134.585938,"y":-85599.773438,"z":2589.842285,
+        "rotation":"90"
+    },
+    "PairedStation":"Battery Import",
+    "DroneStatus":"EDS_EN_ROUTE",
+    "AvgIncRate":0.0,
+	"AvgIncStack":0.0,
+	"AvgOutRate":59.700001,
+	"AvgOutStack":0.3,
+	"AvgRndTrip":"00:02:52",
+	"AvgTotalIncRate":0.0,
+	"AvgTotalIncStack":0.0,
+	"AvgTotalOutRate":59.700001,
+	"AvgTotalOutStack":0.3,
+	"AvgTripIncAmt":0.0,
+	"EstRndTrip":"00:02:10",
+	"EstTotalTransRate":4.1,
+	"EstTransRate":4.1,
+	"EstLatestTotalIncStack":0.0,
+	"EstLatestTotalOutStack":0.3,
+	"LatestIncStack":0.0,
+	"LatestOutStack":0.3,
+	"LatestRndTrip":"00:02:52",
+	"LatestTripIncAmt":0,
+	"LatestTripOutAmt":172,
+	"MedianRndTrip":"00:02:52",
+	"MedianTripIncAmt":0.0,
+	"MedianTripOutAmt":172.0,
+	"EstBatteryRate":2.8,
+    "features": {
+		"properties":
+			{"type": "Drone Station"},
+		"geometry": {
+			"coordinates": {
+					"x":-105134.585938,"y":-85599.773438,"z":2589.842285
+			},
+			"type": "Point"
+		}
+	}	
+}]
+-----------------

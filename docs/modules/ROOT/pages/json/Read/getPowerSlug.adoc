@@ -44,3 +44,56 @@ URI Handler: getPowerSlug +
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+[
+   {
+      "ID":"0",
+      "location":{
+         "x":241707.46875,
+         "y":-310696.75,
+         "z":6774.139648,
+         "rotation":92
+      },
+      "SlugType":"Blue Slug",
+      "features":{
+         "properties":{
+            "type":"Power Slug"
+         },
+         "geometry":{
+            "coordinates":{
+               "x":241707.46875,
+               "y":-310696.75,
+               "z":6774.139648
+            },
+            "type":"Point"
+         }
+      }
+   },
+   {
+      "ID":"1",
+      "location":{
+         "x":-151933.84375,
+         "y":-40291.445312,
+         "z":2863.63623,
+         "rotation":228
+      },
+      "SlugType":"Blue Slug",
+      "features":{
+         "properties":{
+            "type":"Power Slug"
+         },
+         "geometry":{
+            "coordinates":{
+               "x":-151933.84375,
+               "y":-40291.445312,
+               "z":2863.63623
+            },
+            "type":"Point"
+         }
+      }
+   }
+]
+-----------------

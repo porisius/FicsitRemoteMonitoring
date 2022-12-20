@@ -69,7 +69,7 @@ URI Handler: getTrains +
 |Output
 
 |PendingDerail
-|Is Pending Derail
+|Has Pending Collision (Name taken from the Object in Unreal)
 |Boolean
 |Output
 
@@ -84,3 +84,88 @@ URI Handler: getTrains +
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+[
+   {
+      "TrainName":"Caterium Choo",
+      "location":{
+         "x":-13285.462891,
+         "y":-110116.226562,
+         "z":10589.841797,
+         "rotation":280
+      },
+      "ForwardSpeed":22.200001,
+      "TotalMass":300000.0,
+      "PayloadMass":0.0,
+      "PowerConsumed":25.0,
+      "TrainStation":"Caterium Ore",
+      "ThrottlePercent":0.0,
+      "Derailed":false,
+      "PendingDerail":false,
+      "Status":"TS_SelfDriving",
+      "TimeTable":[
+         {
+            "StationName":"Caterium Ore"
+         },
+         {
+            "StationName":"Quickwire Central"
+         }
+      ],
+      "features":{
+         "properties":{
+            "type":"Train"
+         },
+         "geometry":{
+            "coordinates":{
+               "x":-13285.462891,
+               "y":-110116.226562,
+               "z":10589.841797
+            },
+            "type":"Point"
+         }
+      }
+   },
+   {
+      "TrainName":"Elctronics Choo",
+      "location":{
+         "x":0.0,
+         "y":0.0,
+         "z":0.0,
+         "rotation":90
+      },
+      "ForwardSpeed":0.0,
+      "TotalMass":0.0,
+      "PayloadMass":0.0,
+      "PowerConsumed":0.0,
+      "TrainStation":"Electronics Factory",
+      "ThrottlePercent":0.0,
+      "Derailed":true,
+      "PendingDerail":false,
+      "Status":"TS_Derailed",
+      "TimeTable":[
+         {
+            "StationName":"Electronics Factory"
+         },
+         {
+            "StationName":"Aluminum Elctronics"
+         }
+      ],
+      "features":{
+         "properties":{
+            "type":"Train"
+         },
+         "geometry":{
+            "coordinates":{
+               "x":0.0,
+               "y":0.0,
+               "z":0.0
+            },
+            "type":"Point"
+         }
+      }
+   }
+]
+-----------------

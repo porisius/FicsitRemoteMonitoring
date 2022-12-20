@@ -14,7 +14,7 @@ URI Handler: getPlayer +
 |Output
 
 |PlayerName
-|Player Name
+|Player Name: Please note that disconnected/logged out players will not have a name.
 |String
 |Output
 
@@ -59,3 +59,66 @@ URI Handler: getPlayer +
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+[
+   {
+      "ID":"0",
+      "PlayerName":"",
+      "location":{
+         "x":-92569.320312,
+         "y":-122266.9375,
+         "z":-964.684998,
+         "rotation":9
+      },
+      "PlayerHP":100,
+      "PingTime":0,
+      "MapArea":"",
+      "TagColor":"rgba(0,0,0,0)",
+      "features":{
+         "properties":{
+            "name":"",
+            "type":"Player"
+         },
+         "geometry":{
+            "coordinates":{
+               "x":-92569.320312,
+               "y":-122266.9375,
+               "z":-964.684998
+            },
+            "type":"Point"
+         }
+      }
+   },
+   {
+      "ID":"1",
+      "PlayerName":"porisius",
+      "location":{
+         "x":-92278.453125,
+         "y":-121765.703125,
+         "z":-984.628052,
+         "rotation":7
+      },
+      "PlayerHP":100,
+      "PingTime":0,
+      "MapArea":"",
+      "TagColor":"rgba(0.005182,0.391573,0.254152,1)",
+      "features":{
+         "properties":{
+            "name":"porisius",
+            "type":"Player"
+         },
+         "geometry":{
+            "coordinates":{
+               "x":-92278.453125,
+               "y":-121765.703125,
+               "z":-984.628052
+            },
+            "type":"Point"
+         }
+      }
+   }
+]
+-----------------

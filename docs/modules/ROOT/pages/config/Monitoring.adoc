@@ -63,4 +63,9 @@ File: Config/FicsitRemoteMonitoring/MonitoringConfig.cfg
 |Integer
 |Delay between updating getSmelter Cache. Only active if Factory Cache Seperate is Enabled
 
+|Debug/Minimialize Mode
+|Minimialize
+|Boolean (Default: False)
+|If True, removes the unnecessary white spaces and line breaks, shortens and reduces amount needed to transmit.
+
 |===

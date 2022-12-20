@@ -69,3 +69,35 @@ URI Handler: getBelts +
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+[{
+      "PipeName":"Pipeline Mk.1",
+      "FluidName":"Water",
+      "location0":{
+         "x":-91046.757812,"y":-144751.921875,"z":-995.765625
+      },
+      "Connected0":true,
+      "location1":{
+         "x":-91593.585938,"y":-144848.359375,"z":-995.765625
+      },
+      "Connected1":true,
+      "Flow":5.0,
+      "FlowPct":100.0
+   },{
+      "PipeName":"Pipeline Mk.1",
+      "FluidName":"Water",
+      "location0":{
+         "x":-95630.03125,"y":-125096.039062,"z":-833.190308
+      },
+      "Connected0":true,
+      "location1":{
+         "x":-95566.140625,"y":-125443.554688,"z":-1095.765625
+      },
+      "Connected1":true,
+      "Flow":2.0,
+      "FlowPct":39.0
+}]
+-----------------

@@ -44,3 +44,59 @@ URI Handler: getResourceSink +
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+[
+   {
+      "Name":"A.W.E.S.O.M.E.",
+      "NumCoupon":13,
+      "Percent":"15.7",
+      "GraphPoints":[
+         {
+            "Index":0,
+            "value":33218
+         },
+         {
+            "Index":1,
+            "value":37837
+         },
+         {
+            "Index":2,
+            "value":110488
+         },
+         {
+            "Index":3,
+            "value":34840
+         },
+         {
+            "Index":4,
+            "value":75563
+         },
+         {
+            "Index":5,
+            "value":105934
+         },
+         {
+            "Index":6,
+            "value":32933
+         },
+         {
+            "Index":7,
+            "value":150480
+         },
+         {
+            "Index":8,
+            "value":223927
+         },
+         {
+            "Index":9,
+            "value":148770
+         }
+      ],
+      "PointsToCoupon":14902634,
+      "TotalPoints":3334555366
+   }
+]
+-----------------

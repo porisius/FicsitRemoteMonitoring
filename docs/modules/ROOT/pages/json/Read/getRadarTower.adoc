@@ -68,58 +68,133 @@ URI Handler: getPowerSlug +
 Example:
 [source,json]
 -----------------
-▼ {
-   "RadarName":"Radar Tower",
-   "location":{
-      "x": -56196.222656,
-      "y": 229989.75,
-      "z": 5349.920898
-   },
-   "Fauna": [       {
-            "Fauna":"Alpha Stinger"
-            "Remaining":"1"
-      },        {
-            "Fauna":"Fluffy-tailed Hog"
-            "Remaining":"1"
-      },        {
-            "Fauna":"Small Stinger"
-            "Remaining":"1"
-      },        {
-            "Fauna":"Non-flying Birb"
-            "Remaining":"1"
-      },        {
-            "Fauna":"Unknown File Error #6265616e"
-            "Remaining":"1"
-      }],
-   "Signal": [       {
-            "WeakSignal":"Somersloop WIP",
-            "Remaining": 10
-      },       {
-            "WeakSignal":"Blue Power Slug",
-            "Remaining": 16
-      },       {
-            "WeakSignal":"Mercer Sphere WIP",
-            "Remaining": 13
-      }],
-   "Flora": [       {
-            "Flora":"Berry Bush Plant"
-            "Remaining":"1"
-      },        {
-            "Flora":"Nut Bush Plant"
-            "Remaining":"1"
-      },        {
-            "Flora":"Bacon Agaric"
-            "Remaining":"1"
-      }],
-   "features": {
-      "geometry": {
-         "coordinates": {
-         "x": -56196.222656,
-         "y": 229989.75,
-         "z": 5349.920898
-         },
-         "type": "Point"
+[
+   {
+      "RadarName":"Radar Tower",
+      "location":{
+         "x":-53218.585938,
+         "y":-142751.484375,
+         "z":18289.638672
+      },
+      "Fauna":[
+         
+      ],
+      "Signal":[
+         
+      ],
+      "Flora":[
+         
+      ],
+      "features":{
+         "geometry":{
+            "coordinates":{
+               "x":-53218.585938,
+               "y":-142751.484375,
+               "z":18289.638672
+            },
+            "type":"Point"
+         }
       }
-	}	
-}
+   },
+   {
+      "RadarName":"Radar Tower",
+      "location":{
+         "x":109559.46875,
+         "y":143653.828125,
+         "z":12365.823242
+      },
+      "Fauna":[
+         {
+            "Fauna":"Alpha Stinger",
+            "Remaining":"1"
+         },
+         {
+            "Fauna":"Fluffy-tailed Hog",
+            "Remaining":"1"
+         },
+         {
+            "Fauna":"Non-flying Birb",
+            "Remaining":"1"
+         },
+         {
+            "Fauna":"Alpha Forest Spitter",
+            "Remaining":"2"
+         },
+         {
+            "Fauna":"Unknown File Error #6265616e",
+            "Remaining":"1"
+         },
+         {
+            "Fauna":"Small Forest Spitter",
+            "Remaining":"2"
+         },
+         {
+            "Fauna":"Small Stinger",
+            "Remaining":"1"
+         },
+         {
+            "Fauna":"Alpha Hog",
+            "Remaining":"1"
+         },
+         {
+            "Fauna":"Small Desert Spitter",
+            "Remaining":"1"
+         },
+         {
+            "Fauna":"Lizard Doggo",
+            "Remaining":"1"
+         },
+         {
+            "Fauna":"Small Aquatic Spitter",
+            "Remaining":"1"
+         },
+         {
+            "Fauna":"Alpha Aquatic Spitter",
+            "Remaining":"1"
+         }
+      ],
+      "Signal":[
+         {
+            "WeakSignal":"Somersloop WIP",
+            "Remaining":17
+         },
+         {
+            "WeakSignal":"Blue Power Slug",
+            "Remaining":86
+         },
+         {
+            "WeakSignal":"Mercer Sphere WIP",
+            "Remaining":15
+         },
+         {
+            "WeakSignal":"Hard Drive",
+            "Remaining":14
+         }
+      ],
+      "Flora":[
+         {
+            "Flora":"Berry Bush Plant",
+            "Remaining":"1"
+         },
+         {
+            "Flora":"Nut Bush Plant",
+            "Remaining":"1"
+         },
+         {
+            "Flora":"Bacon Agaric",
+            "Remaining":"1"
+         }
+      ],
+      "features":{
+         "geometry":{
+            "coordinates":{
+               "x":109559.46875,
+               "y":143653.828125,
+               "z":12365.823242
+            },
+            "type":"Point"
+         }
+      }
+   }
+]
 -----------------

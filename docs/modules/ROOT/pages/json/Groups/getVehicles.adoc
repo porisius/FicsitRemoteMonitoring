@@ -79,3 +79,37 @@ getTruck only retrieves Trucks +
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+[{
+      "ID":"0",
+      "VehicleType":"Explorer",
+      "location":{
+         "x":-52341.4375,"y":-162543.21875,"z":-904.135193,
+         "rotation":313
+      },
+      "ForwardSpeed":0.0,
+      "CurrentGear":0,
+      "EngineRPM":0.0,
+      "Airborne":false,
+      "AutoPilot":false,
+      "FuelType":"Battery",
+      "FuelInventory":199,
+      "ThrottlePercent":0.0,
+      "PathName":"",
+      "FollowingPath": false,
+      "FuelUsed":"",
+    "features": {
+		"properties":
+			{"type": "Explorer"},
+		"geometry": {
+			"coordinates": {
+				"x":-52341.4375,"y":-162543.21875,"z":-904.135193
+			},
+			"type": "Point"
+		}
+	}	
+}]
+-----------------

@@ -52,3 +52,60 @@ getResourceWell - Fracking/Resource Well +
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+[
+   {
+      "NodeName":"Crude Oil",
+      "location":{
+         "x":178265.375,
+         "y":206095.640625,
+         "z":-9238.571289
+      },
+      "EnumPurity":"RP_Normal",
+      "Purity":"Normal",
+      "NodeType":"Node",
+      "Exploited":false,
+      "features":{
+         "properties":{
+            "type":"Normal"
+         },
+         "geometry":{
+            "coordinates":{
+               "x":178265.375,
+               "y":206095.640625,
+               "z":-9238.571289
+            },
+            "type":"Point"
+         }
+      }
+   },
+   {
+      "NodeName":"SAM Ore",
+      "location":{
+         "x":181999.0625,
+         "y":114342.0,
+         "z":10285.46875
+      },
+      "EnumPurity":"RP_Normal",
+      "Purity":"Normal",
+      "NodeType":"Node",
+      "Exploited":false,
+      "features":{
+         "properties":{
+            "type":"Normal"
+         },
+         "geometry":{
+            "coordinates":{
+               "x":181999.0625,
+               "y":114342.0,
+               "z":10285.46875
+            },
+            "type":"Point"
+         }
+      }
+   }
+]
+-----------------

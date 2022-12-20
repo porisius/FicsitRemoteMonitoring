@@ -44,3 +44,45 @@ URI Handler: getSchematics +
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+[
+   {
+      "SchematicName":"A friend",
+      "TechTier":3,
+      "Type":"EST_MAM",
+      "Recipes":[
+         {
+            "RecipeName":"Actual Snow"
+         },
+         {
+            "RecipeName":"Snowman"
+         }
+      ],
+      "Locked":true,
+      "Purchased":true,
+      "DepLocked":false
+   },
+   {
+      "SchematicName":"FICSMAS Gift Tree",
+      "TechTier":3,
+      "Type":"EST_MAM",
+      "Recipes":[
+         {
+            "RecipeName":"Copper FICSMAS Ornament"
+         },
+         {
+            "RecipeName":"FICSMAS Gift Tree"
+         },
+         {
+            "RecipeName":"Iron FICSMAS Ornament"
+         }
+      ],
+      "Locked":true,
+      "Purchased":true,
+      "DepLocked":false
+   }
+]
+-----------------

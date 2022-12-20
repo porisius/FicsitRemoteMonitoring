@@ -8,9 +8,10 @@ Factory Stats +
 *ADVISORY:* Due to performance, all factory calls use a caching system. Therefore, you will not always get the most up-to-date info on your factory. Please consult the Configuration page to set caching delays.
 
 getAssembler only retrieves Assemblers +
+getBlender only retrieves Blenders +
 getConstructor only retrieves Constructors +
 getParticle only retrieves Particle Accelerators +
-... +
+etc... +
 
 [cols="1,2,1,1"]
 |===
@@ -112,3 +113,76 @@ getParticle only retrieves Particle Accelerators +
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+[{
+      "building":"Refinery",
+      "location":{
+         "x":-83587.078125,"y":-170347.1875,"z":-1710.079102,
+         "rotation":190
+      },
+      "Recipe":"Fuel",
+      "production":[
+         {
+            "Name":"Fuel",
+            "CurrentProd":37176.5,
+            "MaxProd":40000.0,
+            "ProdPercent":92.900002
+         },         {
+            "Name":"Polymer Resin",
+            "CurrentProd":27.9,
+            "MaxProd":30.0,
+            "ProdPercent":92.900002
+         }
+      ],
+      "ingredients":[
+         {
+            "Name":"Crude Oil",
+            "CurrentConsumed":55764.699219,
+            "MaxConsumed":60000.0,
+            "ConsPercent":92.900002
+         }
+      ],
+      "ManuSpeed":1.0,
+      "IsConfigured":true,
+      "IsProducing":true,
+      "IsPaused":false,
+      "CircuitID": 28
+}, 
+{
+      "building":"Assembler",
+      "location":{
+         "x":-92857.976562,"y":-128723.0,"z":-210.157852,
+         "rotation":-80
+      },
+      "Recipe":"Reinforced Iron Plate",
+      "production":[
+         {
+            "Name":"Reinforced Iron Plate",
+            "CurrentProd":5.0,
+            "MaxProd":5.0,
+            "ProdPercent":100.0
+         }
+      ],
+      "ingredients":[
+         {
+            "Name":"Iron Plate",
+            "CurrentConsumed":30.0,
+            "MaxConsumed":30.0,
+            "ConsPercent":100.0
+         },         {
+            "Name":"Screw",
+            "CurrentConsumed":60.0,
+            "MaxConsumed":60.0,
+            "ConsPercent":100.0
+         }
+      ],
+      "ManuSpeed":1.0,
+      "IsConfigured":true,
+      "IsProducing":true,
+      "IsPaused":false,
+      "CircuitID": 44
+}]
+-----------------

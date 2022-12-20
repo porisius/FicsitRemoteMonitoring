@@ -64,3 +64,33 @@ URI Handler: getBelts +
 |Output
 
 |===
+
+Example:
+[source,json]
+-----------------
+[{
+      "BeltName":"Conveyor Belt Mk.1",
+      "ItemName":"",
+      "location0":{
+         "x":-104125.710938,"y":-133350.21875,"z":-1310.157715
+      },
+      "Connected0":true,
+      "location1":{
+         "x":-104015.585938,"y":-132823.078125,"z":-1310.157837
+      },
+      "Connected1":true,
+      "Speed":120.0
+   },{
+      "BeltName":"Conveyor Belt Mk.1",
+      "ItemName":"",
+      "location0":{
+         "x":-104015.585938,"y":-132823.078125,"z":-1310.157837
+      },
+      "Connected0":true,
+      "location1":{
+         "x":-103523.1875,"y":-132736.234375,"z":-1310.157837
+      },
+      "Connected1":true,
+      "Speed":120.0
+}]
+-----------------
