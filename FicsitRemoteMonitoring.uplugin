@@ -1,8 +1,9 @@
 {
 	"FileVersion": 3,
+	"SemVersion": "0.8.11",
+	"AcceptsAnyRemoteVersion": true,
 	"Version": 0,
-	"VersionName": "0.8.9",
-	"SemVersion": "0.8.9",
+	"VersionName": "0.8.11",
 	"FriendlyName": "Ficsit Remote Monitoring",
 	"Description": "Statistical and GeoLocation Monitoring for Satisfactory",
 	"Category": "Modding",
@@ -15,7 +16,6 @@
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
 	"Installed": false,
-	"AcceptsAnyRemoteVersion": true,
 	"Modules": [
 		{
 			"Name": "BlueprintHttpServer",
@@ -46,13 +46,15 @@
 	"Plugins": [
 		{
 			"Name": "SML",
-			"SemVersion": "^3.3.1",
-			"Enabled": true
+			"Enabled": true,
+			"SemVersion": "^3.4.1",
+			"BasePlugin": false
 		},
 		{
 			"Name": "JSONQuery",
+			"Enabled": true,
 			"SemVersion": "^1.0.5",
-			"Enabled": true
+			"BasePlugin": false
 		}
 	]
 }
