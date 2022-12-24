@@ -2,7 +2,7 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: getVehicles +
+API Endpoint: getVehicles +
 Vehicles Stats +
 
 getExplorer only retrieves Explorers +

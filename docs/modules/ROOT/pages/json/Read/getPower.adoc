@@ -2,7 +2,7 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: getPower +
+API Endpoint: getPower +
 
 [cols="1,2,1,1"]
 |===

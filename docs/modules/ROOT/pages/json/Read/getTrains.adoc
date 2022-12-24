@@ -2,7 +2,7 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: getTrains +
+API Endpoint: getTrains +
 
 [cols="1,2,1,1"]
 |===

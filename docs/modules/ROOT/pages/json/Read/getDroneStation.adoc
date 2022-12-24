@@ -2,7 +2,7 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: getDroneStation +
+API Endpoint: getDroneStation +
 
 [cols="1,2,1,1"]
 |===

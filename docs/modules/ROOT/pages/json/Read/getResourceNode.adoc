@@ -2,7 +2,7 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: +
+API Endpoint: +
 getResourceNode - Mining/Oil +
 getResourceGeyser - Geothermal Geyser +
 getResourceWell - Fracking/Resource Well +

@@ -2,7 +2,7 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: getDropPod + 
+API Endpoint: getDropPod + 
 
 [cols="1,2,1,1"]
 |===

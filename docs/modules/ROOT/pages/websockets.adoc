@@ -13,8 +13,8 @@ Chat Commands:
 /frmsocket start - Starts WebSocket Server +
 /frmsocket stop - Stops WebSocket Server
 
-URI Handlers: +
-There are currently several URI Handlers configured, but more are planned. Arguments are reserved for future use and are not currently implemented.
+API Endpoints: +
+There are currently several API Endpoints configured, but more are planned. Arguments are reserved for future use and are not currently implemented.
 
 URI Usage:
 

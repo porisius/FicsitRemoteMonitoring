@@ -2,7 +2,7 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: getResourceSink +
+API Endpoint: getResourceSink +
 
 [cols="1,2,1,1"]
 |===

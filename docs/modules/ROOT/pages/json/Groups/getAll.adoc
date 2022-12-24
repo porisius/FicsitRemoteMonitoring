@@ -2,7 +2,7 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-URI Handler: getAll +
+API Endpoint: getAll +
 Contains all the JSON in FRM. +
 Warning: Be careful with use as it may cause performance issues. Prepare any listener to be waiting on a return as it will be long.
 
