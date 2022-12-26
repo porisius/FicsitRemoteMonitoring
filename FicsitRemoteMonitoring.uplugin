@@ -1,9 +1,9 @@
 {
 	"FileVersion": 3,
+	"Version": 0,
+	"VersionName": "0.8.12",
 	"SemVersion": "0.8.11",
 	"AcceptsAnyRemoteVersion": true,
-	"Version": 0,
-	"VersionName": "0.8.11",
 	"FriendlyName": "Ficsit Remote Monitoring",
 	"Description": "Statistical and GeoLocation Monitoring for Satisfactory",
 	"Category": "Modding",
@@ -46,15 +46,13 @@
 	"Plugins": [
 		{
 			"Name": "SML",
-			"Enabled": true,
 			"SemVersion": "^3.4.1",
-			"BasePlugin": false
+			"Enabled": true
 		},
 		{
 			"Name": "JSONQuery",
-			"Enabled": true,
 			"SemVersion": "^1.0.5",
-			"BasePlugin": false
+			"Enabled": true
 		}
 	]
 }
