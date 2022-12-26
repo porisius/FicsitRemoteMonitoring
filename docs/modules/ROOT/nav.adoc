@@ -41,13 +41,14 @@
 *** xref:json/Read/getResourceNode.adoc[getResourceWell]
 *** xref:json/Read/getSchematics.adoc[getSchematics]
 *** xref:json/Groups/getFactory.adoc[getSmelter]
+*** xref:json/Read/getStorageInv.adoc[getStorageInv]
 *** xref:json/Read/getSwitches.adoc[getSwitches]
 *** xref:json/Groups/getVehicles.adoc[getTractor]
 *** xref:json/Read/getTrains.adoc[getTrains]
 *** xref:json/Read/getTrainStation.adoc[getTrainStation]
 *** xref:json/Groups/getVehicles.adoc[getTruck]
 *** xref:json/Read/getTruckStation.adoc[getTruckStation]
-
+*** xref:json/Read/getWorldInv.adoc[getWorldInv]
 
 ** xref:json/Write/Write.adoc[Write]
 

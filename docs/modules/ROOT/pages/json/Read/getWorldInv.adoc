@@ -1,0 +1,42 @@
+= World Inventory
+
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+API Endpoint: getWorldInv +
+
+This is inventory of the world regardless of location. This does not include pipes/belts/factory buildings, only buildings whom purpose is to provide storage except Fluid Buffers.
+
+[cols="1,2,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|Name
+|Name of item type
+|String
+|Output
+
+|Count
+|Count of items of item type
+|Integar
+|Output
+
+|===
+
+Example:
+[source,json]
+-----------------
+[
+   {
+      "Name":"FICSIT Coupon",
+      "Count":91
+   },
+   {
+      "Name":"Quickwire",
+      "Count":500
+   },
+   {
+      "Name":"FICSMAS Bow",
+      "Count":25
+   }
+]
+-----------------
