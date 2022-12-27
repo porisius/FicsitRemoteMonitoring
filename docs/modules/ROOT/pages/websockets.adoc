@@ -16,7 +16,7 @@ Chat Commands:
 API Endpoints: +
 There are currently several API Endpoints configured, but more are planned. Arguments are reserved for future use and are not currently implemented.
 
-URI Usage:
+API Endpoint Usage:
 
 Usage Example:
 
@@ -33,7 +33,7 @@ Usage Example:
 }
 -----------------
 
-Live use case: (Example is URI: getPower)
+Live use case: (Example is API Endpoint: getPower)
 
 * Client Request to Server:
 +

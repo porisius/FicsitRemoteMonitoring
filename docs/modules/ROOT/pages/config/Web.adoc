@@ -8,10 +8,10 @@ File: Config/FicsitRemoteMonitoring/WebServer.cfg
 |===
 |Configuration |Headless |Type |Description
 
-|WebSocket URI Root
+|WebSocket API Endpoint Root
 |WebSocket_URI
 |String
-|Root URI location. Default: /* Ex. ws://localhost:8081/
+|Root API Endpoint location. Default: /* Ex. ws://localhost:8081/
 
 |WebSocket Server Port
 |WebSocket_Port

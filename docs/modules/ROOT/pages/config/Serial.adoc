@@ -26,7 +26,7 @@ File: Config/FicsitRemoteMonitoring/SerialDevices.cfg
 |Pulsing Power Stats
 |Auto_Serial
 |Boolean
-|If True, FRM ignores inputs and sends the output of the getPower URI. (Requires ArduinoKit)
+|If True, FRM ignores inputs and sends the output of the getPower API Endpoint. (Requires ArduinoKit)
 
 |Serial Tick Delay
 |Serial_Delay
