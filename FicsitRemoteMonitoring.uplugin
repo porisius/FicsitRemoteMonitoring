@@ -1,8 +1,8 @@
 {
 	"FileVersion": 3,
 	"Version": 0,
-	"VersionName": "0.8.12",
-	"SemVersion": "0.8.12",
+	"VersionName": "0.8.13",
+	"SemVersion": "0.8.13",
 	"AcceptsAnyRemoteVersion": true,
 	"FriendlyName": "Ficsit Remote Monitoring",
 	"Description": "Statistical and GeoLocation Monitoring for Satisfactory",
