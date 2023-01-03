@@ -58,6 +58,11 @@ API Endpoint: getExtractor +
 |Float Array
 |Output
 
+|Purity
+|Purity of extraction node
+|String
+|Output
+
 |ManuSpeed
 |Configured Speed
 |Float
@@ -103,6 +108,7 @@ Example:
             "ProdPercent":"39.200001"
          }
       ],
+      "Purity": "Pure"
       "ManuSpeed":2.5,
       "IsConfigured":true,
       "IsProducing":true,
