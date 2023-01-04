@@ -33,7 +33,7 @@ File: Config/FicsitRemoteMonitoring/DiscIT.cfg
 |String
 |Absolute path of Webhook JSON File. If Blank/"", then uses the default.
 
-|Player Online JSON File
+|Player Offline JSON File
 |PlayerOffline
 |String
 |Absolute path of Webhook JSON File. If Blank/"", then uses the default.
