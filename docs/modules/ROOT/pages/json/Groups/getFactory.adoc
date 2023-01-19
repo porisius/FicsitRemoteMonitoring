@@ -13,7 +13,7 @@ getConstructor only retrieves Constructors +
 getParticle only retrieves Particle Accelerators +
 etc... +
 
-[cols="1,2,1,1"]
+[cols="2,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
