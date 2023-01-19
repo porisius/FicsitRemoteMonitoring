@@ -51,8 +51,9 @@
 		},
 		{
 			"Name": "JSONQuery",
+			"Enabled": true,
 			"SemVersion": "^1.0.5",
-			"Enabled": true
+			"BasePlugin": false
 		}
 	]
 }
