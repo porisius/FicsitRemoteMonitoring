@@ -67,6 +67,11 @@ etc... +
 |Float Array
 |Output
 
+|production/Inventory
+|Number of items stored in Building for item
+|Integar Array
+|Output
+
 |ingredients/Name
 |Item Output
 |String Array
@@ -85,6 +90,11 @@ etc... +
 |ingredients/ConsPercent
 |Efficentcy Percentage
 |Float Array
+|Output
+
+|ingredients/Inventory
+|Number of items stored in Building for item
+|Integar Array
 |Output
 
 |ManuSpeed
