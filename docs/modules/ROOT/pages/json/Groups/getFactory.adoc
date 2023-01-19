@@ -139,12 +139,15 @@ Example:
             "Name":"Fuel",
             "CurrentProd":37176.5,
             "MaxProd":40000.0,
-            "ProdPercent":92.900002
-         },         {
+            "ProdPercent":92.900002,
+            "Inventory":10
+         },
+         {
             "Name":"Polymer Resin",
             "CurrentProd":27.9,
             "MaxProd":30.0,
-            "ProdPercent":92.900002
+            "ProdPercent":92.900002,
+            "Inventory":23
          }
       ],
       "ingredients":[
@@ -152,7 +155,8 @@ Example:
             "Name":"Crude Oil",
             "CurrentConsumed":55764.699219,
             "MaxConsumed":60000.0,
-            "ConsPercent":92.900002
+            "ConsPercent":92.900002,
+            "Inventory":120
          }
       ],
       "ManuSpeed":1.0,
@@ -173,7 +177,8 @@ Example:
             "Name":"Reinforced Iron Plate",
             "CurrentProd":5.0,
             "MaxProd":5.0,
-            "ProdPercent":100.0
+            "ProdPercent":100.0,
+            "Inventory":3
          }
       ],
       "ingredients":[
@@ -181,12 +186,15 @@ Example:
             "Name":"Iron Plate",
             "CurrentConsumed":30.0,
             "MaxConsumed":30.0,
-            "ConsPercent":100.0
-         },         {
+            "ConsPercent":100.0,
+            "Inventory":50
+         },
+         {
             "Name":"Screw",
             "CurrentConsumed":60.0,
             "MaxConsumed":60.0,
-            "ConsPercent":100.0
+            "ConsPercent":100.0,
+            "Inventory":500
          }
       ],
       "ManuSpeed":1.0,
