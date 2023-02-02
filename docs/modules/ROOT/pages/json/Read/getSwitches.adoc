@@ -18,6 +18,26 @@ API Endpoint: getSwitches +
 |String
 |Output
 
+|location/x
+|X Location of Storage Container
+|Float
+|Output
+
+|location/y
+|Y Location of Storage Container
+|Float
+|Output
+
+|location/z
+|Z Location of Storage Container
+|Float
+|Output
+
+|location/Rotation
+|Compass Heading of Storage Container
+|Float
+|Output
+
 |Connected
 |Is Connected
 |Boolean
@@ -44,18 +64,30 @@ Example:
 [source,json]
 -----------------
 [{
-      "SwitchID":"0",
+      "SwitchID":"8",
       "SwitchTag":"Power Switch",
+      "location":{
+         "x": -103038.960938,
+         "y": -102086.257812,
+         "z": 189.842163,
+         "rotation":90
+      },
       "Connected":"true",
       "IsOn":true,
-      "Primary":58,
-      "Secondary":44
+      "Primary":28,
+      "Secondary":54
 },{
-      "SwitchID":"1",
+      "SwitchID":"9",
       "SwitchTag":"Power Switch",
+      "location":{
+         "x": -78553.0625,
+         "y": -174129.90625,
+         "z": -1710.157593,
+         "rotation":90
+      },
       "Connected":"true",
-      "IsOn":true,
+      "IsOn":false,
       "Primary":44,
-      "Secondary":5
+      "Secondary":14
 }]
 -----------------
