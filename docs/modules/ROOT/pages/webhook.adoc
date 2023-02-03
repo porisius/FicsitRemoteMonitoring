@@ -158,3 +158,21 @@ Self-Driving Error Types: TrainErrorMessage.json
 |Randomized Flavor Text (Train/Detrimental)
 
 |===
+'''
+Train Stuck/Idle Notificaion +
+Action: Train has been idle/stuck for configurable amount of time +
+Default File: TrainIdle.json
+[cols="2,4"]
+|===
+|Varible Name |Purpose/Data:
+
+|{TrainName}
+|Name of Train with error
+
+|{TrainStation}
+|Name of Train Station the Train was heading to
+
+|{Flavor}
+|Randomized Flavor Text (Train/Detrimental)
+
+|===

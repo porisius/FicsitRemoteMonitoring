@@ -1,0 +1,13 @@
+{
+	"username": "Ficsit Remote Monitoring: Train Notification",
+	"avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
+	"embeds": [{
+		"title": "Alert: Train Idle!",
+		"description": "A train appears to be stuck or is idle.",
+		"fields": [
+			{"name": "Train Name:", "value": "{TrainName}", "inline": true},
+			{"name": "Next Stop:", "value": "{TrainStation}", "inline": true}
+		],
+		"footer": {"text": "{Flavor}"}
+	}]
+}
