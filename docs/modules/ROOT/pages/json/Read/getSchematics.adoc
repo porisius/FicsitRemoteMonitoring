@@ -20,10 +20,55 @@ API Endpoint: getSchematics +
 
 |Type
 |Schematic/Milestone Type
-|[Float, Float]
+|String
 |Output
 
 |Recipes/RecipeName
+|Name of Recipe Associated with Schematic/Milestone
+|String
+|Output
+
+|Recipes/Category
+|Recipe Category
+|String
+|Output
+
+|Recipes/Events/Name
+|Special Event Name, if applicable, for recipe
+|String
+|Output
+
+|Recipes/Ingredients/Name
+|Name of items needed for Recipe
+|String
+|Output
+
+|Recipes/Ingredients/Amount
+|Amount of items required for recipe
+|Integar
+|Output
+
+|Recipes/Products/Name
+|Name of items produced for Recipe
+|String
+|Output
+
+|Recipes/Ingredients/Amount
+|Amount of items produced for recipe
+|Integar
+|Output
+
+|Recipes/ProducedIn/ProducedIn
+|Build tool/factory building used to create item
+|String
+|Output
+
+|Recipes/ManualDuration
+|Name of Item Associated with Schematic/Milestone
+|String
+|Output
+
+|Recipes/ManufacturingDuration
 |Name of Item Associated with Schematic/Milestone
 |String
 |Output
@@ -50,15 +95,39 @@ Example:
 -----------------
 [
    {
-      "SchematicName":"A friend",
-      "TechTier":3,
-      "Type":"EST_MAM",
+      "SchematicName":"Alternate: Polymer Resin",
+      "TechTier":0,
+      "Type":"Alternate",
       "Recipes":[
          {
-            "RecipeName":"Actual Snow"
-         },
-         {
-            "RecipeName":"Snowman"
+            "RecipeName":"Alternate: Polymer Resin",
+            "Category":"Oil Products",
+            "Events":[
+               
+            ],
+            "Ingredients":[
+               {
+                  "Name":"Crude Oil",
+                  "Amount":6
+               }
+            ],
+            "Products":[
+               {
+                  "Name":"Polymer Resin",
+                  "Amount":13
+               },
+               {
+                  "Name":"Heavy Oil Residue",
+                  "Amount":2
+               }
+            ],
+            "ProducedIn":[
+               {
+                  "BuildTool":"Refinery"
+               }
+            ],
+            "ManualDuration":6,
+            "ManufacturingDuration":6
          }
       ],
       "Locked":true,
@@ -66,18 +135,35 @@ Example:
       "DepLocked":false
    },
    {
-      "SchematicName":"FICSMAS Gift Tree",
-      "TechTier":3,
-      "Type":"EST_MAM",
+      "SchematicName":"Alternate: Pure Aluminum Ingot",
+      "TechTier":0,
+      "Type":"Alternate",
       "Recipes":[
          {
-            "RecipeName":"Copper FICSMAS Ornament"
-         },
-         {
-            "RecipeName":"FICSMAS Gift Tree"
-         },
-         {
-            "RecipeName":"Iron FICSMAS Ornament"
+            "RecipeName":"Alternate: Pure Aluminum Ingot",
+            "Category":"Ingots",
+            "Events":[
+               
+            ],
+            "Ingredients":[
+               {
+                  "Name":"Aluminum Scrap",
+                  "Amount":2
+               }
+            ],
+            "Products":[
+               {
+                  "Name":"Aluminum Ingot",
+                  "Amount":1
+               }
+            ],
+            "ProducedIn":[
+               {
+                  "BuildTool":"Smelter"
+               }
+            ],
+            "ManualDuration":2,
+            "ManufacturingDuration":2
          }
       ],
       "Locked":true,

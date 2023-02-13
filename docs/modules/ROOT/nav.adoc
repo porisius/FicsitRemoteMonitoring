@@ -23,6 +23,7 @@
 *** xref:json/Read/getDrone.adoc[getDrone]
 *** xref:json/Read/getDroneStation.adoc[getDroneStation]
 *** xref:json/Read/getDropPod.adoc[getDropPod]
+*** xref:json/Read/getResourceSink.adoc[getExplorationSink]
 *** xref:json/Groups/getVehicles.adoc[getExplorer]
 *** xref:json/Read/getExtractor.adoc[getExtractor]
 *** xref:json/Groups/getFactory.adoc[getFoundry]
