@@ -53,7 +53,7 @@ API Endpoint: getSchematics +
 |String
 |Output
 
-|Recipes/Ingredients/Amount
+|Recipes/Products/Amount
 |Amount of items produced for recipe
 |Integar
 |Output
