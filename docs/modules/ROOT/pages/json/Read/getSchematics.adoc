@@ -48,6 +48,16 @@ API Endpoint: getSchematics +
 |Integar
 |Output
 
+|Recipes/Ingredients/ManualRate
+|Rate per minute, the items manual processing requires at 100% throughput
+|Float
+|Output
+
+|Recipes/Ingredients/FactoryRate
+|Rate per minute, the items automated processing requires at 100% throughput
+|Float
+|Output
+
 |Recipes/Products/Name
 |Name of items produced for Recipe
 |String
@@ -56,6 +66,16 @@ API Endpoint: getSchematics +
 |Recipes/Products/Amount
 |Amount of items produced for recipe
 |Integar
+|Output
+
+|Recipes/Products/ManualRate
+|Rate per minute, the items manual processing produces at 100% throughput
+|Float
+|Output
+
+|Recipes/Products/FactoryRate
+|Rate per minute, the items automated processing produces at 100% throughput
+|Float
 |Output
 
 |Recipes/ProducedIn/ProducedIn
