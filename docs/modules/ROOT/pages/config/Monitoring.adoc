@@ -8,6 +8,11 @@ File: Config/FicsitRemoteMonitoring/MonitoringConfig.cfg
 |===
 |Configuration |Headless |Type |Description
 
+|Enable Caching System
+|EnableCacheSystem
+|Boolean (Default: False)
+|Enables the caching system, if not enabled the Cache Delays are not used. Requires restart if changed.
+
 |Factory Cache Seperate
 |FactoryCacheSeperate
 |Boolean
