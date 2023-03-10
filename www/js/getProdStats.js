@@ -1,39 +1,44 @@
 const prodstatstimeout = setInterval(catchProdStats, 1000);
 
-catchProdStats().catch(error => {
-    console.log('error!');
-    console.error(error);
+catchProdStats().catch((error) => {
+  console.log("error! Using test data.");
+  console.error(error);
+  displayProdStats(test_ProdStats);
 });
 
 async function catchProdStats() {
-    const response = await fetch('/getProdStats');
-    const data = await response.text();
-    const getProdStats = JSON.parse(data);
-    displayProdStats(getProdStats);
-};
+  const response = await fetch("/getProdStats");
+  const data = await response.text();
+  const getProdStats = JSON.parse(data);
+  displayProdStats(getProdStats);
+}
 
 function displayProdStats(getProdStats) {
+  var i, txt;
 
-    var i, txt;
+  txt = "<table class='table' width=100%>";
+  txt += "<tr class='topTable'>";
+  txt +=
+    "<td><b>Item Name:</b></td><td><b>ProdPerMin:</b></td><td><b>Production Percent:</b></td><td><b>Consumption Percent:</b></td><td><b>Current Production:</b></td><td><b>Maximum Production:</b></td><td><b>Current Consumed:</b></td><td><b>Maximum Consumed:</b></td></tr>";
 
-    txt = "<table class='table' width=100%>";
+  for (i in getProdStats) {
     txt += "<tr>";
-    txt += "<td><b>Item Name:</b></td><td><b>ProdPerMin:</b></td><td><b>Production Percent:</b></td><td><b>Consumption Percent:</b></td><td><b>Current Production:</b></td><td><b>Maximum Production:</b></td><td><b>Current Consumed:</b></td><td><b>Maximum Consumed:</b></td></tr>";
+    txt += '<td align="left">' + getProdStats[i].ItemName + "</td>";
+    txt += '<td align="center">' + getProdStats[i].ProdPerMin + "</td>";
+    txt += '<td align="center">' + getProdStats[i].ProdPercent + "%</td>";
+    txt += '<td align="center">' + getProdStats[i].ConsPercent + "%</td>";
+    txt +=
+      '<td align="center">' + getProdStats[i].CurrentProd.toFixed(2) + "</td>";
+    txt += '<td align="center">' + getProdStats[i].MaxProd.toFixed(2) + "</td>";
+    txt +=
+      '<td align="center">' +
+      getProdStats[i].CurrentConsumed.toFixed(2) +
+      "</td>";
+    txt +=
+      '<td align="center">' + getProdStats[i].MaxConsumed.toFixed(2) + "</td>";
+    txt += "</tr>";
+  }
 
-    for (i in getProdStats) {
-        txt += '<tr>';
-        txt += '<td align="left">' + getProdStats[i].ItemName + '</td>';
-        txt += '<td align="center">' + getProdStats[i].ProdPerMin + '</td>';
-        txt += '<td align="center">' + getProdStats[i].ProdPercent + '%</td>';
-        txt += '<td align="center">' + getProdStats[i].ConsPercent + '%</td>';
-        txt += '<td align="center">' + getProdStats[i].CurrentProd.toFixed(2) + '</td>';
-        txt += '<td align="center">' + getProdStats[i].MaxProd.toFixed(2) + '</td>';
-        txt += '<td align="center">' + getProdStats[i].CurrentConsumed.toFixed(2) + '</td>';
-        txt += '<td align="center">' + getProdStats[i].MaxConsumed.toFixed(2) + '</td>';
-        txt += '</tr>';
-    };
-
-    txt += "</table>";
-    document.getElementById("ProductionTable").innerHTML = txt;
-
-};
+  txt += "</table>";
+  document.getElementById("ProductionTable").innerHTML = txt;
+}

@@ -1,36 +1,50 @@
-html, 
+:root {
+  --main-color: #4717f6;
+  --secondary-color: #4316e6;
+  --text-color: #e7dfdd;
+  --table-color: #4717f6;
+  --background-color: #121212;
+
+  color-scheme: dark;
+}
+
+html,
 body {
   padding: 0;
   margin: 0;
   bottom: 0;
   height: 100vh;
+  background-color: var(--background-color);
 }
 
 #map {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #121212;
+  background-color: var(--background-color);
 }
 
 .button {
-  background-color: #4717f6;
+  display: inline-block;
+  border: none;
   border-radius: 5px;
-  border-color: #4717f6;
-  color: #e7dfdd;
-  padding: 15px 32px;
+  border-color: var(--main-color);
+  font-size: 16px;
+  font-weight: bold;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
-  font-weight: bold;
-  font-size: 16px;
-  margin: 4px 2px;
+  color: var(--text-color);
+  background-color: var(--main-color);
   cursor: pointer;
+  width: 100%;
+  margin: 10px;
+  padding: 10px;
+  transition: background-color 0.2s ease-in-out;
 }
 
 .button:hover {
-  background-color: #4316e6;
-  border-color: #4316e6;
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
 }
 
 .leaflet-control-measure {
@@ -71,11 +85,13 @@ body {
 }
 
 .leaflet-measure-tooltip-difference {
-  color: #777;
+  color: var(--text-color)
 }
 
-table, th, td {
-  border: 2px solid #4717f6;
+table,
+th,
+td {
+  border: 2px solid var(--table-color);
   border-radius: 10px;
   text-align: center;
   padding: 5px;
@@ -87,18 +103,88 @@ table, th, td {
 
 .text {
   font-size: 20px;
-  color: white;
+  color: var(--text-color);
 }
 
 #About {
   text-align: center;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-size: 20px;
   font-weight: bold;
-  color: white;
+  color: var(--text-color);
   width: 100vw;
 }
 
-:root {
-  color-scheme: dark;
+.colorSettings {
+  width: 100%;
+  background-color: var(--background-color);
+}
+
+.cPicker {
+  width: 100%;
+  background-color: var(--background-color);
+  height: 50px;
+}
+
+.colorPicker {
+  width: 100%;
+  background-color: var(--background-color);
+  text-align: center;
+}
+
+.cButton {
+  width: 100%;
+  background-color: var(--background-color);
+}
+
+.resetCircuit {
+  background-color: var(--main-color);
+  border-radius: 5px;
+  border-color: var(--main-color);
+  color: var(--text-color);
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.sortAsc {
+  background-color: transparent;
+  padding: 1px;
+  border: none;
+  border-radius: 5px;
+}
+
+.sortAsc:hover {
+  background-color: var(--main-color);
+}
+
+.sortAsc:active {
+  background-color: var(--secondary-color);
+}
+
+.sortDesc {
+  background-color: transparent;
+  border: none;
+  padding: 1px;
+  width: auto;
+  border-radius: 5px;
+}
+
+.sortDesc:hover {
+  background-color: var(--main-color);
+}
+
+.sortDesc:active {
+  background-color: var(--secondary-color);
+}
+
+.sortContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
 }
