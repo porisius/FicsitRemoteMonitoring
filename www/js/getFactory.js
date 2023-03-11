@@ -13,15 +13,54 @@ async function catchFactory() {
   displayFactory(getFactory);
 }
 
+var fTable = document.createElement("table");
+fTable.style.width = "100%";
+fTable.className = "table";
+document.getElementById("FactoryTable").appendChild(fTable);
+
 function displayFactory(getFactory) {
-  var i, p, n, txt, prod, need, eff;
+  var tr = document.createElement("tr");
+  tr.className = "topTable";
+  fTable.appendChild(tr);
 
-  txt = "<table class='table' width=100%>";
-  txt += "<tr class='topTable'>";
-  txt +=
-    "<td><b>Building Type:</b></td><td><b>Recipe:</b></td><td><b>Efficiently:</b></td><td><b>Recipe / Current Production:</b></td><td><b>Ingredients / Current Consumption:</b></td><td><b>Manufacturing Speed:</b></td><td><b>Producing:</b></td><td><b>Paused:</b></td></tr>";
+  var lines = [
+    "Building Type:",
+    "Recipe:",
+    "Efficiently:",
+    "Recipe / Current Production:",
+    "Ingredients / Current Consumption:",
+    "Manufacturing Speed:",
+    "Producing:",
+    "Paused:",
+  ];
 
-  for (i in getFactory) {
+  for (var i = 0; i < lines.length; i++) {
+    var td = document.createElement("td");
+    var b = document.createElement("b");
+    b.innerText = lines[i];
+    td.appendChild(b);
+
+    var sortContainer = document.createElement("div");
+    sortContainer.classList = "sortContainer";
+    td.appendChild(sortContainer);
+
+    var asc = document.createElement("button");
+    asc.classList = "sortAsc";
+    asc.innerText = "⬆️";
+    asc.onclick = sort;
+
+    var desc = document.createElement("button");
+    desc.classList = "sortDesc";
+    desc.innerText = "⬇️";
+    desc.onclick = sort;
+
+    sortContainer.appendChild(asc);
+    sortContainer.appendChild(desc);
+
+    tr.appendChild(td);
+  }
+
+  for (var i in getFactory) {
     prod = "";
     need = "";
 
@@ -30,8 +69,7 @@ function displayFactory(getFactory) {
         "Output: " +
         getFactory[i].production[p].Name +
         " / " +
-        getFactory[i].production[p].CurrentProd.toFixed(2) +
-        "<br>";
+        getFactory[i].production[p].CurrentProd.toFixed(2);
     }
 
     for (n in getFactory[i].ingredients) {
@@ -39,24 +77,58 @@ function displayFactory(getFactory) {
         "Output: " +
         getFactory[i].ingredients[n].Name +
         " / " +
-        getFactory[i].ingredients[n].CurrentConsumed.toFixed(2) +
-        "<br>";
+        getFactory[i].ingredients[n].CurrentConsumed.toFixed(2);
     }
 
+    var tr = document.createElement("tr");
+    fTable.appendChild(tr);
+
+    var building = document.createElement("td");
+    building.style.alignContent = "left";
+    building.innerText = getFactory[i].building;
+
+    var recipe = document.createElement("td");
+    recipe.style.alignContent = "center";
+    recipe.innerText = getFactory[i].Recipe;
+
     eff = getFactory[i].production[p].ProdPercent * 1;
+    var efficiently = document.createElement("td");
+    efficiently.style.alignContent = "center";
+    efficiently.innerText = eff.toFixed(2) + "%";
 
-    txt += "<tr>";
-    txt += '<td align="left">' + getFactory[i].building + "</td>";
-    txt += '<td align="center">' + getFactory[i].Recipe + "</td>";
-    txt += '<td align="center">' + eff.toFixed(2) + "%</td>";
-    txt += '<td align="left">' + prod + "</td>";
-    txt += '<td align="left">' + need + "</td>";
-    txt += '<td align="center">' + getFactory[i].ManuSpeed * 100 + "%</td>";
-    txt += '<td align="center">' + getFactory[i].IsProducing + "</td>";
-    txt += '<td align="center">' + getFactory[i].IsPaused + "</td>";
-    txt += "</tr>";
+    var production = document.createElement("td");
+    production.style.alignContent = "left";
+    production.innerText = prod;
+
+    var needs = document.createElement("td");
+    needs.style.alignContent = "left";
+    needs.innerText = need;
+
+    var manuSpeed = document.createElement("td");
+    manuSpeed.style.alignContent = "center";
+    manuSpeed.innerText = getFactory[i].ManuSpeed * 100 + "%";
+
+    var isProducing = document.createElement("td");
+    isProducing.style.alignContent = "center";
+    isProducing.innerText = getFactory[i].IsProducing;
+
+    var isPaused = document.createElement("td");
+    isPaused.style.alignContent = "center";
+    isPaused.innerText = getFactory[i].IsPaused;
+
+    var trLoop = [
+      building,
+      recipe,
+      efficiently,
+      production,
+      needs,
+      manuSpeed,
+      isProducing,
+      isPaused,
+    ];
+
+    for (var i in trLoop) {
+      tr.appendChild(trLoop[i]);
+    }
   }
-
-  txt += "</table>";
-  document.getElementById("FactoryTable").innerHTML = txt;
 }
