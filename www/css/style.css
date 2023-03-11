@@ -85,7 +85,7 @@ body {
 }
 
 .leaflet-measure-tooltip-difference {
-  color: var(--text-color)
+  color: var(--text-color);
 }
 
 table,
@@ -135,6 +135,8 @@ td {
 .cButton {
   width: 100%;
   background-color: var(--background-color);
+  margin: 0px;
+  margin-top: 10px;
 }
 
 .resetCircuit {
