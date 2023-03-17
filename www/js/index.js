@@ -108,6 +108,7 @@ function menuShow(show) {
   document.getElementById("FactoryTable").style.display = "none";
   document.getElementById("About").style.display = "none";
   document.getElementById("Theme").style.display = "none";
+  document.getElementById("Dev").style.display = "none";
 
   if (show == "map") {
     document.getElementsByTagName("html")[0].style.overflow = "hidden";
@@ -175,4 +176,21 @@ function sortTable(tbody) {
     }
   });
   rows.forEach((row) => tbody.appendChild(row));
+}
+
+function randomizeTestData() {
+  testTable = [test_ProdStats, test_Drone, test_Power, test_Factory];
+  testTable.forEach((testData) => {
+    for (i in testData) {
+      for (j in testData[i]) {
+        if (
+          typeof testData[i][j] == "number" ||
+          typeof testData[i][j] == "float"
+        ) {
+          testData[i][j] = Math.floor(Math.random() * 10);
+        }
+      }
+    }
+  });
+  alert("Randomized some data!");
 }

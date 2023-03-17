@@ -3,14 +3,17 @@ const factorytimeout = setInterval(catchProdStats, 1000);
 catchFactory().catch((error) => {
   console.log("error! Using test data.");
   console.error(error);
-  displayFactory(test_Factory);
 });
 
 async function catchFactory() {
-  const response = await fetch("/getFactory");
-  const data = await response.text();
-  const getFactory = JSON.parse(data);
-  displayFactory(getFactory);
+  try {
+    const response = await fetch("/getFactory");
+    const data = await response.text();
+    const getFactory = JSON.parse(data);
+    displayFactory(getFactory);
+  } catch {
+    displayFactory(test_Factory);
+  }
 }
 
 var fTable = document.createElement("table");
@@ -19,6 +22,7 @@ fTable.className = "table";
 document.getElementById("FactoryTable").appendChild(fTable);
 
 function displayFactory(getFactory) {
+  fTable.innerHTML = "";
   var tr = document.createElement("tr");
   tr.className = "topTable";
   fTable.appendChild(tr);

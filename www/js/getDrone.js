@@ -3,14 +3,17 @@ const dronetimeout = setInterval(catchDrone, 1000);
 catchDrone().catch((error) => {
   console.log("error! Using test data.");
   console.error(error);
-  displayDrone(test_Drone);
 });
 
 async function catchDrone() {
-  const response = await fetch("/getDroneStation");
-  const data = await response.text();
-  const getDrone = JSON.parse(data);
-  displayDrone(getDrone);
+  try {
+    const response = await fetch("/getDroneStation");
+    const data = await response.text();
+    const getDrone = JSON.parse(data);
+    displayDrone(getDrone);
+  } catch {
+    displayDrone(test_Drone);
+  }
 }
 
 var dTable = document.createElement("table");
@@ -19,6 +22,7 @@ dTable.className = "table";
 document.getElementById("DroneTable").appendChild(dTable);
 
 function displayDrone(getDrone) {
+  dTable.innerHTML = "";
   var tr = document.createElement("tr");
   tr.className = "topTable";
   dTable.appendChild(tr);
@@ -72,13 +76,13 @@ function displayDrone(getDrone) {
     droneStatus.innerText = getDrone[i].DroneStatus;
 
     var avgTotalIncRate = document.createElement("td");
-    avgTotalIncRate.innerText = getDrone[i].AvgTotalIncRate;
+    avgTotalIncRate.innerText = Math.round(getDrone[i].AvgTotalIncRate);
 
     var avgTotalOutRate = document.createElement("td");
-    avgTotalOutRate.innerText = getDrone[i].AvgTotalOutRate;
+    avgTotalOutRate.innerText = Math.round(getDrone[i].AvgTotalOutRate);
 
     var estBatteryRate = document.createElement("td");
-    estBatteryRate.innerText = getDrone[i].EstBatteryRate;
+    estBatteryRate.innerText = Math.round(getDrone[i].EstBatteryRate);
 
     var trLoop = [
       homeStation,

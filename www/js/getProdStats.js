@@ -3,14 +3,17 @@ const prodstatstimeout = setInterval(catchProdStats, 1000);
 catchProdStats().catch((error) => {
   console.log("error! Using test data.");
   console.error(error);
-  displayProdStats(test_ProdStats);
 });
 
 async function catchProdStats() {
-  const response = await fetch("/getProdStats");
-  const data = await response.text();
-  const getProdStats = JSON.parse(data);
-  displayProdStats(getProdStats);
+  try {
+    const response = await fetch("/getProdStats");
+    const data = await response.text();
+    const getProdStats = JSON.parse(data);
+    displayProdStats(getProdStats);
+  } catch {
+    displayProdStats(test_ProdStats);
+  }
 }
 
 var pTable = document.createElement("table");
@@ -19,6 +22,7 @@ pTable.className = "table";
 document.getElementById("ProductionTable").appendChild(pTable);
 
 function displayProdStats(getProdStats) {
+  pTable.innerHTML = "";
   var tr = document.createElement("tr");
   tr.className = "topTable";
   pTable.appendChild(tr);
