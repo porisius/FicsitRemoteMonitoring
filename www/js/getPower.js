@@ -13,35 +13,124 @@ async function catchPower() {
   displayPower(getPower);
 }
 
+var powerTable = document.createElement("table");
+powerTable.style.width = "100%";
+powerTable.className = "table";
+document.getElementById("PowerTable").appendChild(powerTable);
+
 function displayPower(getPower) {
-  var i, txt;
+  var tr = document.createElement("tr");
+  tr.className = "topTable";
+  powerTable.appendChild(tr);
 
-  txt = "<table class='table' width=100%>";
-  txt += "<tr class='topTable'>";
-  txt +=
-    "<td><b>Reset Circuit:</b></td><td><b>Circuit ID:</b></td><td><b>Power Capacity:</b></td><td><b>Power Production:</b></td><td><b>Power Consumed:</b></td><td><b>Max Consumed:</b></td><td><b>Battery Differential:</b></td><td><b>Battery Percent:</b></td><td><b>Battery Capacity:</b></td><td><b>Time Remaining:</b></td></tr>";
+  var lines = [
+    "Reset Circuit:",
+    "Circuit ID:",
+    "Power Capacity:",
+    "Power Production:",
+    "Power Consumed:",
+    "Max Consumed:",
+    "Battery Differential:",
+    "Battery Percent:",
+    "Battery Capacity:",
+    "Time Remaining:",
+  ];
 
-  for (i in getPower) {
-    txt += "<tr>";
-    txt +=
-      '<td align="center"><button onclick=resetCircuit(' +
-      getPower[i].CircuitID +
-      ') class="resetCircuit ' +
-      getPower[i].CircuitID +
-      '">Reset</button></td>';
-    txt += '<td align="center">' + getPower[i].CircuitID + "</td>";
-    txt += '<td align="right">' + getPower[i].PowerCapacity + " MW</td>";
-    txt += '<td align="right">' + getPower[i].PowerProduction + " MW</td>";
-    txt += '<td align="right">' + getPower[i].PowerConsumed + " MW</td>";
-    txt += '<td align="right">' + getPower[i].PowerMaxConsumed + " MW</td>";
-    txt += '<td align="right">' + getPower[i].BatteryDifferential + " MW</td>";
-    txt +=
-      '<td align="right">' + getPower[i].BatteryPercent.toFixed(1) + "%</td>";
-    txt += '<td align="right">' + getPower[i].BatteryCapacity + " MW</td>";
-    txt += '<td align="right">' + getPower[i].BatteryTimeEmpty + "</td>";
-    txt += "</tr>";
+  for (var i = 0; i < lines.length; i++) {
+    var td = document.createElement("td");
+    var b = document.createElement("b");
+    b.innerText = lines[i];
+    td.appendChild(b);
+
+    var sortContainer = document.createElement("div");
+    sortContainer.classList = "sortContainer";
+    td.appendChild(sortContainer);
+
+    var asc = document.createElement("button");
+    asc.classList = "sortAsc";
+    asc.innerText = "⬆️";
+    asc.onclick = sort;
+
+    var desc = document.createElement("button");
+    desc.classList = "sortDesc";
+    desc.innerText = "⬇️";
+    desc.onclick = sort;
+
+    sortContainer.appendChild(asc);
+    sortContainer.appendChild(desc);
+
+    tr.appendChild(td);
   }
 
-  txt += "</table>";
-  document.getElementById("PowerTable").innerHTML = txt;
+  for (var i in getPower) {
+    var tr = document.createElement("tr");
+    powerTable.appendChild(tr);
+
+    var resetCircuit = document.createElement("td");
+    var resetCircuitBtn = document.createElement("button");
+    resetCircuitBtn.addEventListener("click", function () {
+      fetch(
+        "/setCircuit?circuit=" +
+          this.parentNode.parentNode.childNodes[1].innerText +
+          "&action=reset"
+      );
+    });
+    resetCircuitBtn.className = "resetCircuit";
+    resetCircuitBtn.innerText = "Reset";
+    resetCircuit.style.alignContent = "center";
+    resetCircuit.appendChild(resetCircuitBtn);
+
+    var circuitID = document.createElement("td");
+    circuitID.innerText = getPower[i].CircuitID;
+    circuitID.style.alignContent = "center";
+
+    var powerCapacity = document.createElement("td");
+    powerCapacity.innerText = getPower[i].PowerCapacity + "MW";
+    powerCapacity.style.alignContent = "right";
+
+    var powerProduction = document.createElement("td");
+    powerProduction.innerText = getPower[i].PowerProduction + "MW";
+    powerProduction.style.alignContent = "right";
+
+    var powerConsumed = document.createElement("td");
+    powerConsumed.innerText = getPower[i].PowerConsumed + "MW";
+    powerConsumed.style.alignContent = "right";
+
+    var powerMaxConsumed = document.createElement("td");
+    powerMaxConsumed.innerText = getPower[i].PowerMaxConsumed + "MW";
+    powerMaxConsumed.style.alignContent = "right";
+
+    var batteryDifferential = document.createElement("td");
+    batteryDifferential.innerText = getPower[i].BatteryDifferential + "MW";
+    batteryDifferential.style.alignContent = "right";
+
+    var batteryPercent = document.createElement("td");
+    batteryPercent.innerText = getPower[i].BatteryPercent.toFixed(1) + "%";
+    batteryPercent.style.alignContent = "right";
+
+    var batteryCapacity = document.createElement("td");
+    batteryCapacity.innerText = getPower[i].BatteryCapacity + "MW";
+    batteryCapacity.style.alignContent = "right";
+
+    var batteryTimeEmpty = document.createElement("td");
+    batteryTimeEmpty.innerText = getPower[i].BatteryTimeEmpty;
+    batteryTimeEmpty.style.alignContent = "right";
+
+    var trLoop = [
+      resetCircuit,
+      circuitID,
+      powerCapacity,
+      powerProduction,
+      powerConsumed,
+      powerMaxConsumed,
+      batteryDifferential,
+      batteryPercent,
+      batteryCapacity,
+      batteryTimeEmpty,
+    ];
+
+    for (var i in trLoop) {
+      tr.appendChild(trLoop[i]);
+    }
+  }
 }

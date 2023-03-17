@@ -120,35 +120,6 @@ function menuShow(show) {
   document.getElementById(show).style.display = "";
 }
 
-function addButtonsTables() {
-  const objects = document.getElementsByClassName("topTable");
-  for (var i = 0; i < objects.length; i++) {
-    var table = objects[i];
-    for (var j = 0; j < table.childNodes.length; j++) {
-      var object = table.childNodes[j];
-
-      if (!object.querySelector(".sortContainer")) {
-        var sortContainer = document.createElement("div");
-        sortContainer.classList = "sortContainer";
-        object.appendChild(sortContainer);
-
-        var asc = document.createElement("button");
-        asc.classList = "sortAsc";
-        asc.innerText = "⬆️";
-        asc.onclick = sort;
-
-        var desc = document.createElement("button");
-        desc.classList = "sortDesc";
-        desc.innerText = "⬇️";
-        desc.onclick = sort;
-
-        sortContainer.appendChild(asc);
-        sortContainer.appendChild(desc);
-      }
-    }
-  }
-}
-
 function sort(dir) {
   var topTable = dir.srcElement.parentNode.parentNode;
   var tbody = topTable.parentNode.parentNode;
