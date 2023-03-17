@@ -17,6 +17,7 @@
 
 *** xref:json/Groups/getFactory.adoc[getAssembler]
 *** xref:json/Read/getBelts.adoc[getBelts]
+*** xref:json/Groups/getGenerators.adoc[getBiomassGenerator]
 *** xref:json/Groups/getFactory.adoc[getBlender]
 *** xref:json/Groups/getFactory.adoc[getConstructor]
 *** xref:json/Read/getDoggo.adoc[getDoggo]
@@ -27,8 +28,11 @@
 *** xref:json/Groups/getVehicles.adoc[getExplorer]
 *** xref:json/Read/getExtractor.adoc[getExtractor]
 *** xref:json/Groups/getFactory.adoc[getFoundry]
+*** xref:json/Groups/getGenerators.adoc[getFuelGenerator]
+*** xref:json/Groups/getGenerators.adoc[getGeothermalGenerator]
 *** xref:json/Groups/getFactory.adoc[getManufacturer]
 *** xref:json/Read/getModList.adoc[getModList]
+*** xref:json/Groups/getGenerators.adoc[getNuclearGenerator]
 *** xref:json/Groups/getFactory.adoc[getParticle]
 *** xref:json/Read/getPipes.adoc[getPipes]
 *** xref:json/Read/getPower.adoc[getPower]
@@ -41,6 +45,7 @@
 *** xref:json/Read/getResourceSink.adoc[getResourceSink]
 *** xref:json/Read/getResourceNode.adoc[getResourceWell]
 *** xref:json/Read/getSchematics.adoc[getSchematics]
+*** xref:json/Groups/getSinkList.adoc[getSinkList]
 *** xref:json/Groups/getFactory.adoc[getSmelter]
 *** xref:json/Read/getStorageInv.adoc[getStorageInv]
 *** xref:json/Read/getSwitches.adoc[getSwitches]
@@ -59,4 +64,5 @@
 
 *** xref:json/Groups/getAll.adoc[getAll]
 *** xref:json/Groups/getFactory.adoc[getFactory]
+*** xref:json/Groups/getGenerators.adoc[getGenerators]
 *** xref:json/Groups/getVehicles.adoc[getVehicles]

@@ -12,8 +12,13 @@ Note: If the item is not being produced or extracted, it will not be displayed.
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|ItemName
+|Name
 |Name of the item mined/extracted/produced
+|String
+|Output
+
+|ClassName
+|UE Class Name
 |String
 |Output
 
@@ -30,11 +35,6 @@ Note: If the item is not being produced or extracted, it will not be displayed.
 |ConsPercent
 |Efficiency percentage Consumed
 |Float
-|Output
-
-|Type
-|Denotes how item is transferred. Item on belt, or fluid/gas on pipe
-|String
 |Output
 
 |CurrentProd
@@ -57,30 +57,52 @@ Note: If the item is not being produced or extracted, it will not be displayed.
 |Float
 |Output
 
+|Type
+|Denotes how item is transferred. Item on belt, or fluid/gas on pipe
+|String
+|Output
+
 |===
 
 Example:
 [source,json]
 -----------------
-[{
-      "ItemName":"Actual Snow",
-      "ProdPerMin":"P: 30.0/30.0/min - C: 0.0/30.0/min",
-      "ProdPercent":99.610001,
-      "ConsPercent":0.0,
-      "CurrentProd":30.0,
-      "MaxProd":30.0,
-      "CurrentConsumed":0.0,
-      "MaxConsumed":30.0,
-      "Type":"Belt"
-}, {
-      "ItemName":"AI Limiter",
-      "ProdPerMin":"P: 5.0/5.0/min - C: 0.0/8.0/min",
-      "ProdPercent":100.0,
-      "ConsPercent":0.0,
-      "CurrentProd":5.0,
-      "MaxProd":5.0,
-      "CurrentConsumed":0.0,
-      "MaxConsumed":8.0,
-      "Type":"Belt"
-}]
+[
+	{
+		"Name": "Alclad Aluminum Sheet",
+		"ClassName": "Desc_AluminumPlate_C",
+		"ProdPerMin": "P:0.0/min - C: 0.0/min",
+		"ProdPercent": 0,
+		"ConsPercent": 0,
+		"CurrentProd": 0,
+		"MaxProd": 240,
+		"CurrentConsumed": 0,
+		"MaxConsumed": 89.999992370605469,
+		"Type": "Belt"
+	},
+	{
+		"Name": "Alumina Solution",
+		"ClassName": "Desc_AluminaSolution_C",
+		"ProdPerMin": "P:0.0/min - C: 0.0/min",
+		"ProdPercent": 0,
+		"ConsPercent": 0,
+		"CurrentProd": 0,
+		"MaxProd": 720.00006103515625,
+		"CurrentConsumed": 0,
+		"MaxConsumed": 660,
+		"Type": "Pipe"
+	},
+	{
+		"Name": "Aluminum Casing",
+		"ClassName": "Desc_AluminumCasing_C",
+		"ProdPerMin": "P:0.0/min - C: 0.0/min",
+		"ProdPercent": 0,
+		"ConsPercent": 0,
+		"CurrentProd": 0,
+		"MaxProd": 240,
+		"CurrentConsumed": 0,
+		"MaxConsumed": 180,
+		"Type": "Belt"
+	}
+]
 -----------------

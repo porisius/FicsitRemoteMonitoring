@@ -8,8 +8,13 @@ API Endpoint: getBelts +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|BeltName
+|Name
 |Belt Type
+|String
+|Output
+
+|ClassName
+|UE Class Name
 |String
 |Output
 
@@ -63,34 +68,79 @@ API Endpoint: getBelts +
 |Integer
 |Output
 
+|features/properties/name
+|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/geometry/name
+|GeoJSON name of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y,Z for map marking
+|[Float, Float, Float]
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
 |===
 
 Example:
 [source,json]
 -----------------
-[{
-      "BeltName":"Conveyor Belt Mk.1",
-      "ItemName":"",
-      "location0":{
-         "x":-104125.710938,"y":-133350.21875,"z":-1310.157715
+[	
+   {
+      "Name": "Conveyor Belt Mk.1",
+      "ClassName": "Build_ConveyorBeltMk1_C_89",
+      "location0":
+      {
+         "X": -104125.7109375,
+         "Y": -133350.21875,
+         "Z": -1310.15771484375
       },
-      "Connected0":true,
-      "location1":{
-         "x":-104015.585938,"y":-132823.078125,"z":-1310.157837
+      "Connected0": true,
+      "location1":
+      {
+         "X": -104015.5859375,
+         "Y": -132823.078125,
+         "Z": -1310.1578369140625
       },
-      "Connected1":true,
-      "Speed":120.0
-   },{
-      "BeltName":"Conveyor Belt Mk.1",
-      "ItemName":"",
-      "location0":{
-         "x":-104015.585938,"y":-132823.078125,"z":-1310.157837
-      },
-      "Connected0":true,
-      "location1":{
-         "x":-103523.1875,"y":-132736.234375,"z":-1310.157837
-      },
-      "Connected1":true,
-      "Speed":120.0
-}]
+      "Connected1": true,
+      "Speed": 120,
+      "features":
+      {
+         "properties":
+         {
+            "name": "Conveyor Belt Mk.1",
+            "type": "Conveyor Belt Mk.1"
+         },
+         "geometry":
+         {
+            "coordinates": [
+               {
+                  "X": -104125.7109375,
+                  "Y": -133350.21875,
+                  "Z": -1310.15771484375
+               },
+               {
+                  "X": -104015.5859375,
+                  "Y": -132823.078125,
+                  "Z": -1310.1578369140625
+               }
+            ],
+            "type": "Line"
+         }
+      }
+   }
+]
 -----------------

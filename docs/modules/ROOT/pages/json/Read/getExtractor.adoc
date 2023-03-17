@@ -13,6 +13,11 @@ API Endpoint: getExtractor +
 |String
 |Output
 
+|ClassName
+|UE Class Name
+|String
+|Output
+
 |location/x
 |X Location of Extractor
 |Float
@@ -88,51 +93,126 @@ API Endpoint: getExtractor +
 |Integar
 |Output
 
+|features/properties/name
+|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/geometry/name
+|GeoJSON name of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y,Z for map marking
+|[Float, Float, Float]
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
 |===
 
 Example:
 [source,json]
 -----------------
-[{
-      "building":"Oil Extractor",
-      "location":{
-         "x":-36415.085938,"y":-199979.984375,"z":2486.057617,
-         "rotation":150
-      },
-      "Recipe":"Crude Oil",
-      "production":[
-         {
-            "Name":"Crude Oil",
-            "CurrentProd":294.100006,
-            "MaxProd":750.0,
-            "ProdPercent":"39.200001"
-         }
-      ],
-      "Purity": "Pure"
-      "ManuSpeed":2.5,
-      "IsConfigured":true,
-      "IsProducing":true,
-      "IsPaused":false,
-      "CircuitID":44
-}, {
-      "building":"Miner Mk.2",
-      "location":{
-         "x":-110109.101562,"y":-129159.960938,"z":-1213.412354,
-         "rotation":10
-      },
-      "Recipe":"Coal",
-      "production":[
-         {
-            "Name":"Coal",
-            "CurrentProd":119.300003,
-            "MaxProd":270.0,
-            "ProdPercent":"44.200001"
-         }
-      ],
-      "ManuSpeed":1.5,
-      "IsConfigured":true,
-      "IsProducing":true,
-      "IsPaused":false,
-      "CircuitID":44
-}]
+[
+	{
+		"Name": "Oil Extractor",
+		"ClassName": "Build_OilPump_C_2146865228",
+		"location":
+		{
+			"x": -36415.0859375,
+			"y": -199979.984375,
+			"z": 2486.0576171875,
+			"rotation": 150
+		},
+		"Recipe": "Crude Oil",
+		"production":
+		{
+			"Name": "Crude Oil",
+			"ClassName": "Desc_LiquidOil_C",
+			"Amount": 6444,
+			"CurrentProd": 288.23529052734375,
+			"MaxProd": 749.99993896484375,
+			"ProdPercent": 0.38431376218795776
+		},
+		"Purity": 1,
+		"ManuSpeed": 2.5,
+		"IsConfigured": true,
+		"IsProducing": true,
+		"IsPaused": false,
+		"CircuitID": 44,
+		"features":
+		{
+			"properties":
+			{
+				"name": "Crude Oil",
+				"type": "Oil Extractor"
+			},
+			"geometry":
+			{
+				"coordinates":
+				{
+					"X": -36415.0859375,
+					"Y": -199979.984375,
+					"Z": 2486.0576171875
+				},
+				"type": "Point"
+			}
+		}
+	},
+	{
+		"Name": "Miner Mk.2",
+		"ClassName": "Build_MinerMk2_C_1",
+		"location":
+		{
+			"x": -110109.1015625,
+			"y": -129159.9609375,
+			"z": -1213.412353515625,
+			"rotation": 10
+		},
+		"Recipe": "Coal",
+		"production":
+		{
+			"Name": "Coal",
+			"ClassName": "Desc_Coal_C",
+			"Amount": 97,
+			"CurrentProd": 119.99999237060547,
+			"MaxProd": 269.99996948242188,
+			"ProdPercent": 0.44444447755813599
+		},
+		"Purity": 1,
+		"ManuSpeed": 1.5,
+		"IsConfigured": true,
+		"IsProducing": false,
+		"IsPaused": false,
+		"CircuitID": 44,
+		"features":
+		{
+			"properties":
+			{
+				"name": "Coal",
+				"type": "Miner Mk.2"
+			},
+			"geometry":
+			{
+				"coordinates":
+				{
+					"X": -110109.1015625,
+					"Y": -129159.9609375,
+					"Z": -1213.412353515625
+				},
+				"type": "Point"
+			}
+		}
+	}
+]
 -----------------

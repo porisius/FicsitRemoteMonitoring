@@ -16,6 +16,11 @@ getResourceWell - Fracking/Resource Well +
 |String
 |Output
 
+|ClassName
+|UE Class Name
+|String
+|Output
+
 |location/x
 |X Location of Resource Node
 |Float
@@ -51,61 +56,100 @@ getResourceWell - Fracking/Resource Well +
 |Boolean
 |Output
 
+|features/properties/name
+|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/geometry/name
+|GeoJSON name of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y,Z for map marking
+|[Float, Float, Float]
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
 |===
 
 Example:
 [source,json]
 -----------------
 [
-   {
-      "NodeName":"Crude Oil",
-      "location":{
-         "x":178265.375,
-         "y":206095.640625,
-         "z":-9238.571289
-      },
-      "EnumPurity":"RP_Normal",
-      "Purity":"Normal",
-      "NodeType":"Node",
-      "Exploited":false,
-      "features":{
-         "properties":{
-            "type":"Normal"
-         },
-         "geometry":{
-            "coordinates":{
-               "x":178265.375,
-               "y":206095.640625,
-               "z":-9238.571289
-            },
-            "type":"Point"
-         }
-      }
-   },
-   {
-      "NodeName":"SAM Ore",
-      "location":{
-         "x":181999.0625,
-         "y":114342.0,
-         "z":10285.46875
-      },
-      "EnumPurity":"RP_Normal",
-      "Purity":"Normal",
-      "NodeType":"Node",
-      "Exploited":false,
-      "features":{
-         "properties":{
-            "type":"Normal"
-         },
-         "geometry":{
-            "coordinates":{
-               "x":181999.0625,
-               "y":114342.0,
-               "z":10285.46875
-            },
-            "type":"Point"
-         }
-      }
-   }
+	{
+		"Name": "Raw Quartz",
+		"ClassName": "",
+		"location":
+		{
+			"X": -24911.302734375,
+			"Y": -142186.59375,
+			"Z": 8143.46875
+		},
+		"EnumPurity": "Pure",
+		"Purity": "Pure",
+		"NodeType": "Node",
+		"Exploited": false,
+		"features":
+		{
+			"properties":
+			{
+				"name": "Raw Quartz",
+				"type": "Resource Node"
+			},
+			"geometry":
+			{
+				"coordinates":
+				{
+					"X": -24911.302734375,
+					"Y": -142186.59375,
+					"Z": 8143.46875
+				},
+				"type": "Point"
+			}
+		}
+	},
+	{
+		"Name": "Copper Ore",
+		"ClassName": "",
+		"location":
+		{
+			"X": -21028.134765625,
+			"Y": -137929.515625,
+			"Z": 10295.291015625
+		},
+		"EnumPurity": "Pure",
+		"Purity": "Pure",
+		"NodeType": "Node",
+		"Exploited": false,
+		"features":
+		{
+			"properties":
+			{
+				"name": "Copper Ore",
+				"type": "Resource Node"
+			},
+			"geometry":
+			{
+				"coordinates":
+				{
+					"X": -21028.134765625,
+					"Y": -137929.515625,
+					"Z": 10295.291015625
+				},
+				"type": "Point"
+			}
+		}
+	}
 ]
 -----------------

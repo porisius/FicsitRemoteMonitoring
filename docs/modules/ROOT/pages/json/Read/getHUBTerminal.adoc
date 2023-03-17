@@ -1,0 +1,143 @@
+= HUB Terminal Information
+
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+API Endpoint: getHUBTerminal
+
+[cols="1,2,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|Building
+|HUB Name
+|String
+|Output
+
+|ClassName
+|UE Class Name
+|String
+|Output
+
+|location/x
+|X Location of HUB Terminal
+|Float
+|Output
+
+|location/y
+|Y Location of HUB Terminal
+|Float
+|Output
+
+|location/z
+|Z Location of HUB Terminal
+|Float
+|Output
+
+|location/Rotation
+|Heading of HUB Terminal
+|Float
+|Output
+
+|ShipDock
+|Drone Ship in Dock
+|Boolean
+|Output
+
+|HUBLevel
+|Level of HUB
+|Integer
+|Output
+
+|SchName
+|Current Active Schematic
+|String
+|Output
+
+|ShipReturn
+|Time until ship returns
+|String
+|Output
+
+|features/properties/name
+|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/geometry/name
+|GeoJSON name of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y,Z for map marking
+|[Float, Float, Float]
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|===
+
+Example:
+[source,json]
+-----------------
+[
+   {
+      "NodeName":"Crude Oil",
+      "location":{
+         "x":178265.375,
+         "y":206095.640625,
+         "z":-9238.571289
+      },
+      "EnumPurity":"RP_Normal",
+      "Purity":"Normal",
+      "NodeType":"Node",
+      "Exploited":false,
+      "features":{
+         "properties":{
+            "type":"Normal"
+         },
+         "geometry":{
+            "coordinates":{
+               "x":178265.375,
+               "y":206095.640625,
+               "z":-9238.571289
+            },
+            "type":"Point"
+         }
+      }
+   },
+   {
+      "NodeName":"SAM Ore",
+      "location":{
+         "x":181999.0625,
+         "y":114342.0,
+         "z":10285.46875
+      },
+      "EnumPurity":"RP_Normal",
+      "Purity":"Normal",
+      "NodeType":"Node",
+      "Exploited":false,
+      "features":{
+         "properties":{
+            "type":"Normal"
+         },
+         "geometry":{
+            "coordinates":{
+               "x":181999.0625,
+               "y":114342.0,
+               "z":10285.46875
+            },
+            "type":"Point"
+         }
+      }
+   }
+]
+-----------------

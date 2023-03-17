@@ -13,6 +13,16 @@ API Endpoint: getPowerSlug +
 |Integer
 |Output
 
+|SlugType
+|Type of Power Slug (Green, Yellow, Purple)
+|String
+|Output
+
+|ClassName
+|UE Class Name
+|String
+|Output
+
 |location/x
 |X Location of Slug
 |Float
@@ -33,13 +43,33 @@ API Endpoint: getPowerSlug +
 |Float
 |Output
 
-|SlugType
-|Type of Power Slug (Green, Yellow, Purple)
+|MapArea
+|Map Area Name (Future Feature)
 |String
 |Output
 
-|MapArea
-|Map Area Name (Future Feature)
+|features/properties/name
+|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/geometry/name
+|GeoJSON name of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y,Z for map marking
+|[Float, Float, Float]
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
 |String
 |Output
 
@@ -49,51 +79,35 @@ Example:
 [source,json]
 -----------------
 [
-   {
-      "ID":"0",
-      "location":{
-         "x":241707.46875,
-         "y":-310696.75,
-         "z":6774.139648,
-         "rotation":92
-      },
-      "SlugType":"Blue Slug",
-      "features":{
-         "properties":{
-            "type":"Power Slug"
-         },
-         "geometry":{
-            "coordinates":{
-               "x":241707.46875,
-               "y":-310696.75,
-               "z":6774.139648
-            },
-            "type":"Point"
-         }
-      }
-   },
-   {
-      "ID":"1",
-      "location":{
-         "x":-151933.84375,
-         "y":-40291.445312,
-         "z":2863.63623,
-         "rotation":228
-      },
-      "SlugType":"Blue Slug",
-      "features":{
-         "properties":{
-            "type":"Power Slug"
-         },
-         "geometry":{
-            "coordinates":{
-               "x":-151933.84375,
-               "y":-40291.445312,
-               "z":2863.63623
-            },
-            "type":"Point"
-         }
-      }
-   }
+	{
+		"ID": 0,
+		"SlugType": "Blue Slug",
+		"ClassName": "BP_Crystal129",
+		"location":
+		{
+			"x": 241707.46875,
+			"y": -310696.75,
+			"z": 6774.1396484375,
+			"rotation": 92
+		},
+		"features":
+		{
+			"properties":
+			{
+				"name": "Blue Slug",
+				"type": "Power Slug"
+			},
+			"geometry":
+			{
+				"coordinates":
+				{
+					"X": 241707.46875,
+					"Y": -310696.75,
+					"Z": 6774.1396484375
+				},
+				"type": "Point"
+			}
+		}
+	}
 ]
 -----------------

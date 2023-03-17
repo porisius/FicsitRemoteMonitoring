@@ -18,6 +18,11 @@ API Endpoint: getDroneStation +
 |String
 |Output
 
+|ClassName
+|UE Class Name
+|String
+|Output
+
 |location/x
 |X Location of Drone Station
 |Float
@@ -168,91 +173,118 @@ API Endpoint: getDroneStation +
 Example:
 [source,json]
 -----------------
-[{
-    "ID":"0",
-    "HomeStation":"Aluminium Drone",
-    "location":{
-		"x":-102771.085938,"y":-85182.867188,"z":2589.842285,
-        "rotation":"90"
-    },
-    "PairedStation":"Storage Import 2",
-    "DroneStatus":"EDS_TAKEOFF",
-    "AvgIncRate":0.0,
-	"AvgIncStack":0.0,
-	"AvgOutRate":217.800003,
-	"AvgOutStack":1.2,
-	"AvgRndTrip":"00:02:54",
-	"AvgTotalIncRate":0.0,
-	"AvgTotalIncStack":0.0,
-	"AvgTotalOutRate":217.800003,
-	"AvgTotalOutStack":1.2,
-	"AvgTripIncAmt":0.0,
-	"EstRndTrip":"00:02:10",
-	"EstTotalTransRate":4.1,
-	"EstTransRate":4.1,
-	"EstLatestTotalIncStack":0.0,
-	"EstLatestTotalOutStack":1.2,
-	"LatestIncStack":0.0,
-	"LatestOutStack":1.2,
-	"LatestRndTrip":"00:02:54",
-	"LatestTripIncAmt":0,
-	"LatestTripOutAmt":634,
-	"MedianRndTrip":"00:02:54",
-	"MedianTripIncAmt":0.0,
-	"MedianTripOutAmt":634.0,
-	"EstBatteryRate":2.8,
-    "features": {
-		"properties":
-			{"type": "Drone Station"},
-		"geometry": {
-			"coordinates": {
-					"x":-102771.085938,"y":-85182.867188,"z":2589.842285
+[
+	{
+		"ID": 0,
+		"Name": "Drone Port",
+		"ClassName": "Build_DroneStation_C_2147259439",
+		"location":
+		{
+			"x": -102771.0859375,
+			"y": -85182.8671875,
+			"z": 2589.84228515625,
+			"rotation": 10
+		},
+		"PairedStation": "Storage Import 2",
+		"DroneStatus": 3,
+		"AvgIncRate": 0,
+		"AvgIncStack": 0,
+		"AvgOutRate": 73.087936401367188,
+		"AvgOutStack": 0.47748488187789917,
+		"AvgRndTrip": "00:02:54",
+		"AvgTotalIncRate": 0,
+		"AvgTotalIncStack": 0,
+		"AvgTotalOutRate": 73.087936401367188,
+		"AvgTotalOutStack": 0.47748488187789917,
+		"AvgTripIncAmt": 0,
+		"EstRndTrip": "00:02:10",
+		"EstTotalTransRate": 4.1415610313415527,
+		"EstTransRate": 4.1415610313415527,
+		"EstLatestTotalIncStack": 0,
+		"EstLatestTotalOutStack": 0.47748488187789917,
+		"LatestIncStack": 0,
+		"LatestOutStack": 0.47748488187789917,
+		"LatestRndTrip": "00:02:54",
+		"LatestTripIncAmt": 0,
+		"LatestTripOutAmt": 212,
+		"MedianRndTrip": "00:02:54",
+		"MedianTripIncAmt": 0,
+		"MedianTripOutAmt": 212,
+		"EstBatteryRate": 2.7610406875610352,
+		"features":
+		{
+			"properties":
+			{
+				"name": "Drone Port",
+				"type": "Drone Station"
 			},
-			"type": "Point"
+			"geometry":
+			{
+				"coordinates":
+				{
+					"X": -102771.0859375,
+					"Y": -85182.8671875,
+					"Z": 2589.84228515625
+				},
+				"type": "Point"
+			}
 		}
-	}	
-},{
-    "ID":"1",
-    "HomeStation":"Battery Port",
-    "location":{
-		"x":-105134.585938,"y":-85599.773438,"z":2589.842285,
-        "rotation":"90"
-    },
-    "PairedStation":"Battery Import",
-    "DroneStatus":"EDS_EN_ROUTE",
-    "AvgIncRate":0.0,
-	"AvgIncStack":0.0,
-	"AvgOutRate":59.700001,
-	"AvgOutStack":0.3,
-	"AvgRndTrip":"00:02:52",
-	"AvgTotalIncRate":0.0,
-	"AvgTotalIncStack":0.0,
-	"AvgTotalOutRate":59.700001,
-	"AvgTotalOutStack":0.3,
-	"AvgTripIncAmt":0.0,
-	"EstRndTrip":"00:02:10",
-	"EstTotalTransRate":4.1,
-	"EstTransRate":4.1,
-	"EstLatestTotalIncStack":0.0,
-	"EstLatestTotalOutStack":0.3,
-	"LatestIncStack":0.0,
-	"LatestOutStack":0.3,
-	"LatestRndTrip":"00:02:52",
-	"LatestTripIncAmt":0,
-	"LatestTripOutAmt":172,
-	"MedianRndTrip":"00:02:52",
-	"MedianTripIncAmt":0.0,
-	"MedianTripOutAmt":172.0,
-	"EstBatteryRate":2.8,
-    "features": {
-		"properties":
-			{"type": "Drone Station"},
-		"geometry": {
-			"coordinates": {
-					"x":-105134.585938,"y":-85599.773438,"z":2589.842285
+	},
+	{
+		"ID": 1,
+		"Name": "Drone Port",
+		"ClassName": "Build_DroneStation_C_2147256765",
+		"location":
+		{
+			"x": -105134.5859375,
+			"y": -85599.7734375,
+			"z": 2589.84228515625,
+			"rotation": 10
+		},
+		"PairedStation": "Battery Import",
+		"DroneStatus": 4,
+		"AvgIncRate": 0,
+		"AvgIncStack": 0,
+		"AvgOutRate": 33.709449768066406,
+		"AvgOutStack": 0.16854724287986755,
+		"AvgRndTrip": "00:02:52",
+		"AvgTotalIncRate": 0,
+		"AvgTotalIncStack": 0,
+		"AvgTotalOutRate": 33.709449768066406,
+		"AvgTotalOutStack": 0.16854724287986755,
+		"AvgTripIncAmt": 0,
+		"EstRndTrip": "00:02:10",
+		"EstTotalTransRate": 4.1497898101806641,
+		"EstTransRate": 4.1497898101806641,
+		"EstLatestTotalIncStack": 0,
+		"EstLatestTotalOutStack": 0.16854724287986755,
+		"LatestIncStack": 0,
+		"LatestOutStack": 0.16854724287986755,
+		"LatestRndTrip": "00:02:52",
+		"LatestTripIncAmt": 0,
+		"LatestTripOutAmt": 97,
+		"MedianRndTrip": "00:02:52",
+		"MedianTripIncAmt": 0,
+		"MedianTripOutAmt": 97,
+		"EstBatteryRate": 2.766526460647583,
+		"features":
+		{
+			"properties":
+			{
+				"name": "Drone Port",
+				"type": "Drone Station"
 			},
-			"type": "Point"
+			"geometry":
+			{
+				"coordinates":
+				{
+					"X": -105134.5859375,
+					"Y": -85599.7734375,
+					"Z": 2589.84228515625
+				},
+				"type": "Point"
+			}
 		}
-	}	
-}]
+	}
+]
 -----------------
