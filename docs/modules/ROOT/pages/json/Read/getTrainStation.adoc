@@ -8,9 +8,14 @@ API Endpoint: getTrainStation +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|StationName
+|Name
 |Name of the Station
 |Integer
+|Output
+
+|ClassName
+|UE Class Name
+|String
 |Output
 
 |location/x
@@ -95,7 +100,7 @@ Example:
 -----------------
 [
    {
-      "StationName": "Caterium Ore",
+      "Name": "Caterium Ore",
       "location":
       {
          "x": -15742.4189453125,

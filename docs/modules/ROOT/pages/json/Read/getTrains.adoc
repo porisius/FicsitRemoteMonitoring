@@ -8,7 +8,7 @@ API Endpoint: getTrains +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|TrainName
+|Name
 |Name of the train
 |String
 |Output
