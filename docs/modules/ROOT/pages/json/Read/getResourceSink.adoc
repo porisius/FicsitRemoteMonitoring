@@ -23,11 +23,6 @@ API Endpoint: getResourceSink / getExplorationSink +
 |Float
 |Output
 
-|GraphPoints/Index
-|Index of Value/Min of Points Earned
-|Integer
-|Output
-
 |GraphPoints/Value
 |Value/Min of Points Earned
 |Integer
@@ -52,7 +47,7 @@ Example:
    {
       "Name":"A.W.E.S.O.M.E.",
       "NumCoupon":13,
-      "Percent":"15.7",
+      "Percent":15.7,
       "GraphPoints":[
          {
             "Index":0,

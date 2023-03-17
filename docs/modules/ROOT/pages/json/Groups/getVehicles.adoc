@@ -18,8 +18,13 @@ getTruck only retrieves Trucks +
 |Integer
 |Output
 
-|VehicleType
+|Name
 |Name of vehicle type
+|String
+|Output
+
+|ClassName
+|UE Class Name
 |String
 |Output
 
@@ -68,14 +73,59 @@ getTruck only retrieves Trucks +
 |Boolean
 |Output
 
-|FuelType
-|Fuel Type
+|Storage/Name
+|Name
 |String
 |Output
 
-|FuelInventory
-|Fuel remaining
-|Integer
+|Storage/ClassName
+|UE Class Name
+|String
+|Output
+
+|Storage/Amount
+|Amount of items
+|Integar
+|Output
+
+|Fuel/Name
+|Name
+|String
+|Output
+
+|Fuel/ClassName
+|UE Class Name
+|String
+|Output
+
+|Fuel/Amount
+|Amount of items
+|Integar
+|Output
+
+|features/properties/name
+|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/geometry/name
+|GeoJSON name of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y,Z for map marking
+|[Float, Float, Float]
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
 |Output
 
 |===
@@ -83,33 +133,62 @@ getTruck only retrieves Trucks +
 Example:
 [source,json]
 -----------------
-[{
-      "ID":"0",
-      "VehicleType":"Explorer",
-      "location":{
-         "x":-52341.4375,"y":-162543.21875,"z":-904.135193,
-         "rotation":313
+[
+  {
+    "ID": 0,
+    "VehicleType": "Explorer",
+    "location":
+    {
+      "x": -52341.4375,
+      "y": -162543.21875,
+      "z": -904.133544921875,
+      "rotation": 313
+    },
+    "ForwardSpeed": 0,
+    "CurrentGear": 0,
+    "EngineRPM": 0,
+    "Airborne": false,
+    "AutoPilot": false,
+    "Storage": [
+      {
+        "Name": "Battery",
+        "ClassName": "Desc_Battery_C",
+        "Amount": 200
       },
-      "ForwardSpeed":0.0,
-      "CurrentGear":0,
-      "EngineRPM":0.0,
-      "Airborne":false,
-      "AutoPilot":false,
-      "FuelType":"Battery",
-      "FuelInventory":199,
-      "ThrottlePercent":0.0,
-      "PathName":"",
-      "FollowingPath": false,
-      "FuelUsed":"",
-    "features": {
-		"properties":
-			{"type": "Explorer"},
-		"geometry": {
-			"coordinates": {
-				"x":-52341.4375,"y":-162543.21875,"z":-904.135193
-			},
-			"type": "Point"
-		}
-	}	
-}]
+      {
+        "Name": "Battery",
+        "ClassName": "Desc_Battery_C",
+        "Amount": 200
+      }
+    ],
+    "Fuel": [
+      {
+        "Name": "Battery",
+        "ClassName": "Desc_Battery_C",
+        "Amount": 199
+      }
+    ],
+    "ThrottlePercent": 0,
+    "PathName": "",
+    "FollowingPath": false,
+    "features":
+    {
+      "properties":
+      {
+        "name": "Explorer",
+        "type": "Explorer"
+      },
+      "geometry":
+      {
+        "coordinates":
+        {
+          "X": -52341.4375,
+          "Y": -162543.21875,
+          "Z": -904.133544921875
+        },
+        "type": "Point"
+      }
+    }
+  }
+]
 -----------------

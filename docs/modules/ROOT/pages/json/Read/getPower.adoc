@@ -63,29 +63,34 @@ API Endpoint: getPower +
 Example:
 [source,json]
 -----------------
-[{
-      "CircuitID":58,
-      "PowerCapacity":8065.0,
-      "PowerProduction":8005.0,
-      "PowerConsumed":7086.0,
-      "PowerMaxConsumed":9260.0,
-      "BatteryDifferential":0.0,
-      "BatteryPercent":100.0,
-      "BatteryCapacity":2500,
-      "BatteryTimeEmpty":"00:00:00",
-      "BatteryTimeFull":"00:00:00",
-      "FuseTriggered":false
-},{
-      "CircuitID":9,
-      "PowerCapacity":8065.0,
-      "PowerProduction":8005.0,
-      "PowerConsumed":7086.0,
-      "PowerMaxConsumed":9260.0,
-      "BatteryDifferential":0.0,
-      "BatteryPercent":100.0,
-      "BatteryCapacity":2500,
-      "BatteryTimeEmpty":"00:00:00",
-      "BatteryTimeFull":"00:00:00",
-      "FuseTriggered":false
-}]
+[
+	{
+		"KeyID": 0,
+		"CircuitID": 58,
+		"PowerCapacity": 8056.07763671875,
+		"PowerProduction": 7996.07763671875,
+		"PowerConsumed": 5760.62841796875,
+		"PowerMaxConsumed": 9260.1884765625,
+		"BatteryDifferential": 0,
+		"BatteryPercent": 100,
+		"BatteryCapacity": 2500,
+		"BatteryTimeEmpty": "00:00:00",
+		"BatteryTimeFull": "00:00:00",
+		"FuseTriggered": false
+	},
+	{
+		"KeyID": 1,
+		"CircuitID": 9,
+		"PowerCapacity": 8056.07763671875,
+		"PowerProduction": 7996.07763671875,
+		"PowerConsumed": 5760.62841796875,
+		"PowerMaxConsumed": 9260.1884765625,
+		"BatteryDifferential": 0,
+		"BatteryPercent": 100,
+		"BatteryCapacity": 2500,
+		"BatteryTimeEmpty": "00:00:00",
+		"BatteryTimeFull": "00:00:00",
+		"FuseTriggered": false
+	}
+]
 -----------------
