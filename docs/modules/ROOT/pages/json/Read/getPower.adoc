@@ -65,7 +65,6 @@ Example:
 -----------------
 [
 	{
-		"KeyID": 0,
 		"CircuitID": 58,
 		"PowerCapacity": 8056.07763671875,
 		"PowerProduction": 7996.07763671875,
@@ -79,7 +78,6 @@ Example:
 		"FuseTriggered": false
 	},
 	{
-		"KeyID": 1,
 		"CircuitID": 9,
 		"PowerCapacity": 8056.07763671875,
 		"PowerProduction": 7996.07763671875,
