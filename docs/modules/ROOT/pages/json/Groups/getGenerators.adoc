@@ -5,11 +5,11 @@
 API Endpoint: getGenerators +
 Power Generation Stats +
 
-getBiomassGenerator only retrieves Assemblers +
-getCoalGenerator only retrieves Blenders +
-getFuelGenerator only retrieves Constructors +
-getNuclearGenerator only retrieves Particle Accelerators +
-getGeothermalGenerator only retrieves Particle Accelerators +
+getBiomassGenerator only retrieves Biomass Generators +
+getCoalGenerator only retrieves Coal Generators +
+getFuelGenerator only retrieves Fuel Generators +
+getNuclearGenerator only retrieves Nuclear Power Plants +
+getGeothermalGenerator only retrieves Geothermal Generator +
 
 [cols="2,2,1,1"]
 |===
