@@ -8,7 +8,7 @@ API Endpoint: getHUBTerminal
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|Building
+|Name
 |HUB Name
 |String
 |Output

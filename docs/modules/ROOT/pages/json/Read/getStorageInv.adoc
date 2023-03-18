@@ -10,7 +10,7 @@ This is inventory of the world broken up by their storage containers. This does 
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|building
+|Name
 |Name of Storage Container type
 |String
 |Output
