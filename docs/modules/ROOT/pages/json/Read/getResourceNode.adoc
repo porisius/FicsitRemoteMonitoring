@@ -11,7 +11,7 @@ getResourceWell - Fracking/Resource Well +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|NodeName
+|Name
 |Node Name
 |String
 |Output

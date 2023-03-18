@@ -8,7 +8,7 @@ API Endpoint: getBelts +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|PipeName
+|Name
 |Pipe Type
 |String
 |Output

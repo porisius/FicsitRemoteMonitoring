@@ -8,11 +8,6 @@ API Endpoint: getSwitches +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|ID
-|ID Number of Power Switch
-|Integer
-|Output
-
 |Name
 |Name
 |String
@@ -100,7 +95,6 @@ Example:
 -----------------
 [
       {
-            "ID": 0,
             "Name": "Power Switch",
             "ClassName": "Build_PowerSwitch_C_2147265249",
             "location":
@@ -135,7 +129,6 @@ Example:
             }
       },
       {
-            "ID": 1,
             "Name": "Power Switch",
             "ClassName": "Build_PowerSwitch_C_2147144997",
             "location":

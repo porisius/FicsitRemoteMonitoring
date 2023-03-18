@@ -8,7 +8,7 @@ API Endpoint: getExtractor +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|building
+|Name
 |Type of Extractor Building
 |String
 |Output
