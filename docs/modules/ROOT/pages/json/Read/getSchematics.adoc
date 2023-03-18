@@ -8,7 +8,7 @@ API Endpoint: getSchematics +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|SchematicName
+|Name
 |Schematic/Milestone Name
 |String
 |Output
@@ -125,7 +125,7 @@ Example:
 -----------------
 [
    {
-   "SchematicName": "Wall Signs",
+   "Name": "Wall Signs",
    "TechTier": 1,
    "Type": 6.1552420141504922e+17,
    "Recipes": [
