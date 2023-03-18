@@ -8,11 +8,6 @@ API Endpoint: getTruckStation +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|ID
-|ID number of Truck
-|Integer
-|Output
-
 |Name
 |Name of Vehicle Station
 |String
