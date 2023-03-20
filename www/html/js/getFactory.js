@@ -1,16 +1,15 @@
-const factorytimeout = setInterval(catchProdStats, 1000);
-
-catchFactory().catch((error) => {
-  console.log("error! Using test data.");
-  console.error(error);
-  displayFactory(test_Factory);
-});
+const factorytimeout = setInterval(catchFactory, 1000);
 
 async function catchFactory() {
-  const response = await fetch("/getFactory");
-  const data = await response.text();
-  const getFactory = JSON.parse(data);
-  displayFactory(getFactory);
+  try {
+    const response = await fetch("/getFactory");
+    const data = await response.text();
+    const getFactory = JSON.parse(data);
+    displayFactory(getFactory);
+  } catch {
+    displayFactory(test_Factory);
+    showAlert("Error while getting factory data! Using Testing Data.");
+  }
 }
 
 var fTable = document.createElement("table");
@@ -19,12 +18,13 @@ fTable.className = "table";
 document.getElementById("FactoryTable").appendChild(fTable);
 
 function displayFactory(getFactory) {
+  fTable.innerHTML = "";
   var tr = document.createElement("tr");
   tr.className = "topTable";
   fTable.appendChild(tr);
 
   var lines = [
-    "Building Type:",
+    "Name:",
     "Recipe:",
     "Efficiently:",
     "Recipe / Current Production:",
@@ -83,9 +83,9 @@ function displayFactory(getFactory) {
     var tr = document.createElement("tr");
     fTable.appendChild(tr);
 
-    var building = document.createElement("td");
-    building.style.alignContent = "left";
-    building.innerText = getFactory[i].building;
+    var name = document.createElement("td");
+    name.style.alignContent = "left";
+    name.innerText = getFactory[i].Name;
 
     var recipe = document.createElement("td");
     recipe.style.alignContent = "center";
@@ -117,7 +117,7 @@ function displayFactory(getFactory) {
     isPaused.innerText = getFactory[i].IsPaused;
 
     var trLoop = [
-      building,
+      name,
       recipe,
       efficiently,
       production,
