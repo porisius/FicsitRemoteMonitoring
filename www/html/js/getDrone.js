@@ -23,7 +23,14 @@ function displayDrone(getDrone) {
   tr.className = "topTable";
   dTable.appendChild(tr);
 
-  var lines = ["Home Station:", "Current Destination:"];
+  var lines = [
+    "Home Station:",
+    "Paired Station:",
+    "Drone Status:",
+    "Incoming Transfer Rate:",
+    "Outgoing Transfer Rate:",
+    "Battery Usage Rate:",
+  ];
 
   for (var i = 0; i < lines.length; i++) {
     var td = document.createElement("td");
@@ -55,13 +62,32 @@ function displayDrone(getDrone) {
     var tr = document.createElement("tr");
     dTable.appendChild(tr);
 
-    var homeStation = document.createElement("td");
-    homeStation.innerText = getDrone[i].HomeStation;
+    var name = document.createElement("td");
+    name.innerText = getDrone[i].Name;
 
-    var currentDestination = document.createElement("td");
-    currentDestination.innerText = getDrone[i].CurrentDestination;
+    var pairedStation = document.createElement("td");
+    pairedStation.innerText = getDrone[i].PairedStation;
 
-    var trLoop = [homeStation, currentDestination];
+    var droneStatus = document.createElement("td");
+    droneStatus.innerText = getDrone[i].DroneStatus;
+
+    var avgTotalIncRate = document.createElement("td");
+    avgTotalIncRate.innerText = Math.round(getDrone[i].AvgIncRate);
+
+    var avgTotalOutRate = document.createElement("td");
+    avgTotalOutRate.innerText = Math.round(getDrone[i].AvgOutRate);
+
+    var estBatteryRate = document.createElement("td");
+    estBatteryRate.innerText = Math.round(getDrone[i].EstBatteryRate);
+
+    var trLoop = [
+      name,
+      pairedStation,
+      droneStatus,
+      avgTotalIncRate,
+      avgTotalOutRate,
+      estBatteryRate,
+    ];
 
     for (var i in trLoop) {
       tr.appendChild(trLoop[i]);
