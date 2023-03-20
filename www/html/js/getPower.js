@@ -1,16 +1,15 @@
 const timeout = setInterval(catchPower, 1000);
 
-catchPower().catch((error) => {
-  console.log("error! Using test data.");
-  console.error(error);
-  displayPower(test_Power);
-});
-
 async function catchPower() {
-  const response = await fetch("/getPower");
-  const data = await response.text();
-  const getPower = JSON.parse(data);
-  displayPower(getPower);
+  try {
+    const response = await fetch("/getPower");
+    const data = await response.text();
+    const getPower = JSON.parse(data);
+    displayPower(getPower);
+  } catch {
+    displayPower(test_Power);
+    showAlert("Error while getting power data! Using Testing Data.");
+  }
 }
 
 var powerTable = document.createElement("table");
@@ -19,9 +18,10 @@ powerTable.className = "table";
 document.getElementById("PowerTable").appendChild(powerTable);
 
 function displayPower(getPower) {
+  powerTable.innerHTML = "";
   var tr = document.createElement("tr");
   tr.className = "topTable";
-  powerTable.appendChild(tr);
+  powerTable.append(tr);
 
   var lines = [
     "Reset Circuit:",
@@ -85,23 +85,25 @@ function displayPower(getPower) {
     circuitID.style.alignContent = "center";
 
     var powerCapacity = document.createElement("td");
-    powerCapacity.innerText = getPower[i].PowerCapacity + "MW";
+    powerCapacity.innerText = Math.round(getPower[i].PowerCapacity) + "MW";
     powerCapacity.style.alignContent = "right";
 
     var powerProduction = document.createElement("td");
-    powerProduction.innerText = getPower[i].PowerProduction + "MW";
+    powerProduction.innerText = Math.round(getPower[i].PowerProduction) + "MW";
     powerProduction.style.alignContent = "right";
 
     var powerConsumed = document.createElement("td");
-    powerConsumed.innerText = getPower[i].PowerConsumed + "MW";
+    powerConsumed.innerText = Math.round(getPower[i].PowerConsumed) + "MW";
     powerConsumed.style.alignContent = "right";
 
     var powerMaxConsumed = document.createElement("td");
-    powerMaxConsumed.innerText = getPower[i].PowerMaxConsumed + "MW";
+    powerMaxConsumed.innerText =
+      Math.round(getPower[i].PowerMaxConsumed) + "MW";
     powerMaxConsumed.style.alignContent = "right";
 
     var batteryDifferential = document.createElement("td");
-    batteryDifferential.innerText = getPower[i].BatteryDifferential + "MW";
+    batteryDifferential.innerText =
+      Math.round(getPower[i].BatteryDifferential) + "MW";
     batteryDifferential.style.alignContent = "right";
 
     var batteryPercent = document.createElement("td");
@@ -109,7 +111,7 @@ function displayPower(getPower) {
     batteryPercent.style.alignContent = "right";
 
     var batteryCapacity = document.createElement("td");
-    batteryCapacity.innerText = getPower[i].BatteryCapacity + "MW";
+    batteryCapacity.innerText = Math.round(getPower[i].BatteryCapacity) + "MW";
     batteryCapacity.style.alignContent = "right";
 
     var batteryTimeEmpty = document.createElement("td");

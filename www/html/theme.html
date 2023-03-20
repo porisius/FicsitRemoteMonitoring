@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="js/index.js"></script>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/porisius/FicsitRemoteMonitoring/main/Resources/Icon128.png">
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+
+    <title>Ficsit Remote Monitoring</title>
+  </head>
+
+  <body>
+    <script>
+      loadStorage();
+    </script>
+    <center class="menu" style="display: flex"></center>
+    <script>
+      getMenu();
+    </script>
+
+    <div id="Theme">
+      <div class="colorSettings">
+        <div class="colorPicker">
+          <div class="colorPickerText">Main Color</div>
+          <input
+            class="cPicker"
+            type="color"
+            id="mainColor"
+            name="mainColor"
+            value="#000000"
+          />
+        </div>
+        <div class="colorPicker">
+          <div class="colorPickerText">Second Color</div>
+          <input
+            class="cPicker"
+            type="color"
+            id="secondColor"
+            name="secondColor"
+            value="#000000"
+          />
+        </div>
+        <div class="colorPicker">
+          <div class="colorPickerText">Text Color</div>
+          <input
+            class="cPicker"
+            type="color"
+            id="textColor"
+            name="textColor"
+            value="#000000"
+          />
+        </div>
+        <div class="colorPicker">
+          <div class="colorPickerText">Table Color</div>
+          <input
+            class="cPicker"
+            type="color"
+            id="tableColor"
+            name="tableColor"
+            value="#000000"
+          />
+        </div>
+        <div class="colorPicker">
+          <div class="colorPickerText">Background Color</div>
+          <input
+            class="cPicker"
+            type="color"
+            id="bgColor"
+            name="bgColor"
+            value="#000000"
+          />
+        </div>
+
+        <button onclick="defaultColors()" class="cButton button">
+          Reset Colors
+        </button>
+      </div>
+      <script>
+        var mainColor = document.getElementById("mainColor");
+        var secondColor = document.getElementById("secondColor");
+        var textColor = document.getElementById("textColor");
+        var tableColor = document.getElementById("tableColor");
+        var bgColor = document.getElementById("bgColor");
+
+        mainColor.addEventListener("input", updateFirst, false);
+        secondColor.addEventListener("input", updateSecond, false);
+        textColor.addEventListener("input", updateText, false);
+        tableColor.addEventListener("input", updateTable, false);
+        bgColor.addEventListener("input", updateBg, false);
+
+        mainColor.addEventListener("change", updateFirst, false);
+        secondColor.addEventListener("change", updateSecond, false);
+        textColor.addEventListener("change", updateText, false);
+        tableColor.addEventListener("change", updateTable, false);
+        bgColor.addEventListener("change", updateBg, false);
+
+        loadStorage();
+      </script>
+    </div>
+  </body>
+</html>

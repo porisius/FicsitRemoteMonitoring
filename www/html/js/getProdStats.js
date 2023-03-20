@@ -1,16 +1,15 @@
 const prodstatstimeout = setInterval(catchProdStats, 1000);
 
-catchProdStats().catch((error) => {
-  console.log("error! Using test data.");
-  console.error(error);
-  displayProdStats(test_ProdStats);
-});
-
 async function catchProdStats() {
-  const response = await fetch("/getProdStats");
-  const data = await response.text();
-  const getProdStats = JSON.parse(data);
-  displayProdStats(getProdStats);
+  try {
+    const response = await fetch("/getProdStats");
+    const data = await response.text();
+    const getProdStats = JSON.parse(data);
+    displayProdStats(getProdStats);
+  } catch {
+    displayProdStats(test_ProdStats);
+    showAlert("Error while getting production data! Using Testing Data.");
+  }
 }
 
 var pTable = document.createElement("table");
@@ -19,12 +18,13 @@ pTable.className = "table";
 document.getElementById("ProductionTable").appendChild(pTable);
 
 function displayProdStats(getProdStats) {
+  pTable.innerHTML = "";
   var tr = document.createElement("tr");
   tr.className = "topTable";
   pTable.appendChild(tr);
 
   var lines = [
-    "Item Name:",
+    "Name:",
     "ProdPerMin:",
     "Consumption Percent:",
     "Production Percent:",
@@ -64,9 +64,9 @@ function displayProdStats(getProdStats) {
     var tr = document.createElement("tr");
     pTable.appendChild(tr);
 
-    var itemName = document.createElement("td");
-    itemName.style.alignContent = "left";
-    itemName.innerText = getProdStats[i].ItemName;
+    var name = document.createElement("td");
+    name.style.alignContent = "left";
+    name.innerText = getProdStats[i].Name;
 
     var prodPerMin = document.createElement("td");
     prodPerMin.style.alignContent = "center";
@@ -97,7 +97,7 @@ function displayProdStats(getProdStats) {
     maxConsumed.innerText = getProdStats[i].MaxConsumed.toFixed(2);
 
     var trLoop = [
-      itemName,
+      name,
       prodPerMin,
       prodPercent,
       consPercent,
