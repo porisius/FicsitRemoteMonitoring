@@ -48,6 +48,11 @@ API Endpoint: getDrone +
 |String
 |Output
 
+|PairedStation
+|Drone's Paired Station
+|String
+|Output
+
 |CurrentDestination
 |Current Destination Drone Station
 |String

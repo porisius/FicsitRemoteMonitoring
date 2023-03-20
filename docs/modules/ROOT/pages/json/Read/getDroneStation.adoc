@@ -8,12 +8,7 @@ API Endpoint: getDroneStation +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|ID
-|ID Number
-|String
-|Output
-
-|HomeStation
+|Name
 |Drone Station
 |String
 |Output
@@ -45,6 +40,11 @@ API Endpoint: getDroneStation +
 
 |Paired Station
 |Drone Station paired to Home Station
+|String
+|Output
+
+|ConnectedStations
+|Connected Drone Stations
 |String
 |Output
 
