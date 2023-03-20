@@ -1,9 +1,4 @@
-const factorytimeout = setInterval(catchProdStats, 1000);
-
-catchFactory().catch((error) => {
-  console.log("error! Using test data.");
-  console.error(error);
-});
+const factorytimeout = setInterval(catchFactory, 1000);
 
 async function catchFactory() {
   try {
@@ -13,6 +8,7 @@ async function catchFactory() {
     displayFactory(getFactory);
   } catch {
     displayFactory(test_Factory);
+    showAlert("Error while getting factory data! Using Testing Data.");
   }
 }
 
@@ -28,7 +24,7 @@ function displayFactory(getFactory) {
   fTable.appendChild(tr);
 
   var lines = [
-    "Building Type:",
+    "Name:",
     "Recipe:",
     "Efficiently:",
     "Recipe / Current Production:",
@@ -87,9 +83,9 @@ function displayFactory(getFactory) {
     var tr = document.createElement("tr");
     fTable.appendChild(tr);
 
-    var building = document.createElement("td");
-    building.style.alignContent = "left";
-    building.innerText = getFactory[i].building;
+    var name = document.createElement("td");
+    name.style.alignContent = "left";
+    name.innerText = getFactory[i].Name;
 
     var recipe = document.createElement("td");
     recipe.style.alignContent = "center";
@@ -121,7 +117,7 @@ function displayFactory(getFactory) {
     isPaused.innerText = getFactory[i].IsPaused;
 
     var trLoop = [
-      building,
+      name,
       recipe,
       efficiently,
       production,

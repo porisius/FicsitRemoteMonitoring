@@ -1,10 +1,5 @@
 const prodstatstimeout = setInterval(catchProdStats, 1000);
 
-catchProdStats().catch((error) => {
-  console.log("error! Using test data.");
-  console.error(error);
-});
-
 async function catchProdStats() {
   try {
     const response = await fetch("/getProdStats");
@@ -13,6 +8,7 @@ async function catchProdStats() {
     displayProdStats(getProdStats);
   } catch {
     displayProdStats(test_ProdStats);
+    showAlert("Error while getting production data! Using Testing Data.");
   }
 }
 
@@ -28,7 +24,7 @@ function displayProdStats(getProdStats) {
   pTable.appendChild(tr);
 
   var lines = [
-    "Item Name:",
+    "Name:",
     "ProdPerMin:",
     "Consumption Percent:",
     "Production Percent:",
@@ -68,9 +64,9 @@ function displayProdStats(getProdStats) {
     var tr = document.createElement("tr");
     pTable.appendChild(tr);
 
-    var itemName = document.createElement("td");
-    itemName.style.alignContent = "left";
-    itemName.innerText = getProdStats[i].ItemName;
+    var name = document.createElement("td");
+    name.style.alignContent = "left";
+    name.innerText = getProdStats[i].Name;
 
     var prodPerMin = document.createElement("td");
     prodPerMin.style.alignContent = "center";
@@ -101,7 +97,7 @@ function displayProdStats(getProdStats) {
     maxConsumed.innerText = getProdStats[i].MaxConsumed.toFixed(2);
 
     var trLoop = [
-      itemName,
+      name,
       prodPerMin,
       prodPercent,
       consPercent,

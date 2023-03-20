@@ -1,10 +1,5 @@
 const timeout = setInterval(catchPower, 1000);
 
-catchPower().catch((error) => {
-  console.log("error! Using test data.");
-  console.error(error);
-});
-
 async function catchPower() {
   try {
     const response = await fetch("/getPower");
@@ -13,6 +8,7 @@ async function catchPower() {
     displayPower(getPower);
   } catch {
     displayPower(test_Power);
+    showAlert("Error while getting power data! Using Testing Data.");
   }
 }
 

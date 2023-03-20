@@ -4,7 +4,7 @@
   --text-color: #e7dfdd;
   --table-color: #4717f6;
   --background-color: #121212;
-
+  font: icon;
   color-scheme: dark;
 }
 
@@ -192,4 +192,70 @@ td {
   display: flex;
   flex-direction: column;
   margin-top: 10px;
+}
+
+.alert-container {
+  position: fixed;
+  bottom: 0;
+  right: -400px;
+  z-index: 9999;
+}
+
+.alert {
+  padding: 20px;
+  background-color: var(--main-color);
+  color: var(--text-color);
+  border-radius: 5px;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.closebtn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: var(--text-color);
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.closebtn:hover {
+  color: black;
+}
+
+.error {
+  text-align: center;
+  margin-top: 10%;
+}
+
+.error-code {
+  font-size: 120px;
+  color: var(--text-color);
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.error-description {
+  font-size: 28px;
+  color: var(--text-color);
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.error-link {
+  display: inline-block;
+  font-size: 20px;
+  color: var(--text-color);
+  background-color: var(--main-color);
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+
+.error-link:hover {
+  background-color: var(--secondary-color);
 }

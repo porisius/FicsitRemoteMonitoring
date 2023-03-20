@@ -1,10 +1,5 @@
 const dronetimeout = setInterval(catchDrone, 1000);
 
-catchDrone().catch((error) => {
-  console.log("error! Using test data.");
-  console.error(error);
-});
-
 async function catchDrone() {
   try {
     const response = await fetch("/getDroneStation");
@@ -13,6 +8,7 @@ async function catchDrone() {
     displayDrone(getDrone);
   } catch {
     displayDrone(test_Drone);
+    showAlert("Error while getting drone data! Using Testing Data.");
   }
 }
 
@@ -27,14 +23,7 @@ function displayDrone(getDrone) {
   tr.className = "topTable";
   dTable.appendChild(tr);
 
-  var lines = [
-    "Home Station:",
-    "Paired Station:",
-    "Drone Status:",
-    "Incoming Transfer Rate:",
-    "Outgoing Transfer Rate:",
-    "Battery Usage Rate:",
-  ];
+  var lines = ["Home Station:", "Current Destination:"];
 
   for (var i = 0; i < lines.length; i++) {
     var td = document.createElement("td");
@@ -69,29 +58,10 @@ function displayDrone(getDrone) {
     var homeStation = document.createElement("td");
     homeStation.innerText = getDrone[i].HomeStation;
 
-    var pairedStation = document.createElement("td");
-    pairedStation.innerText = getDrone[i].PairedStation;
+    var currentDestination = document.createElement("td");
+    currentDestination.innerText = getDrone[i].CurrentDestination;
 
-    var droneStatus = document.createElement("td");
-    droneStatus.innerText = getDrone[i].DroneStatus;
-
-    var avgTotalIncRate = document.createElement("td");
-    avgTotalIncRate.innerText = Math.round(getDrone[i].AvgTotalIncRate);
-
-    var avgTotalOutRate = document.createElement("td");
-    avgTotalOutRate.innerText = Math.round(getDrone[i].AvgTotalOutRate);
-
-    var estBatteryRate = document.createElement("td");
-    estBatteryRate.innerText = Math.round(getDrone[i].EstBatteryRate);
-
-    var trLoop = [
-      homeStation,
-      pairedStation,
-      droneStatus,
-      avgTotalIncRate,
-      avgTotalOutRate,
-      estBatteryRate,
-    ];
+    var trLoop = [homeStation, currentDestination];
 
     for (var i in trLoop) {
       tr.appendChild(trLoop[i]);
