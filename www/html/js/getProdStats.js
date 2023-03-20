@@ -74,27 +74,27 @@ function displayProdStats(getProdStats) {
 
     var prodPercent = document.createElement("td");
     prodPercent.style.alignContent = "center";
-    prodPercent.innerText = getProdStats[i].ProdPercent + "%";
+    prodPercent.innerText = Math.round(getProdStats[i].ProdPercent) + "%";
 
     var consPercent = document.createElement("td");
     consPercent.style.alignContent = "center";
-    consPercent.innerText = getProdStats[i].ConsPercent + "%";
+    consPercent.innerText = Math.round(getProdStats[i].ConsPercent) + "%";
 
     var currentProd = document.createElement("td");
     currentProd.style.alignContent = "center";
-    currentProd.innerText = getProdStats[i].CurrentProd.toFixed(2);
+    currentProd.innerText = Math.round(getProdStats[i].CurrentProd.toFixed(2));
 
     var maxProd = document.createElement("td");
     maxProd.style.alignContent = "center";
-    maxProd.innerText = getProdStats[i].MaxProd.toFixed(2);
+    maxProd.innerText = Math.round(getProdStats[i].MaxProd.toFixed(2));
 
     var currentConsumed = document.createElement("td");
     currentConsumed.style.alignContent = "center";
-    currentConsumed.innerText = getProdStats[i].CurrentConsumed.toFixed(2);
+    currentConsumed.innerText = Math.round(getProdStats[i].CurrentConsumed.toFixed(2));
 
     var maxConsumed = document.createElement("td");
     maxConsumed.style.alignContent = "center";
-    maxConsumed.innerText = getProdStats[i].MaxConsumed.toFixed(2);
+    maxConsumed.innerText = Math.round(getProdStats[i].MaxConsumed.toFixed(2));
 
     var trLoop = [
       name,
