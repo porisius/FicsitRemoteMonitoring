@@ -8,12 +8,7 @@ API Endpoint: getDrone +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|ID
-|ID Number of Drone
-|Integer
-|Output
-
-|VehicleType
+|Name
 |Drone Name
 |String
 |Output
