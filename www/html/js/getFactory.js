@@ -94,7 +94,7 @@ function displayFactory(getFactory) {
     eff = getFactory[i].production[p].ProdPercent * 1;
     var efficiently = document.createElement("td");
     efficiently.style.alignContent = "center";
-    efficiently.innerText = eff.toFixed(2) + "%";
+    efficiently.innerText = Math.round(eff.toFixed(2)) + "%";
 
     var production = document.createElement("td");
     production.style.alignContent = "left";

@@ -40,7 +40,7 @@ function magic() {
     fetch("/"+linksSelect.selectedOptions[0].innerText)
   .then((response) => response.json())
   .then((data) => {
-    code = document.querySelector("language-json")
+    code = document.querySelector(".codeThing")
     code.innerHTML = data
     Prism.highlightAll()
   });
