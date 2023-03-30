@@ -4,7 +4,6 @@
 * xref:websockets.adoc[Web Sockets]
 * xref:webhook.adoc[Webhook Notifications]
 
-// Configuration
 * xref:config/config.adoc[Config]
 *** xref:config/DiscIT.adoc[DiscIT]
 *** xref:config/Monitoring.adoc[Monitoring]
@@ -12,10 +11,8 @@
 *** xref:config/Web.adoc[Web Server]
 *** xref:config/WebSocket.adoc[WebSocket Server]
 
-// JSON
 * xref:json/json.adoc[JSON]
 
-// JSON > Read/GET Dropdown
 ** xref:json/Read/Read.adoc[Read]
 
 *** xref:json/Groups/getFactory.adoc[getAssembler]
@@ -60,12 +57,10 @@
 *** xref:json/Read/getTruckStation.adoc[getTruckStation]
 *** xref:json/Read/getWorldInv.adoc[getWorldInv]
 
-// JSON > Write/POST Dropdown
 ** xref:json/Write/Write.adoc[Write]
 
 *** xref:json/Write/setCircuit.adoc[setCircuit]
 
-// JSON Groups
 ** xref:json/Groups/Groups.adoc[Groups]
 
 *** xref:json/Groups/getAll.adoc[getAll]
