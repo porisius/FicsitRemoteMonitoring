@@ -46,7 +46,7 @@
 *** xref:json/Read/getResourceSink.adoc[getResourceSink]
 *** xref:json/Read/getResourceNode.adoc[getResourceWell]
 *** xref:json/Read/getSchematics.adoc[getSchematics]
-*** xref:json/Groups/getSinkList.adoc[getSinkList]
+*** xref:json/Read/getSinkList.adoc[getSinkList]
 *** xref:json/Groups/getFactory.adoc[getSmelter]
 *** xref:json/Read/getStorageInv.adoc[getStorageInv]
 *** xref:json/Read/getSwitches.adoc[getSwitches]
