@@ -9,19 +9,21 @@ async function catchFactory() {
   } catch {
     displayFactory(test_Factory);
     showAlert("Error while getting factory data! Using Testing Data.");
+    clearInterval(factorytimeout)
   }
 }
 
 var fTable = document.createElement("table");
 fTable.style.width = "100%";
 fTable.className = "table";
-document.getElementById("FactoryTable").appendChild(fTable);
+document.body.appendChild(fTable);
 
 function displayFactory(getFactory) {
   fTable.innerHTML = "";
-  var tr = document.createElement("tr");
-  tr.className = "topTable";
-  fTable.appendChild(tr);
+  var thead = document.createElement("thead");
+  var tr = document.createElement("tr")
+  thead.appendChild(tr)
+  fTable.append(thead);
 
   var lines = [
     "Name:",
@@ -60,6 +62,8 @@ function displayFactory(getFactory) {
     tr.appendChild(td);
   }
 
+  const tbody = document.createElement("tbody")
+  fTable.appendChild(tbody)
   for (var i in getFactory) {
     prod = "";
     need = "";
@@ -81,7 +85,7 @@ function displayFactory(getFactory) {
     }
 
     var tr = document.createElement("tr");
-    fTable.appendChild(tr);
+    tbody.appendChild(tr);
 
     var name = document.createElement("td");
     name.style.alignContent = "left";

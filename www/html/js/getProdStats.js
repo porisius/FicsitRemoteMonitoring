@@ -9,19 +9,21 @@ async function catchProdStats() {
   } catch {
     displayProdStats(test_ProdStats);
     showAlert("Error while getting production data! Using Testing Data.");
+    clearInterval(prodstatstimeout)
   }
 }
 
 var pTable = document.createElement("table");
 pTable.style.width = "100%";
 pTable.className = "table";
-document.getElementById("ProductionTable").appendChild(pTable);
+document.body.appendChild(pTable);
 
 function displayProdStats(getProdStats) {
   pTable.innerHTML = "";
-  var tr = document.createElement("tr");
-  tr.className = "topTable";
-  pTable.appendChild(tr);
+  var thead = document.createElement("thead");
+  var tr = document.createElement("tr")
+  thead.appendChild(tr)
+  pTable.append(thead);
 
   var lines = [
     "Name:",
@@ -60,9 +62,11 @@ function displayProdStats(getProdStats) {
     tr.appendChild(td);
   }
 
+  const tbody = document.createElement("tbody")
+  pTable.appendChild(tbody)
   for (var i in getProdStats) {
     var tr = document.createElement("tr");
-    pTable.appendChild(tr);
+    tbody.appendChild(tr);
 
     var name = document.createElement("td");
     name.style.alignContent = "left";

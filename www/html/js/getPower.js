@@ -9,19 +9,21 @@ async function catchPower() {
   } catch {
     displayPower(test_Power);
     showAlert("Error while getting power data! Using Testing Data.");
+    clearInterval(timeout)
   }
 }
 
 var powerTable = document.createElement("table");
 powerTable.style.width = "100%";
-powerTable.className = "table";
-document.getElementById("PowerTable").appendChild(powerTable);
+powerTable.className = "table"
+document.body.appendChild(powerTable)
 
 function displayPower(getPower) {
   powerTable.innerHTML = "";
-  var tr = document.createElement("tr");
-  tr.className = "topTable";
-  powerTable.append(tr);
+  var thead = document.createElement("thead");
+  var tr = document.createElement("tr")
+  thead.appendChild(tr)
+  powerTable.append(thead);
 
   var lines = [
     "Reset Circuit:",
@@ -62,9 +64,11 @@ function displayPower(getPower) {
     tr.appendChild(td);
   }
 
+  const tbody = document.createElement("tbody")
+  powerTable.appendChild(tbody)
   for (var i in getPower) {
     var tr = document.createElement("tr");
-    powerTable.appendChild(tr);
+    tbody.appendChild(tr);
 
     var resetCircuit = document.createElement("td");
     var resetCircuitBtn = document.createElement("button");
