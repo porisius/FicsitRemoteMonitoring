@@ -2,106 +2,6 @@ var lastSortDirection = "sortAsc";
 var lastSortIndex = 0;
 var sortInterval = null;
 
-function defaultColors() {
-  var mColor = "#4717f6";
-  var sColor = "#4316e6";
-  var tColor = "#e7dfdd";
-  var tbColor = "#4717f6";
-  var bColor = "#121212";
-
-  document.documentElement.style.setProperty("--main-color", mColor);
-  document.documentElement.style.setProperty("--secondary-color", sColor);
-  document.documentElement.style.setProperty("--text-color", tColor);
-  document.documentElement.style.setProperty("--table-color", tbColor);
-  document.documentElement.style.setProperty("--background-color", bColor);
-
-  document.getElementById("mainColor").value = mColor;
-  document.getElementById("secondColor").value = sColor;
-  document.getElementById("textColor").value = tColor;
-  document.getElementById("tableColor").value = tbColor;
-  document.getElementById("bgColor").value = bColor;
-
-  localStorage.setItem("mainColor", mColor);
-  localStorage.setItem("secondColor", sColor);
-  localStorage.setItem("textColor", tColor);
-  localStorage.setItem("tableColor", tbColor);
-  localStorage.setItem("bgColor", bColor);
-}
-
-function loadStorage() {
-  var mainColor = localStorage.getItem("mainColor");
-  var secondColor = localStorage.getItem("secondColor");
-  var textColor = localStorage.getItem("textColor");
-  var tableColor = localStorage.getItem("tableColor");
-  var bgColor = localStorage.getItem("bgColor");
-
-  try {
-    if (mainColor != null) {
-      document.documentElement.style.setProperty("--main-color", mainColor);
-      document.getElementById("mainColor").value = mainColor;
-    }
-    if (secondColor != null) {
-      document.documentElement.style.setProperty(
-        "--secondary-color",
-        secondColor
-      );
-      document.getElementById("secondColor").value = secondColor;
-    }
-    if (textColor != null) {
-      document.documentElement.style.setProperty("--text-color", textColor);
-      document.getElementById("textColor").value = textColor;
-    }
-    if (tableColor != null) {
-      document.documentElement.style.setProperty("--table-color", tableColor);
-      document.getElementById("tableColor").value = tableColor;
-    }
-    if (bgColor != null) {
-      document.documentElement.style.setProperty("--background-color", bgColor);
-      document.getElementById("bgColor").value = bgColor;
-    }
-  } catch {}
-}
-
-function updateFirst(event) {
-  document.documentElement.style.setProperty(
-    "--main-color",
-    event.target.value
-  );
-  localStorage.setItem("mainColor", event.target.value);
-}
-
-function updateSecond(event) {
-  document.documentElement.style.setProperty(
-    "--secondary-color",
-    event.target.value
-  );
-  localStorage.setItem("secondColor", event.target.value);
-}
-
-function updateText(event) {
-  document.documentElement.style.setProperty(
-    "--text-color",
-    event.target.value
-  );
-  localStorage.setItem("textColor", event.target.value);
-}
-
-function updateTable(event) {
-  document.documentElement.style.setProperty(
-    "--table-color",
-    event.target.value
-  );
-  localStorage.setItem("tableColor", event.target.value);
-}
-
-function updateBg(event) {
-  document.documentElement.style.setProperty(
-    "--background-color",
-    event.target.value
-  );
-  localStorage.setItem("bgColor", event.target.value);
-}
-
 function menuShow(show) {
   switch (show) {
     case "Home":
@@ -258,6 +158,81 @@ function getMenu() {
       menuShow(pressed[1]);
     };
     menu.appendChild(btn);
+  }
+}
+
+const themes = {
+  themes: [
+    {
+      name: "Shadow Realm (Default)",
+      colors: ["#5500FF", "#1E1E1E", "#FFFFFF", "#080808", "#101010"],
+    },
+    {
+      name: "Midnight Sky",
+      colors: ["#1F2125", "#0ED9EA", "#F0F0F0", "#131517", "#1D1F21"],
+    },
+    {
+      name: "Electric Nights",
+      colors: ["#1B1B24", "#00FF00", "#F0F0F0", "#101015", "#1A1A22"],
+    },
+    {
+      name: "Crimson Horizon",
+      colors: ["#1B212F", "#FF3636", "#F0F0F0", "#10131C", "#1A1F2B"],
+    },
+    {
+      name: "Neon Lights",
+      colors: ["#00FFA8", "#1E1E1E", "#FFFFFF", "#0C0C0C", "#0A0A0A"],
+    },
+    {
+      name: "Cyberpunk",
+      colors: ["#FF00FF", "#333333", "#FFFFFF", "#1E1E1E", "#0C0C0C"],
+    },
+    {
+      name: "Electric Dreams",
+      colors: ["#00FFFF", "#1E1E1E", "#FFFFFF", "#080808", "#101010"],
+    },
+    {
+      name: "Dark Future",
+      colors: ["#FF5500", "#1E1E1E", "#FFFFFF", "#0C0C0C", "#0A0A0A"],
+    },
+  ],
+};
+
+function applyTheme() {
+  try {
+    const themeIndex = localStorage.getItem("selectedTheme");
+    const theme = themes.themes[themeIndex];
+    let [mainColor, secondColor, textColor, backgroundColor, tableColor] =
+      theme.colors;
+    document.documentElement.style.setProperty("--main-color", mainColor);
+    document.documentElement.style.setProperty(
+      "--secondary-color",
+      secondColor
+    );
+    document.documentElement.style.setProperty("--text-color", textColor);
+    document.documentElement.style.setProperty(
+      "--background-color",
+      backgroundColor
+    );
+    document.documentElement.style.setProperty("--table-color", tableColor);
+  } catch (e) {
+    console.log(e);
+    const themeIndex = "0";
+    const theme = themes.themes[themeIndex];
+    console.log(theme);
+    let [mainColor, secondColor, textColor, backgroundColor, tableColor] =
+      theme.colors;
+    document.documentElement.style.setProperty("--main-color", mainColor);
+    document.documentElement.style.setProperty(
+      "--secondary-color",
+      secondColor
+    );
+    document.documentElement.style.setProperty("--text-color", textColor);
+    document.documentElement.style.setProperty(
+      "--background-color",
+      backgroundColor
+    );
+    document.documentElement.style.setProperty("--table-color", tableColor);
   }
 }
 

@@ -9,19 +9,21 @@ async function catchDrone() {
   } catch {
     displayDrone(test_Drone);
     showAlert("Error while getting drone data! Using Testing Data.");
+    clearInterval(dronetimeout)
   }
 }
 
 var dTable = document.createElement("table");
 dTable.style.width = "100%";
 dTable.className = "table";
-document.getElementById("DroneTable").appendChild(dTable);
+document.body.appendChild(dTable);
 
 function displayDrone(getDrone) {
   dTable.innerHTML = "";
-  var tr = document.createElement("tr");
-  tr.className = "topTable";
-  dTable.appendChild(tr);
+  var thead = document.createElement("thead");
+  var tr = document.createElement("tr")
+  thead.appendChild(tr)
+  dTable.appendChild(thead);
 
   var lines = [
     "Home Station:",
@@ -58,9 +60,11 @@ function displayDrone(getDrone) {
     tr.appendChild(td);
   }
 
+  const tbody = document.createElement("tbody")
+  dTable.appendChild(tbody)
   for (var i in getDrone) {
     var tr = document.createElement("tr");
-    dTable.appendChild(tr);
+    tbody.appendChild(tr);
 
     var name = document.createElement("td");
     name.innerText = getDrone[i].Name;
