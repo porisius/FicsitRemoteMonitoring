@@ -87,7 +87,7 @@ function displayFactory(getFactory) {
         "Output: " +
         getFactory[i].ingredients[n].Name +
         " / " +
-        getFactory[i].ingredients[n].CurrentConsumed.toFixed(2);
+        getFactory[i].ingredients[n].CurrentConsumed.toFixed(2) + " ";
     }
 
     var tr = document.createElement("tr");
@@ -116,7 +116,7 @@ function displayFactory(getFactory) {
 
     var manuSpeed = document.createElement("td");
     manuSpeed.style.alignContent = "center";
-    manuSpeed.innerText = getFactory[i].ManuSpeed * 100 + "%";
+    manuSpeed.innerText = getFactory[i].ManuSpeed + "%";
 
     var isProducing = document.createElement("td");
     isProducing.style.alignContent = "center";
