@@ -8,8 +8,13 @@ API Endpoint: getBelts +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|PipeName
+|Name
 |Pipe Type
+|String
+|Output
+
+|ClassName
+|UE Class Name
 |String
 |Output
 
@@ -68,36 +73,128 @@ API Endpoint: getBelts +
 |Float
 |Output
 
+|features/properties/name
+|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/geometry/name
+|GeoJSON name of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y,Z for map marking
+|[Float, Float, Float]
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
 |===
 
 Example:
 [source,json]
 -----------------
-[{
-      "PipeName":"Pipeline Mk.1",
-      "FluidName":"Water",
-      "location0":{
-         "x":-91046.757812,"y":-144751.921875,"z":-995.765625
-      },
-      "Connected0":true,
-      "location1":{
-         "x":-91593.585938,"y":-144848.359375,"z":-995.765625
-      },
-      "Connected1":true,
-      "Flow":5.0,
-      "FlowPct":100.0
-   },{
-      "PipeName":"Pipeline Mk.1",
-      "FluidName":"Water",
-      "location0":{
-         "x":-95630.03125,"y":-125096.039062,"z":-833.190308
-      },
-      "Connected0":true,
-      "location1":{
-         "x":-95566.140625,"y":-125443.554688,"z":-1095.765625
-      },
-      "Connected1":true,
-      "Flow":2.0,
-      "FlowPct":39.0
-}]
+[
+   {
+		"Name": "Pipeline Mk.2",
+		"ClassName": "Build_PipelineMK2_C_2146967477",
+		"FluidName": "Water",
+		"FluidClass": "Desc_Water_C",
+		"location0":
+		{
+			"X": -92593.2890625,
+			"Y": -85316.9296875,
+			"Z": 4264.8427734375
+		},
+		"Connected0": true,
+		"location1":
+		{
+			"X": -90623.703125,
+			"Y": -84969.46875,
+			"Z": 4264.8427734375
+		},
+		"Connected1": true,
+		"Flow": 0.78740155696868896,
+		"FlowPct": 0.078740157186985016,
+		"features":
+		{
+			"properties":
+			{
+				"name": "Pipeline Mk.2",
+				"type": "Pipeline Mk.2"
+			},
+			"geometry":
+			{
+				"coordinates": [
+					{
+						"X": -92593.2890625,
+						"Y": -85316.9296875,
+						"Z": 4264.8427734375
+					},
+					{
+						"X": -90623.703125,
+						"Y": -84969.46875,
+						"Z": 4264.8427734375
+					}
+				],
+				"type": "Line"
+			}
+		}
+	},
+	{
+		"Name": "Pipeline Mk.2",
+		"ClassName": "Build_PipelineMK2_C_2147016322",
+		"FluidName": "Crude Oil",
+		"FluidClass": "Desc_LiquidOil_C",
+		"location0":
+		{
+			"X": -49386.03515625,
+			"Y": -169084.453125,
+			"Z": -335.15765380859375
+		},
+		"Connected0": true,
+		"location1":
+		{
+			"X": -51749.51953125,
+			"Y": -169501.5,
+			"Z": -335.15756225585938
+		},
+		"Connected1": true,
+		"Flow": 10,
+		"FlowPct": 1,
+		"features":
+		{
+			"properties":
+			{
+				"name": "Pipeline Mk.2",
+				"type": "Pipeline Mk.2"
+			},
+			"geometry":
+			{
+				"coordinates": [
+					{
+						"X": -49386.03515625,
+						"Y": -169084.453125,
+						"Z": -335.15765380859375
+					},
+					{
+						"X": -51749.51953125,
+						"Y": -169501.5,
+						"Z": -335.15756225585938
+					}
+				],
+				"type": "Line"
+			}
+		}
+	}
+]
 -----------------

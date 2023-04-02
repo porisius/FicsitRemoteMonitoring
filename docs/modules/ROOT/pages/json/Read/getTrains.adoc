@@ -8,8 +8,13 @@ API Endpoint: getTrains +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|TrainName
+|Name
 |Name of the train
+|String
+|Output
+
+|ClassName
+|UE Class Name
 |String
 |Output
 
@@ -83,89 +88,82 @@ API Endpoint: getTrains +
 |String
 |Output
 
+|features/properties/name
+|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/geometry/name
+|GeoJSON name of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y,Z for map marking
+|[Float, Float, Float]
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
 |===
 
 Example:
 [source,json]
 -----------------
 [
-   {
-      "TrainName":"Caterium Choo",
-      "location":{
-         "x":-13285.462891,
-         "y":-110116.226562,
-         "z":10589.841797,
-         "rotation":280
-      },
-      "ForwardSpeed":22.200001,
-      "TotalMass":300000.0,
-      "PayloadMass":0.0,
-      "PowerConsumed":25.0,
-      "TrainStation":"Caterium Ore",
-      "ThrottlePercent":0.0,
-      "Derailed":false,
-      "PendingDerail":false,
-      "Status":"TS_SelfDriving",
-      "TimeTable":[
-         {
-            "StationName":"Caterium Ore"
-         },
-         {
-            "StationName":"Quickwire Central"
-         }
-      ],
-      "features":{
-         "properties":{
-            "type":"Train"
-         },
-         "geometry":{
-            "coordinates":{
-               "x":-13285.462891,
-               "y":-110116.226562,
-               "z":10589.841797
-            },
-            "type":"Point"
-         }
-      }
-   },
-   {
-      "TrainName":"Elctronics Choo",
-      "location":{
-         "x":0.0,
-         "y":0.0,
-         "z":0.0,
-         "rotation":90
-      },
-      "ForwardSpeed":0.0,
-      "TotalMass":0.0,
-      "PayloadMass":0.0,
-      "PowerConsumed":0.0,
-      "TrainStation":"Electronics Factory",
-      "ThrottlePercent":0.0,
-      "Derailed":true,
-      "PendingDerail":false,
-      "Status":"TS_Derailed",
-      "TimeTable":[
-         {
-            "StationName":"Electronics Factory"
-         },
-         {
-            "StationName":"Aluminum Elctronics"
-         }
-      ],
-      "features":{
-         "properties":{
-            "type":"Train"
-         },
-         "geometry":{
-            "coordinates":{
-               "x":0.0,
-               "y":0.0,
-               "z":0.0
-            },
-            "type":"Point"
-         }
-      }
-   }
+ [
+	{
+		"Name": "Caterium Choo",
+		"location":
+		{
+			"x": -40870.9765625,
+			"y": -134480.453125,
+			"z": 8189.84228515625,
+			"rotation": 280
+		},
+		"ForwardSpeed": 14.194183349609375,
+		"TotalMass": 300000,
+		"PayloadMass": 0,
+		"PowerConsumed": 25,
+		"TrainStation": "Quickwire Central",
+		"ThrottlePercent": 0,
+		"Derailed": false,
+		"PendingDerail": false,
+		"Status": "Self-Driving",
+		"TimeTable": [
+			{
+				"StationName": "Caterium Ore"
+			},
+			{
+				"StationName": "Quickwire Central"
+			}
+		],
+		"features":
+		{
+			"properties":
+			{
+				"name": "Caterium Choo",
+				"type": "Train"
+			},
+			"geometry":
+			{
+				"coordinates":
+				{
+					"X": -40870.9765625,
+					"Y": -134480.453125,
+					"Z": 8189.84228515625
+				},
+				"type": "Point"
+			}
+		}
+	}
 ]
 -----------------

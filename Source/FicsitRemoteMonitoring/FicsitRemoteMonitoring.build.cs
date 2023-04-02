@@ -12,6 +12,8 @@ public class FicsitRemoteMonitoring : ModuleRules
             "Engine"
             });
 
+        PrivateDependencyModuleNames.AddRange(new string[] {  "Http", "Json", "JsonUtilities" });
+
         PublicDependencyModuleNames.AddRange(new string[] { "FactoryGame", "SML" });
     }
 }

@@ -38,6 +38,11 @@
 			]
 		},
 		{
+			"Name": "JSONParser",
+			"Type": "Runtime",
+			"LoadingPhase": "PreLoadingScreen"
+		},
+		{
 			"Name": "FicsitRemoteMonitoring",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"

@@ -8,7 +8,7 @@ API Endpoint: getSchematics +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|SchematicName
+|Name
 |Schematic/Milestone Name
 |String
 |Output
@@ -43,6 +43,11 @@ API Endpoint: getSchematics +
 |String
 |Output
 
+|Recipes/Ingredients/ClassName
+|UE Class Name
+|String
+|Output
+
 |Recipes/Ingredients/Amount
 |Amount of items required for recipe
 |Integar
@@ -60,6 +65,11 @@ API Endpoint: getSchematics +
 
 |Recipes/Products/Name
 |Name of items produced for Recipe
+|String
+|Output
+
+|Recipes/Products/ClassName
+|UE Class Name
 |String
 |Output
 
@@ -115,80 +125,246 @@ Example:
 -----------------
 [
    {
-      "SchematicName":"Alternate: Polymer Resin",
-      "TechTier":0,
-      "Type":"Alternate",
-      "Recipes":[
-         {
-            "RecipeName":"Alternate: Polymer Resin",
-            "Category":"Oil Products",
-            "Events":[
-               
-            ],
-            "Ingredients":[
-               {
-                  "Name":"Crude Oil",
-                  "Amount":6
-               }
-            ],
-            "Products":[
-               {
-                  "Name":"Polymer Resin",
-                  "Amount":13
-               },
-               {
-                  "Name":"Heavy Oil Residue",
-                  "Amount":2
-               }
-            ],
-            "ProducedIn":[
-               {
-                  "BuildTool":"Refinery"
-               }
-            ],
-            "ManualDuration":6,
-            "ManufacturingDuration":6
-         }
-      ],
-      "Locked":true,
-      "Purchased":true,
-      "DepLocked":false
-   },
-   {
-      "SchematicName":"Alternate: Pure Aluminum Ingot",
-      "TechTier":0,
-      "Type":"Alternate",
-      "Recipes":[
-         {
-            "RecipeName":"Alternate: Pure Aluminum Ingot",
-            "Category":"Ingots",
-            "Events":[
-               
-            ],
-            "Ingredients":[
-               {
-                  "Name":"Aluminum Scrap",
-                  "Amount":2
-               }
-            ],
-            "Products":[
-               {
-                  "Name":"Aluminum Ingot",
-                  "Amount":1
-               }
-            ],
-            "ProducedIn":[
-               {
-                  "BuildTool":"Smelter"
-               }
-            ],
-            "ManualDuration":2,
-            "ManufacturingDuration":2
-         }
-      ],
-      "Locked":true,
-      "Purchased":true,
-      "DepLocked":false
-   }
+   "Name": "Wall Signs",
+   "TechTier": 1,
+   "Type": 6.1552420141504922e+17,
+   "Recipes": [
+      {
+         "RecipeName": "Wall Holo Sign 1x1",
+         "Category": "N/A",
+         "Events": [],
+         "Ingredients": [
+            {
+               "Name": "Iron Plate",
+               "ClassName": "Desc_IronPlate_C",
+               "Amount": 3,
+               "ManualRate": 180,
+               "FactoryRate": 180
+            },
+            {
+               "Name": "Iron Rod",
+               "ClassName": "Desc_IronRod_C",
+               "Amount": 4,
+               "ManualRate": 240,
+               "FactoryRate": 240
+            },
+            {
+               "Name": "Screw",
+               "ClassName": "Desc_IronScrew_C",
+               "Amount": 4,
+               "ManualRate": 240,
+               "FactoryRate": 240
+            },
+            {
+               "Name": "Quickwire",
+               "ClassName": "Desc_HighSpeedWire_C",
+               "Amount": 10,
+               "ManualRate": 600,
+               "FactoryRate": 600
+            },
+            {
+               "Name": "Quartz Crystal",
+               "ClassName": "Desc_QuartzCrystal_C",
+               "Amount": 3,
+               "ManualRate": 180,
+               "FactoryRate": 180
+            }
+         ],
+         "Products": [
+            {
+               "Name": "Wall Holo Sign 1x1",
+               "ClassName": "Desc_RSS_Holoscreen_1x1_C",
+               "Amount": 1,
+               "ManualRate": 60,
+               "FactoryRate": 60
+            }
+         ],
+         "ProducedIn": [
+            {
+               "ProducedIn": "Build Gun"
+            }
+         ],
+         "ManualDuration": 1,
+         "ManufacturingDuration": 1
+      },
+      {
+         "RecipeName": "Wall Holo Sign 1x2",
+         "Category": "N/A",
+         "Events": [],
+         "Ingredients": [
+            {
+               "Name": "Iron Plate",
+               "ClassName": "Desc_IronPlate_C",
+               "Amount": 3,
+               "ManualRate": 180,
+               "FactoryRate": 180
+            },
+            {
+               "Name": "Iron Rod",
+               "ClassName": "Desc_IronRod_C",
+               "Amount": 4,
+               "ManualRate": 240,
+               "FactoryRate": 240
+            },
+            {
+               "Name": "Screw",
+               "ClassName": "Desc_IronScrew_C",
+               "Amount": 4,
+               "ManualRate": 240,
+               "FactoryRate": 240
+            },
+            {
+               "Name": "Quickwire",
+               "ClassName": "Desc_HighSpeedWire_C",
+               "Amount": 10,
+               "ManualRate": 600,
+               "FactoryRate": 600
+            },
+            {
+               "Name": "Quartz Crystal",
+               "ClassName": "Desc_QuartzCrystal_C",
+               "Amount": 3,
+               "ManualRate": 180,
+               "FactoryRate": 180
+            }
+         ],
+         "Products": [
+            {
+               "Name": "Wall Holo Sign 1x2",
+               "ClassName": "Desc_RSS_Holoscreen_1x2_C",
+               "Amount": 1,
+               "ManualRate": 60,
+               "FactoryRate": 60
+            }
+         ],
+         "ProducedIn": [
+            {
+               "ProducedIn": "Build Gun"
+            }
+         ],
+         "ManualDuration": 1,
+         "ManufacturingDuration": 1
+      },
+      {
+         "RecipeName": "Wall Holo Sign 2x1",
+         "Category": "N/A",
+         "Events": [],
+         "Ingredients": [
+            {
+               "Name": "Iron Plate",
+               "ClassName": "Desc_IronPlate_C",
+               "Amount": 3,
+               "ManualRate": 180,
+               "FactoryRate": 180
+            },
+            {
+               "Name": "Iron Rod",
+               "ClassName": "Desc_IronRod_C",
+               "Amount": 4,
+               "ManualRate": 240,
+               "FactoryRate": 240
+            },
+            {
+               "Name": "Screw",
+               "ClassName": "Desc_IronScrew_C",
+               "Amount": 4,
+               "ManualRate": 240,
+               "FactoryRate": 240
+            },
+            {
+               "Name": "Quickwire",
+               "ClassName": "Desc_HighSpeedWire_C",
+               "Amount": 10,
+               "ManualRate": 600,
+               "FactoryRate": 600
+            },
+            {
+               "Name": "Quartz Crystal",
+               "ClassName": "Desc_QuartzCrystal_C",
+               "Amount": 3,
+               "ManualRate": 180,
+               "FactoryRate": 180
+            }
+         ],
+         "Products": [
+            {
+               "Name": "Wall Holo Sign 2x1",
+               "ClassName": "Desc_RSS_holoscreen_2x1_C",
+               "Amount": 1,
+               "ManualRate": 60,
+               "FactoryRate": 60
+            }
+         ],
+         "ProducedIn": [
+            {
+               "ProducedIn": "Build Gun"
+            }
+         ],
+         "ManualDuration": 1,
+         "ManufacturingDuration": 1
+      },
+      {
+         "RecipeName": "Wall Sign 7x1",
+         "Category": "N/A",
+         "Events": [],
+         "Ingredients": [
+            {
+               "Name": "Iron Plate",
+               "ClassName": "Desc_IronPlate_C",
+               "Amount": 3,
+               "ManualRate": 180,
+               "FactoryRate": 180
+            },
+            {
+               "Name": "Iron Rod",
+               "ClassName": "Desc_IronRod_C",
+               "Amount": 4,
+               "ManualRate": 240,
+               "FactoryRate": 240
+            },
+            {
+               "Name": "Screw",
+               "ClassName": "Desc_IronScrew_C",
+               "Amount": 4,
+               "ManualRate": 240,
+               "FactoryRate": 240
+            },
+            {
+               "Name": "Quickwire",
+               "ClassName": "Desc_HighSpeedWire_C",
+               "Amount": 10,
+               "ManualRate": 600,
+               "FactoryRate": 600
+            },
+            {
+               "Name": "Quartz Crystal",
+               "ClassName": "Desc_QuartzCrystal_C",
+               "Amount": 3,
+               "ManualRate": 180,
+               "FactoryRate": 180
+            }
+         ],
+         "Products": [
+            {
+               "Name": "Wall Sign 7x1",
+               "ClassName": "Desc_RSS_Holoscreen_7x1_C",
+               "Amount": 1,
+               "ManualRate": 60,
+               "FactoryRate": 60
+            }
+         ],
+         "ProducedIn": [
+            {
+               "ProducedIn": "Build Gun"
+            }
+         ],
+         "ManualDuration": 1,
+         "ManufacturingDuration": 1
+      }
+   ],
+   "Locked": false,
+   "Purchased": false,
+   "DepLocked": false
+}
 ]
 -----------------

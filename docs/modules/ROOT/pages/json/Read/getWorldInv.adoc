@@ -15,6 +15,11 @@ This is inventory of the world regardless of location. This does not include pip
 |String
 |Output
 
+|ClassName
+|UE Class Name
+|String
+|Output
+
 |Count
 |Count of items of item type
 |Integar
@@ -27,16 +32,44 @@ Example:
 -----------------
 [
    {
-      "Name":"FICSIT Coupon",
-      "Count":91
-   },
-   {
-      "Name":"Quickwire",
-      "Count":500
-   },
-   {
-      "Name":"FICSMAS Bow",
-      "Count":25
-   }
+		"Name": "Snowball",
+		"ClassName": "Desc_SnowballProjectile_C",
+		"Amount": 360000
+	},
+	{
+		"Name": "Iron Plate",
+		"ClassName": "Desc_IronPlate_C",
+		"Amount": 24000
+	},
+	{
+		"Name": "Iron Rod",
+		"ClassName": "Desc_IronRod_C",
+		"Amount": 24000
+	},
+	{
+		"Name": "Reinforced Iron Plate",
+		"ClassName": "Desc_IronPlateReinforced_C",
+		"Amount": 12000
+	},
+	{
+		"Name": "Screw",
+		"ClassName": "Desc_IronScrew_C",
+		"Amount": 60000
+	},
+	{
+		"Name": "Modular Frame",
+		"ClassName": "Desc_ModularFrame_C",
+		"Amount": 3600
+	},
+	{
+		"Name": "Stator",
+		"ClassName": "Desc_Stator_C",
+		"Amount": 7200
+	},
+	{
+		"Name": "Rotor",
+		"ClassName": "Desc_Rotor_C",
+		"Amount": 7200
+	}
 ]
 -----------------

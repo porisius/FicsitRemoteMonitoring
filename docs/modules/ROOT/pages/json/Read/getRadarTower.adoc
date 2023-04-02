@@ -1,16 +1,21 @@
-= Power Slug
+= Radar Tower Information
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-API Endpoint: getPowerSlug +
+API Endpoint: getRadarTower +
 
 [cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|ID
-|Slug ID
-|Integer
+|Name
+|Tower Name
+|String
+|Output
+
+|ClassName
+|UE Class Name
+|String
 |Output
 
 |location/x
@@ -33,8 +38,13 @@ API Endpoint: getPowerSlug +
 |Float
 |Output
 
-|Fauna/FaunaName
+|Fauna/Name
 |Fauna's Name
+|String
+|Output
+
+|Fauna/ClassName
+|UE Class Name
 |String
 |Output
 
@@ -43,8 +53,13 @@ API Endpoint: getPowerSlug +
 |Integer
 |Output
 
-|Signal/WeakSignal
-|Name of Object Tower scanned
+|Signal/Name
+|Name of Object scanned
+|String
+|Output
+
+|Signal/ClassName
+|UE Class Name
 |String
 |Output
 
@@ -53,8 +68,13 @@ API Endpoint: getPowerSlug +
 |Integer
 |Output
 
-|Flora/FloraName
+|Flora/Name
 |Flora's Name
+|String
+|Output
+
+|Flora/ClassName
+|UE Class Name
 |String
 |Output
 
@@ -69,132 +89,134 @@ Example:
 [source,json]
 -----------------
 [
-   {
-      "RadarName":"Radar Tower",
-      "location":{
-         "x":-53218.585938,
-         "y":-142751.484375,
-         "z":18289.638672
-      },
-      "Fauna":[
-         
-      ],
-      "Signal":[
-         
-      ],
-      "Flora":[
-         
-      ],
-      "features":{
-         "geometry":{
-            "coordinates":{
-               "x":-53218.585938,
-               "y":-142751.484375,
-               "z":18289.638672
-            },
-            "type":"Point"
-         }
-      }
-   },
-   {
-      "RadarName":"Radar Tower",
-      "location":{
-         "x":109559.46875,
-         "y":143653.828125,
-         "z":12365.823242
-      },
-      "Fauna":[
-         {
-            "Fauna":"Alpha Stinger",
-            "Remaining":"1"
-         },
-         {
-            "Fauna":"Fluffy-tailed Hog",
-            "Remaining":"1"
-         },
-         {
-            "Fauna":"Non-flying Birb",
-            "Remaining":"1"
-         },
-         {
-            "Fauna":"Alpha Forest Spitter",
-            "Remaining":"2"
-         },
-         {
-            "Fauna":"Unknown File Error #6265616e",
-            "Remaining":"1"
-         },
-         {
-            "Fauna":"Small Forest Spitter",
-            "Remaining":"2"
-         },
-         {
-            "Fauna":"Small Stinger",
-            "Remaining":"1"
-         },
-         {
-            "Fauna":"Alpha Hog",
-            "Remaining":"1"
-         },
-         {
-            "Fauna":"Small Desert Spitter",
-            "Remaining":"1"
-         },
-         {
-            "Fauna":"Lizard Doggo",
-            "Remaining":"1"
-         },
-         {
-            "Fauna":"Small Aquatic Spitter",
-            "Remaining":"1"
-         },
-         {
-            "Fauna":"Alpha Aquatic Spitter",
-            "Remaining":"1"
-         }
-      ],
-      "Signal":[
-         {
-            "WeakSignal":"Somersloop WIP",
-            "Remaining":17
-         },
-         {
-            "WeakSignal":"Blue Power Slug",
-            "Remaining":86
-         },
-         {
-            "WeakSignal":"Mercer Sphere WIP",
-            "Remaining":15
-         },
-         {
-            "WeakSignal":"Hard Drive",
-            "Remaining":14
-         }
-      ],
-      "Flora":[
-         {
-            "Flora":"Berry Bush Plant",
-            "Remaining":"1"
-         },
-         {
-            "Flora":"Nut Bush Plant",
-            "Remaining":"1"
-         },
-         {
-            "Flora":"Bacon Agaric",
-            "Remaining":"1"
-         }
-      ],
-      "features":{
-         "geometry":{
-            "coordinates":{
-               "x":109559.46875,
-               "y":143653.828125,
-               "z":12365.823242
-            },
-            "type":"Point"
-         }
-      }
-   }
+	{
+		"Name": "Radar Tower",
+		"ClassName": "Build_RadarTower_C_2147374116",
+		"location":
+		{
+			"X": -64181.77734375,
+			"Y": -138709.890625,
+			"Z": 10639.4453125
+		},
+		"Fauna": [
+			{
+				"Name": "Small Desert Spitter",
+				"ClassName": "Desc_SpitterDesert_Small_C",
+				"Remaining": 1
+			},
+			{
+				"Name": "Fluffy-tailed Hog",
+				"ClassName": "Desc_HogBasic_C",
+				"Remaining": 1
+			},
+			{
+				"Name": "Non-flying Birb",
+				"ClassName": "Desc_NonflyingBird_C",
+				"Remaining": 1
+			},
+			{
+				"Name": "Alpha Forest Spitter",
+				"ClassName": "Desc_SpitterForest_Alpha_C",
+				"Remaining": 1
+			},
+			{
+				"Name": "Unknown File Error #6265616e",
+				"ClassName": "Desc_SpaceGiraffe_C",
+				"Remaining": 1
+			},
+			{
+				"Name": "Lizard Doggo",
+				"ClassName": "Desc_SpaceRabbit_C",
+				"Remaining": 1
+			},
+			{
+				"Name": "Small Forest Spitter",
+				"ClassName": "Desc_SpitterForest_Small_C",
+				"Remaining": 1
+			},
+			{
+				"Name": "Alpha Stinger",
+				"ClassName": "Desc_StingerAlpha_C",
+				"Remaining": 1
+			},
+			{
+				"Name": "Small Stinger",
+				"ClassName": "Desc_StingerSmall_C",
+				"Remaining": 1
+			},
+			{
+				"Name": "Small Aquatic Spitter",
+				"ClassName": "Desc_SpitterAquatic_Small_C",
+				"Remaining": 1
+			},
+			{
+				"Name": "Alpha Hog",
+				"ClassName": "Desc_HogAlpha_C",
+				"Remaining": 1
+			},
+			{
+				"Name": "Alpha Desert Spitter",
+				"ClassName": "Desc_SpitterDesert_Alpha_C",
+				"Remaining": 1
+			}
+		],
+		"Signal": [
+			{
+				"Name": "Somersloop WIP",
+				"ClassName": "Desc_WAT1_C",
+				"Remaining": 13
+			},
+			{
+				"Name": "Blue Power Slug",
+				"ClassName": "Desc_Crystal_C",
+				"Remaining": 59
+			},
+			{
+				"Name": "Mercer Sphere WIP",
+				"ClassName": "Desc_WAT2_C",
+				"Remaining": 10
+			},
+			{
+				"Name": "Hard Drive",
+				"ClassName": "Desc_HardDrive_C",
+				"Remaining": 1
+			}
+		],
+		"Flora": [
+			{
+				"Name": "Berry Bush Plant",
+				"ClassName": "Desc_BerryBush_C",
+				"Remaining": 1
+			},
+			{
+				"Name": "Nut Bush Plant",
+				"ClassName": "Desc_NutBush_C",
+				"Remaining": 1
+			},
+			{
+				"Name": "Bacon Agaric",
+				"ClassName": "Desc_Shroom_C",
+				"Remaining": 1
+			}
+		],
+		"features":
+		{
+			"properties":
+			{
+				"name": "Radar Tower",
+				"type": "Radar Tower"
+			},
+			"geometry":
+			{
+				"coordinates":
+				{
+					"X": -64181.77734375,
+					"Y": -138709.890625,
+					"Z": 10639.4453125
+				},
+				"type": "Point"
+			}
+		}
+	}
 ]
 -----------------
