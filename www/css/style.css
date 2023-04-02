@@ -253,21 +253,9 @@ body {
   border-radius: 5px;
   position: relative;
   margin-bottom: 10px;
-}
-
-.closebtn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: var(--text-color);
-  font-size: 22px;
-  font-weight: bold;
-  cursor: pointer;
-  padding: 5px;
-}
-
-.closebtn:hover {
-  color: black;
+  /* box-shadow: 0px 0px 18px var(--secondary-color); */
+  transition: all 0.3s ease-in-out;
+  border-color: var(--secondary-color);
 }
 
 .error {

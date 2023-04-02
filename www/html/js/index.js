@@ -1,6 +1,7 @@
 var lastSortDirection = "sortAsc";
 var lastSortIndex = 0;
 var sortInterval = null;
+var alertShow = false;
 
 function menuShow(show) {
   switch (show) {
@@ -37,63 +38,6 @@ function menuShow(show) {
   }
 }
 
-function sort(dir) {
-  var topTable = dir.srcElement.parentNode.parentNode;
-  var tbody = topTable.parentNode.parentNode;
-  lastSortIndex = topTable.cellIndex;
-  lastSortDirection = dir.srcElement.classList[0];
-
-  if (sortInterval) {
-    clearInterval(sortInterval);
-  }
-  sortInterval = setInterval(() => {
-    sortTable(tbody);
-  }, 1000);
-}
-
-function sortTable(tbody) {
-  const rows = Array.from(tbody.querySelectorAll("tr:not([class])"));
-
-  rows.sort((rowA, rowB) => {
-    const strA = rowA.cells[lastSortIndex].textContent.toLowerCase();
-    const strB = rowB.cells[lastSortIndex].textContent.toLowerCase();
-
-    const numA = parseFloat(rowA.cells[lastSortIndex].textContent);
-    const numB = parseFloat(rowB.cells[lastSortIndex].textContent);
-
-    if (numA && numB) {
-      switch (lastSortDirection) {
-        case "sortAsc":
-          return numA - numB;
-
-        case "sortDesc":
-          return numB - numA;
-      }
-    } else if (strA && strB) {
-      switch (lastSortDirection) {
-        case "sortAsc":
-          if (strA < strB) {
-            return -1;
-          } else if (strA > strB) {
-            return 1;
-          } else {
-            return 0;
-          }
-
-        case "sortDesc":
-          if (strA < strB) {
-            return 1;
-          } else if (strA > strB) {
-            return -1;
-          } else {
-            return 0;
-          }
-      }
-    }
-  });
-  rows.forEach((row) => tbody.appendChild(row));
-}
-
 function randomizeTestData() {
   testTable = [test_ProdStats, test_Drone, test_Power, test_Factory];
   testTable.forEach((testData) => {
@@ -104,21 +48,26 @@ function randomizeTestData() {
           typeof testData[i][j] == "float"
         ) {
           testData[i][j] = Math.floor(Math.random() * 10);
+          console.log(testData[i][j]);
         }
       }
     }
   });
-  alert("Randomized some data!");
 }
 
 function showAlert(text) {
-  if (document.querySelector(".alert-container")) return;
-  alertContainer = document.createElement("div");
-  alertDiv = document.createElement("div");
-  alerText = document.createElement("strong");
-  alertContainer.classList = "alert-container";
-  alertDiv.classList = "alert";
-  alerText.classList = "alertText";
+  if (alertShow) return;
+  alertShow = true;
+  if (!document.querySelector(".alert-container")) {
+    alertContainer = document.createElement("div");
+    alertDiv = document.createElement("div");
+    alerText = document.createElement("strong");
+    alertContainer.classList = "alert-container";
+    alertDiv.classList = "alert";
+    alerText.classList = "alertText";
+  } else {
+    document.querySelector(".alert-container").style.display = "block";
+  }
 
   document.body.appendChild(alertContainer);
   alertContainer.appendChild(alertDiv);
@@ -130,7 +79,7 @@ function showAlert(text) {
 }
 
 function closeAlert() {
-  document.querySelector(".alert-container").remove();
+  document.querySelector(".alert-container").style.display = "none";
 }
 
 function getMenu() {
@@ -238,7 +187,7 @@ function applyTheme() {
 
 // Nothing beyond this point only test data.
 
-const test_Drone = [
+var test_Drone = [
   {
     ID: 0,
     Name: "Drone Port",
@@ -342,7 +291,7 @@ const test_Drone = [
     },
   },
 ];
-const test_Factory = [
+var test_Factory = [
   {
     Name: "Constructor",
     ClassName: "Build_ConstructorMk1_C",
@@ -395,7 +344,7 @@ const test_Factory = [
     },
   },
 ];
-const test_Power = [
+var test_Power = [
   {
     CircuitID: 58,
     PowerCapacity: 8056.07763671875,
@@ -423,7 +372,7 @@ const test_Power = [
     FuseTriggered: false,
   },
 ];
-const test_ProdStats = [
+var test_ProdStats = [
   {
     Name: "Alclad Aluminum Sheet",
     ClassName: "Desc_AluminumPlate_C",

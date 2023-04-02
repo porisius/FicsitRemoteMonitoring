@@ -1,5 +1,7 @@
 const timeout = setInterval(catchPower, 1000);
 
+var lastData = null;
+
 async function catchPower() {
   try {
     const response = await fetch("/getPower");
@@ -9,21 +11,25 @@ async function catchPower() {
   } catch {
     displayPower(test_Power);
     showAlert("Error while getting power data! Using Testing Data.");
-    clearInterval(timeout)
   }
 }
 
 var powerTable = document.createElement("table");
 powerTable.style.width = "100%";
-powerTable.className = "table"
-document.body.appendChild(powerTable)
+powerTable.className = "table";
+document.body.appendChild(powerTable);
 
 function displayPower(getPower) {
+  if (lastData != getPower) {
+    lastData = getPower;
+  } else {
+    return;
+  }
   powerTable.innerHTML = "";
   var thead = document.createElement("thead");
-  var tr = document.createElement("tr")
-  thead.appendChild(tr)
   powerTable.append(thead);
+  var tr = document.createElement("tr");
+  thead.appendChild(tr);
 
   var lines = [
     "Reset Circuit:",
@@ -64,8 +70,8 @@ function displayPower(getPower) {
     tr.appendChild(td);
   }
 
-  const tbody = document.createElement("tbody")
-  powerTable.appendChild(tbody)
+  const tbody = document.createElement("tbody");
+  powerTable.appendChild(tbody);
   for (var i in getPower) {
     var tr = document.createElement("tr");
     tbody.appendChild(tr);
