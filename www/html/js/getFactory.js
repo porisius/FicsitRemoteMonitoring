@@ -79,12 +79,12 @@ function displayFactory(getFactory) {
         "Output: " +
         getFactory[i].production[p].Name +
         " / " +
-        getFactory[i].production[p].CurrentProd.toFixed(2);
+        getFactory[i].production[p].CurrentProd.toFixed(2) + " ";
     }
 
     for (n in getFactory[i].ingredients) {
       need +=
-        "Output: " +
+        "Input: " +
         getFactory[i].ingredients[n].Name +
         " / " +
         getFactory[i].ingredients[n].CurrentConsumed.toFixed(2) + " ";
