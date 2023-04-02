@@ -1,5 +1,7 @@
 const factorytimeout = setInterval(catchFactory, 1000);
 
+var lastData = null;
+
 async function catchFactory() {
   try {
     const response = await fetch("/getFactory");
@@ -9,7 +11,6 @@ async function catchFactory() {
   } catch {
     displayFactory(test_Factory);
     showAlert("Error while getting factory data! Using Testing Data.");
-    clearInterval(factorytimeout)
   }
 }
 
@@ -19,11 +20,16 @@ fTable.className = "table";
 document.body.appendChild(fTable);
 
 function displayFactory(getFactory) {
+  if (lastData != getFactory) {
+    lastData = getFactory;
+  } else {
+    return;
+  }
   fTable.innerHTML = "";
   var thead = document.createElement("thead");
-  var tr = document.createElement("tr")
-  thead.appendChild(tr)
   fTable.append(thead);
+  var tr = document.createElement("tr");
+  thead.appendChild(tr);
 
   var lines = [
     "Name:",
@@ -62,8 +68,8 @@ function displayFactory(getFactory) {
     tr.appendChild(td);
   }
 
-  const tbody = document.createElement("tbody")
-  fTable.appendChild(tbody)
+  const tbody = document.createElement("tbody");
+  fTable.appendChild(tbody);
   for (var i in getFactory) {
     prod = "";
     need = "";

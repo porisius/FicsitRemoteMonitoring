@@ -41,7 +41,7 @@ function magic() {
   .then((response) => response.json())
   .then((data) => {
     code = document.querySelector(".codeThing")
-    code.innerHTML = data
+    code.innerHTML = toString(data)
     Prism.highlightAll()
   });
 }

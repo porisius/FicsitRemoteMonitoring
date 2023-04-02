@@ -1,5 +1,7 @@
 const dronetimeout = setInterval(catchDrone, 1000);
 
+var lastData = null;
+
 async function catchDrone() {
   try {
     const response = await fetch("/getDroneStation");
@@ -9,7 +11,6 @@ async function catchDrone() {
   } catch {
     displayDrone(test_Drone);
     showAlert("Error while getting drone data! Using Testing Data.");
-    clearInterval(dronetimeout)
   }
 }
 
@@ -19,11 +20,16 @@ dTable.className = "table";
 document.body.appendChild(dTable);
 
 function displayDrone(getDrone) {
+  if (lastData != getDrone) {
+    lastData = getDrone;
+  } else {
+    return;
+  }
   dTable.innerHTML = "";
   var thead = document.createElement("thead");
-  var tr = document.createElement("tr")
-  thead.appendChild(tr)
   dTable.appendChild(thead);
+  var tr = document.createElement("tr");
+  thead.appendChild(tr);
 
   var lines = [
     "Home Station:",
@@ -60,8 +66,8 @@ function displayDrone(getDrone) {
     tr.appendChild(td);
   }
 
-  const tbody = document.createElement("tbody")
-  dTable.appendChild(tbody)
+  const tbody = document.createElement("tbody");
+  dTable.appendChild(tbody);
   for (var i in getDrone) {
     var tr = document.createElement("tr");
     tbody.appendChild(tr);
