@@ -18,6 +18,11 @@ File: Config/FicsitRemoteMonitoring/MonitoringConfig.cfg
 |Boolean
 |False: Cache Factory buildings as one, True: Cache Factory buildings in seperate processes
 
+|Debug/Minimialize Mode
+|JSONDebugMode
+|Boolean (Default: False)
+|If False, removes the unnecessary white spaces and line breaks, shortens and reduces amount needed to transmit. If True, JSON becomes more human readable.
+
 |Factory Cache Delay
 |FactoryCacheDelay
 |Integer
@@ -67,10 +72,5 @@ File: Config/FicsitRemoteMonitoring/MonitoringConfig.cfg
 |SmelterCacheDelay
 |Integer
 |Delay between updating getSmelter Cache. Only active if Factory Cache Seperate is Enabled
-
-|Debug/Minimialize Mode
-|Minimialize
-|Boolean (Default: False)
-|If True, removes the unnecessary white spaces and line breaks, shortens and reduces amount needed to transmit.
 
 |===

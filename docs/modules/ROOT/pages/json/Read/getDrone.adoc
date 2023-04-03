@@ -8,13 +8,13 @@ API Endpoint: getDrone +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|ID
-|ID Number of Drone
-|Integer
+|Name
+|Drone Name
+|String
 |Output
 
-|VehicleType
-|Drone Name
+|ClassName
+|UE Class Name
 |String
 |Output
 
@@ -43,6 +43,11 @@ API Endpoint: getDrone +
 |String
 |Output
 
+|PairedStation
+|Drone's Paired Station
+|String
+|Output
+
 |CurrentDestination
 |Current Destination Drone Station
 |String
@@ -58,13 +63,18 @@ API Endpoint: getDrone +
 |String
 |Output
 
+|features/properties/name
+|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
 |features/properties/type
 |Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
 |String
 |Output
 
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
+|features/geometry/name
+|GeoJSON name of map marking (Point, Line, Circle, etc)
 |String
 |Output
 
@@ -73,49 +83,84 @@ API Endpoint: getDrone +
 |[Float, Float, Float]
 |Output
 
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
 |===
 
 Example:
 [source,json]
 -----------------
-[{
-      "ID":"0",
-      "VehicleType":"Drone",
-      "location":{
-         "x":-101315.90625,"y":-123853.492188,"z":3984.685059,
-         "rotation":47
+[
+  {
+    "ID": 0,
+    "Name": "Drone",
+    "ClassName": "BP_DroneTransport_C_2147138365",
+    "location":
+    {
+      "x": -56065.14453125,
+      "y": -156554.703125,
+      "z": 1550.282958984375,
+      "rotation": 10
+    },
+    "CurrentDestination": "Storage Import 2",
+    "HomeStation": "Aluminium Drone",
+    "FlyingSpeed": 0,
+    "CurrentFlyingMode": 5.0609362990541046e+18,
+    "features":
+    {
+      "properties":
+      {
+        "name": "Drone",
+        "type": "Drone"
       },
-      "HomeStation":"BlameFeatheredToast",
-      "CurrentDestination":"",
-      "FlyingSpeed":1000,
-      "CurrentFlyingMode":"DFM_Travel",
-    "features": {
-		"properties":
-			{"type": "Drone"},
-		"geometry": {
-			"coordinates": {
-					"x":-101315.90625,"y":-123853.492188,"z":3984.685059			},
-			"type": "Point"
-		}
-	}
-},{
-      "ID":"1",
-      "VehicleType":"Drone",
-      "location":{
-         "x":-60792.097656,"y":-157388.921875,"z":1549.842285,
-         "rotation":10
+      "geometry":
+      {
+        "coordinates":
+        {
+          "X": -56065.14453125,
+          "Y": -156554.703125,
+          "Z": 1550.282958984375
+        },
+        "type": "Point"
+      }
+    }
+  },
+  {
+    "ID": 1,
+    "Name": "Drone",
+    "ClassName": "BP_DroneTransport_C_2147201133",
+    "location":
+    {
+      "x": -81024.140625,
+      "y": -146122.15625,
+      "z": 3992.3212890625,
+      "rotation": 255
+    },
+    "CurrentDestination": "Battery Import",
+    "HomeStation": "Battery Port",
+    "FlyingSpeed": 130.0966796875,
+    "CurrentFlyingMode": 5.0609362990541046e+18,
+    "features":
+    {
+      "properties":
+      {
+        "name": "Drone",
+        "type": "Drone"
       },
-      "CurrentDestination":"",
-      "FlyingSpeed":1000,
-      "CurrentFlyingMode":"DFM_None",
-    "features": {
-		"properties":
-			{"type": "Drone"},
-		"geometry": {
-			"coordinates": {
-					"x":-60792.097656,"y":-157388.921875,"z":1549.842285			},
-			"type": "Point"
-		}
-	}
-}]
+      "geometry":
+      {
+        "coordinates":
+        {
+          "X": -81024.140625,
+          "Y": -146122.15625,
+          "Z": 3992.3212890625
+        },
+        "type": "Point"
+      }
+    }
+  }
+]
 -----------------

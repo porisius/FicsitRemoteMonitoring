@@ -18,6 +18,11 @@ API Endpoint: getPlayer +
 |String
 |Output
 
+|ClassName
+|UE Class Name
+|String
+|Output
+
 |location/x
 |X Location of Player
 |Float
@@ -36,6 +41,11 @@ API Endpoint: getPlayer +
 |location/Rotation
 |Compass Heading of Player
 |Float
+|Output
+
+|Dead
+|Ragdoll
+|Boolean
 |Output
 
 |PlayerHP
@@ -65,58 +75,84 @@ Example:
 -----------------
 [
    {
-      "ID":"0",
-      "PlayerName":"",
-      "location":{
-         "x":-92569.320312,
-         "y":-122266.9375,
-         "z":-964.684998,
-         "rotation":9
+      "ID": 0,
+      "PlayerName": "",
+      "ClassName": "",
+      "location":
+      {
+         "x": -92569.3203125,
+         "y": -122266.9375,
+         "z": -964.68499755859375,
+         "rotation": 9
       },
-      "PlayerHP":100,
-      "PingTime":0,
-      "MapArea":"",
-      "TagColor":"rgba(0,0,0,0)",
-      "features":{
-         "properties":{
-            "name":"",
-            "type":"Player"
+      "PlayerHP": 100,
+      "Dead": false,
+      "PingTime": 0,
+      "MapArea": "",
+      "TagColor":
+      {
+         "R": 0,
+         "G": 0,
+         "B": 0,
+         "A": 0
+      },
+      "features":
+      {
+         "properties":
+         {
+            "name": "",
+            "type": "Player"
          },
-         "geometry":{
-            "coordinates":{
-               "x":-92569.320312,
-               "y":-122266.9375,
-               "z":-964.684998
+         "geometry":
+         {
+            "coordinates":
+            {
+               "X": -92569.3203125,
+               "Y": -122266.9375,
+               "Z": -964.68499755859375
             },
-            "type":"Point"
+            "type": "Point"
          }
       }
    },
    {
-      "ID":"1",
-      "PlayerName":"porisius",
-      "location":{
-         "x":-92278.453125,
-         "y":-121765.703125,
-         "z":-984.628052,
-         "rotation":7
+      "ID": 1,
+      "PlayerName": "porisius",
+      "ClassName": "",
+      "location":
+      {
+         "x": -92278.453125,
+         "y": -121765.703125,
+         "z": -984.6280517578125,
+         "rotation": 345
       },
-      "PlayerHP":100,
-      "PingTime":0,
-      "MapArea":"",
-      "TagColor":"rgba(0.005182,0.391573,0.254152,1)",
-      "features":{
-         "properties":{
-            "name":"porisius",
-            "type":"Player"
+      "PlayerHP": 100,
+      "Dead": false,
+      "PingTime": 0,
+      "MapArea": "",
+      "TagColor":
+      {
+         "R": 0.0051819998770952225,
+         "G": 0.39157301187515259,
+         "B": 0.25415199995040894,
+         "A": 1
+      },
+      "features":
+      {
+         "properties":
+         {
+            "name": "porisius",
+            "type": "Player"
          },
-         "geometry":{
-            "coordinates":{
-               "x":-92278.453125,
-               "y":-121765.703125,
-               "z":-984.628052
+         "geometry":
+         {
+            "coordinates":
+            {
+               "X": -92278.453125,
+               "Y": -121765.703125,
+               "Z": -984.6280517578125
             },
-            "type":"Point"
+            "type": "Point"
          }
       }
    }

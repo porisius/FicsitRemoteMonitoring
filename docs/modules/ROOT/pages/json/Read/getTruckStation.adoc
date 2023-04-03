@@ -8,13 +8,13 @@ API Endpoint: getTruckStation +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|ID
-|ID number of Truck
-|Integer
+|Name
+|Name of Vehicle Station
+|String
 |Output
 
-|StationName
-|Name of Vehicle Station
+|ClassName
+|UE Class Name
 |String
 |Output
 
@@ -68,29 +68,64 @@ API Endpoint: getTruckStation +
 |String
 |Output
 
-|FuelType
-|Type of fuel stored
-|String
-|Output
-
-|FuelInventory
-|Amount of fuel stored
-|Integer
-|Output
-
 |StationActivity
 |Transferring/Idle
 |String
 |Output
 
-|Inventory
-|Item name in Station
+|Storage/Name
+|Name
 |String
 |Output
 
-|InvCount
-|# of Item in Station
-|Integer
+|Storage/ClassName
+|UE Class Name
+|String
+|Output
+
+|Storage/Amount
+|Amount of items
+|Integar
+|Output
+
+|Fuel/Name
+|Name
+|String
+|Output
+
+|Fuel/ClassName
+|UE Class Name
+|String
+|Output
+
+|Fuel/Amount
+|Amount of items
+|Integar
+|Output
+
+|features/properties/name
+|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/geometry/name
+|GeoJSON name of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y,Z for map marking
+|[Float, Float, Float]
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
 |Output
 
 |===
@@ -100,36 +135,41 @@ Example:
 -----------------
 [
    {
-      "ID":"0",
-      "StationName":"",
-      "location":{
-         "x":-88860.914062,
-         "y":-128932.007812,
-         "z":-1410.142822,
-         "rotation":100
+      "ID": 0,
+      "Name": "Truck Station",
+      "ClassName": "Build_TruckStation_C_2147429525",
+      "location":
+      {
+         "x": -87597.640625,
+         "y": -120560.0078125,
+         "z": -977.898193359375,
+         "rotation": 270
       },
-      "DockVehicleCount":0,
-      "LoadMode":"Loading",
-      "TransferRate":0.0,
-      "MaxTransferRate":0.0,
-      "StationStatus":"IS_ERROR",
-      "FuelRate":0.0,
-      "FuelType":"N/A",
-      "FuelInventory":0,
-      "StationActivity":"Idle",
-      "Inventory":"N/A",
-      "InvCount":0,
-      "features":{
-         "properties":{
-            "type":"Truck Station"
+      "DockVehicleCount": 0,
+      "LoadMode": "Loading",
+      "TransferRate": 0,
+      "MaxTransferRate": 0,
+      "StationStatus": 4,
+      "FuelRate": 0,
+      "StationActivity": "Idle",
+      "Storage": [],
+      "Inventory": [],
+      "features":
+      {
+         "properties":
+         {
+            "name": "Truck Station",
+            "type": "Truck Station"
          },
-         "geometry":{
-            "coordinates":{
-               "x":-88860.914062,
-               "y":-128932.007812,
-               "z":-1410.142822
+         "geometry":
+         {
+            "coordinates":
+            {
+               "X": -87597.640625,
+               "Y": -120560.0078125,
+               "Z": -977.898193359375
             },
-            "type":"Point"
+            "type": "Point"
          }
       }
    }

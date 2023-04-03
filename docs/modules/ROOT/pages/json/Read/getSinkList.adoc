@@ -1,0 +1,74 @@
+= Resource Sink List
+
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+API Endpoint: getSinkList +
+
+[cols="1,2,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|Name
+|Item Name
+|String
+|Output
+
+|ClassName
+|UE Class Name
+|String
+|Output
+
+|Points
+|Number of Points Earned
+|Integer
+|Output
+
+|PointsOverride
+|Override for AWESOME Sink Point (Game takes higher of the two)
+|Integer
+|Output
+
+|===
+
+Example:
+[source,json]
+-----------------
+[
+   {
+      "Name": "Turbo Motor",
+      "ClassName": "Desc_MotorLightweight_C",
+      "Points": 242720,
+      "PointsOverride": -1
+   },
+   {
+      "Name": "Pressure Conversion Cube",
+      "ClassName": "Desc_PressureConversionCube_C",
+      "Points": 257312,
+      "PointsOverride": -1
+   },
+   {
+      "Name": "Hover Pack",
+      "ClassName": "BP_EquipmentDescriptorHoverPack_C",
+      "Points": 413920,
+      "PointsOverride": -1
+   },
+   {
+      "Name": "Nuclear Pasta",
+      "ClassName": "Desc_SpaceElevatorPart_9_C",
+      "Points": 543424,
+      "PointsOverride": -1
+   },
+   {
+      "Name": "Assembly Director System",
+      "ClassName": "Desc_SpaceElevatorPart_7_C",
+      "Points": 543632,
+      "PointsOverride": -1
+   },
+   {
+      "Name": "Thermal Propulsion Rocket",
+      "ClassName": "Desc_SpaceElevatorPart_8_C",
+      "Points": 732956,
+      "PointsOverride": -1
+   }
+]
+-----------------

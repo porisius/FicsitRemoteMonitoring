@@ -1,0 +1,314 @@
+= Power Generation Stats
+
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+API Endpoint: getGenerators +
+Power Generation Stats +
+
+getBiomassGenerator only retrieves Biomass Generators +
+getCoalGenerator only retrieves Coal Generators +
+getFuelGenerator only retrieves Fuel Generators +
+getNuclearGenerator only retrieves Nuclear Power Plants +
+getGeothermalGenerator only retrieves Geothermal Generator +
+
+[cols="2,2,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|Name
+|Type of Generator
+|String
+|Output
+
+|ClassName
+|UE Class Name
+|String
+|Output
+
+|location/x
+|X Location of Generator
+|Float
+|Output
+
+|location/y
+|Y Location of Generator
+|Float
+|Output
+
+|location/z
+|Z Location of Generator
+|Float
+|Output
+
+|location/Rotation
+|Compass Heading of Generator
+|Float
+|Output
+
+|CircuitID
+|Connected Circuit Number
+|Integer
+|Output
+
+|BaseProd
+|Base Power Production
+|Float
+|Output
+
+|DynamicProdCapacity
+|Production Capacity
+|Float
+|Output
+
+|DynamicProdDemandFactor
+|Production Demand Factor
+|Float
+|Output
+
+|RegulatedDemandProd
+|Regulated Production
+|Float
+|Output
+
+|IsFullBlast
+|Generator Running at Full Blast
+|Boolean
+|Output
+
+|CanStart
+|Can Generator Start
+|Boolean
+|Output
+
+|ProdPowerComsumption
+|Produced Power being Consumed
+|Float
+|Output
+
+|CurrentPotential
+|Speed Potenial (Power SLug)
+|Float
+|Output
+
+|ProductionCapacity
+|Production Capacity
+|Float
+|Output
+
+|DefaultProductionCapacity
+|Default Production Capacity
+|Float
+|Output
+
+|PowerProductionPotential
+|Max Current Power Potential
+|Float
+|Output
+
+|FuelAmount
+|Fuel Inventory
+|Float
+|Output
+
+|FuelResource
+|Fuel Type in Inventory
+|Float
+|Output
+
+|NuclearWarning
+|Nuclear Power System Alarm (Nuclear Reactors Only)
+|String
+|Output
+
+|GeoMinPower
+|Minimium Power Generated (Geothermal Generators Only)
+|Float
+|Output
+
+|GeoMaxPower
+|Maximium Power Generated (Geothermal Generators Only)
+|Float
+|Output
+
+|AvailableFuel/Name
+|Acceptable Fuel
+|String
+|Output
+
+|AvailableFuel/ClassName
+|UE Class Name
+|String
+|Output
+
+|WasteInventory/Name
+|Nuclear Waste Inventory
+|String
+|Output
+
+|WasteInventory/ClassName
+|UE Class Name
+|String
+|Output
+
+|WasteInventory/Amount
+|Amount of Waste in Generator
+|Integer
+|Output
+
+|features/properties/name
+|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/geometry/name
+|GeoJSON name of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y,Z for map marking
+|[Float, Float, Float]
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|===
+
+Example:
+[source,json]
+-----------------
+[
+   {
+      "ID": 0,
+      "Name": "Coal Generator",
+      "ClassName": "Build_GeneratorCoal_C_32",
+      "location":
+      {
+         "X": -98814.7578125,
+         "Y": -143888.078125,
+         "Z": -808.1903076171875
+      },
+      "CircuitID": 44,
+      "BaseProd": 0,
+      "DynamicProdCapacity": 75,
+      "DynamicProdDemandFactor": 1,
+      "RegulatedDemandProd": 75,
+      "IsFullBlast": true,
+      "CanStart": true,
+      "LoadPercentage": 1,
+      "ProdPowerComsumption": 0,
+      "CurrentPotential": 1,
+      "ProductionCapacity": 75,
+      "DefaultProductionCapacity": 75,
+      "PowerProductionPotential": 75,
+      "FuelAmount": 0.79486042261123657,
+      "NuclearWarning": "EGeneratorNuclearWarning::GNW_None",
+      "FuelResource": "EResourceForm::RF_SOLID",
+      "GeoMinPower": 0,
+      "GeoMaxPower": 0,
+      "AvailableFuel": [
+         {
+            "Name": "Coal",
+            "ClassName": "Desc_Coal_C"
+         },
+         {
+            "Name": "Compacted Coal",
+            "ClassName": "Desc_CompactedCoal_C"
+         },
+         {
+            "Name": "Petroleum Coke",
+            "ClassName": "Desc_PetroleumCoke_C"
+         }
+      ],
+      "WasteInventory": [],
+      "features":
+      {
+         "properties":
+         {
+            "name": "Coal Generator",
+            "type": "Power Generator"
+         },
+         "geometry":
+         {
+            "coordinates":
+            {
+               "X": -98814.7578125,
+               "Y": -143888.078125,
+               "Z": -808.1903076171875
+            },
+            "type": "Point"
+         }
+      }
+   },
+   {
+      "ID": 0,
+      "Name": "Fuel Generator",
+      "ClassName": "Build_GeneratorFuel_C_2147249129",
+      "location":
+      {
+         "X": -65431.5703125,
+         "Y": -179509.546875,
+         "Z": 3829.33349609375
+      },
+      "CircuitID": 58,
+      "BaseProd": 0,
+      "DynamicProdCapacity": 150,
+      "DynamicProdDemandFactor": 1,
+      "RegulatedDemandProd": 150,
+      "IsFullBlast": true,
+      "CanStart": true,
+      "LoadPercentage": 1,
+      "ProdPowerComsumption": 0,
+      "CurrentPotential": 1,
+      "ProductionCapacity": 150,
+      "DefaultProductionCapacity": 150,
+      "PowerProductionPotential": 150,
+      "FuelAmount": 0.23114287853240967,
+      "NuclearWarning": "EGeneratorNuclearWarning::GNW_None",
+      "FuelResource": "EResourceForm::RF_LIQUID",
+      "GeoMinPower": 0,
+      "GeoMaxPower": 0,
+      "AvailableFuel": [
+         {
+            "Name": "Fuel",
+            "ClassName": "Desc_LiquidFuel_C"
+         },
+         {
+            "Name": "Turbofuel",
+            "ClassName": "Desc_LiquidTurboFuel_C"
+         },
+         {
+            "Name": "Liquid Biofuel",
+            "ClassName": "Desc_LiquidBiofuel_C"
+         }
+      ],
+      "WasteInventory": [],
+      "features":
+      {
+         "properties":
+         {
+            "name": "Fuel Generator",
+            "type": "Power Generator"
+         },
+         "geometry":
+         {
+            "coordinates":
+            {
+               "X": -65431.5703125,
+               "Y": -179509.546875,
+               "Z": 3829.33349609375
+            },
+            "type": "Point"
+         }
+      }
+   }
+]
+-----------------

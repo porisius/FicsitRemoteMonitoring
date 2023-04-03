@@ -13,6 +13,16 @@ API Endpoint: getDoggo +
 |Integer
 |Output
 
+|Name
+|Doggo Name
+|String
+|Output
+
+|ClassName
+|UE Class Name
+|String
+|Output
+
 |location/x
 |X Location of Lizard Doggo
 |Float
@@ -38,6 +48,11 @@ API Endpoint: getDoggo +
 |String
 |Output
 
+|ClassName
+|UE Class Name
+|String
+|Output
+
 |ItemAmt
 |# of Item in Doggo's Inventory
 |Integer
@@ -48,37 +63,76 @@ API Endpoint: getDoggo +
 |String
 |Output
 
+|features/properties/name
+|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/geometry/name
+|GeoJSON name of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y,Z for map marking
+|[Float, Float, Float]
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
 |===
 
 Example:
 [source,json]
 -----------------
-[{
-      "ID":"0",
-      "location":{
-         "x":-87813.671875,"y":-122663.875,"z":-1323.271973,
-         "rotation":270
+[
+      {
+            "ID": 0,
+            "Name": "DoggoWithLongName",
+            "ClassName": "Char_SpaceRabbit_C_2147364440",
+            "location":
+            {
+                  "x": -94763.59375,
+                  "y": -119329.2578125,
+                  "z": -1139.87548828125,
+                  "rotation": 178
+            },
+            "Inventory": [
+                  {
+                        "Name": "Purple Power Slug",
+                        "ClassName": "Desc_Crystal_mk3_C",
+                        "Amount": 1
+                  }
+            ],
+            "MapArea": ""
       },
-      "ItemName":"Purple Power Slug",
-      "ItemAmt":1,
-      "MapArea": ""
-}, {
-      "ID":"1",
-      "location":{
-         "x":-90449.921875,"y":-125751.953125,"z":-1339.662964,
-         "rotation":162
-      },
-      "ItemName":"Wood",
-      "ItemAmt":4,
-      "MapArea": ""
-}, {
-      "ID":"2",
-      "location":{
-         "x":-92291.28125,"y":-123848.5,"z":-1339.671021,
-         "rotation":102
-      },
-      "ItemName":"Flower Petals",
-      "ItemAmt":20,
-      "MapArea": ""
-}]
+      {
+            "ID": 1,
+            "Name": "DoggoWithLongName",
+            "ClassName": "Char_SpaceRabbit_C_2146938592",
+            "location":
+            {
+                  "x": -94779.3671875,
+                  "y": -119239.90625,
+                  "z": -1139.7823486328125,
+                  "rotation": 150
+            },
+            "Inventory": [
+                  {
+                        "Name": "Wood",
+                        "ClassName": "Desc_Wood_C",
+                        "Amount": 4
+                  }
+            ],
+            "MapArea": ""
+      }
+]
 -----------------

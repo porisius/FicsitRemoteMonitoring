@@ -8,9 +8,14 @@ API Endpoint: getTrainStation +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
-|StationName
+|Name
 |Name of the Station
 |Integer
+|Output
+
+|ClassName
+|UE Class Name
+|String
 |Output
 
 |location/x
@@ -63,6 +68,31 @@ API Endpoint: getTrainStation +
 |String
 |Output
 
+|features/properties/name
+|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/properties/type
+|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
+|String
+|Output
+
+|features/geometry/name
+|GeoJSON name of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
+|features/geometry/coordinates
+|X,Y,Z for map marking
+|[Float, Float, Float]
+|Output
+
+|features/geometry/type
+|GeoJSON type of map marking (Point, Line, Circle, etc)
+|String
+|Output
+
 |===
 
 Example:
@@ -70,58 +100,36 @@ Example:
 -----------------
 [
    {
-      "StationName":"Caterium Ore",
-      "location":{
-         "x":-15742.418945,
-         "y":-110549.765625,
-         "z":10589.841797,
-         "rotation":100
+      "Name": "Caterium Ore",
+      "location":
+      {
+         "x": -15742.4189453125,
+         "y": -110549.765625,
+         "z": 10589.841796875,
+         "rotation": 100
       },
-      "TransferRate":6.0,
-      "InflowRate":0.0,
-      "OutflowRate":0.0,
-      "LoadingMode":"Loading",
-      "LoadingStatus":"Loading",
-      "DockingStatus":"ETPDS_Loading",
-      "features":{
-         "properties":{
-            "type":"Train Station"
+      "TransferRate": 5.4957275390625,
+      "InflowRate": 0,
+      "OutflowRate": 0,
+      "LoadingMode": "Loading",
+      "LoadingStatus": "Loading",
+      "DockingStatus": 2,
+      "features":
+      {
+         "properties":
+         {
+            "name": "Caterium Ore",
+            "type": "Train"
          },
-         "geometry":{
-            "coordinates":{
-               "x":-15742.418945,
-               "y":-110549.765625,
-               "z":10589.841797
+         "geometry":
+         {
+            "coordinates":
+            {
+               "X": 0,
+               "Y": 0,
+               "Z": 0
             },
-            "type":"Point"
-         }
-      }
-   },
-   {
-      "StationName":"Quickwire Central",
-      "location":{
-         "x":-41261.640625,
-         "y":-134549.375,
-         "z":8189.842285,
-         "rotation":100
-      },
-      "TransferRate":0.0,
-      "InflowRate":0.0,
-      "OutflowRate":0.0,
-      "LoadingMode":"Unloading",
-      "LoadingStatus":"Idle",
-      "DockingStatus":"ETPDS_None",
-      "features":{
-         "properties":{
-            "type":"Train Station"
-         },
-         "geometry":{
-            "coordinates":{
-               "x":-41261.640625,
-               "y":-134549.375,
-               "z":8189.842285
-            },
-            "type":"Point"
+            "type": "Point"
          }
       }
    }
