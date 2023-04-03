@@ -1,5 +1,7 @@
 const dronetimeout = setInterval(catchDrone, 1000);
 
+var lastData = null;
+
 async function catchDrone() {
   try {
     const response = await fetch("/getDroneStation");
@@ -15,13 +17,19 @@ async function catchDrone() {
 var dTable = document.createElement("table");
 dTable.style.width = "100%";
 dTable.className = "table";
-document.getElementById("DroneTable").appendChild(dTable);
+document.body.appendChild(dTable);
 
 function displayDrone(getDrone) {
+  if (lastData != getDrone) {
+    lastData = getDrone;
+  } else {
+    return;
+  }
   dTable.innerHTML = "";
+  var thead = document.createElement("thead");
+  dTable.appendChild(thead);
   var tr = document.createElement("tr");
-  tr.className = "topTable";
-  dTable.appendChild(tr);
+  thead.appendChild(tr);
 
   var lines = [
     "Home Station:",
@@ -58,9 +66,11 @@ function displayDrone(getDrone) {
     tr.appendChild(td);
   }
 
+  const tbody = document.createElement("tbody");
+  dTable.appendChild(tbody);
   for (var i in getDrone) {
     var tr = document.createElement("tr");
-    dTable.appendChild(tr);
+    tbody.appendChild(tr);
 
     var name = document.createElement("td");
     name.innerText = getDrone[i].Name;

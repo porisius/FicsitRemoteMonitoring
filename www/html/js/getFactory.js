@@ -1,5 +1,7 @@
 const factorytimeout = setInterval(catchFactory, 1000);
 
+var lastData = null;
+
 async function catchFactory() {
   try {
     const response = await fetch("/getFactory");
@@ -15,13 +17,19 @@ async function catchFactory() {
 var fTable = document.createElement("table");
 fTable.style.width = "100%";
 fTable.className = "table";
-document.getElementById("FactoryTable").appendChild(fTable);
+document.body.appendChild(fTable);
 
 function displayFactory(getFactory) {
+  if (lastData != getFactory) {
+    lastData = getFactory;
+  } else {
+    return;
+  }
   fTable.innerHTML = "";
+  var thead = document.createElement("thead");
+  fTable.append(thead);
   var tr = document.createElement("tr");
-  tr.className = "topTable";
-  fTable.appendChild(tr);
+  thead.appendChild(tr);
 
   var lines = [
     "Name:",
@@ -60,6 +68,8 @@ function displayFactory(getFactory) {
     tr.appendChild(td);
   }
 
+  const tbody = document.createElement("tbody");
+  fTable.appendChild(tbody);
   for (var i in getFactory) {
     prod = "";
     need = "";
@@ -69,19 +79,19 @@ function displayFactory(getFactory) {
         "Output: " +
         getFactory[i].production[p].Name +
         " / " +
-        getFactory[i].production[p].CurrentProd.toFixed(2);
+        getFactory[i].production[p].CurrentProd.toFixed(2) + " ";
     }
 
     for (n in getFactory[i].ingredients) {
       need +=
-        "Output: " +
+        "Input: " +
         getFactory[i].ingredients[n].Name +
         " / " +
-        getFactory[i].ingredients[n].CurrentConsumed.toFixed(2);
+        getFactory[i].ingredients[n].CurrentConsumed.toFixed(2) + " ";
     }
 
     var tr = document.createElement("tr");
-    fTable.appendChild(tr);
+    tbody.appendChild(tr);
 
     var name = document.createElement("td");
     name.style.alignContent = "left";
@@ -106,7 +116,7 @@ function displayFactory(getFactory) {
 
     var manuSpeed = document.createElement("td");
     manuSpeed.style.alignContent = "center";
-    manuSpeed.innerText = getFactory[i].ManuSpeed * 100 + "%";
+    manuSpeed.innerText = getFactory[i].ManuSpeed + "%";
 
     var isProducing = document.createElement("td");
     isProducing.style.alignContent = "center";

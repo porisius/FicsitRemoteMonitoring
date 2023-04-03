@@ -1,5 +1,7 @@
 const prodstatstimeout = setInterval(catchProdStats, 1000);
 
+var lastData = null;
+
 async function catchProdStats() {
   try {
     const response = await fetch("/getProdStats");
@@ -15,13 +17,21 @@ async function catchProdStats() {
 var pTable = document.createElement("table");
 pTable.style.width = "100%";
 pTable.className = "table";
-document.getElementById("ProductionTable").appendChild(pTable);
+document.body.appendChild(pTable);
 
 function displayProdStats(getProdStats) {
+  if (lastData != getProdStats) {
+    lastData = getProdStats;
+    console.log("Data retrieved")
+  } else {
+    console.log("Data not retrieved")
+    return;
+  }
   pTable.innerHTML = "";
+  var thead = document.createElement("thead");
+  pTable.append(thead);
   var tr = document.createElement("tr");
-  tr.className = "topTable";
-  pTable.appendChild(tr);
+  thead.appendChild(tr);
 
   var lines = [
     "Name:",
@@ -60,9 +70,11 @@ function displayProdStats(getProdStats) {
     tr.appendChild(td);
   }
 
+  const tbody = document.createElement("tbody");
+  pTable.appendChild(tbody);
   for (var i in getProdStats) {
     var tr = document.createElement("tr");
-    pTable.appendChild(tr);
+    tbody.appendChild(tr);
 
     var name = document.createElement("td");
     name.style.alignContent = "left";
@@ -90,7 +102,9 @@ function displayProdStats(getProdStats) {
 
     var currentConsumed = document.createElement("td");
     currentConsumed.style.alignContent = "center";
-    currentConsumed.innerText = Math.round(getProdStats[i].CurrentConsumed.toFixed(2));
+    currentConsumed.innerText = Math.round(
+      getProdStats[i].CurrentConsumed.toFixed(2)
+    );
 
     var maxConsumed = document.createElement("td");
     maxConsumed.style.alignContent = "center";

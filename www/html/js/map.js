@@ -78,7 +78,7 @@ function updateMap() {
     layer.remove();
   });
 
-  L.imageOverlay("/img/map.png", bounds).addTo(map);
+  L.imageOverlay("img/map.png", bounds).addTo(map);
 
   createRealtimeLayer("/getPlayer", "Player");
   createRealtimeLayer("/getDrone", "Drone");

@@ -10,33 +10,30 @@
       type="image/png"
       href="https://raw.githubusercontent.com/porisius/FicsitRemoteMonitoring/main/Resources/Icon128.png"
     />
-    <link rel="stylesheet" type="text/css" href="/css/style.css" />
-
+    <link rel="stylesheet" type="text/css" href="/css/home.css" />
     <title>Ficsit Remote Monitoring</title>
   </head>
 
   <body>
     <script>
-      loadStorage();
+      applyTheme();
     </script>
     <center class="menu" style="display: flex"></center>
     <script>
       getMenu();
     </script>
-    <div style="text-align: center;">
+    <div style="text-align: center">
       <h1>Special Thanks:</h1>
-      <h3>Feyko: Support and guidance to a noob Unreal Engine modder.</h3>
-      <h3>Robb: Answering my dumb questions.</h3>
-      <h3>Vilsol: Also answering my dumb questions and helping with the documentation system.</h3>
-      <h3>Nog: Answering the dumbest of my questions.</h3>
-      <h3>Archengius: Helping with the UE Garbage Collection Issue.</h3>
-      <h3>Deantendo: Icon/Graphic for FRM.</h3>
-      <h3>Andre Aquila: Production Stats code for FRM (Seriously, that would have taken me forever to develop.)</h3>
-      <h3>Badger: For the FRM Companion App.</h3>
-      <h3>BLAndrew575: For giving me a crazy world to brutally stress test the getFactory caching function.</h3>
-      <h3>GalaxyVOID: Contributions to FRM's native web UI.</h3>
-      <h3>FeatheredToast: Finding and helping resolve the dumb things I did dumb.</h3>
-      <h3>and to the rest of the Satisfactory Modding Discord for motivating me and letting me vent as I go through my day and also develop this mod.</h3>
+
+      <table class="special-thanks">
+        <thead>
+          <tr>
+            <th>Who for</th>
+            <th>What for</th>
+          </tr>
+        </thead>
+      </table>
     </div>
   </body>
+  <script src="js/home.js"></script>
 </html>
