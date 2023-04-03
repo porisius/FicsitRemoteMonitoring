@@ -1,6 +1,8 @@
 # Fiscit Remote Monitoring
 
-This is a beta version of the mod, which may have some bugs. If you find any issues, please contact the developer.
+## [Fiscit Remote Monitoring](https://discord.gg/tv3jbJW3RX) official discord server
+
+This is a beta version of the mod, which may have some bugs. If you find any issues, please contact me via my [<b>discord</b>](https://discordapp.com/users/56086820147953664).
 
 Have you ever left your base to explore or work on another project and wondered if the power at home was still good? Do you want a small gadget or website that allows you to remotely monitor your power on your dedicated server? Fiscit Remote Monitoring is here for you!
 
@@ -50,16 +52,16 @@ Please keep it in accordance with the social media rules and ToS.
 
 ## Special Thanks:
 
-- Feyko: Support and guidance to a noob Unreal Engine modder.
-- Robb: Answering my dumb questions.
-- Vilsol: Also answering my dumb questions and helping with the documentation system.
-- Nog: Answering the dumbest of my questions.
-- Archengius: Helping with the UE Garbage Collection Issue.
-- Deantendo: Icon/Graphic for FRM.
-- Andre Aquila: Production Stats code for FRM (Seriously, that would have taken me forever to develop).
-- Badger: For the FRM Companion App.
-- BLAndrew575: For giving me a crazy world to brutally stress test the getFactory caching function.
-- GalaxyVOID: Contributions to FRM's native web UI.
-- FeatheredToast: Finding and helping resolve the dumb things I did.
+- [<b>Feyko</b>](https://discordapp.com/users/227473074616795137): Support and guidance to a noob Unreal Engine modder.
+- [<b>Robb</b>](https://discordapp.com/users/187385442549628928): Answering my dumb questions.
+- [<b>Vilsol</b>](https://discordapp.com/users/135134753534771201): Also answering my dumb questions and helping with the documentation system.
+- [<b>Nog</b>](https://discordapp.com/users/277050857852370944): Answering the dumbest of my questions.
+- [<b>Archengius</b>](https://discordapp.com/users/163955176313585666): Helping with the UE Garbage Collection Issue.
+- [<b>Deantendo</b>](https://discordapp.com/users/293484684787056640): Icon/Graphic for FRM.
+- [<b>Andre Aquila</b>](https://discordapp.com/users/294943551605702667): Production Stats code for FRM (Seriously, that would have taken me forever to develop).
+- [<b>Badger</b>](https://discordapp.com/users/186896287856197633): For the FRM Companion App.
+- [<b>BLAndrew575</b>](https://discordapp.com/users/509759568037937152): For giving me a crazy world to brutally stress test the getFactory caching function.
+- [<b>GalaxyVOID</b>](https://discordapp.com/users/212243828831289344): Contributions to FRM's native web UI.
+- [<b>FeatheredToast</b>](https://discordapp.com/users/130401633564753920): Finding and helping resolve the dumb things I did.
 
 ## Thank you to all who have contributed and helped make Fiscit Remote Monitoring possible!
