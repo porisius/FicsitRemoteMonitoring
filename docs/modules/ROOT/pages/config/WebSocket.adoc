@@ -18,7 +18,7 @@ File: Config/FicsitRemoteMonitoring/WebServer.cfg
 |Integer
 |TCP Port for WebSocket Server, Default: 8081
 
-|Autostart Web Server
+|Autostart WebSocket Server
 |WebSocket_Autostart
 |Boolean
 |True = Autostarts Web Server at Game Start/Load
