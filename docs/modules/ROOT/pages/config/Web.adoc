@@ -8,18 +8,18 @@ File: Config/FicsitRemoteMonitoring/WebServer.cfg
 |===
 |Configuration |Headless |Type |Description
 
-|WebSocket API Endpoint Root
-|WebSocket_URI
+|Web Server Listening IP
+|Listen_IP
 |String
-|Root API Endpoint location. Default: /* Ex. ws://localhost:8081/
+|IP Address of Web server to listen on. Default is localhost for security reasons, but can be safely changed to 0.0.0.0 or the server's IP Address
 
-|WebSocket Server Port
-|WebSocket_Port
+|Web Server Port
+|Web_Port
 |Integer
-|TCP Port for WebSocket Server, Default: 8081
+|TCP Port for Web Server, Default: 8081
 
 |Autostart Web Server
-|WebSocket_Autostart
+|Web_Autostart
 |Boolean
 |True = Autostarts Web Server at Game Start/Load
 
