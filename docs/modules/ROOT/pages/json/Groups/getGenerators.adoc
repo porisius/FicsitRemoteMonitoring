@@ -110,6 +110,31 @@ getGeothermalGenerator only retrieves Geothermal Generator +
 |Float
 |Output
 
+|Supplement\Name
+|Supplement Resource Used (usually water)
+|String
+|Output
+
+|Supplement\ClassName
+|UE Class Name
+|String
+|Output
+
+|Supplement\CurrentConsumed
+|Rate of Supplement Consumption
+|Float
+|Output
+
+|Supplement\MaxConsumed
+|Max Rate of Supplement Consumption
+|Float
+|Output
+
+|Supplement\PercentFull
+|Inventory Used of Supplement Storage (in %)
+|Float
+|Output
+
 |FuelResource
 |Fuel Type in Inventory
 |Float
@@ -137,6 +162,11 @@ getGeothermalGenerator only retrieves Geothermal Generator +
 
 |AvailableFuel/ClassName
 |UE Class Name
+|String
+|Output
+
+|AvailableFuel/EnergyValue
+|Energy Value of Fuel Used in calculations (MW for Potential / (Energy Value Adjusted by Form) * 60)
 |String
 |Output
 

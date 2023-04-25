@@ -44,12 +44,47 @@ API Endpoint: getTrains +
 |Output
 
 |TotalMass
-|(Testing required), total mass of train
+|Total mass of Train
 |Float
 |Output
 
 |PayloadMass
-|Payload Mass for Train (More testing required)
+|Payload Mass for Train
+|Float
+|Output
+
+|MaxPayloadMass
+|Maximium Payload Mass for Train
+|Float
+|Output
+
+|TrainLength
+|Number of FGRailroadVehicles in train
+|Integar
+|Output
+
+|TrainConsist/Name
+|Name of the FGRailroadVehicle
+|String
+|Output
+
+|TrainConsist/ClassName
+|UE Class Name
+|String
+|Output
+
+|TrainConsist/TotalMass
+|Total mass of FGRailroadVehicle
+|Float
+|Output
+
+|TrainConsist/PayloadMass
+|Payload Mass for FGRailroadVehicle
+|Float
+|Output
+
+|TrainConsist/MaxPayloadMass
+|Maximium Payload Mass for FGRailroadVehicle
 |Float
 |Output
 
