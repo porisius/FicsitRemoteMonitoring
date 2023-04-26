@@ -1,6 +1,7 @@
 = Resource Sink List
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:keywords: getSinkList
 
 API Endpoint: getSinkList +
 
