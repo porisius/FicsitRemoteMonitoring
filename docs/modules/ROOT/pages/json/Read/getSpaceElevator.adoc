@@ -2,7 +2,7 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-API Endpoint: getHUBTerminal
+API Endpoint: getSpaceElevator
 
 [cols="1,2,1,1"]
 |===
