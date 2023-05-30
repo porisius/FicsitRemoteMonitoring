@@ -2,7 +2,7 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-API Endpoint: getHUBTerminal
+API Endpoint: getSpaceElevator
 
 [cols="1,2,1,1"]
 |===
@@ -109,55 +109,44 @@ Example:
 [source,json]
 -----------------
 [
-   {
-      "NodeName":"Crude Oil",
-      "location":{
-         "x":178265.375,
-         "y":206095.640625,
-         "z":-9238.571289
-      },
-      "EnumPurity":"RP_Normal",
-      "Purity":"Normal",
-      "NodeType":"Node",
-      "Exploited":false,
-      "features":{
-         "properties":{
-            "type":"Normal"
-         },
-         "geometry":{
-            "coordinates":{
-               "x":178265.375,
-               "y":206095.640625,
-               "z":-9238.571289
-            },
-            "type":"Point"
-         }
-      }
-   },
-   {
-      "NodeName":"SAM Ore",
-      "location":{
-         "x":181999.0625,
-         "y":114342.0,
-         "z":10285.46875
-      },
-      "EnumPurity":"RP_Normal",
-      "Purity":"Normal",
-      "NodeType":"Node",
-      "Exploited":false,
-      "features":{
-         "properties":{
-            "type":"Normal"
-         },
-         "geometry":{
-            "coordinates":{
-               "x":181999.0625,
-               "y":114342.0,
-               "z":10285.46875
-            },
-            "type":"Point"
-         }
-      }
-   }
+	{
+		"Name": "Space Elevator",
+		"ClassName": "Build_SpaceElevator_C",
+		"location":
+		{
+			"x": -52637.3046875,
+			"y": 221160.65625,
+			"z": -735.436767578125,
+			"rotation": 40
+		},
+		"inventory": [],
+		"PhaseCost": [
+			{
+				"Name": "Smart Plating",
+				"ClassName": "Desc_SpaceElevatorPart_1_C",
+				"Amount": 25
+			}
+		],
+		"FullyUpgraded": false,
+		"UpgradeReady": false,
+		"features":
+		{
+			"properties":
+			{
+				"name": "Space Elevator",
+				"type": "Space Elevator"
+			},
+			"geometry":
+			{
+				"coordinates":
+				{
+					"X": -52637.3046875,
+					"Y": 221160.65625,
+					"Z": -735.436767578125
+				},
+				"type": "Point"
+			}
+		}
+	}
 ]
 -----------------
