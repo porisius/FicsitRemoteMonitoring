@@ -17,6 +17,7 @@ Please note that I did not develop these tools, and thus cannot be of much assis
 - [Ficsit Remote Monitoring Companion App](https://github.com/AP-Hunt/FicsitRemoteMonitoringCompanion/releases/) written by Badger.
 - [Satisfactory Efficiency Terminal](https://github.com/kikookraft/satisfactory-efficiency-terminal) designed and engineered by u/kikookraft.
 - [Ficsit Remote Monitoring Companion Bundle](https://github.com/featheredtoast/satisfactory-monitoring) written by FeatheredToast
+- [Ficsit Remote Monitoring Dashboard](https://github.com/Jonathan-Hofmann/ficsit-remote-monitoring-dasboard) written by Arfla and JDesignV2
 
 ## How to get started
 
