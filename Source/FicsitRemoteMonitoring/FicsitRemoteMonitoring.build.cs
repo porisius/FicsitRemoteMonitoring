@@ -7,12 +7,8 @@ public class FicsitRemoteMonitoring : ModuleRules
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicDependencyModuleNames.AddRange(new string[] {
-            "Core", "CoreUObject",
-            "Engine"
-            });
-
-        PrivateDependencyModuleNames.AddRange(new string[] {  "Http", "Json", "JsonUtilities" });
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine" });
+        PrivateDependencyModuleNames.AddRange(new string[] { "Json", "JsonUtilities" });
 
         PublicDependencyModuleNames.AddRange(new string[] { "FactoryGame", "SML" });
     }
