@@ -1,12 +1,10 @@
 # Fiscit Remote Monitoring
-
 ## [Fiscit Remote Monitoring](https://discord.gg/tv3jbJW3RX) official discord server
-
 ## [Fiscit Web UI Source](https://github.com/GalaxyVOID/FRM-s-WebUI-Source)
 
 This is a beta version of the mod, which may have some bugs. If you find any issues, please contact me via my [**discord**](https://discordapp.com/users/56086820147953664).
 
-Have you ever left your base to explore or work on another project and wondered if the power at home was still good? Do you want a small gadget or website that allows you to remotely monitor your power on your dedicated server? Fiscit Remote Monitoring is here for you!
+Have you ever left your base to explore or work on another project and wondered if the power at home was still good? Do you want a small gadget or website that allows you to monitor your power on your dedicated server remotely? Fiscit Remote Monitoring is here for you!
 
 **Note:** This mod is not required to be on everyone's mod list. You may run this mod alone or with your group.
 
@@ -14,10 +12,10 @@ Have you ever left your base to explore or work on another project and wondered 
 
 Please note that I did not develop these tools, and thus cannot be of much assistance. I would advise contacting the developer/engineer of the tool if no solution can be found: All references here are by permission of the author.
 
-- [Ficsit Remote Monitoring Companion App](https://github.com/AP-Hunt/FicsitRemoteMonitoringCompanion/releases/) written by Badger.
+- [Ficsit Remote Monitoring Companion App](https://github.com/AP-Hunt/FicsitRemoteMonitoringCompanion/releases/) written by [Badger](https://discordapp.com/users/186896287856197633).
 - [Satisfactory Efficiency Terminal](https://github.com/kikookraft/satisfactory-efficiency-terminal) designed and engineered by u/kikookraft.
-- [Ficsit Remote Monitoring Companion Bundle](https://github.com/featheredtoast/satisfactory-monitoring) written by FeatheredToast
-- [Ficsit Remote Monitoring Dashboard](https://github.com/Jonathan-Hofmann/ficsit-remote-monitoring-dasboard) written by Arfla and JDesignV2
+- [Ficsit Remote Monitoring Companion Bundle](https://github.com/featheredtoast/satisfactory-monitoring) written by [FeatheredToast](https://discordapp.com/users/130401633564753920)
+- [Ficsit Remote Monitoring Dashboard](https://github.com/Jonathan-Hofmann/ficsit-remote-monitoring-dasboard) written by [Arfla](https://discordapp.com/users/354294231134633987) and [JDesignV2](https://discordapp.com/users/402899414785720322)
 
 ## How to get started
 
@@ -50,7 +48,7 @@ If you have any options or features that you want, @ me in the modding Discord.
 
 ## Permissions granted
 
-You are permitted to create your own UIs for either Web and/or Serial and display them where appropriate (i.e., Discord, Reddit, etc).
+You can create your own UIs for either Web and/or Serial and display them where appropriate (i.e., Discord, Reddit, etc).
 
 Please keep it in accordance with the social media rules and ToS.
 
