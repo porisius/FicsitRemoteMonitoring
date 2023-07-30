@@ -4,7 +4,7 @@
 
 This is a beta version of the mod, which may have some bugs. If you find any issues, please contact me via my [**discord**](https://discordapp.com/users/56086820147953664).
 
-Have you ever left your base to explore or work on another project and wondered if the power at home was still good? Do you want a small gadget or website that allows you to remotely monitor your power on your dedicated server? Fiscit Remote Monitoring is here for you!
+Have you ever left your base to explore or work on another project and wondered if the power at home was still good? Do you want a small gadget or website that allows you to monitor your power on your dedicated server remotely? Fiscit Remote Monitoring is here for you!
 
 **Note:** This mod is not required to be on everyone's mod list. You may run this mod alone or with your group.
 
@@ -48,7 +48,7 @@ If you have any options or features that you want, @ me in the modding Discord.
 
 ## Permissions granted
 
-You are permitted to create your own UIs for either Web and/or Serial and display them where appropriate (i.e., Discord, Reddit, etc).
+You can create your own UIs for either Web and/or Serial and display them where appropriate (i.e., Discord, Reddit, etc).
 
 Please keep it in accordance with the social media rules and ToS.
 
