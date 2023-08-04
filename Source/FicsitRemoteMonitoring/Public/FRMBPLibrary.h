@@ -14,9 +14,9 @@ class FICSITREMOTEMONITORING_API UFRMBPLibrary : public UBlueprintFunctionLibrar
 	
     public:
 
-	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
+	UFUNCTION(BlueprintCallable, Category = "FicsitRemoteMonitoring")
 	static void SortIntArray(UPARAM(ref) TArray<int32>& IntArray, TArray<int32>& IntArraySorted);
 
-	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
+	UFUNCTION(BlueprintCallable, Category = "FicsitRemoteMonitoring")
 	static void SortFloatArray(UPARAM(ref) TArray<float>& FloatArray, TArray<float>& FloatArraySorted);
 };

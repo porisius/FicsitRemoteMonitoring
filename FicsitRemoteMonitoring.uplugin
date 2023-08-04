@@ -1,8 +1,8 @@
 {
 	"FileVersion": 3,
 	"Version": 0,
-	"VersionName": "0.9.6",
-	"SemVersion": "0.9.6",
+	"VersionName": "0.10.0",
+	"SemVersion": "0.10.0",
 	"AcceptsAnyRemoteVersion": true,
 	"FriendlyName": "Ficsit Remote Monitoring",
 	"Description": "Statistical and GeoLocation Monitoring for Satisfactory",
@@ -21,7 +21,7 @@
 			"Name": "BlueprintHttpServer",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
-			"WhitelistPlatforms": [
+			"PlatformAllowList": [
 				"Mac",
 				"Win64",
 				"Linux"
@@ -31,7 +31,7 @@
 			"Name": "WebSocketServer",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
-			"WhitelistPlatforms": [
+			"PlatformAllowList": [
 				"Win64",
 				"Linux",
 				"Mac"
@@ -51,7 +51,7 @@
 	"Plugins": [
 		{
 			"Name": "SML",
-			"SemVersion": "3.4.1",
+			"SemVersion": "^3.5.0",
 			"Enabled": true
 		}
 	]
