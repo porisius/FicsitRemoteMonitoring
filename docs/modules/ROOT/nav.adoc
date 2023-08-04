@@ -26,8 +26,8 @@
 *** xref:json/Read/getDropPod.adoc[getDropPod]
 *** xref:json/Read/getResourceSink.adoc[getExplorationSink]
 *** xref:json/Groups/getVehicles.adoc[getExplorer]
-*** xref:json/Read/getExtractor.adoc[getExtractor
-*** xref:json/Groups/getVehicles.adoc[getFactoryCart]]
+*** xref:json/Read/getExtractor.adoc[getExtractor]
+*** xref:json/Groups/getVehicles.adoc[getFactoryCart]
 *** xref:json/Groups/getFactory.adoc[getFoundry]
 *** xref:json/Groups/getGenerators.adoc[getFuelGenerator]
 *** xref:json/Groups/getGenerators.adoc[getGeothermalGenerator]
