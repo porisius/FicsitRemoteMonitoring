@@ -1,0 +1,170 @@
+= Schematics Status
+
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+API Endpoint: getSchematics +
+
+[cols="1,2,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|RecipeName
+|Name of Recipe Associated with Schematic/Milestone
+|String
+|Output
+
+|Category
+|Recipe Category
+|String
+|Output
+
+|Events/Name
+|Special Event Name, if applicable, for recipe
+|String
+|Output
+
+|Ingredients/Name
+|Name of items needed for Recipe
+|String
+|Output
+
+|Ingredients/ClassName
+|UE Class Name
+|String
+|Output
+
+|Ingredients/Amount
+|Amount of items required for recipe
+|Integar
+|Output
+
+|Ingredients/ManualRate
+|Rate per minute, the items manual processing requires at 100% throughput
+|Float
+|Output
+
+|Ingredients/FactoryRate
+|Rate per minute, the items automated processing requires at 100% throughput
+|Float
+|Output
+
+|Products/Name
+|Name of items produced for Recipe
+|String
+|Output
+
+|Products/ClassName
+|UE Class Name
+|String
+|Output
+
+|Products/Amount
+|Amount of items produced for recipe
+|Integar
+|Output
+
+|Products/ManualRate
+|Rate per minute, the items manual processing produces at 100% throughput
+|Float
+|Output
+
+|Products/FactoryRate
+|Rate per minute, the items automated processing produces at 100% throughput
+|Float
+|Output
+
+|ProducedIn/ProducedIn
+|Build tool/factory building used to create item
+|String
+|Output
+
+|ManualDuration
+|Name of Item Associated with Schematic/Milestone
+|String
+|Output
+
+|ManufacturingDuration
+|Name of Item Associated with Schematic/Milestone
+|String
+|Output
+
+|===
+
+Example:
+[source,json]
+-----------------
+[
+	{
+		"RecipeName": "Industrial Railing",
+		"ClassName": "Recipe_Fence_01_C",
+		"Category": "N/A",
+		"Events": [],
+		"Ingredients": [
+			{
+				"Name": "Iron Rod",
+				"ClassName": "Desc_IronRod_C",
+				"Amount": 4,
+				"ManualRate": 240,
+				"FactoryRate": 240
+			}
+		],
+		"Products": [
+			{
+				"Name": "Industrial Railing",
+				"ClassName": "Desc_Fence_01_C",
+				"Amount": 1,
+				"ManualRate": 60,
+				"FactoryRate": 60
+			}
+		],
+		"ProducedIn": [
+			{
+				"ProducedIn": "Build Gun"
+			}
+		],
+		"ManualDuration": 1,
+		"ManufacturingDuration": 1
+	},
+	{
+		"RecipeName": "Old Jump Pad",
+		"ClassName": "Recipe_JumpPad_C",
+		"Category": "N/A",
+		"Events": [],
+		"Ingredients": [
+			{
+				"Name": "Rotor",
+				"ClassName": "Desc_Rotor_C",
+				"Amount": 2,
+				"ManualRate": 120,
+				"FactoryRate": 120
+			},
+			{
+				"Name": "Iron Plate",
+				"ClassName": "Desc_IronPlate_C",
+				"Amount": 15,
+				"ManualRate": 900,
+				"FactoryRate": 900
+			},
+			{
+				"Name": "Cable",
+				"ClassName": "Desc_Cable_C",
+				"Amount": 10,
+				"ManualRate": 600,
+				"FactoryRate": 600
+			}
+		],
+		"Products": [
+			{
+				"Name": "Old Jump Pad",
+				"ClassName": "Desc_JumpPad_C",
+				"Amount": 1,
+				"ManualRate": 60,
+				"FactoryRate": 60
+			}
+		],
+		"ProducedIn": [],
+		"ManualDuration": 1,
+		"ManufacturingDuration": 1
+	}
+]
+-----------------
