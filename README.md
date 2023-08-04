@@ -1,6 +1,7 @@
 # Fiscit Remote Monitoring
 ## [Fiscit Remote Monitoring](https://discord.gg/tv3jbJW3RX) official discord server
 ## [Fiscit Web UI Source](https://github.com/GalaxyVOID/FRM-s-WebUI-Source)
+[![Executables](https://github.com/GalaxyVOID/FRM-s-WebUI-Source/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/GalaxyVOID/FRM-s-WebUI-Source/actions/workflows/main.yml)
 
 This is a beta version of the mod, which may have some bugs. If you find any issues, please contact me via my [**discord**](https://discordapp.com/users/56086820147953664).
 
