@@ -1,6 +1,6 @@
 # Fiscit Remote Monitoring
 
-## [Fiscit Remote Monitoring](https://discord.gg/tv3jbJW3RX) official discord server
+## [Fiscit Remote Monitoring](Offline due to Security Issues) official discord server
 
 ## [Fiscit Web UI Source](https://github.com/GalaxyVOID/FRM-s-WebUI-Source)
 
