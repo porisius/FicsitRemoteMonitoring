@@ -1,7 +1,7 @@
 # Fiscit Remote Monitoring
 
 ## [Fiscit Remote Monitoring](Offline due to Security Issues) official discord server
-## [Fiscit Remote Monitoring Backup](https://discord.gg/Gv7ZXTUU) backup discord server
+<img alt="Discord" src="https://img.shields.io/discord/1142919853053841488?style=for-the-badge&logo=discord&label=Backup%20Discord%20Server">
 
 ## [Fiscit Web UI Source](https://github.com/GalaxyVOID/FRM-s-WebUI-Source)
 [![Executables](https://github.com/GalaxyVOID/FRM-s-WebUI-Source/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/GalaxyVOID/FRM-s-WebUI-Source/actions/workflows/main.yml)
