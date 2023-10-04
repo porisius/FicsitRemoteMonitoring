@@ -20,10 +20,13 @@ jobs:
         run: Copy-Item "$Env:GITHUB_WORKSPACE\\FicsitRemoteMontioring" C:\workspace\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Copy Non-Public Source Files to Mod
-        run: Copy-Item C:\workspace\Source_Files C:\workspace\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source -Recurse -Force -Confirm:$false -ErrorAction Ignore
+        run: Copy-Item C:\workspace\Source_Files\* C:\workspace\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1
+
+      - name: Generate VS project files
+        run: C:\workspace\ue\Engine\Build\BatchFiles\Build.bat -projectfiles -project='C:\workspace\SatisfactoryModLoader\FactoryGame.uproject' -game -rocket -progres
 
       - name: Build for Development Editor
         run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Development Editor' /p:Platform='Win64' /t:'Games\FactoryGame' -m
