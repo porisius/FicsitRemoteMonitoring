@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-    VSPath: "C:\\Program Files\\Microsoft Visual Studio\\2022\Community\\MSBuild\\Current\\Bin\\MSBuild.exe"
+    VSPath: "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe"
     UEPath: "C:\\Program Files\\Unreal Engine - CSS\\Engine\\Build\\BatchFiles\\Build.bat"
     FGPath: "C:\\workspace\\SatisfactoryModLoader\\FactoryGame.sln"
     FUPath: "C:\\workspace\\SatisfactoryModLoader\\FactoryGame.uproject"
