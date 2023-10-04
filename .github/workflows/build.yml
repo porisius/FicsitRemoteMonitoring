@@ -26,16 +26,16 @@ jobs:
         uses: microsoft/setup-msbuild@v1
 
       - name: Build for Development Editor
-        run: MSBuild.exe -projectfiles -project='C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Development Editor' /p:Platform='Win64' /t:'Games\FactoryGame' -m
+        run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Development Editor' /p:Platform='Win64' /t:'Games\FactoryGame' -m
 
       - name: Build for Shipping/Client
-        run: MSBuild.exe -projectfiles -project='C:\workspace\\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping' /p:Platform='Win64' /t:'Games\FactoryGame' -m
+        run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping' /p:Platform='Win64' /t:'Games\FactoryGame' -m
 
       - name: Build for Win64 Dedicated Server
-        run: MSBuild.exe -projectfiles -project='C:\\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Win64' /t:'Games\FactoryGame' -m
+        run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Win64' /t:'Games\FactoryGame' -m
 
       - name: Build for Linux Dedicated Server
-        run: MSBuild.exe -projectfiles -project='C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Linux' /t:'Games\FactoryGame' -m
+        run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Linux' /t:'Games\FactoryGame' -m
 
       - name: Package FicsitRemoteMonitoring Mod
-        run: 'C:\Program Files\Unreal Engine - CSS\Engine\Build\BatchFiles\Build.bat' -ScriptsForProject='C:\workspace\SatisfactoryModLoader\FactoryGame.uproject" PackagePlugin -Project='C:\workspace\SatisfactoryModLoader\FactoryGame.uproject' -PluginName='FicsitRemoteMonitoring' -PluginTarget='Win64' -PluginTarget='Win64_Server' -PluginTarget='Linux_Server' -MergeArchive
+        run: "C:\Program Files\Unreal Engine - CSS\Engine\Build\BatchFiles\Build.bat" -ScriptsForProject='C:\workspace\SatisfactoryModLoader\FactoryGame.uproject' PackagePlugin -Project='C:\workspace\SatisfactoryModLoader\FactoryGame.uproject' -PluginName='FicsitRemoteMonitoring' -PluginTarget='Win64' -PluginTarget='Win64_Server' -PluginTarget='Linux_Server' -MergeArchive
