@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+    VSPath: "C:\\Program Files\\Microsoft Visual Studio\\2022\Community\\MSBuild\\Current\\Bin\\MSBuild.exe"
+    UEPath: "C:\\Program Files\\Unreal Engine - CSS\\Engine\\Build\\BatchFiles\\Build.bat"
+    FGPath: "C:\\workspace\\SatisfactoryModLoader\\FactoryGame.sln"
+    FUPath: "C:\\workspace\\SatisfactoryModLoader\\FactoryGame.uproject"
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Cleanup
+        run: Remove-Item C:\workspace\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring -Recurse -Force -Confirm:$false -ErrorAction Ignore
+
+      - uses: actions/checkout@v2
+        with:
+          path: FicsitRemoteMontioring
+
+      - name: Copy Mod to Project
+        run: Copy-Item "$Env:GITHUB_WORKSPACE\\FicsitRemoteMontioring" C:\workspace\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring -Recurse -Force -Confirm:$false -ErrorAction Ignore
+
+      - name: Copy Non-Public Source Files to Mod
+        run: Copy-Item C:\workspace\Source_Files C:\workspace\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source -Recurse -Force -Confirm:$false -ErrorAction Ignore
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Build for Development Editor
+        run: MSBuild.exe -projectfiles -project="$FGPath" /p:Configuration='Development Editor' /p:Platform='Win64' /t:'Games\FactoryGame' -m"
+
+      - name: Build for Shipping/Client
+        run: MSBuild.exe -projectfiles -project="$FGPath" /p:Configuration='Shipping' /p:Platform='Win64' /t:'Games\FactoryGame' -m"
+
+      - name: Build for Win64 Dedicated Server
+        run: MSBuild.exe -projectfiles -project="$FGPath" /p:Configuration='Shipping Server' /p:Platform='Win64' /t:'Games\FactoryGame' -m"
+
+      - name: Build for Linux Dedicated Server
+        run: MSBuild.exe -projectfiles -project="$FGPath" /p:Configuration='Shipping Server' /p:Platform='Linux' /t:'Games\FactoryGame' -m"
+
+      - name: Package FicsitRemoteMonitoring Mod
+        run: $UEPath -ScriptsForProject="$FUPath" PackagePlugin -Project="$FUPath" -PluginName="FicsitRemoteMonitoring" -PluginTarget="Win64" -PluginTarget='Win64_Server' -PluginTarget='Linux_Server' -MergeArchive
