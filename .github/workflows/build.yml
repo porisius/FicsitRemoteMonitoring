@@ -10,17 +10,29 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Cleanup
-        run: Remove-Item C:\workspace\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring -Recurse -Force -Confirm:$false -ErrorAction Ignore
+        run: Remove-Item C:\workspace\SatisfactoryModLoader -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
       - uses: actions/checkout@v2
         with:
           path: FicsitRemoteMontioring
+
+      - uses: actions/checkout@master
+        with:
+          repository: satisfactorymodding/SatisfactoryModLoader
+          ref: refs/heads/dedicated-servers
+          path: SatisfactoryModLoader
+
+      - name: Copy Mod to Project
+        run: Copy-Item "$Env:GITHUB_WORKSPACE\\SatisfactoryModLoader" C:\workspace\ -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Copy Mod to Project
         run: Copy-Item "$Env:GITHUB_WORKSPACE\\FicsitRemoteMontioring" C:\workspace\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Copy Non-Public Source Files to Mod
         run: Copy-Item C:\workspace\Source_Files\* C:\workspace\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source -Recurse -Force -Confirm:$false -ErrorAction Ignore
+
+      - name: Extract WWise
+        run: Expand-Archive -Path C:\workspace\WWise.zip -DestinationPath C:\workspace\SatisfactoryModLoader -Force
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1
