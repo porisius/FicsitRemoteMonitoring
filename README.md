@@ -1,7 +1,6 @@
 # Fiscit Remote Monitoring
 
-## [Fiscit Remote Monitoring](Offline due to Security Issues) official discord server
-## [FRM Backup Server backup discord server](https://discord.gg/c6446HTHpu) ![](https://img.shields.io/discord/1142919853053841488?style=for-the-badge&logo=discord&label=Backup%20Discord%20Server)
+## [FRM Official Discord Server](https://discord.gg/c6446HTHpu) ![](https://img.shields.io/discord/1142919853053841488?style=for-the-badge&logo=discord&label=Backup%20Discord%20Server)
 
 ## [Fiscit Web UI Source](https://github.com/GalaxyVOID/FRM-s-WebUI-Source)
 # [Download!](https://github.com/GalaxyVOID/FRM-s-WebUI-Source/releases/latest) ![GitHub release (with filter)](https://img.shields.io/github/v/release/GalaxyVOID/FRM-s-WebUI-Source?style=for-the-badge&logo=github)
