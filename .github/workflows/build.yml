@@ -35,7 +35,7 @@ jobs:
           ref: refs/heads/dedicated-servers
           path: SatisfactoryModLoader
 
-      - name: Copy Mod to Project
+      - name: Copy Project to Workspace
         run: Copy-Item "$Env:GITHUB_WORKSPACE\\SatisfactoryModLoader" C:\workspace\ -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Copy Mod to Project
