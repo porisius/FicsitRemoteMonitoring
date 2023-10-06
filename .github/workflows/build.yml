@@ -2,7 +2,20 @@ name: CI
 
 on:
   push:
+    branches:
+      - main
+      - dev
+    paths:
+      - "FicsitRemoteMonitoring.uplugin"
+      - "Content/**"
+      - "Source/**"
   pull_request:
+    branches:
+      - "main"
+      - "dev"
+    paths:
+      - "Content/**"
+      - "Source/**"
   workflow_dispatch:
 
 jobs:
