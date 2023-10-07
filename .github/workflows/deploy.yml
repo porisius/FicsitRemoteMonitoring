@@ -1,10 +1,8 @@
 name: Deploy
 
 on:
-  workflow_run:
-    workflows: ["Build and Release"]
-    types:
-      - completed
+  repository_dispatch:
+    types: [deploy]
 
 jobs:
   deploy:
