@@ -17,5 +17,10 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: build-artifacts
-          path: ./www # Replace with the path to your "www" directory
+          name: deploy-artifact
+          path: . # Download the artifact to the current directory
+
+      - name: Unzip and Replace Contents
+        run: |
+          unzip -o deploy-artifact
+          rm -f deploy-artifact # Remove the zip file
