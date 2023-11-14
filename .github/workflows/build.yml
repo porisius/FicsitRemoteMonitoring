@@ -71,8 +71,14 @@ jobs:
       - name: Copy JSONQuery to Project
         run: Copy-Item "$Env:GITHUB_WORKSPACE\\JSONQuery" C:\workspace\SatisfactoryModLoader\Mods\JSONQuery -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
-      - name: Extract WWise
-        run: Expand-Archive -Path C:\workspace\WWise.zip -DestinationPath C:\workspace\SatisfactoryModLoader -Force
+      - name: Add Wwise
+        run: |
+          gh release download --repo mircearoata/wwise-cli -p "wwise-cli.exe"
+          ./wwise-cli.exe download     --sdk-version "2022.1.5.8242"          --filter Packages=SDK --filter DeploymentPlatforms=Windows_vc140 --filter DeploymentPlatforms=Windows_vc150 --filter DeploymentPlatforms=Windows_vc160 --filter DeploymentPlatforms=Windows_vc170 --filter DeploymentPlatforms=Linux --filter DeploymentPlatforms=
+          ./wwise-cli.exe integrate-ue --integration-version "2022.1.5.2714"  --project "SML\FactoryGame.uproject"
+        env:
+          WWISE_EMAIL: ${{ secrets.WWISE_EMAIL }}
+          WWISE_PASSWORD: ${{ secrets.WWISE_PASSWORD }}
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1
