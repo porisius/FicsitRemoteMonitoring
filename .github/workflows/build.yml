@@ -50,7 +50,7 @@ jobs:
       - uses: actions/checkout@master
         with:
           repository: satisfactorymodding/SatisfactoryModLoader
-          ref: refs/heads/dedicated-servers
+          ref: refs/heads/dev
           path: SatisfactoryModLoader
 
       - name: Copy Project to Workspace
