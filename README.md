@@ -1,74 +1,97 @@
-# Fiscit Remote Monitoring
+# **Fiscit Remote Monitoring**
 
-## [Fiscit Remote Monitoring](Offline due to Security Issues) official discord server
-## [FRM Backup Server backup discord server](https://discord.gg/c6446HTHpu) ![](https://img.shields.io/discord/1142919853053841488?style=for-the-badge&logo=discord&label=Backup%20Discord%20Server)
+## [Join the FRM Community](https://discord.gg/c6446HTHpu) ![FRM Community](https://img.shields.io/discord/1142919853053841488?style=for-the-badge&logo=discord)
 
-## [Fiscit Web UI Source](https://github.com/GalaxyVOID/FRM-s-WebUI-Source)
-# [Download!](https://github.com/GalaxyVOID/FRM-s-WebUI-Source/releases/latest) ![GitHub release (with filter)](https://img.shields.io/github/v/release/GalaxyVOID/FRM-s-WebUI-Source?style=for-the-badge&logo=github)
+### [Explore the Fiscit Web UI Source](https://github.com/GalaxyVOID/FRM-s-WebUI-Source)
+# [Download the Latest Release](https://github.com/GalaxyVOID/FRM-s-WebUI-Source/releases/latest) ![GitHub release](https://img.shields.io/github/v/release/GalaxyVOID/FRM-s-WebUI-Source?style=for-the-badge&logo=github)
 
+---
 
-This is a beta version of the mod, which may have some bugs. If you find any issues, please contact me via my [**discord**](https://discordapp.com/users/56086820147953664).
+🚧 **Welcome to the Beta Version** 🚧
 
-Have you ever left your base to explore or work on another project and wondered if the power at home was still good? Do you want a small gadget or website that allows you to monitor your power on your dedicated server remotely? Fiscit Remote Monitoring is here for you!
+This mod is an exciting journey into the future of remote monitoring for dedicated servers. Though it's a beta version, it comes with great potential. If you encounter any bugs or have suggestions, don't hesitate to reach out on [**Discord**](https://discord.gg/c6446HTHpu).
 
-**Note:** This mod is not required to be on everyone's mod list. You may run this mod alone or with your group.
+Have you ever left your base for an adventure or a side project, wondering about your home's power status? FRM provides you with a compact gadget and a website to monitor your server's power remotely.
 
-## Third-party Support/Apps
+**Note:** FRM is versatile and can be used as a standalone mod or with your gaming group.
 
-Please note that I did not develop these tools, and thus cannot be of much assistance. I would advise contacting the developer/engineer of the tool if no solution can be found: All references here are by permission of the author.
+---
 
-- [Ficsit Remote Monitoring Companion App](https://github.com/AP-Hunt/FicsitRemoteMonitoringCompanion/releases/) written by [Badger](https://discordapp.com/users/186896287856197633).
-- [Satisfactory Efficiency Terminal](https://github.com/kikookraft/satisfactory-efficiency-terminal) designed and engineered by u/kikookraft.
-- [Ficsit Remote Monitoring Companion Bundle](https://github.com/featheredtoast/satisfactory-monitoring) written by [FeatheredToast](https://discordapp.com/users/130401633564753920)
-- [Ficsit Remote Monitoring Dashboard](https://github.com/Jonathan-Hofmann/ficsit-remote-monitoring-dasboard) written by [Arfla](https://discordapp.com/users/354294231134633987) and [JDesignV2](https://discordapp.com/users/402899414785720322)
+### **Discover Third-party Support and Apps**
 
-## How to get started
+Explore these external tools and apps created by talented developers:
 
-1. Read the documentation on [https://docs.ficsit.app/ficsitremotemonitoring/latest/](https://docs.ficsit.app/ficsitremotemonitoring/latest/).
-2. The web server may be started/stopped by using `/frmweb {start/stop}` in the chat window.
-3. The serial communication may be started/stopped by using `/frmserial {start/stop}` in the chat window.
-4. For Serial, specify the Serial port associated (Windows Device Manager helps with this), then set the Baud Rate.
-   - Due to the library used, only the baud rate can be changed; you must use 8-N-1 (8 bits, No parity, 1 stop bit).
+- [**Ficsit Remote Monitoring Companion App**](https://github.com/AP-Hunt/FicsitRemoteMonitoringCompanion/releases/) by [Badger](https://discordapp.com/users/186896287856197633)
+- [**Satisfactory Efficiency Terminal**](https://github.com/kikookraft/satisfactory-efficiency-terminal) designed and engineered by u/kikookraft
+- [**Ficsit Remote Monitoring Companion Bundle**](https://github.com/featheredtoast/satisfactory-monitoring) by [FeatheredToast](https://discordapp.com/users/130401633564753920)
+- [**Ficsit Remote Monitoring Dashboard**](https://github.com/Jonathan-Hofmann/ficsit-remote-monitoring-dasboard) by [Arfla](https://discordapp.com/users/354294231134633987) and [JDesignV2](https://discordapp.com/users/402899414785720322)
 
-## Features
+---
 
-- Power Monitoring on a selected circuit.
-- Battery status, charge, capacity, time until out of power.
-- Output Serial Devices like RaspberryPi, Arduino, and other RS-232 devices.
-- Input support to remotely reset fuses or issue other commands.
-- JSON Support for output to allow updates and additional input/output without disrupting current setups.
-- Web Server Support, complete with Power Information as well as Real-Time Tracking of Player (not multiplayer tested, but should work).
+### **Getting Started**
 
-## WIP / Future Features
+1. Start your journey with our comprehensive [documentation](https://docs.ficsit.app/ficsitremotemonitoring/latest/).
+2. Manage the web server with ease using `/frmweb {start/stop}` in the chat.
+3. Control serial communication effortlessly with `/frmserial {start/stop}` in the chat.
+4. For Serial, specify the Serial port (check Windows Device Manager for help) and set the Baud Rate.
+   - Note: Only the baud rate is adjustable; use 8-N-1 (8 bits, No parity, 1 stop bit).
 
-- Input functionality, i.e., turn on/off switches.
+---
 
-## Known Bugs
+### **Features at a Glance**
 
-See [Remote Monitoring Github Issues](https://github.com/porisius/FicsitRemoteMonitoring/issues).
+- Monitor power on your chosen circuit.
+- Track battery status, charge, capacity, and time until power depletion.
+- Connect with Output Serial Devices like Raspberry Pi, Arduino, and more.
+- Remote input support for fuse resets and other commands.
+- JSON Support for flexible data exchange without disrupting setups.
+- Host your Web Server with Power Information and Real-Time Player Tracking (not multiplayer tested, but expected to work).
 
-## Feedback
+---
 
-If you have any options or features that you want, @ me in the modding Discord.
+### **Upcoming Features**
 
-## Permissions granted
+- Exciting input functionality for controlling switches.
 
-You can create your own UIs for either Web and/or Serial and display them where appropriate (i.e., Discord, Reddit, etc).
+---
 
-Please keep it in accordance with the social media rules and ToS.
+### **Known Bugs**
 
-## Special Thanks
+For a list of known issues, please visit our [Remote Monitoring Github Issues](https://github.com/porisius/FicsitRemoteMonitoring/issues).
 
-- [**Feyko**](https://discordapp.com/users/227473074616795137): Support and guidance to a noob Unreal Engine modder.
-- [**Robb**](https://discordapp.com/users/187385442549628928): Answering my dumb questions.
-- [**Vilsol**](https://discordapp.com/users/135134753534771201): Also answering my dumb questions and helping with the documentation system.
-- [**Nog**](https://discordapp.com/users/277050857852370944): Answering the dumbest of my questions.
-- [**Archengius**](https://discordapp.com/users/163955176313585666): Helping with the UE Garbage Collection Issue.
-- [**Deantendo**](https://discordapp.com/users/293484684787056640): Icon/Graphic for FRM.
-- [**Andre Aquila**](https://discordapp.com/users/294943551605702667): Production Stats code for FRM (Seriously, that would have taken me forever to develop).
-- [**Badger**](https://discordapp.com/users/186896287856197633): For the FRM Companion App.
-- [**BLAndrew575**](https://discordapp.com/users/509759568037937152): For giving me a crazy world to brutally stress test the getFactory caching function.
-- [**GalaxyVOID**](https://discordapp.com/users/212243828831289344): Contributions to FRM's native web UI.
-- [**FeatheredToast**](https://discordapp.com/users/130401633564753920): Finding and helping resolve the dumb things I did.
+---
 
-## Thank you to all who have contributed and helped make Fiscit Remote Monitoring possible
+### **We Value Your Feedback**
+
+If you have suggestions or feature requests, don't hesitate to contact us in the modding Discord.
+
+---
+
+### **Permissions Granted**
+
+Feel free to create your own UIs for web and serial and share them on social media platforms like Discord and Reddit. Please adhere to the platform's rules and ToS.
+
+---
+
+### **Special Thanks to Our Supporters**
+
+Our journey wouldn't be possible without the help and support of these amazing individuals:
+
+- [**Feyko**](https://discordapp.com/users/227473074616795137)
+- [**Robb**](https://discordapp.com/users/187385442549628928)
+- [**Vilsol**](https://discordapp.com/users/135134753534771201)
+- [**Nog**](https://discordapp.com/users/277050857852370944)
+- [**Archengius**](https://discordapp.com/users/163955176313585666)
+- [**Deantendo**](https://discordapp.com/users/293484684787056640)
+- [**Andre Aquila**](https://discordapp.com/users/294943551605702667)
+- [**Badger**](https://discordapp.com/users/186896287856197633)
+- [**BLAndrew575**](https://discordapp.com/users/509759568037937152)
+- [**GalaxyVOID**](https://discordapp.com/users/212243828831289344)
+- [**FeatheredToast**](https://discordapp.com/users/130401633564753920)
+
+---
+
+### **A Heartfelt Thank You**
+
+To all the contributors and supporters who made Fiscit Remote Monitoring a reality, we extend our deepest gratitude. Together, we're shaping the future of remote server monitoring!
+
