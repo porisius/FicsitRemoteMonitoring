@@ -51,8 +51,10 @@
 	"Plugins": [
 		{
 			"Name": "SML",
-			"SemVersion": "^3.5.1",
-			"Enabled": true
+			"SemVersion": "^3.6.0",
+			"Enabled": true,
+			"BasePlugin": false
 		}
-	]
+	],
+	"RemoteVersionRange": ""
 }
