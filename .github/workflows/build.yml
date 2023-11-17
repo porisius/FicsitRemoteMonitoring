@@ -102,11 +102,11 @@ jobs:
       - name: Build for Shipping/Client
         run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping' /p:Platform='Win64' /t:'Games\FactoryGame' -m
 
-      - name: Build for Win64 Dedicated Server
-        run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Win64' /t:'Games\FactoryGame' -m
+      #- name: Build for Win64 Dedicated Server
+      #  run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Win64' /t:'Games\FactoryGame' -m
 
-      - name: Build for Linux Dedicated Server
-        run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Linux' /t:'Games\FactoryGame' -m
+      #- name: Build for Linux Dedicated Server
+      #  run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Linux' /t:'Games\FactoryGame' -m
 
       - name: Package FicsitRemoteMonitoring Mod
         run: C:\workspace\ue\Engine\Build\BatchFiles\RunUAT.bat -ScriptsForProject='C:\workspace\SatisfactoryModLoader\FactoryGame.uproject' PackagePlugin -Project='C:\workspace\SatisfactoryModLoader\FactoryGame.uproject' -PluginName='FicsitRemoteMonitoring' -PluginTarget='Win64' -PluginTarget='Win64_Server' -PluginTarget='Linux_Server' -MergeArchive
