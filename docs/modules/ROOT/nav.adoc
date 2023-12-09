@@ -39,6 +39,7 @@
 *** xref:json/Read/getPaths.adoc[getPaths]
 *** xref:json/Read/getPipes.adoc[getPipes]
 *** xref:json/Read/getPower.adoc[getPower]
+*** xref:json/Read/getPowerSlug.adoc[getPowerSlug]
 *** xref:json/Read/getPlayer.adoc[getPlayer]
 *** xref:json/Read/getProdStats.adoc[getProdStats]
 *** xref:json/Read/getRadarTower.adoc[getRadarTower]

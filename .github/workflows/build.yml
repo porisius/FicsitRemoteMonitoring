@@ -17,6 +17,19 @@ on:
       - "Content/**"
       - "Source/**"
   workflow_dispatch:
+    inputs:
+      ue_version_tag:
+        required: false
+        description: "Release of UnrealEngine-CSS to use. Will use the latest if unspecified"
+  workflow_call:
+    secrets:
+      WWISE_EMAIL:
+        required: true
+      WWISE_PASSWORD:
+        required: true
+      GH_TOKEN:
+        required: false
+
 
 jobs:
   build:
@@ -24,6 +37,12 @@ jobs:
     steps:
       - name: Cleanup
         run: Remove-Item C:\workspace\SatisfactoryModLoader -Recurse -Force -Confirm:$false -ErrorAction Ignore
+
+      - name: Setup Unreal Engine
+        uses: mircearoata/satisfactory-modding-ue-action@master
+        with:
+          tag: ${{inputs.ue_version_tag}}
+          token: ${{ secrets.GH_TOKEN }}
 
       - uses: actions/checkout@v2
         with:
@@ -50,7 +69,7 @@ jobs:
       - uses: actions/checkout@master
         with:
           repository: satisfactorymodding/SatisfactoryModLoader
-          ref: refs/heads/dedicated-servers
+          ref: refs/heads/dev
           path: SatisfactoryModLoader
 
       - name: Copy Project to Workspace
@@ -71,8 +90,15 @@ jobs:
       - name: Copy JSONQuery to Project
         run: Copy-Item "$Env:GITHUB_WORKSPACE\\JSONQuery" C:\workspace\SatisfactoryModLoader\Mods\JSONQuery -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
-      - name: Extract WWise
-        run: Expand-Archive -Path C:\workspace\WWise.zip -DestinationPath C:\workspace\SatisfactoryModLoader -Force
+      - name: Add Wwise
+        run: |
+          gh release download --repo mircearoata/wwise-cli -p "wwise-cli.exe"
+          ./wwise-cli.exe download     --sdk-version "2022.1.5.8242"          --filter Packages=SDK --filter DeploymentPlatforms=Windows_vc140 --filter DeploymentPlatforms=Windows_vc150 --filter DeploymentPlatforms=Windows_vc160 --filter DeploymentPlatforms=Windows_vc170 --filter DeploymentPlatforms=Linux --filter DeploymentPlatforms=
+          ./wwise-cli.exe integrate-ue --integration-version "2022.1.5.2714"  --project "C:\workspace\SatisfactoryModLoader\FactoryGame.uproject"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          WWISE_EMAIL: ${{ secrets.WWISE_EMAIL }}
+          WWISE_PASSWORD: ${{ secrets.WWISE_PASSWORD }}
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1
@@ -86,11 +112,11 @@ jobs:
       - name: Build for Shipping/Client
         run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping' /p:Platform='Win64' /t:'Games\FactoryGame' -m
 
-      - name: Build for Win64 Dedicated Server
-        run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Win64' /t:'Games\FactoryGame' -m
+      #- name: Build for Win64 Dedicated Server
+      #  run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Win64' /t:'Games\FactoryGame' -m
 
-      - name: Build for Linux Dedicated Server
-        run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Linux' /t:'Games\FactoryGame' -m
+      #- name: Build for Linux Dedicated Server
+      #  run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Linux' /t:'Games\FactoryGame' -m
 
       - name: Package FicsitRemoteMonitoring Mod
         run: C:\workspace\ue\Engine\Build\BatchFiles\RunUAT.bat -ScriptsForProject='C:\workspace\SatisfactoryModLoader\FactoryGame.uproject' PackagePlugin -Project='C:\workspace\SatisfactoryModLoader\FactoryGame.uproject' -PluginName='FicsitRemoteMonitoring' -PluginTarget='Win64' -PluginTarget='Win64_Server' -PluginTarget='Linux_Server' -MergeArchive
