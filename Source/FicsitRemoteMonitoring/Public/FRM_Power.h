@@ -7,17 +7,17 @@
 #include "FGBlueprintFunctionLibrary.h"
 #include "FGPowerCircuit.h"
 #include "FGCircuitSubsystem.h"
-#include "Power.generated.h"
+#include "FRM_Power.generated.h"
 
 UCLASS()
-class FICSITREMOTEMONITORING_API UFRMPowerLibrary : public UFGBlueprintFunctionLibrary
+class FICSITREMOTEMONITORING_API UFRM_Power : public UFGBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 	
-    public:
+public:
 
-		UFUNCTION(BlueprintPure)
-		static FString getCircuit(UObject* WorldContext);
+	UFUNCTION(BlueprintPure)
+	static FString getCircuit(UObject* WorldContext);
 
 private:
 	friend class UFGPowerCircuit;

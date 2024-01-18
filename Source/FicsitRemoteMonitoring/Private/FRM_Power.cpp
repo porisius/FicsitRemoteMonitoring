@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Power.h"
+#include "FRM_Power.h"
 
-FString UFRMPowerLibrary::getCircuit(UObject* WorldContext)
+FString UFRM_Power::getCircuit(UObject* WorldContext)
 {
 	AFGCircuitSubsystem* CircuitSubsystem = AFGCircuitSubsystem::Get(WorldContext->GetWorld());
 
@@ -20,20 +20,18 @@ FString UFRMPowerLibrary::getCircuit(UObject* WorldContext)
 		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerGroup->mConsumption));
 		JCircuit->Values.Add("PowerCapacity", MakeShared<FJsonValueNumber>(PowerGroup->mMaximumProductionCapacity));
 		JCircuit->Values.Add("PowerMaxConsumed", MakeShared<FJsonValueNumber>(PowerGroup->mMaximumPowerConsumption));
-		JCircuit->Values.Add("BatteryDifferential", MakeShared<FJsonValueNumber>(PowerGroup->mTotalPowerStore));
+		JCircuit->Values.Add("BatteryDifferential", MakeShared<FJsonValueNumber>(PowerCircuit->mBatterySumPowerInput));
 		JCircuit->Values.Add("BatteryPercent", MakeShared<FJsonValueNumber>(100 * (PowerGroup->mTotalPowerStore / PowerGroup->mTotalPowerStoreCapacity)));
 		JCircuit->Values.Add("BatteryCapacity", MakeShared<FJsonValueNumber>(PowerGroup->mTotalPowerStoreCapacity));
 		JCircuit->Values.Add("BatteryTimeEmpty", MakeShared<FJsonValueString>(SecondsToTimeString(PowerCircuit->mTimeToBatteriesEmpty)));
 		JCircuit->Values.Add("BatteryTimeFull", MakeShared<FJsonValueString>(SecondsToTimeString(PowerCircuit->mTimeToBatteriesFull)));
 		JCircuit->Values.Add("FuseTriggered", MakeShared<FJsonValueBoolean>(PowerGroup->mIsAnyFuseTriggered));
-		
+
 		JCircuitArray.Add(MakeShared<FJsonValueObject>(JCircuit));
 	};
-	TSharedRef<FJsonObject> JObj = MakeShared<FJsonObject>();
-	JObj->Values.Add("Circuits", MakeShared<FJsonValueArray>(JCircuitArray));
 	FString Write;
 	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
 	FJsonSerializer::Serialize(JCircuitArray, JsonWriter);
 
 	return Write;
-}
+};
