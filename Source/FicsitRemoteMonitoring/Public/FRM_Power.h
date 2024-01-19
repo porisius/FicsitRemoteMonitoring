@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "JsonObjectConverter.h"
 #include "FicsitRemoteMonitoringModule.h"
 #include "FGBlueprintFunctionLibrary.h"
 #include "FGPowerCircuit.h"
