@@ -1,21 +1,21 @@
 #include "FRM_Factory.h"
+#include <NiagaraPerfBaseline.h>
 
 FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 {
-	TArray<TSharedPtr<FJsonValue>> JFactoryArray;
-	TArray<TSharedPtr<FJsonValue>> JCircuitArray;
-	TArray<TSharedPtr<FJsonValue>> JProductArray;
-	TArray<TSharedPtr<FJsonValue>> JIngredientsArray;
-
+	
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 	TArray<AFGBuildable*> Buildables;
 	BuildableSubsystem->GetTypedBuildable(TypedBuildable, Buildables);
+	TArray<TSharedPtr<FJsonValue>> JFactoryArray;
 
 	for (AFGBuildable* Buildable : Buildables) {
 
 		AFGBuildableManufacturer* Manufacturer = Cast<AFGBuildableManufacturer>(Buildable);
 
 		TSharedPtr<FJsonObject> JFactory = MakeShared<FJsonObject>();
+		TArray<TSharedPtr<FJsonValue>> JProductArray;
+		TArray<TSharedPtr<FJsonValue>> JIngredientsArray;
 
 		if (IsValid(Manufacturer->GetCurrentRecipe())) {
 			auto CurrentRecipe = Cast<UFGRecipe>(Manufacturer->GetCurrentRecipe());
@@ -82,6 +82,8 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 			JIngredientsArray.Add(MakeShared<FJsonValueObject>(JIngredients));
 		};
 		
+		TArray<TSharedPtr<FJsonValue>> JCircuitArray;
+
 		TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
 		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(Manufacturer->GetPowerInfo()->GetPowerCircuit()->GetCircuitGroupID()));
 		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(Manufacturer->GetPowerInfo()->GetPowerCircuit()->mPowerConsumed));
