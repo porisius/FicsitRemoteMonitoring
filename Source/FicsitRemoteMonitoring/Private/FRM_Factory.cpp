@@ -46,15 +46,15 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 
 				auto Amount = Manufacturer->GetOutputInventory()->GetNumItems(Ingredients.ItemClass);
 				auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Ingredients.Amount, UFGItemDescriptor::GetForm(Ingredients.ItemClass));
-				auto CurrentProd = RecipeAmount * ProdCycle * Productivity * CurrentPotential;
-				auto MaxProd = RecipeAmount * ProdCycle * CurrentPotential;
+				auto CurrentConsumed = RecipeAmount * ProdCycle * Productivity * CurrentPotential;
+				auto MaxConsumed = RecipeAmount * ProdCycle * CurrentPotential;
 
 				JIngredients->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Ingredients.ItemClass).ToString()));
 				JIngredients->Values.Add("ClassName", MakeShared<FJsonValueString>((Ingredients.ItemClass)->GetDefaultObjectName().ToString()));
 				JIngredients->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
-				JIngredients->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
-				JIngredients->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
-				JIngredients->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>(CurrentProd / MaxProd));
+				JIngredients->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(CurrentConsumed));
+				JIngredients->Values.Add("MaxConsumed", MakeShared<FJsonValueNumber>(MaxConsumed));
+				JIngredients->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>(CurrentConsumed / MaxConsumed));
 
 				JIngredientsArray.Add(MakeShared<FJsonValueObject>(JIngredients));
 			};
@@ -74,8 +74,8 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 			JIngredients->Values.Add("Name", MakeShared<FJsonValueString>("Unassigned"));
 			JIngredients->Values.Add("ClassName", MakeShared<FJsonValueString>("Unassigned"));
 			JIngredients->Values.Add("Amount", MakeShared<FJsonValueNumber>(0));
-			JIngredients->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(0));
-			JIngredients->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(0));
+			JIngredients->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(0));
+			JIngredients->Values.Add("MaxConsumed", MakeShared<FJsonValueNumber>(0));
 			JIngredients->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>(0));
 
 			JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
@@ -102,7 +102,7 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 		JFactory->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(Manufacturer->IsProductionPaused()));
 		JFactory->Values.Add("PowerInfo", MakeShared<FJsonValueArray>(JCircuitArray));
 		JFactory->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(Manufacturer->GetPowerInfo()->GetPowerCircuit()->GetCircuitGroupID()));
-		JFactory->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Manufacturer), Manufacturer->mDisplayName.ToString())));
+		JFactory->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Manufacturer), Manufacturer->mDisplayName.ToString(), Manufacturer->mDisplayName.ToString())));
 
 		JFactoryArray.Add(MakeShared<FJsonValueObject>(JFactory));
 	};
