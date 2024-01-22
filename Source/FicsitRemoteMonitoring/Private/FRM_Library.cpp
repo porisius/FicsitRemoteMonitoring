@@ -27,26 +27,29 @@ TSharedPtr<FJsonObject> UFRM_Library::getActorJSON(AActor* Actor) {
 
 };
 
-TSharedPtr<FJsonObject> UFRM_Library::getActorFeaturesJSON(AActor* Actor, FString DisplayName) {
+TSharedPtr<FJsonObject> UFRM_Library::getActorFeaturesJSON(AActor* Actor, FString DisplayName, FString TypeName) {
 
-	TSharedPtr<FJsonObject> JFeatures = MakeShared<FJsonObject>();
-	TSharedPtr<FJsonObject> JCoordinates = MakeShared<FJsonObject>();
 	TSharedPtr<FJsonObject> JProperties = MakeShared<FJsonObject>();
-	TSharedPtr<FJsonObject> JGeometry = MakeShared<FJsonObject>();
 
 	JProperties->Values.Add("name", MakeShared<FJsonValueString>(DisplayName));
-	JProperties->Values.Add("type", MakeShared<FJsonValueString>(DisplayName));
+	JProperties->Values.Add("type", MakeShared<FJsonValueString>(TypeName));
 
 	long double primaryX = Actor->GetActorLocation().X;
 	long double primaryY = Actor->GetActorLocation().Y;
 	long double primaryZ = Actor->GetActorLocation().Z;
 
+	TSharedPtr<FJsonObject> JCoordinates = MakeShared<FJsonObject>();
+
 	JCoordinates->Values.Add("x", MakeShared<FJsonValueNumber>(primaryX));
 	JCoordinates->Values.Add("y", MakeShared<FJsonValueNumber>(primaryY));
 	JCoordinates->Values.Add("z", MakeShared<FJsonValueNumber>(primaryZ));
 
+	TSharedPtr<FJsonObject> JGeometry = MakeShared<FJsonObject>();
+
 	JGeometry->Values.Add("coordinates", MakeShared<FJsonValueObject>(JCoordinates));
 	JGeometry->Values.Add("type", MakeShared<FJsonValueString>("Point"));
+
+	TSharedPtr<FJsonObject> JFeatures = MakeShared<FJsonObject>();
 
 	JFeatures->Values.Add("properties", MakeShared<FJsonValueObject>(JProperties));
 	JFeatures->Values.Add("geometry", MakeShared<FJsonValueObject>(JGeometry));

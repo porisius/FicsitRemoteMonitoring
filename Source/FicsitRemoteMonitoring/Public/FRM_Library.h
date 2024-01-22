@@ -16,5 +16,5 @@ class FICSITREMOTEMONITORING_API UFRM_Library : public UFGBlueprintFunctionLibra
 	
 public:
 	static TSharedPtr<FJsonObject> getActorJSON(AActor* Actor);
-	static TSharedPtr<FJsonObject> getActorFeaturesJSON(AActor* Actor, FString DisplayName);
+	static TSharedPtr<FJsonObject> getActorFeaturesJSON(AActor* Actor, FString DisplayName, FString TypeName);
 };
