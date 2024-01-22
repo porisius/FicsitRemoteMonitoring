@@ -15,7 +15,9 @@ FString UFRM_Power::getCircuit(UObject* WorldContext)
 
 		TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
 
-		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(Circuit->GetCircuitGroupID()));
+		auto CircuitID = Circuit->GetCircuitGroupID();
+
+		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
 		JCircuit->Values.Add("PowerProduction", MakeShared<FJsonValueNumber>(PowerGroup->mBaseProduction));
 		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerGroup->mConsumption));
 		JCircuit->Values.Add("PowerCapacity", MakeShared<FJsonValueNumber>(PowerGroup->mMaximumProductionCapacity));
