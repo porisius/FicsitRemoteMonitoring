@@ -11,6 +11,7 @@
 #include "Resources/FGItemDescriptor.h"
 #include "FGRecipe.h"
 #include "FGBlueprintFunctionLibrary.h"
+#include "FGItemPickup.h"
 #include "FRM_Library.h"
 #include "FRM_Factory.generated.h"
 
@@ -22,4 +23,7 @@ class FICSITREMOTEMONITORING_API UFRM_Factory : public UFGBlueprintFunctionLibra
 public:
 	UFUNCTION(BlueprintPure)
 	static FString getFactory(UObject* WorldContext, UClass* TypedBuildable);
+
+	UFUNCTION(BlueprintPure)
+	static FString getPowerSlug(UObject* WorldContext);
 };

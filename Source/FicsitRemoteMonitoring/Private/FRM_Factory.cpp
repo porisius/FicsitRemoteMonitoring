@@ -112,3 +112,42 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 
 	return Write;
 };
+
+FString UFRM_Factory::getPowerSlug(UObject* WorldContext) {
+
+	UClass* CrystalClass = LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Resource/Environment/Crystal/BP_Crystal.BP_Crystal_C"));
+	TArray<AActor*> FoundActors;
+	TArray<TSharedPtr<FJsonValue>> JSlugArray;
+
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), CrystalClass, FoundActors);
+	int Index = 0;
+	for (AActor* PowerActor : FoundActors) {
+		Index++;
+
+		TSharedPtr<FJsonObject> JPowerSlug = MakeShared<FJsonObject>();
+
+		auto PowerSlug = Cast<AFGItemPickup>(PowerActor)->GetPickupItems().Item;
+		FString SlugName;
+
+		if (PowerSlug.GetItemClass()->GetName() == "Desc_Crystal") {
+			SlugName = "Blue Slug";
+		} else if(PowerSlug.GetItemClass()->GetName() == "Desc_Crystal_mk2") {
+			SlugName = "Green Slug";
+		} else if (PowerSlug.GetItemClass()->GetName() == "Desc_Crystal_mk3") {
+			SlugName = "Purple Slug";
+		};
+
+		JPowerSlug->Values.Add("ID", MakeShared<FJsonValueNumber>(Index));
+		JPowerSlug->Values.Add("Name", MakeShared<FJsonValueString>(SlugName));
+		JPowerSlug->Values.Add("ClassName", MakeShared<FJsonValueString>(PowerActor->GetClass()->GetName()));
+		JPowerSlug->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(PowerActor)));
+		JPowerSlug->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(PowerActor), SlugName, "Power Slug")));
+
+		JSlugArray.Add(MakeShared<FJsonValueObject>(JPowerSlug));
+	};
+	FString Write;
+	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+	FJsonSerializer::Serialize(JSlugArray, JsonWriter);
+
+	return Write;
+}
