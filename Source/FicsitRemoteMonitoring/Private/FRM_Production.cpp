@@ -170,7 +170,7 @@ FString UFRM_Production::getProdStats(UObject* WorldContext) {
 			ProdPerMin.Append(FString::SanitizeFloat(UFGBlueprintFunctionLibrary::RoundFloatWithPrecision(Consumption, 2)));
 			ProdPerMin.Append("/ min");
 
-			JProductionStats->Values.Add("Name", MakeShared<FJsonValueString>(ClassName->GetDisplayNameText().ToString()));
+			JProductionStats->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
 			JProductionStats->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName->GetClass()->GetName()));
 			JProductionStats->Values.Add("ProdPerMin", MakeShared<FJsonValueString>(ProdPerMin));
 			JProductionStats->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>(100 * (Produced / MaxProduced)));
