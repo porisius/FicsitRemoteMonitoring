@@ -2,7 +2,6 @@
 
 
 #include "FRM_Production.h"
-#include <Selection.h>
 
 FString UFRM_Production::getProdStats(UObject* WorldContext) {
 
@@ -145,7 +144,6 @@ FString UFRM_Production::getProdStats(UObject* WorldContext) {
 			FString Type;
 			UEnum::GetValueAsString(Form, Type);
 
-			//FString ProdPerMin = (TEXT("P: %f /min - C: %f /min"), UFGBlueprintFunctionLibrary::RoundFloatWithPrecision(Produced, 2), UFGBlueprintFunctionLibrary::RoundFloatWithPrecision(Consumption, 2)).ToString();
 			FString ProdPerMin = "P: ";
 			ProdPerMin.Append(FString::SanitizeFloat(UFGBlueprintFunctionLibrary::RoundFloatWithPrecision(Produced, 2)));
 			ProdPerMin.Append("/ min - C: ");
