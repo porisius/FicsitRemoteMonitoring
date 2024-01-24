@@ -9,6 +9,8 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 	BuildableSubsystem->GetTypedBuildable(TypedBuildable, Buildables);
 	TArray<TSharedPtr<FJsonValue>> JFactoryArray;
 
+	UE_LOG(LogTemp, Warning, TEXT("Initial variables configured, executing getProdStats"));
+
 	for (AFGBuildable* Buildable : Buildables) {
 
 		AFGBuildableManufacturer* Manufacturer = Cast<AFGBuildableManufacturer>(Buildable);
@@ -17,12 +19,16 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 		TArray<TSharedPtr<FJsonValue>> JProductArray;
 		TArray<TSharedPtr<FJsonValue>> JIngredientsArray;
 
+		UE_LOGFMT(LogCore, Warning, "Loading FGBuildable {Manufacturer} to get data.", Manufacturer->GetClass()->GetName());
+
 		if (IsValid(Manufacturer->GetCurrentRecipe())) {
 			auto CurrentRecipe = Cast<UFGRecipe>(Manufacturer->GetCurrentRecipe());
 			auto ProdCycle = 60 / Manufacturer->GetProductionCycleTimeForRecipe(Manufacturer->GetCurrentRecipe());
 			auto CurrentPotential = Manufacturer->GetCurrentPotential();
 			auto Productivity = Manufacturer->GetProductivity();
 						
+			UE_LOGFMT(LogCore, Warning, "Loading FGRecipe {Manufacturer} to get data.", CurrentRecipe->GetClass()->GetName());
+
 			for (FItemAmount Product : CurrentRecipe->GetProducts()) {
 				TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
 				

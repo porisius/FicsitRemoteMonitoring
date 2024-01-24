@@ -12,6 +12,7 @@
 #include "FGRecipe.h"
 #include "FGBlueprintFunctionLibrary.h"
 #include "FGItemPickup.h"
+#include "Logging\StructuredLog.h"
 #include "FRM_Library.h"
 #include "FRM_Factory.generated.h"
 
