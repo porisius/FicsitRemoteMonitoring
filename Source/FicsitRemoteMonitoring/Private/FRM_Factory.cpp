@@ -131,9 +131,11 @@ FString UFRM_Factory::getPowerSlug(UObject* WorldContext) {
 
 		if (PowerSlug.GetItemClass()->GetName() == "Desc_Crystal") {
 			SlugName = "Blue Slug";
-		} else if(PowerSlug.GetItemClass()->GetName() == "Desc_Crystal_mk2") {
+		}
+		else if (PowerSlug.GetItemClass()->GetName() == "Desc_Crystal_mk2") {
 			SlugName = "Green Slug";
-		} else if (PowerSlug.GetItemClass()->GetName() == "Desc_Crystal_mk3") {
+		}
+		else if (PowerSlug.GetItemClass()->GetName() == "Desc_Crystal_mk3") {
 			SlugName = "Purple Slug";
 		};
 
@@ -150,4 +152,4 @@ FString UFRM_Factory::getPowerSlug(UObject* WorldContext) {
 	FJsonSerializer::Serialize(JSlugArray, JsonWriter);
 
 	return Write;
-}
+};
