@@ -141,8 +141,28 @@ FString UFRM_Production::getProdStats(UObject* WorldContext) {
 			auto MaxProduced = TotalProduced.FindRef(ClassName);
 
 			EResourceForm Form = UFGItemDescriptor::GetForm(ClassName);
-			FString Type;
-			UEnum::GetValueAsString(Form, Type);
+
+			FString FormString = "Unknown";
+			if (Form == EResourceForm::RF_SOLID) {
+				FormString = "Solid";
+			}
+			else if (Form == EResourceForm::RF_LIQUID) {
+				FormString = "Liquid";
+			}
+			else if (Form == EResourceForm::RF_GAS) {
+				FormString = "Gas";
+			}
+			else if (Form == EResourceForm::RF_HEAT) {
+				FormString = "Heat";
+			}
+			else if (Form == EResourceForm::RF_INVALID) {
+				FormString = "Invalid";
+			}
+			else if (Form == EResourceForm::RF_LAST_ENUM) {
+				// This is used to specify no form change in patches so it's okay now
+				// UE_LOG(LogContentLib, Error, TEXT("Encountered EResourceForm::RF_LAST_ENUM, should be impossible"));
+				FormString = "Unknown";
+			};
 
 			FString ProdPerMin = "P: ";
 			ProdPerMin.Append(FString::SanitizeFloat(UFGBlueprintFunctionLibrary::RoundFloatWithPrecision(Produced, 2)));
@@ -159,7 +179,7 @@ FString UFRM_Production::getProdStats(UObject* WorldContext) {
 			JProductionStats->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProduced));
 			JProductionStats->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(Consumption));
 			JProductionStats->Values.Add("MaxConsumed", MakeShared<FJsonValueNumber>(MaxConsumption));
-			JProductionStats->Values.Add("Type", MakeShared<FJsonValueString>(Type));
+			JProductionStats->Values.Add("Type", MakeShared<FJsonValueString>(FormString));
 
 			JProductionStatsArray.Add(MakeShared<FJsonValueObject>(JProductionStats));
 		};
