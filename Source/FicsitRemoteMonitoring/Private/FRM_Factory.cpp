@@ -1,5 +1,6 @@
 #include "FRM_Factory.h"
 #include <NiagaraPerfBaseline.h>
+DEFINE_LOG_CATEGORY_STATIC(LogFooBarBaz, Log, All);
 
 FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 {
@@ -9,7 +10,7 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 	BuildableSubsystem->GetTypedBuildable(TypedBuildable, Buildables);
 	TArray<TSharedPtr<FJsonValue>> JFactoryArray;
 
-	UE_LOG(LogTemp, Warning, TEXT("Initial variables configured, executing getProdStats"));
+	UE_LOGFMT(LogFooBarBaz, Warning, "Initial variables configured, executing getProdStats");
 
 	for (AFGBuildable* Buildable : Buildables) {
 
@@ -19,7 +20,7 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 		TArray<TSharedPtr<FJsonValue>> JProductArray;
 		TArray<TSharedPtr<FJsonValue>> JIngredientsArray;
 
-		UE_LOGFMT(LogCore, Warning, "Loading FGBuildable {Manufacturer} to get data.", Manufacturer->GetClass()->GetName());
+		UE_LOGFMT(LogFooBarBaz, Warning, "Loading FGBuildable {Manufacturer} to get data.", Manufacturer->GetClass()->GetName());
 
 		if (IsValid(Manufacturer->GetCurrentRecipe())) {
 			auto CurrentRecipe = Cast<UFGRecipe>(Manufacturer->GetCurrentRecipe());
@@ -27,7 +28,7 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 			auto CurrentPotential = Manufacturer->GetCurrentPotential();
 			auto Productivity = Manufacturer->GetProductivity();
 						
-			UE_LOGFMT(LogCore, Warning, "Loading FGRecipe {Manufacturer} to get data.", CurrentRecipe->GetClass()->GetName());
+			UE_LOGFMT(LogFooBarBaz, Warning, "Loading FGRecipe {Recipe} to get data.", CurrentRecipe->GetClass()->GetName());
 
 			for (FItemAmount Product : CurrentRecipe->GetProducts()) {
 				TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
