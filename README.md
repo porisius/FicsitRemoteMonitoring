@@ -2,20 +2,19 @@
 
 ## [Join the FRM Community](https://discord.gg/c6446HTHpu) ![FRM Community](https://img.shields.io/discord/1142919853053841488?style=for-the-badge&logo=discord)
 
-### [Explore the Fiscit Web UI Source](https://github.com/GalaxyVOID/FRM-s-WebUI-Source)
-# [Download the Latest Release](https://github.com/GalaxyVOID/FRM-s-WebUI-Source/releases/latest) ![GitHub release](https://img.shields.io/github/v/release/GalaxyVOID/FRM-s-WebUI-Source?style=for-the-badge&logo=github)
-
 ---
 
-🚧 **Welcome to the Beta Version** 🚧
-
-This mod is an exciting journey into the future of remote monitoring for dedicated servers. Though it's a beta version, it comes with great potential. If you encounter any bugs or have suggestions, don't hesitate to reach out on [**Discord**](https://discord.gg/c6446HTHpu).
+This mod is an exciting journey into the future of remote monitoring for dedicated servers or your locally run game. If you encounter any bugs or have suggestions, don't hesitate to reach out on [**Discord**](https://discord.gg/c6446HTHpu).
 
 Have you ever left your base for an adventure or a side project, wondering about your home's power status? FRM provides you with a compact gadget and a website to monitor your server's power remotely.
 
 **Note:** FRM is versatile and can be used as a standalone mod or with your gaming group.
 
 ---
+
+### [Explore the Fiscit Web UI Source](https://github.com/GalaxyVOID/FRM-s-WebUI-Source)
+- [Download the Latest Release](https://github.com/GalaxyVOID/FRM-s-WebUI-Source/releases/latest) 
+- [GitHub release](https://img.shields.io/github/v/release/GalaxyVOID/FRM-s-WebUI-Source?style=for-the-badge&logo=github)
 
 ### **Discover Third-party Support and Apps**
 
@@ -45,7 +44,7 @@ Explore these external tools and apps created by talented developers:
 - Connect with Output Serial Devices like Raspberry Pi, Arduino, and more.
 - Remote input support for fuse resets and other commands.
 - JSON Support for flexible data exchange without disrupting setups.
-- Host your Web Server with Power Information and Real-Time Player Tracking (not multiplayer tested, but expected to work).
+- Host your Web Server with Power Information and Real-Time Player Tracking.
 
 ---
 
@@ -57,7 +56,8 @@ Explore these external tools and apps created by talented developers:
 
 ### **Known Bugs**
 
-For a list of known issues, please visit our [Remote Monitoring Github Issues](https://github.com/porisius/FicsitRemoteMonitoring/issues).
+- For a list of known issues, please visit our [Remote Monitoring Github Issues](https://github.com/porisius/FicsitRemoteMonitoring/issues).
+- Icon system does not work on dedicated servers. Please upload the Icons folder after running your game locally (with Remote Monitoring installed) to your dedicated server's Icons folder. This is not a fault of the mod or even the game. This is due to Unreal Engine assets are not present in server (Windows and Linux) builds.
 
 ---
 
