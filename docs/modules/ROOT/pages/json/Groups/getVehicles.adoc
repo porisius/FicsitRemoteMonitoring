@@ -13,6 +13,12 @@ getTruck only retrieves Trucks +
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
 
+|ID
+|UE Asset Name
+|String
+|Output
+
+
 |Name
 |Name of vehicle type
 |String
