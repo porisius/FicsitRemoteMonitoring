@@ -20,12 +20,12 @@ FString UFRM_Production::getProdStats(UObject* WorldContext) {
 		AFGBuildableManufacturer* Manufacturer = Cast<AFGBuildableManufacturer>(Buildable);
 
 		if (IsValid(Manufacturer->GetCurrentRecipe())) {
-			auto CurrentRecipe = Cast<UFGRecipe>(Manufacturer->GetCurrentRecipe());
+			auto CurrentRecipe = Manufacturer->GetCurrentRecipe();
 			auto ProdCycle = 60 / Manufacturer->GetProductionCycleTimeForRecipe(Manufacturer->GetCurrentRecipe());
 			auto CurrentPotential = Manufacturer->GetCurrentPotential();
 			auto Productivity = Manufacturer->GetProductivity();
 
-			for (FItemAmount Product : CurrentRecipe->GetProducts()) {
+			for (FItemAmount Product : CurrentRecipe.GetDefaultObject()->GetProducts()) {
 
 				auto ItemClass = Product.ItemClass;
 				auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Product.Amount, UFGItemDescriptor::GetForm(Product.ItemClass));
@@ -43,7 +43,7 @@ FString UFRM_Production::getProdStats(UObject* WorldContext) {
 
 			};
 
-			for (FItemAmount Ingredients : CurrentRecipe->GetIngredients()) {
+			for (FItemAmount Ingredients : CurrentRecipe.GetDefaultObject()->GetIngredients()) {
 
 				auto ItemClass = Ingredients.ItemClass;
 				auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Ingredients.Amount, UFGItemDescriptor::GetForm(Ingredients.ItemClass));
@@ -63,15 +63,17 @@ FString UFRM_Production::getProdStats(UObject* WorldContext) {
 		};
 	};
 
-	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableResourceExtractor")), Buildables);
+	TArray<AFGBuildable*> ExtractorBuildables;
+	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableResourceExtractor")), ExtractorBuildables);
 	// Resource Building Production Stats
-	for (AFGBuildable* Buildable : Buildables) {
+	for (AFGBuildable* BuildableExtractor : ExtractorBuildables) {
 
-		AFGBuildableResourceExtractor* Extractor = Cast<AFGBuildableResourceExtractor>(Buildable);
+		AFGBuildableResourceExtractor* Extractor = Cast<AFGBuildableResourceExtractor>(BuildableExtractor);
 
-		auto ItemClass = Extractor->GetExtractableResource()->GetResourceClass();
-		auto ProdCycle = Extractor->GetExtractionPerMinute();;
-		auto Productivity = Extractor->GetProductivity();
+		TScriptInterface<IFGExtractableResourceInterface> ResourceClass = Extractor->GetExtractableResource();
+		TSubclassOf<UFGResourceDescriptor> ItemClass = ResourceClass->GetResourceClass();
+		float ProdCycle = Extractor->GetExtractionPerMinute();;
+		float Productivity = Extractor->GetProductivity();
 
 		auto CurrentProd = ProdCycle * Productivity;
 
@@ -85,12 +87,12 @@ FString UFRM_Production::getProdStats(UObject* WorldContext) {
 		};
 	};
 
-
-	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableGenerator")), Buildables);
+	TArray<AFGBuildable*> GeneratorBuildables;
+	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableGenerator")), GeneratorBuildables);
 	// Power Generator Building Production Stats
-	for (AFGBuildable* Buildable : Buildables) {
+	for (AFGBuildable* BuildableGenerator : GeneratorBuildables) {
 
-		AFGBuildableGeneratorFuel* Generator = Cast<AFGBuildableGeneratorFuel>(Buildable);
+		AFGBuildableGeneratorFuel* Generator = Cast<AFGBuildableGeneratorFuel>(BuildableGenerator);
 
 		auto FuelItemClass = Generator->GetCurrentFuelClass();
 		auto EnergyValue = UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetEnergyValue(FuelItemClass), UFGItemDescriptor::GetForm(FuelItemClass));
@@ -135,10 +137,10 @@ FString UFRM_Production::getProdStats(UObject* WorldContext) {
 		if (TotalConsumed.Contains(ClassName) || TotalProduced.Contains(ClassName)) {
 			TSharedPtr<FJsonObject> JProductionStats = MakeShared<FJsonObject>();
 
-			auto Consumption = CurrentConsumed.FindRef(ClassName);
-			auto MaxConsumption = TotalConsumed.FindRef(ClassName);
-			auto Produced = CurrentProduced.FindRef(ClassName);
-			auto MaxProduced = TotalProduced.FindRef(ClassName);
+			float Consumption = CurrentConsumed.FindRef(ClassName);
+			float MaxConsumption = TotalConsumed.FindRef(ClassName);
+			float Produced = CurrentProduced.FindRef(ClassName);
+			float MaxProduced = TotalProduced.FindRef(ClassName);
 
 			EResourceForm Form = UFGItemDescriptor::GetForm(ClassName);
 
@@ -171,10 +173,10 @@ FString UFRM_Production::getProdStats(UObject* WorldContext) {
 			ProdPerMin.Append("/ min");
 
 			JProductionStats->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-			JProductionStats->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName->GetClass()->GetName()));
+			JProductionStats->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
 			JProductionStats->Values.Add("ProdPerMin", MakeShared<FJsonValueString>(ProdPerMin));
-			JProductionStats->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>(100 * (Produced / MaxProduced)));
-			JProductionStats->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>(100 * (Consumption / MaxConsumption)));
+			JProductionStats->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UFRM_Library::SafeDivide(Produced, MaxProduced)))));
+			JProductionStats->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>((100 * (UFRM_Library::SafeDivide(Consumption, MaxConsumption)))));
 			JProductionStats->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(Produced));
 			JProductionStats->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProduced));
 			JProductionStats->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(Consumption));
