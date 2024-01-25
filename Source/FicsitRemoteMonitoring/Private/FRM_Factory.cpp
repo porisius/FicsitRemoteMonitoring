@@ -23,14 +23,14 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 		UE_LOGFMT(LogFooBarBaz, Warning, "Loading FGBuildable {Manufacturer} to get data.", Manufacturer->GetClass()->GetName());
 
 		if (IsValid(Manufacturer->GetCurrentRecipe())) {
-			auto CurrentRecipe = Cast<UFGRecipe>(Manufacturer->GetCurrentRecipe());
+			auto CurrentRecipe = Manufacturer->GetCurrentRecipe();
 			auto ProdCycle = 60 / Manufacturer->GetProductionCycleTimeForRecipe(Manufacturer->GetCurrentRecipe());
 			auto CurrentPotential = Manufacturer->GetCurrentPotential();
 			auto Productivity = Manufacturer->GetProductivity();
 						
 			UE_LOGFMT(LogFooBarBaz, Warning, "Loading FGRecipe {Recipe} to get data.", CurrentRecipe->GetClass()->GetName());
 
-			for (FItemAmount Product : CurrentRecipe->GetProducts()) {
+			for (FItemAmount Product : CurrentRecipe.GetDefaultObject()->GetProducts()) {
 				TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
 				
 				auto Amount = Manufacturer->GetOutputInventory()->GetNumItems(Product.ItemClass);
@@ -43,12 +43,12 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 				JProduct->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
 				JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
 				JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
-				JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((CurrentProd / MaxProd) * 100));
+				JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UFRM_Library::SafeDivide(CurrentProd, MaxProd)))));
 
 				JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
 			};
 
-			for (FItemAmount Ingredients : CurrentRecipe->GetIngredients()) {
+			for (FItemAmount Ingredients : CurrentRecipe.GetDefaultObject()->GetIngredients()) {
 				TSharedPtr<FJsonObject> JIngredients = MakeShared<FJsonObject>();
 
 				auto Amount = Manufacturer->GetOutputInventory()->GetNumItems(Ingredients.ItemClass);
@@ -61,7 +61,7 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 				JIngredients->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
 				JIngredients->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(CurrentConsumed));
 				JIngredients->Values.Add("MaxConsumed", MakeShared<FJsonValueNumber>(MaxConsumed));
-				JIngredients->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>((CurrentConsumed / MaxConsumed) * 100));
+				JIngredients->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>((100 * (UFRM_Library::SafeDivide(CurrentConsumed, MaxConsumed)))));
 
 				JIngredientsArray.Add(MakeShared<FJsonValueObject>(JIngredients));
 			};

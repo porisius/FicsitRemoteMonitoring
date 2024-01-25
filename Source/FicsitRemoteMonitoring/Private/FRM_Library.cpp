@@ -57,3 +57,15 @@ TSharedPtr<FJsonObject> UFRM_Library::getActorFeaturesJSON(AActor* Actor, FStrin
 	return JFeatures;
 
 };
+
+float UFRM_Library::SafeDivide(float NumberA, float NumberB) {
+
+	if (NumberB == 0) {
+		return 0;
+	};
+
+	float divide = NumberA / NumberB;
+
+	return divide;
+
+};
