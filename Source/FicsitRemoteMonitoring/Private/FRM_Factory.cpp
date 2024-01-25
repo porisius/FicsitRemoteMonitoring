@@ -92,15 +92,18 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 		TArray<TSharedPtr<FJsonValue>> JCircuitArray;
 
 		TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
-		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(Manufacturer->GetPowerInfo()->GetPowerCircuit()->GetCircuitGroupID()));
-		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(Manufacturer->GetPowerInfo()->GetPowerCircuit()->mPowerConsumed));
+		//int32 CircuitID = Manufacturer->GetPowerInfo()->GetPowerCircuit()->GetCircuitGroupID();
+		//float PowerConsumed = Manufacturer->GetPowerInfo()->GetActualConsumption();
+
+		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(0));
+		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(0));
 		JCircuitArray.Add(MakeShared<FJsonValueObject>(JCircuit));
 
 		JFactory->Values.Add("Name", MakeShared<FJsonValueString>(Manufacturer->mDisplayName.ToString()));
 		JFactory->Values.Add("ClassName", MakeShared<FJsonValueString>(Manufacturer->GetClass()->GetName()));
 		JFactory->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Manufacturer))));
-		JFactory->Values.Add("Recipe", MakeShared<FJsonValueString>(Manufacturer->GetCurrentRecipe()->GetFName().ToString()));
-		JFactory->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(Manufacturer->GetCurrentRecipe()->GetClass()->GetName()));
+		JFactory->Values.Add("Recipe", MakeShared<FJsonValueString>(UFGRecipe::GetRecipeName(Manufacturer->GetCurrentRecipe()).ToString()));
+		JFactory->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetCurrentRecipe())));
 		JFactory->Values.Add("production", MakeShared<FJsonValueArray>(JProductArray));
 		JFactory->Values.Add("ingredients", MakeShared<FJsonValueArray>(JIngredientsArray));
 		JFactory->Values.Add("ManuSpeed", MakeShared<FJsonValueNumber>(Manufacturer->GetManufacturingSpeed() * 100));
@@ -108,7 +111,7 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 		JFactory->Values.Add("IsProducing", MakeShared<FJsonValueBoolean>(Manufacturer->IsProducing()));
 		JFactory->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(Manufacturer->IsProductionPaused()));
 		JFactory->Values.Add("PowerInfo", MakeShared<FJsonValueArray>(JCircuitArray));
-		JFactory->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(Manufacturer->GetPowerInfo()->GetPowerCircuit()->GetCircuitGroupID()));
+		JFactory->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(0));
 		JFactory->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Manufacturer), Manufacturer->mDisplayName.ToString(), Manufacturer->mDisplayName.ToString())));
 
 		JFactoryArray.Add(MakeShared<FJsonValueObject>(JFactory));
