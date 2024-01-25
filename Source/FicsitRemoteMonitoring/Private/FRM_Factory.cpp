@@ -1,5 +1,7 @@
 #include "FRM_Factory.h"
 #include <NiagaraPerfBaseline.h>
+#include "Buildables/FGBuildableStorage.h"
+
 DEFINE_LOG_CATEGORY_STATIC(LogFooBarBaz, Log, All);
 
 FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
@@ -162,4 +164,70 @@ FString UFRM_Factory::getPowerSlug(UObject* WorldContext) {
 	FJsonSerializer::Serialize(JSlugArray, JsonWriter);
 
 	return Write;
+};
+
+FString UFRM_Factory::getStorageInv(UObject* WorldContext) {
+
+	
+	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
+
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	TArray<AFGBuildable*> Buildables;
+	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableStorage")), Buildables);
+	TArray<TSharedPtr<FJsonValue>> JStorageArray;
+
+	for (AFGBuildable* Buildable : Buildables) {
+
+		AFGBuildableStorage* StorageContainer = Cast<AFGBuildableStorage>(Buildable);
+		TSharedPtr<FJsonObject> JStorage = MakeShared<FJsonObject>();
+
+		TArray<FInventoryStack> InventoryStacks;
+		StorageContainer->GetStorageInventory()->GetInventoryStacks(InventoryStacks);
+
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> Storage;
+
+		for (FInventoryStack Inventory : InventoryStacks) {
+
+			auto ItemClass = Inventory.Item.GetItemClass();
+			auto Amount = Inventory.NumItems;
+
+			if (Storage.Contains(ItemClass)) {
+				Storage.Add(ItemClass) = Amount + Storage.FindRef(ItemClass);
+			}
+			else {
+				Storage.Add(ItemClass) = Amount;
+			};
+
+		};
+
+		TArray<TSharedPtr<FJsonValue>> JInventoryArray;
+
+		for (const TPair< TSubclassOf<UFGItemDescriptor>, int32> StorageStack : Storage) {
+
+			TSharedPtr<FJsonObject> JInventory = MakeShared<FJsonObject>();
+
+			JInventory->Values.Add("Name", MakeShared<FJsonValueString>((StorageStack.Key.GetDefaultObject()->mDisplayName).ToString()));
+			JInventory->Values.Add("ClassName", MakeShared<FJsonValueString>(StorageStack.Key->GetClass()->GetName()));
+			JInventory->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageStack.Value));
+
+			JInventoryArray.Add(MakeShared<FJsonValueObject>(JInventory));
+
+		};
+
+		JStorage->Values.Add("Name", MakeShared<FJsonValueString>(StorageContainer->mDisplayName.ToString()));
+		JStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(StorageContainer->GetClass()->GetName()));
+		JStorage->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(StorageContainer)));
+		JStorage->Values.Add("Inventory", MakeShared<FJsonValueArray>(JInventoryArray));
+		JStorage->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(StorageContainer, StorageContainer->mDisplayName.ToString(), "Storage Container")));
+
+		JStorageArray.Add(MakeShared<FJsonValueObject>(JStorage));
+
+	};
+
+	FString Write;
+	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+	FJsonSerializer::Serialize(JStorageArray, JsonWriter);
+
+	return Write;
+
 };

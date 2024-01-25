@@ -2,9 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "FGBuildableSubsystem.h"
 #include "Buildables\FGBuildableFactory.h"
 #include "Buildables\FGBuildableManufacturer.h"
+#include "Buildables/FGBuildableStorage.h"
 #include "FGInventoryLibrary.h"
 #include "FGInventoryComponent.h"
 #include "FGPowerCircuit.h"
@@ -27,4 +29,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	static FString getPowerSlug(UObject* WorldContext);
+
+	UFUNCTION(BlueprintPure)
+	static FString getStorageInv(UObject* WorldContext);
 };
