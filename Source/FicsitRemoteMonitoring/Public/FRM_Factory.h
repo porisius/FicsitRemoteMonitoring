@@ -32,4 +32,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	static FString getStorageInv(UObject* WorldContext);
+
+	UFUNCTION(BlueprintPure)
+	static FString getWorldInv(UObject* WorldContext);
 };
