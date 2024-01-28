@@ -93,15 +93,18 @@ FString UFRM_Vehicles::getTruckStation(UObject* WorldContext) {
 
 		TArray<TSharedPtr<FJsonValue>> JTruckStationStorageArray;
 
-		for (TSubclassOf<UFGItemDescriptor> Storage : ClassNames) {
+		for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
 
-			TSharedPtr<FJsonObject> JTruckStationStorage = MakeShared<FJsonObject>();
+			if (StorageInventory.Contains(ClassName))
+			{
+				TSharedPtr<FJsonObject> JTruckStationStorage = MakeShared<FJsonObject>();
 
-			JTruckStationStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Storage).ToString()));
-			JTruckStationStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(Storage.GetDefaultObject()->GetClass()->GetName()));
-			JTruckStationStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageInventory.FindRef(Storage)));
+				JTruckStationStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
+				JTruckStationStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+				JTruckStationStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageInventory.FindRef(ClassName)));
 
-			JTruckStationStorageArray.Add(MakeShared<FJsonValueObject>(JTruckStationStorage));
+				JTruckStationStorageArray.Add(MakeShared<FJsonValueObject>(JTruckStationStorage));
+			};
 		};
 
 		JTruckStation->Values.Add("Name", MakeShared<FJsonValueString>(TruckStation->mDisplayName.ToString()));
