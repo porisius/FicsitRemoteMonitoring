@@ -52,6 +52,9 @@ FString UFRM_Vehicles::getTruckStation(UObject* WorldContext) {
 			FormString = "Error";
 		};
 
+		TArray<TSubclassOf<UFGItemDescriptor>> ClassNames;
+		UFGBlueprintFunctionLibrary::GetAllDescriptorsSorted(WorldContext->GetWorld(), ClassNames);
+
 		TArray<FInventoryStack> FuelInventoryStacks;
 		UFGInventoryComponent* StationFuelInventory = TruckStation->GetFuelInventory();
 		TMap<TSubclassOf<UFGItemDescriptor>, float> FuelPetroInventory;
@@ -70,8 +73,21 @@ FString UFRM_Vehicles::getTruckStation(UObject* WorldContext) {
 
 		};
 
-		TArray<TSubclassOf<UFGItemDescriptor>> ClassNames;
-		UFGBlueprintFunctionLibrary::GetAllDescriptorsSorted(WorldContext->GetWorld(), ClassNames);
+		TArray<TSharedPtr<FJsonValue>> JTruckStationFuelArray;
+
+		for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
+
+			if (FuelPetroInventory.Contains(ClassName))
+			{
+				TSharedPtr<FJsonObject> JTruckStationStorage = MakeShared<FJsonObject>();
+
+				JTruckStationStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
+				JTruckStationStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+				JTruckStationStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(FuelPetroInventory.FindRef(ClassName)));
+
+				JTruckStationFuelArray.Add(MakeShared<FJsonValueObject>(JTruckStationStorage));
+			};
+		};
 
 		TArray<FInventoryStack> InventoryStacks;
 		UFGInventoryComponent* StationInventory = TruckStation->GetInventory();
