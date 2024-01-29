@@ -1,0 +1,208 @@
+#pragma once
+
+#include "FRM_Drones.h"
+
+FString UFRM_Drones::getDroneStation(UObject* WorldContext) {
+
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	TArray<AFGBuildable*> Buildables;
+
+	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableDroneStation")), Buildables);
+
+	TArray<TSharedPtr<FJsonValue>> JDroneStationArray;
+
+	// Factory Building Production Stats
+	for (AFGBuildable* Buildable : Buildables) {
+
+		AFGBuildableDroneStation* DroneStation = Cast<AFGBuildableDroneStation>(Buildable);
+		TSharedPtr<FJsonObject> JDroneStation = MakeShared<FJsonObject>();
+
+		TArray<FInventoryStack> BatteryInventoryStacks;
+		UFGInventoryComponent* BatteryInventory = DroneStation->GetBatteryInventory();
+		TMap<TSubclassOf<UFGItemDescriptor>, float> BatteryInventoryTMap;
+		BatteryInventory->GetInventoryStacks(BatteryInventoryStacks);
+		for (FInventoryStack BatteryInventoryStack : BatteryInventoryStacks) {
+
+			auto ItemClass = BatteryInventoryStack.Item.GetItemClass();
+			auto Amount = BatteryInventoryStack.NumItems;
+
+			if (BatteryInventoryTMap.Contains(ItemClass)) {
+				BatteryInventoryTMap.Add(ItemClass) = Amount + BatteryInventoryTMap.FindRef(ItemClass);
+			}
+			else {
+				BatteryInventoryTMap.Add(ItemClass) = Amount;
+			};
+
+		};
+
+		TArray<TSharedPtr<FJsonValue>> JBatteryStorageArray;
+
+		TArray<TSubclassOf<UFGItemDescriptor>> ClassNames;
+		UFGBlueprintFunctionLibrary::GetAllDescriptorsSorted(WorldContext->GetWorld(), ClassNames);
+
+		for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
+
+			if (BatteryInventoryTMap.Contains(ClassName))
+			{
+				TSharedPtr<FJsonObject> JBatteryStorage = MakeShared<FJsonObject>();
+
+				JBatteryStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
+				JBatteryStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+				JBatteryStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(BatteryInventoryTMap.FindRef(ClassName)));
+
+				JBatteryStorageArray.Add(MakeShared<FJsonValueObject>(JBatteryStorage));
+			};
+		};
+
+		TArray<FInventoryStack> InputStacks;
+		UFGInventoryComponent* StationInputInventory = DroneStation->GetInputInventory();
+		TMap<TSubclassOf<UFGItemDescriptor>, float> InputInventory;
+		StationInputInventory->GetInventoryStacks(InputStacks);
+		for (FInventoryStack Inventory : InputStacks) {
+
+			auto ItemClass = Inventory.Item.GetItemClass();
+			auto Amount = Inventory.NumItems;
+
+			if (InputInventory.Contains(ItemClass)) {
+				InputInventory.Add(ItemClass) = Amount + InputInventory.FindRef(ItemClass);
+			}
+			else {
+				InputInventory.Add(ItemClass) = Amount;
+			};
+
+		};
+
+		TArray<TSharedPtr<FJsonValue>> JInputStorageArray;
+
+		for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
+
+			if (InputInventory.Contains(ClassName))
+			{
+				TSharedPtr<FJsonObject> JInputStorage = MakeShared<FJsonObject>();
+
+				JInputStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
+				JInputStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+				JInputStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(InputInventory.FindRef(ClassName)));
+
+				JInputStorageArray.Add(MakeShared<FJsonValueObject>(JInputStorage));
+			};
+		};
+
+		TArray<FInventoryStack> OutputStacks;
+		UFGInventoryComponent* StationOutputInventory = DroneStation->GetOutputInventory();
+		TMap<TSubclassOf<UFGItemDescriptor>, float> OutputInventory;
+		StationOutputInventory->GetInventoryStacks(OutputStacks);
+		for (FInventoryStack Inventory : OutputStacks) {
+
+			auto ItemClass = Inventory.Item.GetItemClass();
+			auto Amount = Inventory.NumItems;
+
+			if (OutputInventory.Contains(ItemClass)) {
+				OutputInventory.Add(ItemClass) = Amount + OutputInventory.FindRef(ItemClass);
+			}
+			else {
+				OutputInventory.Add(ItemClass) = Amount;
+			};
+
+		};
+
+		TArray<TSharedPtr<FJsonValue>> JOutputStorageArray;
+
+		for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
+
+			if (OutputInventory.Contains(ClassName))
+			{
+				TSharedPtr<FJsonObject> JInputStorage = MakeShared<FJsonObject>();
+
+				JInputStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
+				JInputStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+				JInputStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(InputInventory.FindRef(ClassName)));
+
+				JInputStorageArray.Add(MakeShared<FJsonValueObject>(JInputStorage));
+			};
+		};
+
+		AFGDroneStationInfo* StationInfo = DroneStation->GetInfo();
+
+		TArray<TSharedPtr<FJsonValue>> JConnectedStationArray;
+		for (AFGDroneStationInfo* ConnectedStation : StationInfo->GetConnectedStations()) {
+			TSharedPtr<FJsonObject> JConnectedStation = MakeShared<FJsonObject>();
+			JConnectedStation->Values.Add("StationName", MakeShared<FJsonValueString>(ConnectedStation->GetBuildingTag()));
+
+			JConnectedStationArray.Add(MakeShared<FJsonValueObject>(JConnectedStation));
+		};
+
+		EDroneStatus Form = StationInfo->GetDroneStatus();
+
+		FString FormString = "Unknown";
+		if (Form == EDroneStatus::EDS_CANNOT_UNLOAD) {
+			FormString = "Cannot Unload";
+		}
+		else if (Form == EDroneStatus::EDS_DOCKED) {
+			FormString = "Docked";
+		}
+		else if (Form == EDroneStatus::EDS_DOCKING) {
+			FormString = "Docking";
+		}
+		else if (Form == EDroneStatus::EDS_EN_ROUTE) {
+			FormString = "En Route";
+		}
+		else if (Form == EDroneStatus::EDS_LOADING) {
+			FormString = "Loading";
+		}
+		else if (Form == EDroneStatus::EDS_NOT_ENOUGH_BATTERIES) {
+			FormString = "Not Enough Batteries";
+		}
+		else if (Form == EDroneStatus::EDS_NO_DRONE) {
+			FormString = "No Drone";
+		}
+		else if (Form == EDroneStatus::EDS_TAKEOFF) {
+			FormString = "Taking Off";
+		}
+		else if (Form == EDroneStatus::EDS_UNLOADING) {
+			FormString = "Unloading";
+		};
+
+		JDroneStation->Values.Add("Name", MakeShared<FJsonValueString>(DroneStation->mDisplayName.ToString()));
+		JDroneStation->Values.Add("ClassName", MakeShared<FJsonValueString>(DroneStation->GetClass()->GetName()));
+		JDroneStation->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(DroneStation)));
+		JDroneStation->Values.Add("InputInventory", MakeShared<FJsonValueArray>(JInputStorageArray));
+		JDroneStation->Values.Add("OutputInventory", MakeShared<FJsonValueArray>(JOutputStorageArray));
+		JDroneStation->Values.Add("PairedStation", MakeShared<FJsonValueString>(StationInfo->GetPairedStation()->GetBuildingTag()));
+		JDroneStation->Values.Add("ConnectedStations", MakeShared<FJsonValueArray>(JConnectedStationArray));
+		JDroneStation->Values.Add("DroneStatus", MakeShared<FJsonValueString>(FormString));
+		JDroneStation->Values.Add("AvgIncRate", MakeShared<FJsonValueNumber>(StationInfo->GetAverageIncomingItemRate()));
+		JDroneStation->Values.Add("AvgIncStack", MakeShared<FJsonValueNumber>(StationInfo->GetAverageIncomingItemStackRate()));
+		JDroneStation->Values.Add("AvgOutRate", MakeShared<FJsonValueNumber>(StationInfo->GetAverageOutgoingItemRate()));
+		JDroneStation->Values.Add("AvgOutStack", MakeShared<FJsonValueNumber>(StationInfo->GetAverageTotalOutgoingItemStackRate()));
+		JDroneStation->Values.Add("AvgRngTrip", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(StationInfo->GetAverageRoundTripTime())));
+		JDroneStation->Values.Add("AvgTotalIncRate", MakeShared<FJsonValueNumber>(StationInfo->GetAverageTotalIncomingItemRate()));
+		JDroneStation->Values.Add("AvgTotalIncStack", MakeShared<FJsonValueNumber>(StationInfo->GetAverageTotalIncomingItemStackRate()));
+		JDroneStation->Values.Add("AvgTotalOutRate", MakeShared<FJsonValueNumber>(StationInfo->GetAverageTotalOutgoingItemRate()));
+		JDroneStation->Values.Add("AvgTotalOutStack", MakeShared<FJsonValueNumber>(StationInfo->GetAverageTotalOutgoingItemStackRate()));
+		JDroneStation->Values.Add("AvgTripIncAmt", MakeShared<FJsonValueNumber>(StationInfo->GetAverageTripIncomingItemAmount()));
+		JDroneStation->Values.Add("AvgTripOutAmt", MakeShared<FJsonValueNumber>(StationInfo->GetAverageTripOutgoingItemAmount()));
+		JDroneStation->Values.Add("EstRndTrip", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(StationInfo->GetEstimatedRoundTripTime())));
+		JDroneStation->Values.Add("EstTotalTransRate", MakeShared<FJsonValueNumber>(StationInfo->GetEstimatedTotalTransportRate()));
+		JDroneStation->Values.Add("EstLatestTotalIncStack", MakeShared<FJsonValueNumber>(StationInfo->GetLatestEstimatedTotalIncomingItemStackRate()));
+		JDroneStation->Values.Add("EstLatestTotalOutStack", MakeShared<FJsonValueNumber>(StationInfo->GetLatestEstimatedTotalOutgoingItemStackRate()));
+		JDroneStation->Values.Add("LatestIncStack", MakeShared<FJsonValueNumber>(StationInfo->GetLatestIncomingItemStackRate()));
+		JDroneStation->Values.Add("LatestOutStack", MakeShared<FJsonValueNumber>(StationInfo->GetLatestOutgoingItemStackRate()));
+		JDroneStation->Values.Add("LatestRndTrip", MakeShared<FJsonValueNumber>(StationInfo->GetLatestRoundTripTime()));
+		JDroneStation->Values.Add("LatestTripIncAmt", MakeShared<FJsonValueNumber>(StationInfo->GetLatestTripIncomingItemAmount()));
+		JDroneStation->Values.Add("LatestTripOutAmt", MakeShared<FJsonValueNumber>(StationInfo->GetLatestTripOutgoingItemAmount()));
+		JDroneStation->Values.Add("MedianRndTrip", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(StationInfo->GetMedianRoundTripTime())));
+		JDroneStation->Values.Add("MedianTripIncAmt", MakeShared<FJsonValueNumber>(StationInfo->GetMedianTripIncomingItemAmount()));
+		JDroneStation->Values.Add("MedianTripOutAmt", MakeShared<FJsonValueNumber>(StationInfo->GetMedianTripOutgoingItemAmount()));
+		JDroneStation->Values.Add("EstBatteryRate", MakeShared<FJsonValueNumber>(StationInfo->GetEstimatedBatteryRequirementRate()));
+		JDroneStation->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(DroneStation, DroneStation->mDisplayName.ToString(), "Drone Station")));
+
+		JDroneStationArray.Add(MakeShared<FJsonValueObject>(JDroneStation));
+	};
+
+	FString Write;
+	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+	FJsonSerializer::Serialize(JDroneStationArray, JsonWriter);
+
+	return Write;
+};
