@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "FGBuildableSubsystem.h"
 #include "Buildables\FGBuildableDroneStation.h"
 #include "FGCircuitSubsystem.h"
@@ -23,4 +24,6 @@ class FICSITREMOTEMONITORING_API UFRM_Drones : public UBlueprintFunctionLibrary
 public:
 	UFUNCTION(BlueprintPure)
 	static FString getDroneStation(UObject* WorldContext);
+	UFUNCTION(BlueprintPure)
+	static FString getDrone(UObject* WorldContext);
 };

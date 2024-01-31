@@ -206,3 +206,61 @@ FString UFRM_Drones::getDroneStation(UObject* WorldContext) {
 
 	return Write;
 };
+
+FString UFRM_Drones::getDrone(UObject* WorldContext) {
+
+	UClass* DroneClass = LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGDroneVehicle"));
+	TArray<AActor*> FoundActors;
+	TArray<TSharedPtr<FJsonValue>> JDroneArray;
+
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), DroneClass, FoundActors);
+	int32 Index = 0;
+
+	for (AActor* FoundActor : FoundActors) {
+		Index++;
+
+		TSharedPtr<FJsonObject> JDrone = MakeShared<FJsonObject>();
+
+		AFGDroneVehicle* Drone = Cast<AFGDroneVehicle>(FoundActor);
+
+		EDroneFlyingMode Form = Drone->GetCurrentFlyingMode();
+
+		FString FormString = "Unknown";
+		if (Form == EDroneFlyingMode::DFM_Flying) {
+			FormString = "Flying";
+		}
+		else if (Form == EDroneFlyingMode::DFM_None) {
+			FormString = "None";
+		}
+		else if (Form == EDroneFlyingMode::DFM_Travel) {
+			FormString = "Travelling";
+		};
+
+		FString Destination = "No Destination";
+		AFGBuildableDroneStation* CurrentDestination = Drone->GetCurrentDestinationStation();
+
+		if (IsValid(CurrentDestination)) {
+			Destination = CurrentDestination->mDisplayName.ToString();
+		};
+
+		JDrone->Values.Add("ID", MakeShared<FJsonValueString>(Drone->GetName()));
+		JDrone->Values.Add("Name", MakeShared<FJsonValueString>(Drone->mDisplayName.ToString()));
+		JDrone->Values.Add("ClassName", MakeShared<FJsonValueString>(Drone->GetClass()->GetName()));
+		JDrone->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Drone)));
+		JDrone->Values.Add("HomeStation", MakeShared<FJsonValueString>((Drone->GetHomeStation()->mDisplayName.ToString())));
+		JDrone->Values.Add("PairedStation", MakeShared<FJsonValueString>((Drone->GetHomeStation()->GetInfo()->GetPairedStation()->GetStation()->mDisplayName.ToString())));
+		JDrone->Values.Add("CurrentDestination", MakeShared<FJsonValueString>(Destination));
+		JDrone->Values.Add("FlyingSpeed", MakeShared<FJsonValueNumber>(Drone->GetCurrentVelocity().Length()));
+		JDrone->Values.Add("CurrentFlyingMode", MakeShared<FJsonValueString>(FormString));
+		JDrone->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Drone, Drone->mDisplayName.ToString(), "Drone")));
+
+		JDroneArray.Add(MakeShared<FJsonValueObject>(JDrone));
+	};
+
+	FString Write;
+	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+	FJsonSerializer::Serialize(JDroneArray, JsonWriter);
+
+	return Write;
+
+};
