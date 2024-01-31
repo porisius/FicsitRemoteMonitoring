@@ -127,7 +127,7 @@ FString UFRM_Drones::getDroneStation(UObject* WorldContext) {
 		TArray<TSharedPtr<FJsonValue>> JConnectedStationArray;
 		for (AFGDroneStationInfo* ConnectedStation : StationInfo->GetConnectedStations()) {
 			TSharedPtr<FJsonObject> JConnectedStation = MakeShared<FJsonObject>();
-			JConnectedStation->Values.Add("StationName", MakeShared<FJsonValueString>(ConnectedStation->GetBuildingTag()));
+			JConnectedStation->Values.Add("StationName", MakeShared<FJsonValueString>((ConnectedStation->GetStation()->mDisplayName.ToString())));
 
 			JConnectedStationArray.Add(MakeShared<FJsonValueObject>(JConnectedStation));
 		};
@@ -168,7 +168,7 @@ FString UFRM_Drones::getDroneStation(UObject* WorldContext) {
 		JDroneStation->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(DroneStation)));
 		JDroneStation->Values.Add("InputInventory", MakeShared<FJsonValueArray>(JInputStorageArray));
 		JDroneStation->Values.Add("OutputInventory", MakeShared<FJsonValueArray>(JOutputStorageArray));
-		JDroneStation->Values.Add("PairedStation", MakeShared<FJsonValueString>(StationInfo->GetPairedStation()->GetBuildingTag()));
+		JDroneStation->Values.Add("PairedStation", MakeShared<FJsonValueString>((StationInfo->GetPairedStation()->GetStation()->mDisplayName.ToString())));
 		JDroneStation->Values.Add("ConnectedStations", MakeShared<FJsonValueArray>(JConnectedStationArray));
 		JDroneStation->Values.Add("DroneStatus", MakeShared<FJsonValueString>(FormString));
 		JDroneStation->Values.Add("AvgIncRate", MakeShared<FJsonValueNumber>(StationInfo->GetAverageIncomingItemRate()));
