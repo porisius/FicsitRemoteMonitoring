@@ -6,6 +6,8 @@
 #include "FGBuildableSubsystem.h"
 #include "Buildables\FGBuildableFactory.h"
 #include "Buildables\FGBuildableManufacturer.h"
+#include "Buildables\FGBuildableResourceExtractor.h"
+#include "Resources/FGExtractableResourceInterface.h"
 #include "Buildables/FGBuildableStorage.h"
 #include "FGInventoryLibrary.h"
 #include "FGInventoryComponent.h"
@@ -40,5 +42,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	static FString getDropPod(UObject* WorldContext);
+
+	UFUNCTION(BlueprintPure)
+	static FString getResourceExtractor(UObject* WorldContext);
 
 };

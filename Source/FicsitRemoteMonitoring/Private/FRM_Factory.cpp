@@ -331,3 +331,72 @@ FString UFRM_Factory::getDropPod(UObject* WorldContext) {
 	return Write;
 
 };
+
+FString UFRM_Factory::getResourceExtractor(UObject* WorldContext)
+{
+
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	TArray<AFGBuildable*> Buildables;
+	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableResourceExtractor")), Buildables);
+	TArray<TSharedPtr<FJsonValue>> JExtractorArray;
+
+	for (AFGBuildable* Buildable : Buildables) {
+
+		AFGBuildableResourceExtractor* Extractor = Cast<AFGBuildableResourceExtractor>(Buildable);
+
+		TSharedPtr<FJsonObject> JExtractor = MakeShared<FJsonObject>();
+		TArray<TSharedPtr<FJsonValue>> JProductArray;
+		TArray<TSharedPtr<FJsonValue>> JIngredientsArray;
+
+		TScriptInterface<IFGExtractableResourceInterface> ResourceClass = Extractor->GetExtractableResource();
+		TSubclassOf<UFGResourceDescriptor> ItemClass = ResourceClass->GetResourceClass();
+		float ProdCycle = Extractor->GetExtractionPerMinute();;
+		float Productivity = Extractor->GetProductivity();
+		UFGInventoryComponent* ExtractorInventory = Extractor->GetOutputInventory();
+
+		int32 Amount = ExtractorInventory->GetNumItems(ItemClass);
+		float CurrentProd = Productivity * ProdCycle;
+		float MaxProd = ProdCycle;
+
+		TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
+		JProduct->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ItemClass).ToString()));
+		JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>((ItemClass)->GetDefaultObjectName().ToString()));
+		JProduct->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
+		JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
+		JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
+		JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UFRM_Library::SafeDivide(CurrentProd, MaxProd)))));
+
+		JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
+
+		TArray<TSharedPtr<FJsonValue>> JCircuitArray;
+
+		TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
+		//int32 CircuitID = Manufacturer->GetPowerInfo()->GetPowerCircuit()->GetCircuitGroupID();
+		//float PowerConsumed = Manufacturer->GetPowerInfo()->GetActualConsumption();
+
+		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(0));
+		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(0));
+		JCircuitArray.Add(MakeShared<FJsonValueObject>(JCircuit));
+
+		JExtractor->Values.Add("Name", MakeShared<FJsonValueString>(Extractor->mDisplayName.ToString()));
+		JExtractor->Values.Add("ClassName", MakeShared<FJsonValueString>(Extractor->GetClass()->GetName()));
+		JExtractor->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Extractor))));
+		JExtractor->Values.Add("Recipe", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ItemClass).ToString()));
+		JExtractor->Values.Add("RecipeClassName", MakeShared<FJsonValueString>((ItemClass)->GetDefaultObjectName().ToString()));
+		JExtractor->Values.Add("production", MakeShared<FJsonValueArray>(JProductArray));
+		JExtractor->Values.Add("ManuSpeed", MakeShared<FJsonValueNumber>(Extractor->GetCurrentPotential() * 100));
+		JExtractor->Values.Add("IsConfigured", MakeShared<FJsonValueBoolean>(Extractor->IsConfigured()));
+		JExtractor->Values.Add("IsProducing", MakeShared<FJsonValueBoolean>(Extractor->IsProducing()));
+		JExtractor->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(Extractor->IsProductionPaused()));
+		JExtractor->Values.Add("PowerInfo", MakeShared<FJsonValueArray>(JCircuitArray));
+		JExtractor->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(0));
+		JExtractor->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Extractor), Extractor->mDisplayName.ToString(), Extractor->mDisplayName.ToString())));
+
+		JExtractorArray.Add(MakeShared<FJsonValueObject>(JExtractor));
+	};
+	FString Write;
+	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+	FJsonSerializer::Serialize(JExtractorArray, JsonWriter);
+
+	return Write;
+};
