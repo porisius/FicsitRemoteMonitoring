@@ -163,12 +163,17 @@ FString UFRM_Drones::getDroneStation(UObject* WorldContext) {
 			FormString = "Unloading";
 		};
 
+		FString PairedStation = "None";
+		if (StationInfo->GetPairedStation() != nullptr) {
+			PairedStation = StationInfo->GetPairedStation()->GetStation()->mDisplayName.ToString();
+		};
+
 		JDroneStation->Values.Add("Name", MakeShared<FJsonValueString>(DroneStation->mDisplayName.ToString()));
 		JDroneStation->Values.Add("ClassName", MakeShared<FJsonValueString>(DroneStation->GetClass()->GetName()));
 		JDroneStation->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(DroneStation)));
 		JDroneStation->Values.Add("InputInventory", MakeShared<FJsonValueArray>(JInputStorageArray));
 		JDroneStation->Values.Add("OutputInventory", MakeShared<FJsonValueArray>(JOutputStorageArray));
-		JDroneStation->Values.Add("PairedStation", MakeShared<FJsonValueString>((StationInfo->GetPairedStation()->GetStation()->mDisplayName.ToString())));
+		JDroneStation->Values.Add("PairedStation", MakeShared<FJsonValueString>(PairedStation));
 		JDroneStation->Values.Add("ConnectedStations", MakeShared<FJsonValueArray>(JConnectedStationArray));
 		JDroneStation->Values.Add("DroneStatus", MakeShared<FJsonValueString>(FormString));
 		JDroneStation->Values.Add("AvgIncRate", MakeShared<FJsonValueNumber>(StationInfo->GetAverageIncomingItemRate()));
@@ -241,6 +246,11 @@ FString UFRM_Drones::getDrone(UObject* WorldContext) {
 
 		if (IsValid(CurrentDestination)) {
 			Destination = CurrentDestination->mDisplayName.ToString();
+		}; 
+
+		FString PairedStation = "None";
+		if (Drone->GetHomeStation()->GetInfo()->GetPairedStation() != nullptr) {
+			PairedStation = Drone->GetHomeStation()->GetInfo()->GetPairedStation()->GetStation()->mDisplayName.ToString();
 		};
 
 		JDrone->Values.Add("ID", MakeShared<FJsonValueString>(Drone->GetName()));
@@ -248,7 +258,7 @@ FString UFRM_Drones::getDrone(UObject* WorldContext) {
 		JDrone->Values.Add("ClassName", MakeShared<FJsonValueString>(Drone->GetClass()->GetName()));
 		JDrone->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Drone)));
 		JDrone->Values.Add("HomeStation", MakeShared<FJsonValueString>((Drone->GetHomeStation()->mDisplayName.ToString())));
-		JDrone->Values.Add("PairedStation", MakeShared<FJsonValueString>((Drone->GetHomeStation()->GetInfo()->GetPairedStation()->GetStation()->mDisplayName.ToString())));
+		JDrone->Values.Add("PairedStation", MakeShared<FJsonValueString>(PairedStation));
 		JDrone->Values.Add("CurrentDestination", MakeShared<FJsonValueString>(Destination));
 		JDrone->Values.Add("FlyingSpeed", MakeShared<FJsonValueNumber>(Drone->GetCurrentVelocity().Length()));
 		JDrone->Values.Add("CurrentFlyingMode", MakeShared<FJsonValueString>(FormString));
