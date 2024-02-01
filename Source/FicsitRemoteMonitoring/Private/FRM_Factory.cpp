@@ -287,3 +287,47 @@ FString UFRM_Factory::getWorldInv(UObject* WorldContext) {
 	return Write;
 
 };
+
+FString UFRM_Factory::getDropPod(UObject* WorldContext) {
+
+	UClass* DropPodClass = LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGDropPod"));
+	TArray<AActor*> FoundActors;
+	TArray<TSharedPtr<FJsonValue>> JDropPodArray;
+
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), DropPodClass, FoundActors);
+	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
+
+	for (AActor* FoundActor : FoundActors) {
+
+		TSharedPtr<FJsonObject> JDropPod = MakeShared<FJsonObject>();
+
+		AFGDropPod* DropPod = Cast<AFGDropPod>(FoundActor);
+
+		TSubclassOf<UFGItemDescriptor> ItemClass;
+		int32 ItemAmount;
+		float PowerRequired;
+
+		ItemClass = ModSubsystem->DropPodRepairClass(DropPod);
+		ItemAmount = ModSubsystem->DropPodRepairAmount(DropPod);
+		PowerRequired = ModSubsystem->DropPodRepairPower(DropPod);
+
+		JDropPod->Values.Add("ID", MakeShared<FJsonValueString>(DropPod->GetName()));
+		JDropPod->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(DropPod)));
+		JDropPod->Values.Add("Opened", MakeShared<FJsonValueBoolean>(DropPod->HasBeenOpened()));
+		JDropPod->Values.Add("Looted", MakeShared<FJsonValueBoolean>(DropPod->HasBeenLooted()));
+		JDropPod->Values.Add("RepairItem", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ItemClass).ToString()));
+		//JDropPod->Values.Add("RepairItemClass", MakeShared<FJsonValueString>(ItemClass->GetDefaultObject()->GetClass()->GetName()));
+		JDropPod->Values.Add("RepairAmount", MakeShared<FJsonValueNumber>(ItemAmount));
+		JDropPod->Values.Add("PowerRequired", MakeShared<FJsonValueNumber>(PowerRequired));
+		JDropPod->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(DropPod, "Drop Pod", "Drop Pod")));
+
+		JDropPodArray.Add(MakeShared<FJsonValueObject>(JDropPod));
+	};
+
+	FString Write;
+	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+	FJsonSerializer::Serialize(JDropPodArray, JsonWriter);
+
+	return Write;
+
+};

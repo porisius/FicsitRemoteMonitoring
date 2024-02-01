@@ -13,8 +13,10 @@
 #include "Resources/FGItemDescriptor.h"
 #include "FGRecipe.h"
 #include "FGBlueprintFunctionLibrary.h"
+#include "FGDropPod.h"
 #include "FGItemPickup.h"
 #include "Logging\StructuredLog.h"
+#include "FicsitRemoteMonitoring.h"
 #include "FRM_Library.h"
 #include "FRM_Factory.generated.h"
 
@@ -35,4 +37,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	static FString getWorldInv(UObject* WorldContext);
+
+	UFUNCTION(BlueprintPure)
+	static FString getDropPod(UObject* WorldContext);
+
 };
