@@ -145,3 +145,162 @@ FString UFRM_Vehicles::getTruckStation(UObject* WorldContext) {
 
 	return Write;
 };
+
+FString UFRM_Vehicles::getVehicles(UObject* WorldContext) {
+	
+	AFGVehicleSubsystem* VehicleSubsystem = AFGVehicleSubsystem::Get(WorldContext);
+	TArray<AFGVehicle*> Vehicles = VehicleSubsystem->GetVehicles();
+	//UKismetArrayLibrary::FilterArray(Vehicles, )
+
+	TArray<TSharedPtr<FJsonValue>> JVehicleArray;
+
+	for (AFGVehicle* Vehicle : Vehicles) {
+
+		TSharedPtr<FJsonObject> JVehicle = MakeShared<FJsonObject>();
+
+		AFGWheeledVehicle* WheeledVehicle = Cast<AFGWheeledVehicle>(Vehicle);
+		// UFGWheeledVehicleMovementComponent* VehicleMovement = Cast<UFGWheeledVehicleMovementComponent>(Vehicle);
+		UFGWheeledVehicleMovementComponent* VehicleMovement = WheeledVehicle->GetVehicleMovementComponent();
+		AFGWheeledVehicleInfo* VehicleInfo = WheeledVehicle->GetInfo(); //Cast<AFGWheeledVehicleInfo>(Vehicle);
+
+		TArray<TSubclassOf<UFGItemDescriptor>> ClassNames;
+		UFGBlueprintFunctionLibrary::GetAllDescriptorsSorted(WorldContext->GetWorld(), ClassNames);
+
+		TArray<FInventoryStack> FuelInventoryStacks;
+		UFGInventoryComponent* VehicleFuelInventory = WheeledVehicle->GetFuelInventory();
+		TMap<TSubclassOf<UFGItemDescriptor>, float> FuelPetroInventory;
+		TArray<TSharedPtr<FJsonValue>> JVehicleFuelArray;
+		if (IsValid(VehicleFuelInventory)) {
+			VehicleFuelInventory->GetInventoryStacks(FuelInventoryStacks);
+			for (FInventoryStack FuelInventory : FuelInventoryStacks) {
+
+				auto ItemClass = FuelInventory.Item.GetItemClass();
+				auto Amount = FuelInventory.NumItems;
+
+				if (FuelPetroInventory.Contains(ItemClass)) {
+					FuelPetroInventory.Add(ItemClass) = Amount + FuelPetroInventory.FindRef(ItemClass);
+				}
+				else {
+					FuelPetroInventory.Add(ItemClass) = Amount;
+				};
+
+			};
+
+			for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
+
+				if (FuelPetroInventory.Contains(ClassName))
+				{
+					TSharedPtr<FJsonObject> JVehicleFuel = MakeShared<FJsonObject>();
+
+					JVehicleFuel->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
+					JVehicleFuel->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+					JVehicleFuel->Values.Add("Amount", MakeShared<FJsonValueNumber>(FuelPetroInventory.FindRef(ClassName)));
+
+					JVehicleFuelArray.Add(MakeShared<FJsonValueObject>(JVehicleFuel));
+				};
+			};
+		}
+		else {
+			TSharedPtr<FJsonObject> JVehicleFuel = MakeShared<FJsonObject>();
+
+			JVehicleFuel->Values.Add("Name", MakeShared<FJsonValueString>("None"));
+			JVehicleFuel->Values.Add("ClassName", MakeShared<FJsonValueString>("Desc_None"));
+			JVehicleFuel->Values.Add("Amount", MakeShared<FJsonValueNumber>(0));
+
+			JVehicleFuelArray.Add(MakeShared<FJsonValueObject>(JVehicleFuel));
+		};
+
+		TArray<FInventoryStack> InventoryStacks;
+		UFGInventoryComponent* VehicleInventory = WheeledVehicle->GetStorageInventory();
+		TMap<TSubclassOf<UFGItemDescriptor>, float> StorageInventory;
+		TArray<TSharedPtr<FJsonValue>> JVehicleStorageArray;
+		if (IsValid(VehicleInventory)) {
+			VehicleInventory->GetInventoryStacks(InventoryStacks);
+			for (FInventoryStack Inventory : InventoryStacks) {
+
+				auto ItemClass = Inventory.Item.GetItemClass();
+				auto Amount = Inventory.NumItems;
+
+				if (StorageInventory.Contains(ItemClass)) {
+					StorageInventory.Add(ItemClass) = Amount + StorageInventory.FindRef(ItemClass);
+				}
+				else {
+					StorageInventory.Add(ItemClass) = Amount;
+				};
+
+			};
+
+			for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
+
+				if (StorageInventory.Contains(ClassName))
+				{
+					TSharedPtr<FJsonObject> JVehicleStorage = MakeShared<FJsonObject>();
+
+					JVehicleStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
+					JVehicleStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+					JVehicleStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageInventory.FindRef(ClassName)));
+
+					JVehicleStorageArray.Add(MakeShared<FJsonValueObject>(JVehicleStorage));
+				};
+			};
+		} 
+		else {
+			TSharedPtr<FJsonObject> JVehicleStorage = MakeShared<FJsonObject>();
+
+			JVehicleStorage->Values.Add("Name", MakeShared<FJsonValueString>("None"));
+			JVehicleStorage->Values.Add("ClassName", MakeShared<FJsonValueString>("Desc_None"));
+			JVehicleStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(0));
+
+			JVehicleStorageArray.Add(MakeShared<FJsonValueObject>(JVehicleStorage));
+		};
+
+		FString FormString = "Unknown";
+
+		EVehicleStatus Form = VehicleInfo->GetVehicleStatus();
+		
+		if (Form == EVehicleStatus::VS_Deadlocked) {
+			FormString = "Deadlocked";
+		}
+		else if (Form == EVehicleStatus::VS_Operational) {
+			FormString = "Operational";
+		}
+		else if (Form == EVehicleStatus::VS_OutOfFuel) {
+			FormString = "Out of Fuel";
+		};
+
+		int32 CurrentGear = VehicleMovement->GetCurrentGear();
+		float ForwardSpeed = VehicleMovement->GetForwardSpeed();
+		float RotationSpeed = VehicleMovement->GetEngineRotationSpeed();
+		float Throttle = VehicleMovement->GetThrottleInput();
+
+		AFGSavedWheeledVehiclePath* VehiclePath = Cast<AFGSavedWheeledVehiclePath>(Vehicle);
+		FString PathName = VehiclePath->mPathName;
+
+		JVehicle->Values.Add("ID", MakeShared<FJsonValueString>(Vehicle->GetName()));
+		JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(Vehicle->mDisplayName.ToString()));
+		JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(Vehicle->GetClass()->GetName()));
+		JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Vehicle)));
+		JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>(PathName));
+		JVehicle->Values.Add("Status", MakeShared<FJsonValueString>(FormString));
+		JVehicle->Values.Add("CurrentGear", MakeShared<FJsonValueNumber>(VehicleMovement->GetCurrentGear()));
+		JVehicle->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(VehicleMovement->GetForwardSpeed()));
+		JVehicle->Values.Add("EngineRPM", MakeShared<FJsonValueNumber>(VehicleMovement->GetEngineRotationSpeed()));
+		JVehicle->Values.Add("ThrottlePercent", MakeShared<FJsonValueNumber>(VehicleMovement->GetThrottleInput()));		
+		JVehicle->Values.Add("Airborne", MakeShared<FJsonValueBoolean>(VehicleMovement->IsInAir()));
+		JVehicle->Values.Add("FollowingPath", MakeShared<FJsonValueBoolean>(Vehicle->IsFollowingAPath()));
+		JVehicle->Values.Add("Autopilot", MakeShared<FJsonValueBoolean>(Vehicle->IsSelfDriving()));
+		JVehicle->Values.Add("Storage", MakeShared<FJsonValueArray>(JVehicleStorageArray));
+		JVehicle->Values.Add("Fuel", MakeShared<FJsonValueArray>(JVehicleFuelArray));
+		JVehicle->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Vehicle, Vehicle->mDisplayName.ToString(), Vehicle->mDisplayName.ToString())));
+
+		JVehicleArray.Add(MakeShared<FJsonValueObject>(JVehicle));
+	
+	};
+
+	FString Write;
+	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+	FJsonSerializer::Serialize(JVehicleArray, JsonWriter);
+
+	return Write;
+
+};
