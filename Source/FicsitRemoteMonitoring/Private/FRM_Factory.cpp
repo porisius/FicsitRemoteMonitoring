@@ -1,6 +1,6 @@
 #include "FRM_Factory.h"
 #include <NiagaraPerfBaseline.h>
-#include "Buildables/FGBuildableStorage.h"
+
 
 DEFINE_LOG_CATEGORY_STATIC(LogFooBarBaz, Log, All);
 
@@ -295,7 +295,6 @@ FString UFRM_Factory::getDropPod(UObject* WorldContext) {
 	TArray<TSharedPtr<FJsonValue>> JDropPodArray;
 
 	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), DropPodClass, FoundActors);
-	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
 
 	for (AActor* FoundActor : FoundActors) {
 
@@ -307,16 +306,29 @@ FString UFRM_Factory::getDropPod(UObject* WorldContext) {
 		int32 ItemAmount;
 		float PowerRequired;
 
-		ItemClass = ModSubsystem->DropPodRepairClass(DropPod);
-		ItemAmount = ModSubsystem->DropPodRepairAmount(DropPod);
-		PowerRequired = ModSubsystem->DropPodRepairPower(DropPod);
+		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(DropPod->GetWorld());
+		fgcheck(ModSubsystem);
+		
+		ModSubsystem->GetDropPodInfo_BIE(DropPod, ItemClass, ItemAmount, PowerRequired);
+
+		//ItemClass = ModSubsystem->DropPodRepairClass(DropPod);
+		//ItemAmount = ModSubsystem->DropPodRepairAmount(DropPod);
+		//PowerRequired = ModSubsystem->DropPodRepairPower(DropPod);
+
+		FString JItemName = "No Item";
+		FString JItemClass = "Desc_NoItem";
+
+		if (IsValid(ItemClass)) {
+			JItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
+			JItemClass = ItemClass->GetClass()->GetName();
+		};
 
 		JDropPod->Values.Add("ID", MakeShared<FJsonValueString>(DropPod->GetName()));
 		JDropPod->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(DropPod)));
 		JDropPod->Values.Add("Opened", MakeShared<FJsonValueBoolean>(DropPod->HasBeenOpened()));
 		JDropPod->Values.Add("Looted", MakeShared<FJsonValueBoolean>(DropPod->HasBeenLooted()));
-		JDropPod->Values.Add("RepairItem", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ItemClass).ToString()));
-		//JDropPod->Values.Add("RepairItemClass", MakeShared<FJsonValueString>(ItemClass->GetDefaultObject()->GetClass()->GetName()));
+		JDropPod->Values.Add("RepairItem", MakeShared<FJsonValueString>(JItemName));
+		JDropPod->Values.Add("RepairItemClass", MakeShared<FJsonValueString>(JItemClass));
 		JDropPod->Values.Add("RepairAmount", MakeShared<FJsonValueNumber>(ItemAmount));
 		JDropPod->Values.Add("PowerRequired", MakeShared<FJsonValueNumber>(PowerRequired));
 		JDropPod->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(DropPod, "Drop Pod", "Drop Pod")));

@@ -5,8 +5,13 @@
 #include "CoreMinimal.h"
 #include "Subsystem/ModSubsystem.h"
 #include "Resources\FGItemDescriptor.h"
+#include "EngineUtils.h"
 #include "FGDropPod.h"
 #include "Subsystem/SubsystemActorManager.h"
+#include "CoreMinimal.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
+#include "Subsystem/ModSubsystem.h"
+#include "Patching/NativeHookManager.h"
 #include "FicsitRemoteMonitoring.generated.h"
 
 /**
@@ -19,6 +24,9 @@ class FICSITREMOTEMONITORING_API AFicsitRemoteMonitoring : public AModSubsystem
 
 public:
 
+	AFicsitRemoteMonitoring();
+	~AFicsitRemoteMonitoring();
+
 	/** Get the subsystem in the current world, can be nullptr, e.g. on game ending (destroy) or game startup. */
 	static AFicsitRemoteMonitoring* Get(UWorld* world);
 
@@ -30,5 +38,10 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "FicsitRemoteMonitoring")
 	float DropPodRepairPower(AFGDropPod* Droppod);
-	
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void GetDropPodInfo_BIE(const AFGDropPod* Droppod, TSubclassOf<UFGItemDescriptor>& ItemClass, int32& Amount, float& Power);	
+
+protected:
+	virtual void BeginPlay() override;
 };
