@@ -145,7 +145,7 @@ FString UFRM_Factory::getPowerSlug(UObject* WorldContext) {
 			SlugName = "Blue Slug";
 		}
 		else if (PowerSlug.GetItemClass()->GetName() == "Desc_Crystal_mk2") {
-			SlugName = "Green Slug";
+			SlugName = "Yellow Slug";
 		}
 		else if (PowerSlug.GetItemClass()->GetName() == "Desc_Crystal_mk3") {
 			SlugName = "Purple Slug";
