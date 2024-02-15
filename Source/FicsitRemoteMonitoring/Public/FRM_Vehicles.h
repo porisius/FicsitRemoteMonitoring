@@ -29,7 +29,7 @@ class FICSITREMOTEMONITORING_API UFRM_Vehicles : public UBlueprintFunctionLibrar
 
 public:
 	UFUNCTION(BlueprintPure)
-	static FString getVehicles(UObject* WorldContext);
+	static FString getVehicles(UObject* WorldContext, UClass* VehicleClass);
 
 	UFUNCTION(BlueprintPure)
 	static FString getTruckStation(UObject* WorldContext);
