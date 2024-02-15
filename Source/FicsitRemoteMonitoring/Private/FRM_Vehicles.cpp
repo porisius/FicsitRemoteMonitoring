@@ -276,14 +276,12 @@ FString UFRM_Vehicles::getVehicles(UObject* WorldContext, UClass* VehicleClass) 
 			AFGSavedWheeledVehiclePath* VehiclePath = Cast<AFGSavedWheeledVehiclePath>(Vehicle);
 			FString PathName = VehiclePath->mPathName;
 
-			//FString VehicleID = *Vehicle->GetName();
-
-			//JVehicle->Values.Add("ID", MakeShared<FJsonValueString>(VehicleID));
-			//JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(*Vehicle->mDisplayName.ToString()));
-			//JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(*Vehicle->GetClass()->GetName()));
-			//JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Vehicle)));
-			//JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>(PathName));
-			//JVehicle->Values.Add("Status", MakeShared<FJsonValueString>(FormString));
+			JVehicle->Values.Add("ID", MakeShared<FJsonValueString>(Vehicle->GetName()));
+			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(Vehicle->mDisplayName.ToString()));
+			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(Vehicle->GetClass()->GetName()));
+			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Vehicle)));
+			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>(PathName));
+			JVehicle->Values.Add("Status", MakeShared<FJsonValueString>(FormString));
 			JVehicle->Values.Add("CurrentGear", MakeShared<FJsonValueNumber>(VehicleMovement->GetCurrentGear()));
 			JVehicle->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(VehicleMovement->GetForwardSpeed()));
 			JVehicle->Values.Add("EngineRPM", MakeShared<FJsonValueNumber>(VehicleMovement->GetEngineRotationSpeed()));
