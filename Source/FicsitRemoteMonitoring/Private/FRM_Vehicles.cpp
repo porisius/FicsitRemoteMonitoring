@@ -46,7 +46,7 @@ FString UFRM_Vehicles::getTruckStation(UObject* WorldContext) {
 			FormString = "Producing With Crystal";
 		}
 		else if (Form == EProductionStatus::IS_STANDBY) {
-			FormString = "Standbu";
+			FormString = "Standby";
 		}
 		else if (Form == EProductionStatus::IS_ERROR) {
 			FormString = "Error";
