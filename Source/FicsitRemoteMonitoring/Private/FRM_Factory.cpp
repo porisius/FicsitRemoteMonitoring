@@ -303,22 +303,18 @@ FString UFRM_Factory::getDropPod(UObject* WorldContext) {
 		AFGDropPod* DropPod = Cast<AFGDropPod>(FoundActor);
 
 		TSubclassOf<UFGItemDescriptor> ItemClass;
-		int32 ItemAmount;
-		float PowerRequired;
+		int32 ItemAmount = -1;
+		float PowerRequired = 0;
 
 		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(DropPod->GetWorld());
 		fgcheck(ModSubsystem);
 		
 		ModSubsystem->GetDropPodInfo_BIE(DropPod, ItemClass, ItemAmount, PowerRequired);
 
-		//ItemClass = ModSubsystem->DropPodRepairClass(DropPod);
-		//ItemAmount = ModSubsystem->DropPodRepairAmount(DropPod);
-		//PowerRequired = ModSubsystem->DropPodRepairPower(DropPod);
-
 		FString JItemName = "No Item";
 		FString JItemClass = "Desc_NoItem";
 
-		if (IsValid(ItemClass)) {
+		if (ItemAmount > 0) {
 			JItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
 			JItemClass = ItemClass->GetClass()->GetName();
 		};
