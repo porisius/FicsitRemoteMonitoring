@@ -6,16 +6,14 @@
 FString UFRM_Vehicles::getTruckStation(UObject* WorldContext) {
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	TArray<AFGBuildable*> Buildables;
-
-	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableDockingStation")), Buildables);
+	TArray<AFGBuildableDockingStation*> Buildables;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableDockingStation>(Buildables);
 
 	TArray<TSharedPtr<FJsonValue>> JTruckStationArray;
 
 	// Factory Building Production Stats
-	for (AFGBuildable* Buildable : Buildables) {
+	for (AFGBuildableDockingStation* TruckStation : Buildables) {
 
-		AFGBuildableDockingStation* TruckStation = Cast<AFGBuildableDockingStation>(Buildable);
 		TSharedPtr<FJsonObject> JTruckStation = MakeShared<FJsonObject>();
 
 		FString LoadMode;
