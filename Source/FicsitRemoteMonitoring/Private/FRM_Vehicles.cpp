@@ -153,10 +153,11 @@ FString UFRM_Vehicles::getVehicles(UObject* WorldContext, UClass* VehicleClass) 
 	for (AFGVehicle* Vehicle : Vehicles) {
 
 		if (Vehicle->GetClass()->IsChildOf(VehicleClass)) {
-
+			UE_LOG(LogTemp, Warning, TEXT("Processing vehicle '%s'"), *Vehicle->GetName());
 			TSharedPtr<FJsonObject> JVehicle = MakeShared<FJsonObject>();
 
 			AFGWheeledVehicle* WheeledVehicle = Cast<AFGWheeledVehicle>(Vehicle);
+			fgcheck(WheeledVehicle);
 			UFGWheeledVehicleMovementComponent* VehicleMovement = WheeledVehicle->GetVehicleMovementComponent();
 			AFGWheeledVehicleInfo* VehicleInfo = WheeledVehicle->GetInfo();
 
@@ -271,14 +272,15 @@ FString UFRM_Vehicles::getVehicles(UObject* WorldContext, UClass* VehicleClass) 
 			float RotationSpeed = VehicleMovement->GetEngineRotationSpeed();
 			float Throttle = VehicleMovement->GetThrottleInput();
 
-			AFGSavedWheeledVehiclePath* VehiclePath = Cast<AFGSavedWheeledVehiclePath>(Vehicle);
-			FString PathName = VehiclePath->mPathName;
+			//AFGSavedWheeledVehiclePath* VehiclePath = Cast<AFGSavedWheeledVehiclePath>(Vehicle);
+			//fgcheck(VehiclePath);
+			//FString PathName = VehiclePath->mPathName;
 
 			JVehicle->Values.Add("ID", MakeShared<FJsonValueString>(Vehicle->GetName()));
 			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(Vehicle->mDisplayName.ToString()));
 			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(Vehicle->GetClass()->GetName()));
 			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Vehicle)));
-			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>(PathName));
+			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>("PathName"));
 			JVehicle->Values.Add("Status", MakeShared<FJsonValueString>(FormString));
 			JVehicle->Values.Add("CurrentGear", MakeShared<FJsonValueNumber>(VehicleMovement->GetCurrentGear()));
 			JVehicle->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(VehicleMovement->GetForwardSpeed()));
@@ -289,7 +291,7 @@ FString UFRM_Vehicles::getVehicles(UObject* WorldContext, UClass* VehicleClass) 
 			JVehicle->Values.Add("Autopilot", MakeShared<FJsonValueBoolean>(WheeledVehicle->IsSelfDriving()));
 			JVehicle->Values.Add("Storage", MakeShared<FJsonValueArray>(JVehicleStorageArray));
 			JVehicle->Values.Add("Fuel", MakeShared<FJsonValueArray>(JVehicleFuelArray));
-			JVehicle->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(WheeledVehicle, WheeledVehicle->mDisplayName.ToString(), WheeledVehicle->mDisplayName.ToString())));
+			JVehicle->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Vehicle, Vehicle->mDisplayName.ToString(), Vehicle->mDisplayName.ToString())));
 
 			JVehicleArray.Add(MakeShared<FJsonValueObject>(JVehicle));
 		};
