@@ -30,15 +30,6 @@ public:
 	/** Get the subsystem in the current world, can be nullptr, e.g. on game ending (destroy) or game startup. */
 	static AFicsitRemoteMonitoring* Get(UWorld* world);
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "FicsitRemoteMonitoring")
-	TSubclassOf<UFGItemDescriptor> DropPodRepairClass(AFGDropPod* Droppod);
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "FicsitRemoteMonitoring")
-	int32 DropPodRepairAmount(AFGDropPod* Droppod);
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "FicsitRemoteMonitoring")
-	float DropPodRepairPower(AFGDropPod* Droppod);
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void GetDropPodInfo_BIE(const AFGDropPod* Droppod, TSubclassOf<UFGItemDescriptor>& ItemClass, int32& Amount, float& Power);	
 
