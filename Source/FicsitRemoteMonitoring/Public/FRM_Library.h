@@ -18,4 +18,5 @@ public:
 	static TSharedPtr<FJsonObject> getActorJSON(AActor* Actor);
 	static TSharedPtr<FJsonObject> getActorFeaturesJSON(AActor* Actor, FString DisplayName, FString TypeName);
 	static float SafeDivide(float NumberA, float NumberB);
+	static FString APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray);
 };

@@ -6,6 +6,7 @@
 #include "FGBuildableSubsystem.h"
 #include "Buildables\FGBuildableFactory.h"
 #include "Buildables\FGBuildableManufacturer.h"
+#include "Buildables\FGBuildableManufacturerVariablePower.h"
 #include "Buildables\FGBuildableResourceExtractor.h"
 #include "Resources/FGExtractableResourceInterface.h"
 #include "Buildables/FGBuildableStorage.h"

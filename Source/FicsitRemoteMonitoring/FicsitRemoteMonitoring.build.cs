@@ -9,6 +9,8 @@ public class FicsitRemoteMonitoring : ModuleRules
 
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "Json", "JsonUtilities" });
         
-        PublicDependencyModuleNames.AddRange(new string[] { "FactoryGame", "SML", "Chaos", "ChaosVehicles" });
+        PublicDependencyModuleNames.AddRange(new string[] { "FactoryGame", "SML", "Chaos", "ChaosVehiclesCore", "ChaosVehicles" });
+
+	PrivateDependencyModuleNames.AddRange(new string[] { "HTTP", "HTTPServer" });
     }
 }

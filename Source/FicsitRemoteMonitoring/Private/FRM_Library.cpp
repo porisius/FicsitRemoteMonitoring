@@ -69,3 +69,13 @@ float UFRM_Library::SafeDivide(float NumberA, float NumberB) {
 	return divide;
 
 };
+
+FString UFRM_Library::APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray) {
+
+	FString Write;
+	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write);
+	FJsonSerializer::Serialize(JSONArray, JsonWriter);
+
+	return Write;
+
+}
