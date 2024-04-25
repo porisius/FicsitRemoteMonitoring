@@ -19,7 +19,6 @@
 #include "FGDropPod.h"
 #include "FGItemPickup.h"
 #include "Logging\StructuredLog.h"
-#include "FicsitRemoteMonitoring.h"
 #include "FRM_Library.h"
 #include "FRM_Factory.generated.h"
 

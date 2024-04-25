@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -22,8 +20,6 @@ class FICSITREMOTEMONITORING_API UFRM_Drones : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintPure)
-	static FString getDroneStation(UObject* WorldContext);
-	UFUNCTION(BlueprintPure)
-	static FString getDrone(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getDroneStation(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getDrone(UObject* WorldContext);
 };

@@ -2,7 +2,7 @@
 
 #include "FRM_Drones.h"
 
-FString UFRM_Drones::getDroneStation(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContext) {
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 	TArray<AFGBuildable*> Buildables;
@@ -205,14 +205,14 @@ FString UFRM_Drones::getDroneStation(UObject* WorldContext) {
 		JDroneStationArray.Add(MakeShared<FJsonValueObject>(JDroneStation));
 	};
 
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JDroneStationArray, JsonWriter);
+	//FString Write;
+	//const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+	//FJsonSerializer::Serialize(JDroneStationArray, JsonWriter);
 
-	return Write;
+	return JDroneStationArray;
 };
 
-FString UFRM_Drones::getDrone(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDrone(UObject* WorldContext) {
 
 	UClass* DroneClass = LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGDroneVehicle"));
 	TArray<AActor*> FoundActors;
@@ -267,10 +267,10 @@ FString UFRM_Drones::getDrone(UObject* WorldContext) {
 		JDroneArray.Add(MakeShared<FJsonValueObject>(JDrone));
 	};
 
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JDroneArray, JsonWriter);
+	//FString Write;
+	//const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+	//FJsonSerializer::Serialize(JDroneArray, JsonWriter);
 
-	return Write;
+	return JDroneArray;
 
 };
