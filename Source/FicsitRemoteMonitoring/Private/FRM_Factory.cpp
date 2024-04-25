@@ -3,6 +3,7 @@
 
 
 DEFINE_LOG_CATEGORY_STATIC(LogFooBarBaz, Log, All);
+#undef GetForm
 
 FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 {
