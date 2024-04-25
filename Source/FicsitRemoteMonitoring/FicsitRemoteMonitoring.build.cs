@@ -9,8 +9,10 @@ public class FicsitRemoteMonitoring : ModuleRules
 
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "Json", "JsonUtilities" });
         
-        PublicDependencyModuleNames.AddRange(new string[] { "FactoryGame", "SML", "Chaos", "ChaosVehiclesCore", "ChaosVehicles" });
+        PublicDependencyModuleNames.AddRange(new string[] { "FactoryGame", "SML", "Chaos", "ChaosVehiclesCore", "ChaosVehicles", "HTTP", "ArduinoKit" });
 
-	PrivateDependencyModuleNames.AddRange(new string[] { "HTTP", "HTTPServer" });
+        PrivateIncludePaths.Add(Path.Combine(PluginDirectory, "Source/ThirdParty/"));
+
+	    PrivateDependencyModuleNames.AddRange(new string[] { "HTTP", "HTTPServer" });
     }
 }
