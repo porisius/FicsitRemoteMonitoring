@@ -1,5 +1,6 @@
 
 #include "FRM_Library.h"
+#include "FRM_Factory.h"
 
 TSharedPtr<FJsonObject> UFRM_Library::getActorJSON(AActor* Actor) {
 
@@ -70,11 +71,18 @@ float UFRM_Library::SafeDivide(float NumberA, float NumberB) {
 
 };
 
-FString UFRM_Library::APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray) {
+FString UFRM_Library::APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext) {
 
 	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write);
-	FJsonSerializer::Serialize(JSONArray, JsonWriter);
+	auto config = FConfig_FactoryStruct::GetActiveConfig(WorldContext);
+
+	if (config.JSONDebugMode) {
+		const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write);
+		FJsonSerializer::Serialize(JSONArray, JsonWriter);
+	} else {
+		const TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+		FJsonSerializer::Serialize(JSONArray, JsonWriter);
+	}
 
 	return Write;
 
