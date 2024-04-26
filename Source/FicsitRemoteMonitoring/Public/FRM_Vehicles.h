@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -28,11 +26,9 @@ class FICSITREMOTEMONITORING_API UFRM_Vehicles : public UBlueprintFunctionLibrar
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintPure)
-	static FString getVehicles(UObject* WorldContext, UClass* VehicleClass);
 
-	UFUNCTION(BlueprintPure)
-	static FString getTruckStation(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getVehicles(UObject* WorldContext, UClass* VehicleClass);
+	static TArray<TSharedPtr<FJsonValue>> getTruckStation(UObject* WorldContext);
 
 protected: 
 	friend class AFGVehicleSubsystem;

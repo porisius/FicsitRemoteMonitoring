@@ -3,7 +3,7 @@
 
 #include "FRM_Production.h"
 
-FString UFRM_Production::getProdStats(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldContext) {
 
 	TMap<TSubclassOf<UFGItemDescriptor>, float> CurrentConsumed;
 	TMap<TSubclassOf<UFGItemDescriptor>, float> CurrentProduced;
@@ -161,8 +161,6 @@ FString UFRM_Production::getProdStats(UObject* WorldContext) {
 				FormString = "Invalid";
 			}
 			else if (Form == EResourceForm::RF_LAST_ENUM) {
-				// This is used to specify no form change in patches so it's okay now
-				// UE_LOG(LogContentLib, Error, TEXT("Encountered EResourceForm::RF_LAST_ENUM, should be impossible"));
 				FormString = "Unknown";
 			};
 
@@ -187,10 +185,6 @@ FString UFRM_Production::getProdStats(UObject* WorldContext) {
 		};
 	};
 
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JProductionStatsArray, JsonWriter);
-
-	return Write;
+	return JProductionStatsArray;
 
 };

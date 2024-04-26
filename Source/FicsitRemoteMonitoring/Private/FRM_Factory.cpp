@@ -2,10 +2,9 @@
 #include <NiagaraPerfBaseline.h>
 
 
-DEFINE_LOG_CATEGORY_STATIC(LogFooBarBaz, Log, All);
 #undef GetForm
 
-FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 {
 	
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
@@ -13,7 +12,7 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 	BuildableSubsystem->GetTypedBuildable(TypedBuildable, Buildables);
 	TArray<TSharedPtr<FJsonValue>> JFactoryArray;
 
-	UE_LOGFMT(LogFooBarBaz, Warning, "Initial variables configured, executing getProdStats");
+	UE_LOGFMT(LogFRMAPI, Warning, "Initial variables configured, executing getProdStats");
 
 	for (AFGBuildable* Buildable : Buildables) {
 
@@ -23,7 +22,7 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 		TArray<TSharedPtr<FJsonValue>> JProductArray;
 		TArray<TSharedPtr<FJsonValue>> JIngredientsArray;
 
-		UE_LOGFMT(LogFooBarBaz, Warning, "Loading FGBuildable {Manufacturer} to get data.", Manufacturer->GetClass()->GetName());
+		UE_LOGFMT(LogFRMAPI, Warning, "Loading FGBuildable {Manufacturer} to get data.", Manufacturer->GetClass()->GetName());
 
 		if (IsValid(Manufacturer->GetCurrentRecipe())) {
 			auto CurrentRecipe = Manufacturer->GetCurrentRecipe();
@@ -31,7 +30,7 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 			auto CurrentPotential = Manufacturer->GetCurrentPotential();
 			auto Productivity = Manufacturer->GetProductivity();
 						
-			UE_LOGFMT(LogFooBarBaz, Warning, "Loading FGRecipe {Recipe} to get data.", CurrentRecipe->GetClass()->GetName());
+			UE_LOGFMT(LogFRMAPI, Warning, "Loading FGRecipe {Recipe} to get data.", CurrentRecipe->GetClass()->GetName());
 
 			for (FItemAmount Product : CurrentRecipe.GetDefaultObject()->GetProducts()) {
 				TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
@@ -120,14 +119,10 @@ FString UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 		JFactoryArray.Add(MakeShared<FJsonValueObject>(JFactory));
 	};
 
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JFactoryArray, JsonWriter);
-
-	return Write;
+	return JFactoryArray;
 };
 
-FString UFRM_Factory::getPowerSlug(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPowerSlug(UObject* WorldContext) {
 
 	UClass* CrystalClass = LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Resource/Environment/Crystal/BP_Crystal.BP_Crystal_C"));
 	TArray<AActor*> FoundActors;
@@ -161,14 +156,11 @@ FString UFRM_Factory::getPowerSlug(UObject* WorldContext) {
 
 		JSlugArray.Add(MakeShared<FJsonValueObject>(JPowerSlug));
 	};
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JSlugArray, JsonWriter);
 
-	return Write;
+	return JSlugArray;
 };
 
-FString UFRM_Factory::getStorageInv(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getStorageInv(UObject* WorldContext) {
 		
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
 
@@ -225,15 +217,11 @@ FString UFRM_Factory::getStorageInv(UObject* WorldContext) {
 
 	};
 
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JStorageArray, JsonWriter);
-
-	return Write;
+	return JStorageArray;
 
 };
 
-FString UFRM_Factory::getWorldInv(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getWorldInv(UObject* WorldContext) {
 
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
 
@@ -282,15 +270,11 @@ FString UFRM_Factory::getWorldInv(UObject* WorldContext) {
 
 	};
 
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JInventoryArray, JsonWriter);
-
-	return Write;
+	return JInventoryArray;
 
 };
 
-FString UFRM_Factory::getDropPod(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext) {
 
 	UClass* DropPodClass = LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGDropPod"));
 	TArray<AActor*> FoundActors;
@@ -334,15 +318,11 @@ FString UFRM_Factory::getDropPod(UObject* WorldContext) {
 		JDropPodArray.Add(MakeShared<FJsonValueObject>(JDropPod));
 	};
 
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JDropPodArray, JsonWriter);
-
-	return Write;
+	return JDropPodArray;
 
 };
 
-FString UFRM_Factory::getResourceExtractor(UObject* WorldContext)
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* WorldContext)
 {
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
@@ -404,9 +384,6 @@ FString UFRM_Factory::getResourceExtractor(UObject* WorldContext)
 
 		JExtractorArray.Add(MakeShared<FJsonValueObject>(JExtractor));
 	};
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JExtractorArray, JsonWriter);
 
-	return Write;
+	return JExtractorArray;
 };

@@ -205,10 +205,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 		JDroneStationArray.Add(MakeShared<FJsonValueObject>(JDroneStation));
 	};
 
-	//FString Write;
-	//const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	//FJsonSerializer::Serialize(JDroneStationArray, JsonWriter);
-
 	return JDroneStationArray;
 };
 
@@ -266,10 +262,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDrone(UObject* WorldContext) {
 
 		JDroneArray.Add(MakeShared<FJsonValueObject>(JDrone));
 	};
-
-	//FString Write;
-	//const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	//FJsonSerializer::Serialize(JDroneArray, JsonWriter);
 
 	return JDroneArray;
 

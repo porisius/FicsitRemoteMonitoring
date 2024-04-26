@@ -2,7 +2,7 @@
 
 #include "FRM_Player.h"
 
-FString UFRM_Player::getPlayer(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Player::getPlayer(UObject* WorldContext) {
 
 	UClass* PlayerClass = LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGCharacterPlayer"));
 	TArray<AActor*> FoundActors;
@@ -31,9 +31,5 @@ FString UFRM_Player::getPlayer(UObject* WorldContext) {
 		JPlayerArray.Add(MakeShared<FJsonValueObject>(JPlayer));
 	};
 
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JPlayerArray, JsonWriter);
-
-	return Write;
+	return JPlayerArray;
 };

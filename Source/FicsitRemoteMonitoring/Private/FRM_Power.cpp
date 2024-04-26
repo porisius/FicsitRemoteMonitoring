@@ -2,7 +2,7 @@
 
 #include "FRM_Power.h"
 
-FString UFRM_Power::getCircuit(UObject* WorldContext)
+TArray<TSharedPtr<FJsonValue>> UFRM_Power::getCircuit(UObject* WorldContext)
 {
 	AFGCircuitSubsystem* CircuitSubsystem = AFGCircuitSubsystem::Get(WorldContext->GetWorld());
 
@@ -31,9 +31,9 @@ FString UFRM_Power::getCircuit(UObject* WorldContext)
 
 		JCircuitArray.Add(MakeShared<FJsonValueObject>(JCircuit));
 	};
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JCircuitArray, JsonWriter);
 
-	return Write;
+	return JCircuitArray;
 };
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, UClass* TypedBuildable)
+{

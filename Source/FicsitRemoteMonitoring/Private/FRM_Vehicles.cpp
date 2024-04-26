@@ -1,9 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "FRM_Vehicles.h"
 
-FString UFRM_Vehicles::getTruckStation(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getTruckStation(UObject* WorldContext) {
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 	TArray<AFGBuildableDockingStation*> Buildables;
@@ -137,14 +134,10 @@ FString UFRM_Vehicles::getTruckStation(UObject* WorldContext) {
 		JTruckStationArray.Add(MakeShared<FJsonValueObject>(JTruckStation));
 	};
 
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JTruckStationArray, JsonWriter);
-
-	return Write;
+	return JTruckStationArray;
 };
 
-FString UFRM_Vehicles::getVehicles(UObject* WorldContext, UClass* VehicleClass) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext, UClass* VehicleClass) {
 	
 	AFGVehicleSubsystem* VehicleSubsystem = AFGVehicleSubsystem::Get(WorldContext);
 	TArray<AFGVehicle*> Vehicles = VehicleSubsystem->GetVehicles();
@@ -297,10 +290,6 @@ FString UFRM_Vehicles::getVehicles(UObject* WorldContext, UClass* VehicleClass) 
 		};
 	};
 
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JVehicleArray, JsonWriter);
-
-	return Write;
+	return JVehicleArray;
 
 };

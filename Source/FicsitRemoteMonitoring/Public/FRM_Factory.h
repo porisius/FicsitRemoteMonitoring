@@ -28,22 +28,12 @@ class FICSITREMOTEMONITORING_API UFRM_Factory : public UFGBlueprintFunctionLibra
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintPure)
-	static FString getFactory(UObject* WorldContext, UClass* TypedBuildable);
 
-	UFUNCTION(BlueprintPure)
-	static FString getPowerSlug(UObject* WorldContext);
-
-	UFUNCTION(BlueprintPure)
-	static FString getStorageInv(UObject* WorldContext);
-
-	UFUNCTION(BlueprintPure)
-	static FString getWorldInv(UObject* WorldContext);
-
-	UFUNCTION(BlueprintPure)
-	static FString getDropPod(UObject* WorldContext);
-
-	UFUNCTION(BlueprintPure)
-	static FString getResourceExtractor(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getFactory(UObject* WorldContext, UClass* TypedBuildable);
+	static TArray<TSharedPtr<FJsonValue>> getPowerSlug(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getStorageInv(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getWorldInv(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getDropPod(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getResourceExtractor(UObject* WorldContext);
 
 };

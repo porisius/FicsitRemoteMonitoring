@@ -3,7 +3,7 @@
 
 #include "FRM_Trains.h"
 
-FString UFRM_Trains::getTrains(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 
 	AFGRailroadSubsystem* RailroadSubsystem = AFGRailroadSubsystem::Get(WorldContext->GetWorld());
 	
@@ -98,10 +98,6 @@ FString UFRM_Trains::getTrains(UObject* WorldContext) {
 
 	};
 
-	FString Write;
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	FJsonSerializer::Serialize(JTrainsArray, JsonWriter);
-
-	return Write;
+	return JTrainsArray;
 
 };

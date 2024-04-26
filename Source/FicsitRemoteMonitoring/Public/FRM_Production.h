@@ -30,6 +30,5 @@ class FICSITREMOTEMONITORING_API UFRM_Production : public UBlueprintFunctionLibr
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintPure)
-	static FString getProdStats(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getProdStats(UObject* WorldContext);
 };
