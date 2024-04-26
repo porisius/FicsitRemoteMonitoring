@@ -12,60 +12,60 @@
 UENUM()
 enum class EAPIEndpoints : uint8
 {
-
 	// Read API Endpoints
-    getAssembler,
+    getAssembler,           //Done
     getBelts,
-    getBiomassGenerator,
-    getBlender,
-    getConstructor,
+    getBiomassGenerator,    //Done
+    getBlender,             //Done
+    getCoalGenerator,       //Done
+    getConstructor,         //Done
     getDoggo,
-    getDrone,
-    getDroneStation,
-    getDropPod,
+    getDrone,               //Done
+    getDroneStation,        //Done
+    getDropPod,             //Done
     getExplorationSink,
-    getExplorer,
-    getExtractor,
-    getFactoryCart,
-    getFoundry,
-    getFuelGenerator,
-    getGeothermalGenerator,
+    getExplorer,            //Done
+    getExtractor,           //Done
+    getFactoryCart,         //Done
+    getFoundry,             //Done
+    getFuelGenerator,       //Done
+    getGeothermalGenerator, //Done
     getHUBTerminal,
-    getManufacturer,
+    getManufacturer,        //Done
     getModList,
-    getNuclearGenerator,
-    getParticle,
+    getNuclearGenerator,    //Done
+    getParticle,            //Done
     getPaths,
     getPipes,
-	getPlayer,
-	getPower,
-    getPowerSlug,
-    getProdStats,
+	getPlayer,              //Done
+	getPower,               //Done
+    getPowerSlug,           //Done
+    getProdStats,           //Done
     getRadarTower,
     getRecipes,
-    getRefinery,
+    getRefinery,            //Done
     getResourceGeyser,
     getResourceNode,
 	getResourceSink,
     getResourceWell,
     getSchematics,
     getSinkList,
-    getSmelter,
+    getSmelter,             //Done
     getSpaceElevator,
-    getStorageInv,
+    getStorageInv,          //Done
 	getSwitches,
-	getTractor,
-	getTrains,
+	getTractor,             //Done
+	getTrains,              //Done
 	getTrainStation,
-	getTruck,
-	getTruckStation,
-	getWorldInv,
+	getTruck,               //Done
+	getTruckStation,        //Done
+	getWorldInv,            //Done
 
 	// Read API Group Endpoints
 	getAll,
-	getFactory,
-	getGenerators,
-	getVehicles,
+	getFactory,             //Done
+	getGenerators,          //Done
+	getVehicles,            //Done
 };
 
 UCLASS()
