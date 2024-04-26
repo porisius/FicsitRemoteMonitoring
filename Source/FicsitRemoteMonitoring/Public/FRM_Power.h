@@ -4,6 +4,8 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "FicsitRemoteMonitoringModule.h"
 #include "FGBlueprintFunctionLibrary.h"
+#include "Buildables\FGBuildableGeneratorGeoThermal.h"
+#include "Buildables\FGBuildableGeneratorNuclear.h"
 #include "FGPowerCircuit.h"
 #include "FGCircuitSubsystem.h"
 #include "FRM_Power.generated.h"
@@ -14,13 +16,16 @@ class FICSITREMOTEMONITORING_API UFRM_Power : public UFGBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
-
-	UFUNCTION(BlueprintPure)
-	static FString getCircuit(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getCircuit(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getGenerators(UObject* WorldContext, UClass* TypedBuildable);
 
 private:
 	friend class UFGPowerCircuit;
 	friend class UFGPowerCircuitGroup;
+	friend class AFGBuildableGenerator;
+	friend class AFGBuildableGeneratorFuel;
+	friend class AFGBuildableGeneratorNuclear;
+	friend class AFGBuildableGeneratorGeoThermal;
 	friend class AFGCircuitSubsystem;
 
 };
