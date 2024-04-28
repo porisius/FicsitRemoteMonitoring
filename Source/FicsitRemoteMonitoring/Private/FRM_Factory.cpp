@@ -120,9 +120,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 	};
 
 	return JFactoryArray;
-};
+}
 
-TArray<TSharedPtr<FJsonValue>> getHubTerminal(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContext) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 	AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(WorldContext->GetWorld());
 
