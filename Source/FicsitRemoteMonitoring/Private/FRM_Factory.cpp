@@ -122,6 +122,37 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 	return JFactoryArray;
 };
 
+TArray<TSharedPtr<FJsonValue>> getHubTerminal(UObject* WorldContext) {
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(WorldContext->GetWorld());
+
+	TArray<AFGBuildable*> Buildables;
+	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableHubTerminal")), Buildables);
+	TArray<TSharedPtr<FJsonValue>> JHubTerminalArray;
+
+	for (AFGBuildable* Buildable : Buildables) {
+
+		AFGBuildableHubTerminal* HubTerminal = Cast<AFGBuildableHubTerminal>(Buildable);
+		TSharedPtr<FJsonObject> JHubTerminal;
+
+		AFGBuildableTradingPost* TradingPost = HubTerminal->GetTradingPost();
+
+		JHubTerminal->Values.Add("Name", MakeShared<FJsonValueString>(HubTerminal->mDisplayName.ToString()));
+		JHubTerminal->Values.Add("ClassName", MakeShared<FJsonValueString>(HubTerminal->GetClass()->GetName()));
+		JHubTerminal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(HubTerminal))));
+		JHubTerminal->Values.Add("HUBLevel", MakeShared<FJsonValueNumber>(TradingPost->GetTradingPostLevel()));
+		JHubTerminal->Values.Add("ShipDock", MakeShared<FJsonValueBoolean>(SchematicManager->IsShipAtTradingPost()));
+		JHubTerminal->Values.Add("SchName", MakeShared<FJsonValueString>(SchematicManager->GetActiveSchematic()->GetDisplayNameText().ToString()));
+		JHubTerminal->Values.Add("ShipReturn", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(SchematicManager->GetTimeUntilShipReturn())));
+		JHubTerminal->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(HubTerminal), HubTerminal->mDisplayName.ToString(), HubTerminal->mDisplayName.ToString())));
+
+		JHubTerminalArray.Add(MakeShared<FJsonValueObject>(JHubTerminal));
+
+	};
+
+	return JHubTerminalArray;
+};
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPowerSlug(UObject* WorldContext) {
 
 	UClass* CrystalClass = LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Resource/Environment/Crystal/BP_Crystal.BP_Crystal_C"));
