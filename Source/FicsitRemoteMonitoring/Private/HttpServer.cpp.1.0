@@ -264,7 +264,7 @@ bool AHttpServer::RequestManufacturer(const FHttpServerRequest& Request, const F
 	AHttpServer* HttpServer = Get(GetWorld());
 	UWorld* World = HttpServer->GetWorld();
 
-	UClass* Buildable = AFGBuildableManufacturer::StaticClass();
+	UClass* Buildable = LoadObject<UClass>(nullptr, TEXT("/Script/Engine.Blueprint'/Game/FactoryGame/Buildable/Factory/ManufacturerMk1/Build_ManufacturerMk1.Build_ManufacturerMk1'));
 
 	TUniquePtr<FHttpServerResponse> response = FHttpServerResponse::Create(UFRM_Factory::getFactory(World, Buildable), TEXT("application/json"));
 	OnComplete(MoveTemp(response));
