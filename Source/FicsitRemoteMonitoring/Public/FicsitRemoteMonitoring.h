@@ -33,7 +33,7 @@ private:
 public:
 
 	AFicsitRemoteMonitoring();
-	~AFicsitRemoteMonitoring();
+	virtual ~AFicsitRemoteMonitoring();
 
 	/** Get the subsystem in the current world, can be nullptr, e.g. on game ending (destroy) or game startup. */
 	static AFicsitRemoteMonitoring* Get(UWorld* world);
@@ -58,9 +58,11 @@ public:
 
 	void SerialListen();
 
+	UPROPERTY()
+	UHttpServer* HttpServer;
+
 protected:
 	virtual void BeginPlay() override;
 	//virtual void Tick(DeltaTime) override;
 
 };
-
