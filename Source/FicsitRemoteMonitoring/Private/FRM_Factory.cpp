@@ -134,7 +134,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 
 		AFGBuildableHubTerminal* HubTerminal = Cast<AFGBuildableHubTerminal>(Buildable);
 		TSharedPtr<FJsonObject> JHubTerminal;
-
+		TSubclassOf<UFGSchematic> ActiveSchematic = SchematicManager->GetActiveSchematic();
+		FString SchematicName = UFGSchematic::GetSchematicDisplayName(ActiveSchematic).ToString();
 		AFGBuildableTradingPost* TradingPost = HubTerminal->GetTradingPost();
 
 		JHubTerminal->Values.Add("Name", MakeShared<FJsonValueString>(HubTerminal->mDisplayName.ToString()));
@@ -142,7 +143,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 		JHubTerminal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(HubTerminal))));
 		JHubTerminal->Values.Add("HUBLevel", MakeShared<FJsonValueNumber>(TradingPost->GetTradingPostLevel()));
 		JHubTerminal->Values.Add("ShipDock", MakeShared<FJsonValueBoolean>(SchematicManager->IsShipAtTradingPost()));
-		JHubTerminal->Values.Add("SchName", MakeShared<FJsonValueString>(SchematicManager->GetActiveSchematic()->GetDisplayNameText().ToString()));
+		JHubTerminal->Values.Add("SchName", MakeShared<FJsonValueString>(SchematicName));
 		JHubTerminal->Values.Add("ShipReturn", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(SchematicManager->GetTimeUntilShipReturn())));
 		JHubTerminal->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(HubTerminal), HubTerminal->mDisplayName.ToString(), HubTerminal->mDisplayName.ToString())));
 
