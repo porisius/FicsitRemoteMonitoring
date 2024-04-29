@@ -93,10 +93,28 @@ public:
 			FHttpRequest  Request (&Req);
 			FHttpResponse Response(&Res);
 
+			std::mutex				LocalMutex;
+			std::condition_variable LocalWaiter;
+
+			Response.Internal->SetupWaiter(&LocalWaiter);
+
 			AsyncTask(ENamedThreads::GameThread, [Callback, Request, Response]() mutable -> void
 			{
 				Callback.ExecuteIfBound(Request, Response);
 			});
+
+			if (Response.Internal->IsValid())
+			{
+				std::unique_lock<std::mutex>	Lock(LocalMutex);
+
+				const auto WaitUntil = std::chrono::steady_clock().now() + std::chrono::seconds(60);
+				const std::cv_status Status = LocalWaiter.wait_until(Lock, WaitUntil);
+
+				if (Status == std::cv_status::timeout)
+				{
+					UE_LOG(LogHttpServer, Warning, TEXT("Reached timeout of 60 seconds for HTTP Request.");
+				}
+			}
 
 			Response.Internal->Invalidate();
 			Request .Internal->Invalidate();
@@ -107,6 +125,7 @@ public:
 UHttpServer::UHttpServer()
 	: Super()
 	, Server(MakeShared<httplib::Server, ESPMode::ThreadSafe>())
+	, MaxSecondWaitTimeout(60.f)
 {
 }
 
@@ -199,14 +218,22 @@ TMap<FString, FString> UHttpServer::GetDefaultHeaders()
 
 void FHttpResponse::ReplyJSON(const FString& Json, const FString& MimeType)
 {
+	UE_LOG(LogHttpServer, Log, TEXT("ReplyJson: %s "), *Json);
+
+	const TMap<FString, FString>& DefaultHeaders = UHttpServer::GetDefaultHeaders();
+	httplib::Headers Headers;
+
+	for (const auto& Header : DefaultHeaders)
+	{
+		Headers.insert({ TCHAR_TO_UTF8(*Header.Key), TCHAR_TO_UTF8(*Header.Value) });
+	}
+
 	START_INTERNAL_SYNCHRONIZED(httplib::Response & Response);
 
-	Response.set_content(TCHAR_TO_UTF8(*Json), TCHAR_TO_UTF8(TEXT("application/json")));
-	Response.status = 200;
-
+	Response.body = TCHAR_TO_UTF8(*Json);
+	Response.set_content(Response.body, "application/json");
+	
 	END_INTERNAL_SYNCHRONIZED();
-
-	Internal->Invalidate();
 }
 
 void FHttpResponse::getCoffee()
@@ -216,20 +243,32 @@ void FHttpResponse::getCoffee()
 						"#PraiseAlpaca"
 						"#BlameSimon");
 
+	UE_LOG(LogHttpServer, Log, TEXT("Easter Egg: %s "), *noCoffee);
+
+	const TMap<FString, FString>& DefaultHeaders = UHttpServer::GetDefaultHeaders();
+	httplib::Headers Headers;
+
+	for (const auto& Header : DefaultHeaders)
+	{
+		Headers.insert({ TCHAR_TO_UTF8(*Header.Key), TCHAR_TO_UTF8(*Header.Value) });
+	}
+
 	START_INTERNAL_SYNCHRONIZED(httplib::Response & Response);
 
+	Response.body = TCHAR_TO_UTF8(*noCoffee);
 	Response.reason = TCHAR_TO_UTF8(TEXT("Reason: Am Teapot"));
 	Response.status = 418;
 	Response.set_content(TCHAR_TO_UTF8(*noCoffee), TCHAR_TO_UTF8(TEXT("text/html")));
 
 	END_INTERNAL_SYNCHRONIZED();
-
-	Internal->Invalidate();
 	
 }
 
 void FHttpResponse::Redirect(const FString& Location)
 {
+
+	UE_LOG(LogHttpServer, Log, TEXT("Location Redirection: %s"), *Location);
+
 	START_INTERNAL_SYNCHRONIZED(httplib::Response & Response);
 
 	Response.status = 308;
@@ -237,6 +276,10 @@ void FHttpResponse::Redirect(const FString& Location)
 
 	END_INTERNAL_SYNCHRONIZED();
 
+}
+
+void FHttpResponse::Send()
+{
 	Internal->Invalidate();
 }
 
@@ -292,16 +335,6 @@ FHttpResponse& FHttpResponse::operator=(FHttpResponse&& Other)
 {
 	Internal = MoveTemp(Other.Internal);
 	return *this;
-}
-
-AFicsitRemoteMonitoring::AFicsitRemoteMonitoring() : AModSubsystem()
-{
-
-}
-
-AFicsitRemoteMonitoring::~AFicsitRemoteMonitoring()
-{
-
 }
 
 static FHttpRouteSetter GetSetterForVerb(const EHttpServerVerb& Verb)

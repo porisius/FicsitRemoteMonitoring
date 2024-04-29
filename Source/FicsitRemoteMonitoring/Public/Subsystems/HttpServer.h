@@ -109,7 +109,7 @@ private:
 public:
 
 	UHttpServer();
-	~UHttpServer();
+	virtual ~UHttpServer();
 
 	static UHttpServer* CreateHttpServer();
 	static TMap<FString, FString> GetDefaultHeaders();
@@ -127,4 +127,5 @@ protected:
 
 private:
 	FThreadPtr Thread;
+	float MaxSecondWaitTimeout;
 };
