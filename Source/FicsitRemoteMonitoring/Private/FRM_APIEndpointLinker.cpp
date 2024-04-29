@@ -2,7 +2,7 @@
 
 #include "FRM_APIEndpointLinker.h"
 
-TArray<TSharedPtr<FJsonValue>> API_Endpoint(UObject* WorldContext, FString APICall) 
+TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint_String(UObject* WorldContext, FString APICall)
 {
 	TArray<TSharedPtr<FJsonValue>> Json;
 
@@ -10,7 +10,7 @@ TArray<TSharedPtr<FJsonValue>> API_Endpoint(UObject* WorldContext, FString APICa
 	return Json;
 }
 
-TArray<TSharedPtr<FJsonValue>> API_Endpoint(UObject* WorldContext, const EAPIEndpoints APICall)
+TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint(UObject* WorldContext, const EAPIEndpoints APICall)
 {
 	TArray<TSharedPtr<FJsonValue>> Json;
 

@@ -1,5 +1,4 @@
 #include "FicsitRemoteMonitoring.h"
-#include <ArduinoKitBP.h>
 
 AFicsitRemoteMonitoring* AFicsitRemoteMonitoring::Get(UWorld* WorldContext)
 {
@@ -20,27 +19,39 @@ void AFicsitRemoteMonitoring::BeginPlay()
 	Super::BeginPlay();
 
 	InitHttpService();
-	InitSerialDevice();
+	//InitSerialDevice();
 
 }
 
+AFicsitRemoteMonitoring::AFicsitRemoteMonitoring() : AModSubsystem()
+{
+
+}
+
+AFicsitRemoteMonitoring::~AFicsitRemoteMonitoring()
+{
+
+}
+
+
 void AFicsitRemoteMonitoring::InitHttpService() {
 
-	UHttpServer* HttpServer = UHttpServer::CreateHttpServer();
+	AFicsitRemoteMonitoring::HttpServer = UHttpServer::CreateHttpServer();
 
 	FString ModPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/";
 	FString IconsPath = ModPath + "Icons";
 	FString UIPath;
 
-	auto config = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
-	
+	auto World = GetWorld();
+	auto config = FConfig_HTTPStruct::GetActiveConfig(World);
+
 	if (config.Web_Root.IsEmpty()) {
 		UIPath = ModPath + "www";
 	}
 	else
 	{
 		UIPath = config.Web_Root;
-	}	
+	}
 
 	HttpServer->Mount(TEXT("/"), UIPath);
 	HttpServer->Mount(TEXT("/Icons/"), IconsPath);
@@ -54,24 +65,46 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 	HttpServer->Get(TEXT("/getCoffee"), FHttpServerAPICallback::CreateLambda([](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
 			Response.getCoffee();
+			Response.Send();
 		})
 	);
+
+	for (EAPIEndpoints Endpoint : TEnumRange<EAPIEndpoints>()) {
+
+		FString API = UEnum::GetValueAsName(Endpoint).ToString();
+		API = API.Replace(TEXT("EAPIEndpoints::"), TEXT(""));
+
+		FString URI = "/" + API;
+
+		HttpServer->Get(URI, FHttpServerAPICallback::CreateLambda([World, &Endpoint](const FHttpRequest& Request, FHttpResponse& Response) -> void
+			{
+				TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, Endpoint);
+				FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+				Response.ReplyJSON(Json, TEXT("application/json"));
+				Response.Send();
+			})
+		);
+
+	};
 
 	HttpServer->Get(TEXT("/getDrones"), FHttpServerAPICallback::CreateLambda([](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
 			UWorld* World = GEngine->GameViewport->GetWorld();
 			FString Json = UFRM_Library::APItoJSON(UFRM_Drones::getDrone(World), World);
 			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
 		})
 	);
 
 	HttpServer->Get(TEXT("/getDroneStation"), FHttpServerAPICallback::CreateLambda([](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
 			UWorld* World = GEngine->GameViewport->GetWorld();
-			FString Json = UFRM_Library::APItoJSON(UFRM_Drones::getDroneStation(World), World);
+			FString Json = UFRM_Library::APItoJSON(UFRM_Drones::getDrone(World), World);
 			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
 		})
 	);
+
 
 	FString Listen_IP = config.Listen_IP;
 	int32 Port = config.HTTP_Port;

@@ -7,6 +7,7 @@
 #include "FRM_Production.h"
 #include "FRM_Trains.h"
 #include "FRM_Vehicles.h"
+#include "Misc/EnumRange.h"
 #include "FRM_APIEndpointLinker.generated.h"
 
 UENUM()
@@ -66,7 +67,11 @@ enum class EAPIEndpoints : uint8
 	getFactory,             //Done
 	getGenerators,          //Done
 	getVehicles,            //Done
+
+    Count UMETA(Hidden)
 };
+
+ENUM_RANGE_BY_COUNT(EAPIEndpoints, EAPIEndpoints::Count);
 
 UCLASS()
 class FICSITREMOTEMONITORING_API UAPI_Endpoints : public UBlueprintFunctionLibrary
@@ -75,7 +80,7 @@ class FICSITREMOTEMONITORING_API UAPI_Endpoints : public UBlueprintFunctionLibra
 
 public:
 
-    static TArray<TSharedPtr<FJsonValue>> API_Endpoint(UObject* WorldContext, FString APICall);
+    static TArray<TSharedPtr<FJsonValue>> API_Endpoint_String(UObject* WorldContext, FString APICall);
     static TArray<TSharedPtr<FJsonValue>> API_Endpoint(UObject* WorldContext, EAPIEndpoints APICall);
 
 };
