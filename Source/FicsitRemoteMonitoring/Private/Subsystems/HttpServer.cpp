@@ -112,9 +112,9 @@ public:
 
 				if (Status == std::cv_status::timeout)
 				{
-					UE_LOG(LogHttpServer, Warning, TEXT("Reached timeout of 60 seconds for HTTP Request.");
-				}
-			}
+					UE_LOG(LogHttpServer, Warning, TEXT("Reached timeout of 60 seconds for HTTP Request."));
+				};
+			};
 
 			Response.Internal->Invalidate();
 			Request .Internal->Invalidate();
