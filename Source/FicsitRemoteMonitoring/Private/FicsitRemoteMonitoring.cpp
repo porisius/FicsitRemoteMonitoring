@@ -69,42 +69,464 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 		})
 	);
 
-	for (EAPIEndpoints Endpoint : TEnumRange<EAPIEndpoints>()) {
-
-		FString API = UEnum::GetValueAsName(Endpoint).ToString();
-		API = API.Replace(TEXT("EAPIEndpoints::"), TEXT(""));
-
-		FString URI = "/" + API;
-
-		HttpServer->Get(URI, FHttpServerAPICallback::CreateLambda([World, &Endpoint](const FHttpRequest& Request, FHttpResponse& Response) -> void
-			{
-				TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, Endpoint);
-				FString Json = UFRM_Library::APItoJSON(JSONArray, World);
-				Response.ReplyJSON(Json, TEXT("application/json"));
-				Response.Send();
-			})
-		);
-
-	};
-
-	HttpServer->Get(TEXT("/getDrones"), FHttpServerAPICallback::CreateLambda([](const FHttpRequest& Request, FHttpResponse& Response) -> void
+	HttpServer->Get("/getAssembler", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			UWorld* World = GEngine->GameViewport->GetWorld();
-			FString Json = UFRM_Library::APItoJSON(UFRM_Drones::getDrone(World), World);
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getAssembler);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
 	);
 
-	HttpServer->Get(TEXT("/getDroneStation"), FHttpServerAPICallback::CreateLambda([](const FHttpRequest& Request, FHttpResponse& Response) -> void
+	HttpServer->Get("/getBelts", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			UWorld* World = GEngine->GameViewport->GetWorld();
-			FString Json = UFRM_Library::APItoJSON(UFRM_Drones::getDrone(World), World);
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getBelts);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
 	);
 
+	HttpServer->Get("/getBiomassGenerator", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getBiomassGenerator);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getBlender", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getBlender);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getCoalGenerator", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getCoalGenerator);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getConstructor", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getConstructor);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getDoggo", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getDoggo);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getDrone", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getDrone);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getDroneStation", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getDroneStation);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getDropPod", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getDropPod);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getExplorationSink", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getExplorationSink);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getExplorer", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getExplorer);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getExtractor", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getExtractor);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getFactoryCart", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getFactoryCart);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getFoundry", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getFoundry);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getFuelGenerator", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getFuelGenerator);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getGeothermalGenerator", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getGeothermalGenerator);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getHUBTerminal", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getHUBTerminal);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getManufacturer", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getManufacturer);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getModList", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getModList);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getNuclearGenerator", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getNuclearGenerator);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getParticle", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getParticle);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getPaths", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPaths);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getPipes", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPipes);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getPlayer", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPlayer);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getPower", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPower);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getPowerSlug", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPowerSlug);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getProdStats", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getProdStats);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getRadarTower", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getRadarTower);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getRecipes", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getRecipes);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getRefinery", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getRefinery);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getResourceGeyser", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getResourceGeyser);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getResourceNode", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getResourceNode);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getResourceSink", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getResourceSink);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getResourceWell", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getResourceWell);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getSchematics", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSchematics);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getSinkList", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSinkList);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getSmelter", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSmelter);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getSpaceElevator", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSpaceElevator);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getStorageInv", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getStorageInv);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getSwitches", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSwitches);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getTractor", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTractor);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getTrains", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTrains);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getTrainStation", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTrainStation);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getTruck", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTruck);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getTruckStation", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTruckStation);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getWorldInv", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getWorldInv);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getAll", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getAll);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getFactory", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getFactory);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getGenerators", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getGenerators);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/getVehicles", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getVehicles);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
 
 	FString Listen_IP = config.Listen_IP;
 	int32 Port = config.HTTP_Port;
