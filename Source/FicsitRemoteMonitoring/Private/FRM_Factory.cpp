@@ -4,6 +4,35 @@
 
 #undef GetForm
 
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getModList() {
+
+	UModLoadingLibrary* ModLoadingLibrary = NewObject<UModLoadingLibrary>();
+	TArray<FModInfo> ModInfos = ModLoadingLibrary->GetLoadedMods();
+
+	TArray<TSharedPtr<FJsonValue>> JModInfosArray;
+
+	for (FModInfo ModInfo : ModInfos) {
+
+		TSharedPtr<FJsonObject> JModInfos;
+
+		JModInfos->Values.Add("Name", MakeShared<FJsonValueString>(ModInfo.FriendlyName));
+		JModInfos->Values.Add("SMRName", MakeShared<FJsonValueString>(ModInfo.Name));
+		JModInfos->Values.Add("Version", MakeShared<FJsonValueString>(ModInfo.Version.ToString()));
+		JModInfos->Values.Add("Description", MakeShared<FJsonValueString>(ModInfo.Description));
+		JModInfos->Values.Add("DocsURL", MakeShared<FJsonValueString>(ModInfo.DocsURL));
+		JModInfos->Values.Add("AcceptsAnyRemoteVersion", MakeShared<FJsonValueString>(ModInfo.SupportURL));
+		JModInfos->Values.Add("CreatedBy", MakeShared<FJsonValueString>(ModInfo.CreatedBy));
+		JModInfos->Values.Add("RemoteVersionRange", MakeShared<FJsonValueString>(ModInfo.RemoteVersionRange.ToString()));
+		JModInfos->Values.Add("AcceptsAnyRemoteVersion", MakeShared<FJsonValueBoolean>(ModInfo.bAcceptsAnyRemoteVersion));
+		
+		JModInfosArray.Add(MakeShared<FJsonValueObject>(JModInfos));
+
+	}
+
+	return JModInfosArray;
+
+}
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
 {
 	

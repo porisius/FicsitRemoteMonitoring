@@ -13,6 +13,7 @@
 #include "Buildables\FGBuildableResourceExtractor.h"
 #include "Resources/FGExtractableResourceInterface.h"
 #include "Buildables/FGBuildableStorage.h"
+#include "ModLoading/ModLoadingLibrary.h"
 #include "FGSchematicManager.h"
 #include "FGInventoryLibrary.h"
 #include "FGInventoryComponent.h"
@@ -40,5 +41,6 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getWorldInv(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getDropPod(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getResourceExtractor(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getModList();
 
 };
