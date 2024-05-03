@@ -12,6 +12,10 @@
 #include "Buildables\FGBuildableManufacturerVariablePower.h"
 #include "Buildables\FGBuildableResourceExtractor.h"
 #include "Resources/FGExtractableResourceInterface.h"
+#include "Resources/FGResourceNode.h"
+#include "Resources/FGResourceNodeBase.h"
+#include "Resources/FGResourceNodeFrackingCore.h"
+#include "Resources/FGResourceNodeFrackingSatellite.h"
 #include "Buildables/FGBuildableStorage.h"
 #include "ModLoading/ModLoadingLibrary.h"
 #include "FGSchematicManager.h"
@@ -42,5 +46,6 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getDropPod(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getResourceExtractor(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getModList();
+	static TArray<TSharedPtr<FJsonValue>> getResourceNode(UObject* WorldContext, UClass* ResourceActor);
 
 };

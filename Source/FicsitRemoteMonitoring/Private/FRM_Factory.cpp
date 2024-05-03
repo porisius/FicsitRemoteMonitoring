@@ -448,3 +448,43 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 
 	return JExtractorArray;
 };
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceNode(UObject* WorldContext, UClass* ResourceActor) {
+
+	TArray<AActor*> FoundActors;
+	TArray<TSharedPtr<FJsonValue>> JResourceNodeArray;
+
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), ResourceActor, FoundActors);
+
+	for (AActor* FoundActor : FoundActors) {
+
+		TSharedPtr<FJsonObject> JResourceNode = MakeShared<FJsonObject>();
+
+		AFGResourceNode* ResourceNode = Cast<AFGResourceNode>(FoundActor);
+
+		if (IsValid(ResourceNode)) {
+
+			FString ResourceNodeType;
+
+			switch (ResourceNode->GetResourceNodeType()) {
+				case EResourceNodeType::Geyser: ResourceNodeType = TEXT("Geyser");
+				case EResourceNodeType::FrackingCore: ResourceNodeType = TEXT("Fracking Core");
+				case EResourceNodeType::FrackingSatellite: ResourceNodeType = TEXT("Fracking Satellite");
+				case EResourceNodeType::Node: ResourceNodeType = TEXT("Node");
+			}
+
+			JResourceNode->Values.Add("Name", MakeShared<FJsonValueString>(ResourceNode->GetResourceName().ToString()));
+			JResourceNode->Values.Add("ClassName", MakeShared<FJsonValueString>(ResourceNode->GetClass()->GetName()));
+			JResourceNode->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(ResourceNode))));
+			JResourceNode->Values.Add("EnumPurity", MakeShared<FJsonValueString>(UEnum::GetValueAsString(ResourceNode->GetResoucePurity())));
+			JResourceNode->Values.Add("Purity", MakeShared<FJsonValueString>(ResourceNode->GetResoucePurityText().ToString()));
+			JResourceNode->Values.Add("NodeType", MakeShared<FJsonValueString>(ResourceNodeType));
+			JResourceNode->Values.Add("Exploited", MakeShared<FJsonValueBoolean>(ResourceNode->IsOccupied()));
+			JResourceNode->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(ResourceNode), ResourceNode->GetResourceName().ToString(), TEXT("Resource Node"))));
+
+			JResourceNodeArray.Add(MakeShared<FJsonValueObject>(JResourceNode));
+		}
+	}
+
+	return JResourceNodeArray;
+}
