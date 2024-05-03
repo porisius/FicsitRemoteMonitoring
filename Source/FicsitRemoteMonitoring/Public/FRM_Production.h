@@ -35,4 +35,5 @@ class FICSITREMOTEMONITORING_API UFRM_Production : public UBlueprintFunctionLibr
 public:
 	static TArray<TSharedPtr<FJsonValue>> getProdStats(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getSinkList(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getResourceSink(UObject* WorldContext, EResourceSinkTrack ResourceSinkTrack);
 };

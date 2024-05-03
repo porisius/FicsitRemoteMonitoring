@@ -219,3 +219,41 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getSinkList(UObject* WorldContex
 
 	return JSinkPointsArray;
 }
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Production::getResourceSink(UObject* WorldContext, EResourceSinkTrack ResourceSinkTrack) {
+
+	TArray<TSharedPtr<FJsonValue>> JResourceSinkArray;
+	TSharedPtr<FJsonObject> JResourceSink;
+	FString SinkName;
+
+	AFGResourceSinkSubsystem* ResourceSinkSubsystem = AFGResourceSinkSubsystem::Get(WorldContext);
+
+	switch (ResourceSinkTrack) {
+		case EResourceSinkTrack::RST_Default		: SinkName = "Resource";
+		case EResourceSinkTrack::RST_Exploration	: SinkName = "Exploration";
+	}
+
+	TSharedPtr<FJsonObject> JCoupon;
+	TSubclassOf<UFGItemDescriptor> CouponClass = ResourceSinkSubsystem->GetCouponClass();
+	TArray<TSharedPtr<FJsonValue>> PointHistory;
+	
+	for (int32 PointGraph : ResourceSinkSubsystem->GetGlobalPointHistory(ResourceSinkTrack)) {
+		PointHistory.Add(MakeShared<FJsonValueNumber>(PointGraph));
+	}
+
+	JCoupon->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(CouponClass).ToString()));
+	JCoupon->Values.Add("ClassName", MakeShared<FJsonValueString>(CouponClass->GetName()));
+
+	JResourceSink->Values.Add("Name", MakeShared<FJsonValueString>(SinkName));
+	JResourceSink->Values.Add("ClassName", MakeShared<FJsonValueString>(ResourceSinkSubsystem->GetClass()->GetName()));
+	JResourceSink->Values.Add("CouponType", MakeShared<FJsonValueObject>(JCoupon));
+	JResourceSink->Values.Add("NumCoupon", MakeShared<FJsonValueNumber>(ResourceSinkSubsystem->GetNumCoupons()));
+	JResourceSink->Values.Add("Percent", MakeShared<FJsonValueNumber>(ResourceSinkSubsystem->GetProgressionTowardsNextCoupon(ResourceSinkTrack)));
+	JResourceSink->Values.Add("GraphPoints", MakeShared<FJsonValueArray>(PointHistory));
+	JResourceSink->Values.Add("TotalPoints", MakeShared<FJsonValueNumber>(ResourceSinkSubsystem->GetNumTotalPoints(ResourceSinkTrack)));
+	JResourceSink->Values.Add("PointsToCoupon", MakeShared<FJsonValueNumber>(ResourceSinkSubsystem->GetNumCoupons()));
+
+	JResourceSinkArray.Add(MakeShared<FJsonValueObject>(JResourceSink));
+
+	return JResourceSinkArray;
+}
