@@ -7,6 +7,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogHttpServer, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(LogWSServer, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(LogArduino, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(LogFRMAPI, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogFRMNotification, Log, All);
 
 class FFicsitRemoteMonitoringModule : public FDefaultGameModuleImpl {
 public:

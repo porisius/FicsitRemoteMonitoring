@@ -12,13 +12,16 @@
 #include "Configs/Config_HTTPStruct.h"
 #include "Configs/Config_SerialStruct.h"
 #include "Configs/Config_WebSocketStruct.h"
+#include "Configs/Config_DiscITStruct.h"
 #include "Patching/NativeHookManager.h"
+#include "FGResearchManager.h"
 #include "FRM_APIEndpointLinker.h"
 #include "Subsystems/HttpServer.h"
 #include "Resources/FGItemDescriptor.h"
 #include "FGDropPod.h"
 #include "Subsystem/SubsystemActorManager.h"
 #include "Subsystem/ModSubsystem.h"
+#include "NotificationLoader.h"
 #include "FicsitRemoteMonitoringModule.h"
 #include "FicsitRemoteMonitoring.generated.h"
 
@@ -29,6 +32,7 @@ class FICSITREMOTEMONITORING_API AFicsitRemoteMonitoring : public AModSubsystem
 
 private:
 	friend class UHttpServer;
+	friend class UFGPowerCircuitGroup;
 
 public:
 
@@ -56,10 +60,30 @@ public:
 	void InitHttpService();
 	void InitSerialDevice();
 
+	void InitOutageNotification();
+
 	void SerialListen();
 
 	UPROPERTY()
 	UHttpServer* HttpServer;
+
+	UPROPERTY()
+	TArray<FString> Flavor_Battery;
+
+	UPROPERTY()
+	TArray<FString> Flavor_Doggo;
+
+	UPROPERTY()
+	TArray<FString> Flavor_Player;
+
+	UPROPERTY()
+	TArray<FString> Flavor_Power;
+
+	UPROPERTY()
+	TArray<FString> Flavor_Research;
+
+	UPROPERTY()
+	TArray<FString> Flavor_Train;
 
 protected:
 	virtual void BeginPlay() override;
