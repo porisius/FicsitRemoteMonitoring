@@ -17,7 +17,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getCircuit(UObject* WorldContext)
 
 		TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
 
-		auto CircuitID = Circuit->GetCircuitGroupID();
+		int32 CircuitID = Circuit->GetCircuitGroupID();
 
 		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
 		JCircuit->Values.Add("PowerProduction", MakeShared<FJsonValueNumber>(PowerGroup->mBaseProduction));
@@ -43,7 +43,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 	TArray<AFGBuildable*> Buildables;
 	BuildableSubsystem->GetTypedBuildable(TypedBuildable, Buildables);
-	
+
 	TArray<TSharedPtr<FJsonValue>> JGeneratorArray;
 
 	for (AFGBuildable* Buildable : Buildables) {
