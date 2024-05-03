@@ -13,6 +13,9 @@
 #include "Resources/FGItemDescriptor.h"
 #include "FGRecipe.h"
 #include "FGBlueprintFunctionLibrary.h"
+#include "FGResourceSinkSettings.h"
+#include "FGResourceSinkSubsystem.h"
+#include "Engine/DataTable.h"
 #include "Buildables\FGBuildableResourceExtractor.h"
 #include "Buildables\FGBuildableGenerator.h"
 #include <Buildables/FGBuildableGeneratorFuel.h>
@@ -31,4 +34,5 @@ class FICSITREMOTEMONITORING_API UFRM_Production : public UBlueprintFunctionLibr
 	
 public:
 	static TArray<TSharedPtr<FJsonValue>> getProdStats(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getSinkList(UObject* WorldContext);
 };

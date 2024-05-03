@@ -188,3 +188,34 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 	return JProductionStatsArray;
 
 };
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Production::getSinkList(UObject* WorldContext) {
+
+	TArray<FResourceSinkPointsData*> SinkRows;
+	UDataTable* SinkTable = UFGResourceSinkSettings::GetPointsDataTable();
+
+	//TArray<FName> SinkRowNames = SinkTable->GetRowNames();
+	SinkTable->GetAllRows<FResourceSinkPointsData>("", SinkRows);
+
+	TArray<TSharedPtr<FJsonValue>> JSinkPointsArray;
+
+	for (FResourceSinkPointsData* SinkRow : SinkRows) {
+
+		TSharedPtr<FJsonObject> JSinkRow = MakeShared<FJsonObject>();
+		int32 SinkPoints = SinkRow->Points;
+		int32 SinkOverridden = SinkRow->OverriddenResourceSinkPoints;
+
+		if (SinkPoints == 0 && SinkOverridden == 0) {
+			continue;
+		}
+
+		JSinkRow->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(SinkRow->ItemClass).ToString()));
+		JSinkRow->Values.Add("ClassName", MakeShared<FJsonValueString>(SinkRow->ItemClass.GetDefaultObject()->GetClass()->GetName()));
+		JSinkRow->Values.Add("Points", MakeShared<FJsonValueNumber>(SinkPoints));
+		JSinkRow->Values.Add("PointsOverride", MakeShared<FJsonValueNumber>(SinkOverridden));
+
+		JSinkPointsArray.Add(MakeShared<FJsonValueObject>(JSinkRow));
+	}
+
+	return JSinkPointsArray;
+}
