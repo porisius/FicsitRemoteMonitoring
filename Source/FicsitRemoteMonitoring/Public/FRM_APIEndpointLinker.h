@@ -35,6 +35,7 @@ enum class EAPIEndpoints : uint8
     getManufacturer,        //Done
     getModList,
     getNuclearGenerator,    //Done
+    getPackager,
     getParticle,            //Done
     getPaths,
     getPipes,
