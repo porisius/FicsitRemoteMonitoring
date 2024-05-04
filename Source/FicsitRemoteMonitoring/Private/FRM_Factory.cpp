@@ -556,17 +556,16 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 		};
 
 		TSet<TSubclassOf<UFGItemDescriptor>> FaunaKeys;
-		FloraTMap.GetKeys(FloraKeys);
+		FaunaTMap.GetKeys(FaunaKeys);
 		for (TSubclassOf <UFGItemDescriptor> Fauna : FaunaKeys) {
-			{
-				TSharedPtr<FJsonObject> JFauna = MakeShared<FJsonObject>();
 
-				JFauna->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Fauna).ToString()));
-				JFauna->Values.Add("ClassName", MakeShared<FJsonValueString>(Fauna.GetDefaultObject()->GetClass()->GetName()));
-				JFauna->Values.Add("Amount", MakeShared<FJsonValueNumber>(FaunaTMap.FindRef(Fauna)));
+			TSharedPtr<FJsonObject> JFauna = MakeShared<FJsonObject>();
 
-				JFaunaArray.Add(MakeShared<FJsonValueObject>(JFauna));
-			};
+			JFauna->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Fauna).ToString()));
+			JFauna->Values.Add("ClassName", MakeShared<FJsonValueString>(Fauna.GetDefaultObject()->GetClass()->GetName()));
+			JFauna->Values.Add("Amount", MakeShared<FJsonValueNumber>(FaunaTMap.FindRef(Fauna)));
+
+			JFaunaArray.Add(MakeShared<FJsonValueObject>(JFauna));
 		};
 
 
