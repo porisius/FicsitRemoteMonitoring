@@ -68,7 +68,7 @@ TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint(UObject* WorldContex
 		case EAPIEndpoints::getAll: return Json;
 		case EAPIEndpoints::getFactory: UFRM_Factory::getFactory(WorldContext, AFGBuildableManufacturer::StaticClass());
 		case EAPIEndpoints::getGenerators: return UFRM_Power::getGenerators(WorldContext, AFGBuildableGenerator::StaticClass());
-		case EAPIEndpoints::getVehicles: return UFRM_Vehicles::getVehicles(WorldContext, AFGVehicle::StaticClass());
+		case EAPIEndpoints::getVehicles: return UFRM_Vehicles::getVehicles(WorldContext, AFGWheeledVehicle::StaticClass());
 	}
 
 
