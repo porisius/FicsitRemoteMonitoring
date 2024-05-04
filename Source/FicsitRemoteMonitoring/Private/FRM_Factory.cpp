@@ -589,8 +589,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 		JRadarTower->Values.Add("Name", MakeShared<FJsonValueString>(RadarTower->mDisplayName.ToString()));
 		JRadarTower->Values.Add("ClassName", MakeShared<FJsonValueString>(RadarTower->GetClass()->GetName()));
 		JRadarTower->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(RadarTower))));
-		JRadarTower->Values.Add("RevealRadius", MakeShared<FJsonValueString>(RadarData->GetFogOfWarRevealRadius()));
-		JRadarTower->Values.Add("RevealType", MakeShared<FJsonValueString>(UEnum::GetDisplayValueAsText(RadarData->GetFogOfWarRevealType())));
+		JRadarTower->Values.Add("RevealRadius", MakeShared<FJsonValueNumber>(RadarData->GetFogOfWarRevealRadius()));
+		JRadarTower->Values.Add("RevealType", MakeShared<FJsonValueString>(UEnum::GetDisplayValueAsText(RadarData->GetFogOfWarRevealType()).ToString()));
 		JRadarTower->Values.Add("Fauna", MakeShared<FJsonValueArray>(JFaunaArray));
 		JRadarTower->Values.Add("Signal", MakeShared<FJsonValueArray>(JSignalArray));
 		JRadarTower->Values.Add("Flora", MakeShared<FJsonValueArray>(JFloraArray));
