@@ -507,8 +507,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 		TArray<TSharedPtr<FJsonValue>> JSignalArray;
 		TArray<TSharedPtr<FJsonValue>> JFloraArray;
 
-		TMap<UFGItemDescriptor*, int32> FaunaTMap;
-		TMap<UFGItemDescriptor*, int32> FloraTMap;
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> FaunaTMap;
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> FloraTMap;
 		TArray<TSubclassOf<UFGItemDescriptor>> FaunaArray;
 		TArray<TSubclassOf<UFGItemDescriptor>> FloraArray;
 		TArray<FScanObjectPair> SignalArray;
@@ -519,7 +519,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 
 		for (TSubclassOf<UFGItemDescriptor> Fauna : FaunaArray) {
 
-			auto ItemClass = Fauna.GetDefaultObject();
+			auto ItemClass = Fauna;
 
 			if (FaunaTMap.Contains(ItemClass)) {
 				FaunaTMap.Add(ItemClass) = 1 + FaunaTMap.FindRef(ItemClass);
@@ -532,7 +532,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 
 		for (TSubclassOf<UFGItemDescriptor> Flora : FloraArray) {
 
-			auto ItemClass = Flora.GetDefaultObject();
+			auto ItemClass = Flora;
 
 			if (FloraTMap.Contains(ItemClass)) {
 				FloraTMap.Add(ItemClass) = 1 + FloraTMap.FindRef(ItemClass);
@@ -543,33 +543,30 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 
 		};
 
-		TArray<TSubclassOf<UFGItemDescriptor>> ClassNames;
-		UFGBlueprintFunctionLibrary::GetAllDescriptorsSorted(WorldContext->GetWorld(), ClassNames);
+		TSet<TSubclassOf<UFGItemDescriptor>> FloraKeys;
+		FloraTMap.GetKeys(FloraKeys);
+		for (TSubclassOf <UFGItemDescriptor> Flora : FloraKeys) {
 
-		for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
+			TSharedPtr<FJsonObject> JFlora = MakeShared<FJsonObject>();
 
-			UFGItemDescriptor* Class = ClassName.GetDefaultObject();
+			JFlora->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Flora).ToString()));
+			JFlora->Values.Add("ClassName", MakeShared<FJsonValueString>(Flora.GetDefaultObject()->GetClass()->GetName()));
+			JFlora->Values.Add("Amount", MakeShared<FJsonValueNumber>(FloraTMap.FindRef(Flora)));
 
-			if (FaunaTMap.Contains(Class))
+			JFloraArray.Add(MakeShared<FJsonValueObject>(JFlora));
+		};
+
+		TSet<TSubclassOf<UFGItemDescriptor>> FaunaKeys;
+		FloraTMap.GetKeys(FloraKeys);
+		for (TSubclassOf <UFGItemDescriptor> Fauna : FaunaKeys) {
 			{
 				TSharedPtr<FJsonObject> JFauna = MakeShared<FJsonObject>();
 
-				JFauna->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-				JFauna->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
-				JFauna->Values.Add("Amount", MakeShared<FJsonValueNumber>(FaunaTMap.FindRef(Class)));
+				JFauna->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Fauna).ToString()));
+				JFauna->Values.Add("ClassName", MakeShared<FJsonValueString>(Fauna.GetDefaultObject()->GetClass()->GetName()));
+				JFauna->Values.Add("Amount", MakeShared<FJsonValueNumber>(FaunaTMap.FindRef(Fauna)));
 
 				JFaunaArray.Add(MakeShared<FJsonValueObject>(JFauna));
-			};
-
-			if (FloraTMap.Contains(Class))
-			{
-				TSharedPtr<FJsonObject> JFlora = MakeShared<FJsonObject>();
-
-				JFlora->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-				JFlora->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
-				JFlora->Values.Add("Amount", MakeShared<FJsonValueNumber>(FloraTMap.FindRef(Class)));
-
-				JFloraArray.Add(MakeShared<FJsonValueObject>(JFlora));
 			};
 		};
 
@@ -579,7 +576,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 			TSharedPtr<FJsonObject> JSignal = MakeShared<FJsonObject>();
 
 			JSignal->Values.Add("Name", MakeShared<FJsonValueString>((Signal.ItemDescriptor.GetDefaultObject()->mDisplayName).ToString()));
-			JSignal->Values.Add("ClassName", MakeShared<FJsonValueString>(Signal.ItemDescriptor->GetClass()->GetName()));
+			JSignal->Values.Add("ClassName", MakeShared<FJsonValueString>(Signal.ItemDescriptor->GetDefaultObject()->GetClass()->GetName()));
 			JSignal->Values.Add("Amount", MakeShared<FJsonValueNumber>(Signal.NumActorsFound));
 
 			JSignalArray.Add(MakeShared<FJsonValueObject>(JSignal));
