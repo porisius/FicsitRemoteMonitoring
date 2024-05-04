@@ -387,13 +387,11 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 {
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	TArray<AFGBuildable*> Buildables;
-	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableResourceExtractor")), Buildables);
+	TArray<AFGBuildableResourceExtractor*> Extractors;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableResourceExtractor>(Extractors);
 	TArray<TSharedPtr<FJsonValue>> JExtractorArray;
 
-	for (AFGBuildable* Buildable : Buildables) {
-
-		AFGBuildableResourceExtractor* Extractor = Cast<AFGBuildableResourceExtractor>(Buildable);
+	for (AFGBuildableResourceExtractor* Extractor : Extractors) {
 
 		TSharedPtr<FJsonObject> JExtractor = MakeShared<FJsonObject>();
 		TArray<TSharedPtr<FJsonValue>> JProductArray;
@@ -493,13 +491,14 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 {
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	TArray<AFGBuildable*> Buildables;
-	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableRadioTower")), Buildables);
+
+	TArray<AFGBuildableRadarTower*> RadarTowers;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableRadarTower>(RadarTowers);
+
 	TArray<TSharedPtr<FJsonValue>> JRadarTowerArray;
 
-	for (AFGBuildable* Buildable : Buildables) {
+	for (AFGBuildableRadarTower* RadarTower : RadarTowers) {
 
-		AFGBuildableRadarTower* RadarTower = Cast<AFGBuildableRadarTower>(Buildable);
 		UFGRadarTowerRepresentation* RadarData = RadarTower->GetRadarTowerRepresentation();
 
 		TSharedPtr<FJsonObject> JRadarTower = MakeShared<FJsonObject>();
