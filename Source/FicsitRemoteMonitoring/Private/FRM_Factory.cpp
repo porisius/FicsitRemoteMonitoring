@@ -488,3 +488,117 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceNode(UObject* WorldConte
 
 	return JResourceNodeArray;
 }
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext)
+{
+
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	TArray<AFGBuildable*> Buildables;
+	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableRadioTower")), Buildables);
+	TArray<TSharedPtr<FJsonValue>> JRadarTowerArray;
+
+	for (AFGBuildable* Buildable : Buildables) {
+
+		AFGBuildableRadarTower* RadarTower = Cast<AFGBuildableRadarTower>(Buildable);
+		UFGRadarTowerRepresentation* RadarData = RadarTower->GetRadarTowerRepresentation();
+
+		TSharedPtr<FJsonObject> JRadarTower = MakeShared<FJsonObject>();
+		TArray<TSharedPtr<FJsonValue>> JFaunaArray;
+		TArray<TSharedPtr<FJsonValue>> JSignalArray;
+		TArray<TSharedPtr<FJsonValue>> JFloraArray;
+
+		TMap<UFGItemDescriptor*, int32> FaunaTMap;
+		TMap<UFGItemDescriptor*, int32> FloraTMap;
+		TArray<TSubclassOf<UFGItemDescriptor>> FaunaArray;
+		TArray<TSubclassOf<UFGItemDescriptor>> FloraArray;
+		TArray<FScanObjectPair> SignalArray;
+
+		RadarData->GetFoundFauna(FaunaArray);
+		RadarData->GetFoundFlora(FloraArray);
+		RadarData->GetFoundWeakSignals(SignalArray);
+
+		for (TSubclassOf<UFGItemDescriptor> Fauna : FaunaArray) {
+
+			auto ItemClass = Fauna.GetDefaultObject();
+
+			if (FaunaTMap.Contains(ItemClass)) {
+				FaunaTMap.Add(ItemClass) = 1 + FaunaTMap.FindRef(ItemClass);
+			}
+			else {
+				FaunaTMap.Add(ItemClass) = 1;
+			};
+
+		};
+
+		for (TSubclassOf<UFGItemDescriptor> Flora : FloraArray) {
+
+			auto ItemClass = Flora.GetDefaultObject();
+
+			if (FloraTMap.Contains(ItemClass)) {
+				FloraTMap.Add(ItemClass) = 1 + FloraTMap.FindRef(ItemClass);
+			}
+			else {
+				FloraTMap.Add(ItemClass) = 1;
+			};
+
+		};
+
+		TArray<TSubclassOf<UFGItemDescriptor>> ClassNames;
+		UFGBlueprintFunctionLibrary::GetAllDescriptorsSorted(WorldContext->GetWorld(), ClassNames);
+
+		for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
+
+			UFGItemDescriptor* Class = ClassName.GetDefaultObject();
+
+			if (FaunaTMap.Contains(Class))
+			{
+				TSharedPtr<FJsonObject> JFauna = MakeShared<FJsonObject>();
+
+				JFauna->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
+				JFauna->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+				JFauna->Values.Add("Amount", MakeShared<FJsonValueNumber>(FaunaTMap.FindRef(Class)));
+
+				JFaunaArray.Add(MakeShared<FJsonValueObject>(JFauna));
+			};
+
+			if (FloraTMap.Contains(Class))
+			{
+				TSharedPtr<FJsonObject> JFlora = MakeShared<FJsonObject>();
+
+				JFlora->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
+				JFlora->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+				JFlora->Values.Add("Amount", MakeShared<FJsonValueNumber>(FloraTMap.FindRef(Class)));
+
+				JFloraArray.Add(MakeShared<FJsonValueObject>(JFlora));
+			};
+		};
+
+
+		for (FScanObjectPair Signal : SignalArray) {
+
+			TSharedPtr<FJsonObject> JSignal = MakeShared<FJsonObject>();
+
+			JSignal->Values.Add("Name", MakeShared<FJsonValueString>((Signal.ItemDescriptor.GetDefaultObject()->mDisplayName).ToString()));
+			JSignal->Values.Add("ClassName", MakeShared<FJsonValueString>(Signal.ItemDescriptor->GetClass()->GetName()));
+			JSignal->Values.Add("Amount", MakeShared<FJsonValueNumber>(Signal.NumActorsFound));
+
+			JSignalArray.Add(MakeShared<FJsonValueObject>(JSignal));
+
+		};	
+
+		JRadarTower->Values.Add("Name", MakeShared<FJsonValueString>(RadarTower->mDisplayName.ToString()));
+		JRadarTower->Values.Add("ClassName", MakeShared<FJsonValueString>(RadarTower->GetClass()->GetName()));
+		JRadarTower->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(RadarTower))));
+		JRadarTower->Values.Add("RevealRadius", MakeShared<FJsonValueString>(RadarData->GetFogOfWarRevealRadius()));
+		JRadarTower->Values.Add("RevealType", MakeShared<FJsonValueString>(UEnum::GetDisplayValueAsText(RadarData->GetFogOfWarRevealType())));
+		JRadarTower->Values.Add("Fauna", MakeShared<FJsonValueArray>(JFaunaArray));
+		JRadarTower->Values.Add("Signal", MakeShared<FJsonValueArray>(JSignalArray));
+		JRadarTower->Values.Add("Flora", MakeShared<FJsonValueArray>(JFloraArray));
+		JRadarTower->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(RadarTower), RadarTower->mDisplayName.ToString(), RadarTower->mDisplayName.ToString())));
+
+		JRadarTowerArray.Add(MakeShared<FJsonValueObject>(JRadarTower));
+
+	}
+
+	return JRadarTowerArray;
+}

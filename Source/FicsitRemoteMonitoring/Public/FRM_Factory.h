@@ -5,12 +5,13 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "FGBuildableSubsystem.h"
 #include "FGBlueprintFunctionLibrary.h"
-#include "Buildables\FGBuildableFactory.h"
+#include "Buildables/FGBuildableFactory.h"
 #include "Buildables/FGBuildableHubTerminal.h"
 #include "Buildables/FGBuildableTradingPost.h"
-#include "Buildables\FGBuildableManufacturer.h"
-#include "Buildables\FGBuildableManufacturerVariablePower.h"
-#include "Buildables\FGBuildableResourceExtractor.h"
+#include "Buildables/FGBuildableManufacturer.h"
+#include "Buildables/FGBuildableManufacturerVariablePower.h"
+#include "Buildables/FGBuildableResourceExtractor.h"
+#include "Buildables/FGBuildableRadarTower.h"
 #include "Resources/FGExtractableResourceInterface.h"
 #include "Resources/FGResourceNode.h"
 #include "Resources/FGResourceNodeBase.h"
@@ -47,5 +48,6 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getResourceExtractor(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getModList();
 	static TArray<TSharedPtr<FJsonValue>> getResourceNode(UObject* WorldContext, UClass* ResourceActor);
+	static TArray<TSharedPtr<FJsonValue>> getRadarTower(UObject* WorldContext);
 
 };

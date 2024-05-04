@@ -44,7 +44,7 @@ TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint(UObject* WorldContex
 		case EAPIEndpoints::getPower: return UFRM_Power::getCircuit(WorldContext);
 		case EAPIEndpoints::getPowerSlug: return UFRM_Factory::getPowerSlug(WorldContext);
 		case EAPIEndpoints::getProdStats: return UFRM_Production::getProdStats(WorldContext);
-		case EAPIEndpoints::getRadarTower: return Json;
+		case EAPIEndpoints::getRadarTower: return UFRM_Factory::getRadarTower(WorldContext);
 		case EAPIEndpoints::getRecipes: return Json;
 		case EAPIEndpoints::getRefinery: return UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/ManufacturerMk1/Build_ManufacturerMk1.Build_ManufacturerMk1")));
 		case EAPIEndpoints::getResourceGeyser: return UFRM_Factory::getResourceNode(WorldContext, AFGResourceNodeFrackingCore::StaticClass());
