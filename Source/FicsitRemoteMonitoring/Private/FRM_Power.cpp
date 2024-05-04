@@ -69,7 +69,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 			TSubclassOf<UFGItemDescriptor> Supplemental = GeneratorFuel->GetSupplementalResourceClass();
 
 			JSupplemental->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Supplemental).ToString()));
-			JSupplemental->Values.Add("ClassName", MakeShared<FJsonValueString>(Supplemental->GetClass()->GetName()));
+			JSupplemental->Values.Add("ClassName", MakeShared<FJsonValueString>(Supplemental->GetDefaultObjectName()));
 			JSupplemental->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(GeneratorFuel->GetSupplementalConsumptionRateCurrent() * 60));
 			JSupplemental->Values.Add("MaxConsumed", MakeShared<FJsonValueNumber>(GeneratorFuel->GetSupplementalConsumptionRateCurrent() * 60));
 			JSupplemental->Values.Add("PercentFull", MakeShared<FJsonValueNumber>(GeneratorFuel->GetSupplementalAmount() * 100));
