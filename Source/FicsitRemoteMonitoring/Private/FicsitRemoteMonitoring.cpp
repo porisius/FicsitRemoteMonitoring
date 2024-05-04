@@ -258,6 +258,15 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 		})
 	);
 
+	HttpServer->Get("/getPackager", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPackager);
+			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			Response.ReplyJSON(Json, TEXT("application/json"));
+			Response.Send();
+		})
+	);
+
 	HttpServer->Get("/getParticle", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
 			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getParticle);
