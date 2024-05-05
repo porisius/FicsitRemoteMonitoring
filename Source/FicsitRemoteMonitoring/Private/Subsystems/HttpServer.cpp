@@ -148,6 +148,11 @@ UHttpServer* UHttpServer::CreateHttpServer()
 	return Server;
 }
 
+void UHttpServer::Stop()
+{
+	Server->stop();
+}
+
 UHttpServer* UHttpServer::Get(const FString& Path, FHttpServerAPICallback Callback)
 {
 	UE_LOG(LogHttpServer, Log, TEXT("New APIEndpoint added: { GET, %s }."), *Path);

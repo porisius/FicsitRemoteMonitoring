@@ -120,6 +120,7 @@ public:
 	static void APIEndpoint(UHttpServer* HttpServer, const EHttpServerVerb Verb, const FString& APIEndpoint, FHttpServerAPICallback Callback);
 	bool Mount(const FString& UrlPath, const FString& DiskPath);
 	void Listen(FString Host, const uint16 Port, FHttpServerListenCallback Callback = FHttpServerListenCallback());
+	void Stop();
 	void Redirect(const FString& Location);
 
 protected:
