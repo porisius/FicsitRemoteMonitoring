@@ -71,8 +71,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getAssembler", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getAssembler);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getAssembler);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -80,17 +79,15 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getBelts", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getBelts);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getBelts);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
 	);
 
 	HttpServer->Get("/getBiomassGenerator", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
-		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getBiomassGenerator);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+		{ 
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getBiomassGenerator);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -98,8 +95,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getBlender", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getBlender);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getBlender);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -107,8 +103,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getCoalGenerator", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getCoalGenerator);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getCoalGenerator);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -116,8 +111,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getConstructor", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getConstructor);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getConstructor);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -125,17 +119,15 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getDoggo", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getDoggo);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getDoggo);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
 	);
 
 	HttpServer->Get("/getDrone", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
-		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getDrone);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+		{ 
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getDrone);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -143,8 +135,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getDroneStation", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getDroneStation);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getDroneStation);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -152,8 +143,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getDropPod", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getDropPod);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getDropPod);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -161,8 +151,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getExplorationSink", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getExplorationSink);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getExplorationSink);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -170,8 +159,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getExplorer", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getExplorer);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getExplorer);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -179,8 +167,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getExtractor", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getExtractor);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getExtractor);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -188,8 +175,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getFactoryCart", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getFactoryCart);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getFactoryCart);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -197,8 +183,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getFoundry", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getFoundry);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getFoundry);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -206,8 +191,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getFuelGenerator", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getFuelGenerator);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getFuelGenerator);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -215,8 +199,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getGeothermalGenerator", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getGeothermalGenerator);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getGeothermalGenerator);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -224,8 +207,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getHUBTerminal", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getHUBTerminal);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getHUBTerminal);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -233,8 +215,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getManufacturer", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getManufacturer);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getManufacturer);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -242,8 +223,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getModList", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getModList);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getModList);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -251,8 +231,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getNuclearGenerator", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getNuclearGenerator);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getNuclearGenerator);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -260,8 +239,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getPackager", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPackager);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPackager);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -269,8 +247,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getParticle", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getParticle);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getParticle);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -278,8 +255,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getPaths", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPaths);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPaths);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -287,8 +263,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getPipes", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPipes);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPipes);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -296,8 +271,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getPlayer", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPlayer);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPlayer);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -305,8 +279,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getPower", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPower);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPower);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -314,8 +287,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getPowerSlug", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPowerSlug);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getPowerSlug);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -323,8 +295,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getProdStats", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getProdStats);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getProdStats);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -332,8 +303,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getRadarTower", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getRadarTower);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getRadarTower);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -341,8 +311,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getRecipes", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getRecipes);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getRecipes);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -350,8 +319,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getRefinery", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getRefinery);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getRefinery);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -359,8 +327,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getResourceGeyser", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getResourceGeyser);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getResourceGeyser);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -368,8 +335,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getResourceNode", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getResourceNode);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getResourceNode);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -377,8 +343,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getResourceSink", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getResourceSink);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getResourceSink);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -386,8 +351,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getResourceWell", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getResourceWell);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getResourceWell);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -395,8 +359,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getSchematics", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSchematics);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSchematics);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -404,8 +367,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getSinkList", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSinkList);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSinkList);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -413,8 +375,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getSmelter", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSmelter);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSmelter);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -422,8 +383,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getSpaceElevator", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSpaceElevator);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSpaceElevator);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -431,8 +391,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getStorageInv", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getStorageInv);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getStorageInv);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -440,8 +399,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getSwitches", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSwitches);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getSwitches);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -449,8 +407,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getTractor", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTractor);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTractor);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -458,8 +415,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getTrains", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTrains);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTrains);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -467,8 +423,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getTrainStation", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTrainStation);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTrainStation);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -476,8 +431,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getTruck", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTruck);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTruck);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -485,8 +439,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getTruckStation", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTruckStation);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getTruckStation);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -494,8 +447,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getWorldInv", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getWorldInv);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getWorldInv);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -503,8 +455,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getAll", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getAll);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getAll);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -512,8 +463,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getFactory", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getFactory);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getFactory);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -521,8 +471,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getGenerators", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getGenerators);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getGenerators);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
@@ -530,8 +479,7 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 
 	HttpServer->Get("/getVehicles", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
-			TArray<TSharedPtr<FJsonValue>> JSONArray = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getVehicles);
-			FString Json = UFRM_Library::APItoJSON(JSONArray, World);
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getVehicles);
 			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})

@@ -81,7 +81,10 @@ class FICSITREMOTEMONITORING_API UAPI_Endpoints : public UBlueprintFunctionLibra
 
 public:
 
-    static TArray<TSharedPtr<FJsonValue>> API_Endpoint_String(UObject* WorldContext, FString APICall);
-    static TArray<TSharedPtr<FJsonValue>> API_Endpoint(UObject* WorldContext, EAPIEndpoints APICall);
+   
+    UFUNCTION(BlueprintCallable)
+    static FString API_Endpoint(UObject* WorldContext, EAPIEndpoints APICall);
 
+    static TArray<TSharedPtr<FJsonValue>> getAll(UObject* WorldContext);
+    static TArray<TSharedPtr<FJsonValue>> API_Endpoint_Call(UObject* WorldContext, EAPIEndpoints APICall);
 };
