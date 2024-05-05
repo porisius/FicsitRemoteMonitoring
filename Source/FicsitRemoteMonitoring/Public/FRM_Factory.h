@@ -11,6 +11,7 @@
 #include "Buildables/FGBuildableManufacturer.h"
 #include "Buildables/FGBuildableManufacturerVariablePower.h"
 #include "Buildables/FGBuildableResourceExtractor.h"
+#include "Buildables/FGBuildableSpaceElevator.h"
 #include "Buildables/FGBuildableRadarTower.h"
 #include "Resources/FGExtractableResourceInterface.h"
 #include "Resources/FGResourceNode.h"
@@ -49,5 +50,6 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getModList();
 	static TArray<TSharedPtr<FJsonValue>> getResourceNode(UObject* WorldContext, UClass* ResourceActor);
 	static TArray<TSharedPtr<FJsonValue>> getRadarTower(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getSpaceElevator(UObject* WorldContext);
 
 };

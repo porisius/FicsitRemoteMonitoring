@@ -597,3 +597,81 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 
 	return JRadarTowerArray;
 }
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldContext) {
+
+	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
+
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	TArray<AFGBuildableSpaceElevator*> SpaceElevators;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableSpaceElevator>(SpaceElevators);
+	TArray<TSharedPtr<FJsonValue>> JSpaceElevatorArray;
+
+	for (AFGBuildableSpaceElevator* SpaceElevator : SpaceElevators) {
+
+		TSharedPtr<FJsonObject> JSpaceElevator = MakeShared<FJsonObject>();
+
+		TArray<FInventoryStack> InventoryStacks;
+		SpaceElevator->GetInputInventory()->GetInventoryStacks(InventoryStacks);
+
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> Storage;
+
+		for (FInventoryStack Inventory : InventoryStacks) {
+
+			auto ItemClass = Inventory.Item.GetItemClass();
+			auto Amount = Inventory.NumItems;
+
+			if (Storage.Contains(ItemClass)) {
+				Storage.Add(ItemClass) = Amount + Storage.FindRef(ItemClass);
+			}
+			else {
+				Storage.Add(ItemClass) = Amount;
+			};
+
+		};
+
+		TArray<TSharedPtr<FJsonValue>> JInventoryArray;
+
+		for (const TPair< TSubclassOf<UFGItemDescriptor>, int32> StorageStack : Storage) {
+
+			TSharedPtr<FJsonObject> JInventory = MakeShared<FJsonObject>();
+
+			JInventory->Values.Add("Name", MakeShared<FJsonValueString>((StorageStack.Key.GetDefaultObject()->mDisplayName).ToString()));
+			JInventory->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(StorageStack.Key->GetClass())));
+			JInventory->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageStack.Value));
+
+			JInventoryArray.Add(MakeShared<FJsonValueObject>(JInventory));
+
+		};
+
+		TArray<TSharedPtr<FJsonValue>> JNextPhaseArray;
+		TArray<FItemAmount> NextPhaseCost;
+
+		SpaceElevator->GetNextPhaseCost(NextPhaseCost);
+
+		for (FItemAmount NextPhase : NextPhaseCost) {
+
+			TSharedPtr<FJsonObject> JNextPhase = MakeShared<FJsonObject>();
+
+			JNextPhase->Values.Add("Name", MakeShared<FJsonValueString>((NextPhase.ItemClass.GetDefaultObject()->mDisplayName.ToString())));
+			JNextPhase->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(NextPhase.ItemClass)));
+			JNextPhase->Values.Add("Amount", MakeShared<FJsonValueNumber>(NextPhase.Amount));
+
+			JNextPhaseArray.Add(MakeShared<FJsonValueObject>(JNextPhase));
+
+		};
+
+		JSpaceElevator->Values.Add("Name", MakeShared<FJsonValueString>(SpaceElevator->mDisplayName.ToString()));
+		JSpaceElevator->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(SpaceElevator->GetClass())));
+		JSpaceElevator->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(SpaceElevator)));
+		JSpaceElevator->Values.Add("Inventory", MakeShared<FJsonValueArray>(JInventoryArray));
+		JSpaceElevator->Values.Add("PhaseCost", MakeShared<FJsonValueArray>(JNextPhaseArray));
+		JSpaceElevator->Values.Add("FullyUpgraded", MakeShared<FJsonValueBoolean>(SpaceElevator->IsFullyUpgraded()));
+		JSpaceElevator->Values.Add("UpgradeReady", MakeShared<FJsonValueBoolean>(SpaceElevator->IsReadyToUpgrade()));
+		JSpaceElevator->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(SpaceElevator, SpaceElevator->mDisplayName.ToString(), TEXT("Space Elevator"))));
+
+		JSpaceElevatorArray.Add(MakeShared<FJsonValueObject>(JSpaceElevator));
+	}
+
+	return JSpaceElevatorArray;
+}
