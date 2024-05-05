@@ -5,6 +5,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "FGBuildableSubsystem.h"
 #include "FGBlueprintFunctionLibrary.h"
+#include "Buildables/FGBuildableConveyorBase.h"
+#include "FGFactoryConnectionComponent.h"
 #include "Buildables/FGBuildableFactory.h"
 #include "Buildables/FGBuildableHubTerminal.h"
 #include "Buildables/FGBuildableTradingPost.h"
@@ -40,6 +42,7 @@ class FICSITREMOTEMONITORING_API UFRM_Factory : public UFGBlueprintFunctionLibra
 
 public:
 
+	static TArray<TSharedPtr<FJsonValue>> getBelts(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getFactory(UObject* WorldContext, UClass* TypedBuildable);
 	static TArray<TSharedPtr<FJsonValue>> getHubTerminal(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getPowerSlug(UObject* WorldContext);
@@ -51,5 +54,7 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getResourceNode(UObject* WorldContext, UClass* ResourceActor);
 	static TArray<TSharedPtr<FJsonValue>> getRadarTower(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getSpaceElevator(UObject* WorldContext);
+
+	friend class AFGBuildableConveyorBase;
 
 };

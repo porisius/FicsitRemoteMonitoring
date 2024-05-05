@@ -5,6 +5,37 @@
 
 #undef GetForm
 
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext) {
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+
+	TArray<AFGBuildableConveyorBase*> ConveyorBelts;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableConveyorBase>(ConveyorBelts);
+	TArray<TSharedPtr<FJsonValue>> JConveyorBeltArray;
+
+	for (AFGBuildableConveyorBase* ConveyorBelt : ConveyorBelts) {
+
+		TSharedPtr<FJsonObject> JConveyorBelt;
+		
+		UFGFactoryConnectionComponent* ConnectionZero = ConveyorBelt->GetConnection0();
+		UFGFactoryConnectionComponent* ConnectionOne = ConveyorBelt->GetConnection1();
+
+		JConveyorBelt->Values.Add("Name", MakeShared<FJsonValueString>(ConveyorBelt->mDisplayName.ToString()));
+		JConveyorBelt->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ConveyorBelt->GetClass())));
+		JConveyorBelt->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorFactoryCompXYZ(ConnectionZero)));
+		JConveyorBelt->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
+		JConveyorBelt->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorFactoryCompXYZ(ConnectionOne)));
+		JConveyorBelt->Values.Add("Connected1", MakeShared<FJsonValueBoolean>(ConnectionOne->IsConnected()));
+		JConveyorBelt->Values.Add("Length", MakeShared<FJsonValueNumber>(ConveyorBelt->GetLength()));
+		JConveyorBelt->Values.Add("SPeed", MakeShared<FJsonValueNumber>(ConveyorBelt->GetSpeed()));
+		JConveyorBelt->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(ConveyorBelt), ConveyorBelt->mDisplayName.ToString(), ConveyorBelt->mDisplayName.ToString())));
+
+		JConveyorBeltArray.Add(MakeShared<FJsonValueObject>(JConveyorBelt));
+
+	};
+
+	return JConveyorBeltArray;
+};
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getModList() {
 
 	UModLoadingLibrary* ModLoadingLibrary = NewObject<UModLoadingLibrary>();
