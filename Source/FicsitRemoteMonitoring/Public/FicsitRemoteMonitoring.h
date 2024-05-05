@@ -58,11 +58,11 @@ public:
 	//void WriteSerial(FString* Json);
 
 	void InitHttpService();
+
+	UFUNCTION(BlueprintImplementableEvent)
 	void InitSerialDevice();
 
 	void InitOutageNotification();
-
-	void SerialListen();
 
 	UPROPERTY()
 	UHttpServer* HttpServer;

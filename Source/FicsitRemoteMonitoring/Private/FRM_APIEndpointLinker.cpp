@@ -2,15 +2,26 @@
 
 #include "FRM_APIEndpointLinker.h"
 
-TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint_String(UObject* WorldContext, FString APICall)
+FString UAPI_Endpoints::API_Endpoint(UObject* WorldContext, EAPIEndpoints APICall)
 {
-	TArray<TSharedPtr<FJsonValue>> Json;
+	TArray<TSharedPtr<FJsonValue>> Json = UAPI_Endpoints::API_Endpoint_Call(WorldContext, APICall);
 
+	FString Write;
+	auto config = FConfig_FactoryStruct::GetActiveConfig(WorldContext);
 
-	return Json;
+	if (config.JSONDebugMode) {
+		const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write);
+		FJsonSerializer::Serialize(Json, JsonWriter);
+	}
+	else {
+		const TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+		FJsonSerializer::Serialize(Json, JsonWriter);
+	}
+
+	return Write;
 }
 
-TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint(UObject* WorldContext, const EAPIEndpoints APICall)
+TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint_Call(UObject* WorldContext, const EAPIEndpoints APICall)
 {
 	TArray<TSharedPtr<FJsonValue>> Json;
 

@@ -559,62 +559,6 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 	
 }
 
-void AFicsitRemoteMonitoring::InitSerialDevice() {
-
-	FString SerialMod = "ArduinoKit";
-
-	auto config = FConfig_SerialStruct::GetActiveConfig(GetWorld());
-
-	UModLoadingLibrary* ModLoadingLibrary = NewObject<UModLoadingLibrary>();
-	if ((ModLoadingLibrary->IsModLoaded(SerialMod)) && config.COM_Autostart) {
-		
-
-		FString Port = config.COM_Port;
-		int32 Baud = config.Baud_Rate;
-		int32 Size = config.SerialStackSize;
-
-		bool IsOpened = false;
-
-		//this->OpenSerial(Port, Baud, Size, &IsOpened);
-
-		if (!IsOpened)
-		{
-			UE_LOGFMT(LogArduino, Error, "Unable to open Serial Device on COM Port: {0}, Baud: {1}.", Port, Baud);
-		}
-		else
-		{
-			UE_LOGFMT(LogArduino, Log, "Serial Device Initialized on COM Port: {0}, Baud: {1}.", Port, Baud);
-		};
-
-	};
-}
-
-void AFicsitRemoteMonitoring::SerialListen() {
-
-	/*const bool RS232_Init = UArduinoKitBP::IsOpen();
-
-	if (!RS232_Init) {
-		return;
-	};*/
-
-	//TArray<uint8> SerialBytes = ReadSerial();
-
-	FString SerialString = "";
-	
-	this->ReadSerial(SerialString);
-	
-	/*if (SerialBytes.IsEmpty()) {
-		return;
-	};*/
-
-	//FString SerialString = BytesToString(SerialBytes);
-
-	UKismetStringLibrary::ReplaceInline(SerialString, "\r\n", "", ESearchCase::IgnoreCase);
-
-	TArray<TSharedPtr<FJsonValue>> JSONArray;
-
-}
-
 void AFicsitRemoteMonitoring::InitOutageNotification() {
 
 	auto World = GetWorld();
