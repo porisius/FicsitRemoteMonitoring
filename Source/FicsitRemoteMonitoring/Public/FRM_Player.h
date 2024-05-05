@@ -18,5 +18,6 @@ class FICSITREMOTEMONITORING_API UFRM_Player : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	static TArray<TSharedPtr<FJsonValue>> getPlayer(UObject* WorldContext);	
+	static TArray<TSharedPtr<FJsonValue>> getPlayer(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getDoggo(UObject* WorldContext);
 };

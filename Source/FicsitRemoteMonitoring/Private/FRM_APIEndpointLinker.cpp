@@ -33,7 +33,7 @@ TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint_Call(UObject* WorldC
 		case EAPIEndpoints::getBlender: return UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Blender/Build_Blender.Build_Blender_C")));
 		case EAPIEndpoints::getCoalGenerator: return UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorCoal/Build_GeneratorCoal.Build_GeneratorCoal_C")));
 		case EAPIEndpoints::getConstructor: return UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/ConstructorMk1/Build_ConstructorMk1.Build_ConstructorMk1_C")));
-		case EAPIEndpoints::getDoggo: return Json;
+		case EAPIEndpoints::getDoggo: return UFRM_Player::getDoggo(WorldContext);;
 		case EAPIEndpoints::getDrone: return UFRM_Drones::getDrone(WorldContext);
 		case EAPIEndpoints::getDroneStation: return UFRM_Drones::getDroneStation(WorldContext);
 		case EAPIEndpoints::getDropPod: return UFRM_Factory::getDropPod(WorldContext);

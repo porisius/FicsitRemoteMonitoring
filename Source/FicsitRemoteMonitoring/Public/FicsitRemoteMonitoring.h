@@ -45,6 +45,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void GetDropPodInfo_BIE(const AFGDropPod* Droppod, TSubclassOf<UFGItemDescriptor>& ItemClass, int32& Amount, float& Power);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void GetDoggoInfo_BIE(const AActor* Doggo, FString& DisplayName, TArray<FInventoryStack>& Inventory);
+
 	//UFUNCTION(BlueprintImplementableEvent)
 	//void OpenSerial(const FString ComPort, int32 BaudRate, int32 StackSize, bool& Success);
 
