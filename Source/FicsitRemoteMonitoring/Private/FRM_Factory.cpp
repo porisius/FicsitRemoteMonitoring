@@ -1,5 +1,6 @@
 #include "FRM_Factory.h"
 #include <NiagaraPerfBaseline.h>
+#include <FicsitRemoteMonitoring.h>
 
 
 #undef GetForm
@@ -51,7 +52,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 		TArray<TSharedPtr<FJsonValue>> JProductArray;
 		TArray<TSharedPtr<FJsonValue>> JIngredientsArray;
 
-		UE_LOGFMT(LogFRMAPI, Warning, "Loading FGBuildable {Manufacturer} to get data.", Manufacturer->GetClass()->GetName());
+		UE_LOGFMT(LogFRMAPI, Warning, "Loading FGBuildable {Manufacturer} to get data.", UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetClass()));
 
 		if (IsValid(Manufacturer->GetCurrentRecipe())) {
 			auto CurrentRecipe = Manufacturer->GetCurrentRecipe();
@@ -59,7 +60,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 			auto CurrentPotential = Manufacturer->GetCurrentPotential();
 			auto Productivity = Manufacturer->GetProductivity();
 						
-			UE_LOGFMT(LogFRMAPI, Warning, "Loading FGRecipe {Recipe} to get data.", CurrentRecipe->GetClass()->GetName());
+			UE_LOGFMT(LogFRMAPI, Warning, "Loading FGRecipe {Recipe} to get data.", UKismetSystemLibrary::GetClassDisplayName(CurrentRecipe->GetClass()));
 
 			for (FItemAmount Product : CurrentRecipe.GetDefaultObject()->GetProducts()) {
 				TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
@@ -70,7 +71,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 				auto MaxProd = RecipeAmount * ProdCycle * CurrentPotential;
 
 				JProduct->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Product.ItemClass).ToString()));
-				JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>((Product.ItemClass)->GetDefaultObjectName().ToString()));
+				JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Product.ItemClass)));
 				JProduct->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
 				JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
 				JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
@@ -88,7 +89,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 				auto MaxConsumed = RecipeAmount * ProdCycle * CurrentPotential;
 
 				JIngredients->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Ingredients.ItemClass).ToString()));
-				JIngredients->Values.Add("ClassName", MakeShared<FJsonValueString>((Ingredients.ItemClass)->GetDefaultObjectName().ToString()));
+				JIngredients->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Ingredients.ItemClass)));
 				JIngredients->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
 				JIngredients->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(CurrentConsumed));
 				JIngredients->Values.Add("MaxConsumed", MakeShared<FJsonValueNumber>(MaxConsumed));
@@ -102,15 +103,15 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 			TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
 			TSharedPtr<FJsonObject> JIngredients = MakeShared<FJsonObject>();
 
-			JProduct->Values.Add("Name", MakeShared<FJsonValueString>("Unassigned"));
-			JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>("Unassigned"));
+			JProduct->Values.Add("Name", MakeShared<FJsonValueString>(TEXT("Unassigned")));
+			JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>(TEXT("Unassigned")));
 			JProduct->Values.Add("Amount", MakeShared<FJsonValueNumber>(0));
 			JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(0));
 			JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(0));
 			JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>(0));
 
-			JIngredients->Values.Add("Name", MakeShared<FJsonValueString>("Unassigned"));
-			JIngredients->Values.Add("ClassName", MakeShared<FJsonValueString>("Unassigned"));
+			JIngredients->Values.Add("Name", MakeShared<FJsonValueString>(TEXT("Unassigned")));
+			JIngredients->Values.Add("ClassName", MakeShared<FJsonValueString>(TEXT("Unassigned")));
 			JIngredients->Values.Add("Amount", MakeShared<FJsonValueNumber>(0));
 			JIngredients->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(0));
 			JIngredients->Values.Add("MaxConsumed", MakeShared<FJsonValueNumber>(0));
@@ -131,7 +132,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 		JCircuitArray.Add(MakeShared<FJsonValueObject>(JCircuit));
 
 		JFactory->Values.Add("Name", MakeShared<FJsonValueString>(Manufacturer->mDisplayName.ToString()));
-		JFactory->Values.Add("ClassName", MakeShared<FJsonValueString>(Manufacturer->GetClass()->GetName()));
+		JFactory->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetClass())));
 		JFactory->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Manufacturer))));
 		JFactory->Values.Add("Recipe", MakeShared<FJsonValueString>(UFGRecipe::GetRecipeName(Manufacturer->GetCurrentRecipe()).ToString()));
 		JFactory->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetCurrentRecipe())));
@@ -168,7 +169,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 		AFGBuildableTradingPost* TradingPost = HubTerminal->GetTradingPost();
 
 		JHubTerminal->Values.Add("Name", MakeShared<FJsonValueString>(HubTerminal->mDisplayName.ToString()));
-		JHubTerminal->Values.Add("ClassName", MakeShared<FJsonValueString>(HubTerminal->GetClass()->GetName()));
+		JHubTerminal->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(HubTerminal->GetClass())));
 		JHubTerminal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(HubTerminal))));
 		JHubTerminal->Values.Add("HUBLevel", MakeShared<FJsonValueNumber>(TradingPost->GetTradingPostLevel()));
 		JHubTerminal->Values.Add("ShipDock", MakeShared<FJsonValueBoolean>(SchematicManager->IsShipAtTradingPost()));
@@ -211,7 +212,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPowerSlug(UObject* WorldContext)
 
 		JPowerSlug->Values.Add("ID", MakeShared<FJsonValueNumber>(Index));
 		JPowerSlug->Values.Add("Name", MakeShared<FJsonValueString>(SlugName));
-		JPowerSlug->Values.Add("ClassName", MakeShared<FJsonValueString>(PowerActor->GetClass()->GetName()));
+		JPowerSlug->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(PowerActor->GetClass())));
 		JPowerSlug->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(PowerActor)));
 		JPowerSlug->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(PowerActor), SlugName, "Power Slug")));
 
@@ -226,13 +227,12 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getStorageInv(UObject* WorldContext
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	TArray<AFGBuildable*> Buildables;
-	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableStorage")), Buildables);
+	TArray<AFGBuildableStorage*> StorageContainers;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableStorage>(StorageContainers);
 	TArray<TSharedPtr<FJsonValue>> JStorageArray;
 
-	for (AFGBuildable* Buildable : Buildables) {
+	for (AFGBuildableStorage* StorageContainer : StorageContainers) {
 
-		AFGBuildableStorage* StorageContainer = Cast<AFGBuildableStorage>(Buildable);
 		TSharedPtr<FJsonObject> JStorage = MakeShared<FJsonObject>();
 
 		TArray<FInventoryStack> InventoryStacks;
@@ -261,7 +261,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getStorageInv(UObject* WorldContext
 			TSharedPtr<FJsonObject> JInventory = MakeShared<FJsonObject>();
 
 			JInventory->Values.Add("Name", MakeShared<FJsonValueString>((StorageStack.Key.GetDefaultObject()->mDisplayName).ToString()));
-			JInventory->Values.Add("ClassName", MakeShared<FJsonValueString>(StorageStack.Key->GetClass()->GetName()));
+			JInventory->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(StorageStack.Key->GetClass())));
 			JInventory->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageStack.Value));
 
 			JInventoryArray.Add(MakeShared<FJsonValueObject>(JInventory));
@@ -269,10 +269,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getStorageInv(UObject* WorldContext
 		};
 
 		JStorage->Values.Add("Name", MakeShared<FJsonValueString>(StorageContainer->mDisplayName.ToString()));
-		JStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(StorageContainer->GetClass()->GetName()));
+		JStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(StorageContainer->GetClass())));
 		JStorage->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(StorageContainer)));
 		JStorage->Values.Add("Inventory", MakeShared<FJsonValueArray>(JInventoryArray));
-		JStorage->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(StorageContainer, StorageContainer->mDisplayName.ToString(), "Storage Container")));
+		JStorage->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(StorageContainer, StorageContainer->mDisplayName.ToString(), TEXT("Storage Container"))));
 
 		JStorageArray.Add(MakeShared<FJsonValueObject>(JStorage));
 
@@ -353,7 +353,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext) {
 		int32 ItemAmount = -1;
 		float PowerRequired = 0;
 
-		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(DropPod->GetWorld());
+		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
 		fgcheck(ModSubsystem);
 		
 		ModSubsystem->GetDropPodInfo_BIE(DropPod, ItemClass, ItemAmount, PowerRequired);
@@ -363,7 +363,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext) {
 
 		if (ItemAmount > 0) {
 			JItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
-			JItemClass = ItemClass->GetClass()->GetName();
+			JItemClass = UKismetSystemLibrary::GetClassDisplayName(ItemClass);
 		};
 
 		JDropPod->Values.Add("ID", MakeShared<FJsonValueString>(DropPod->GetName()));
@@ -472,7 +472,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceNode(UObject* WorldConte
 			}
 
 			JResourceNode->Values.Add("Name", MakeShared<FJsonValueString>(ResourceNode->GetResourceName().ToString()));
-			JResourceNode->Values.Add("ClassName", MakeShared<FJsonValueString>(ResourceNode->GetClass()->GetName()));
+			JResourceNode->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ResourceNode->GetClass())));
 			JResourceNode->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(ResourceNode))));
 			JResourceNode->Values.Add("EnumPurity", MakeShared<FJsonValueString>(UEnum::GetValueAsString(ResourceNode->GetResoucePurity())));
 			JResourceNode->Values.Add("Purity", MakeShared<FJsonValueString>(ResourceNode->GetResoucePurityText().ToString()));
@@ -549,7 +549,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 			TSharedPtr<FJsonObject> JFlora = MakeShared<FJsonObject>();
 
 			JFlora->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Flora).ToString()));
-			JFlora->Values.Add("ClassName", MakeShared<FJsonValueString>(Flora.GetDefaultObject()->GetClass()->GetName()));
+			JFlora->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Flora)));
 			JFlora->Values.Add("Amount", MakeShared<FJsonValueNumber>(FloraTMap.FindRef(Flora)));
 
 			JFloraArray.Add(MakeShared<FJsonValueObject>(JFlora));
@@ -562,7 +562,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 			TSharedPtr<FJsonObject> JFauna = MakeShared<FJsonObject>();
 
 			JFauna->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Fauna).ToString()));
-			JFauna->Values.Add("ClassName", MakeShared<FJsonValueString>(Fauna.GetDefaultObject()->GetClass()->GetName()));
+			JFauna->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Fauna)));
 			JFauna->Values.Add("Amount", MakeShared<FJsonValueNumber>(FaunaTMap.FindRef(Fauna)));
 
 			JFaunaArray.Add(MakeShared<FJsonValueObject>(JFauna));
@@ -574,7 +574,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 			TSharedPtr<FJsonObject> JSignal = MakeShared<FJsonObject>();
 
 			JSignal->Values.Add("Name", MakeShared<FJsonValueString>((Signal.ItemDescriptor.GetDefaultObject()->mDisplayName).ToString()));
-			JSignal->Values.Add("ClassName", MakeShared<FJsonValueString>(Signal.ItemDescriptor->GetDefaultObject()->GetClass()->GetName()));
+			JSignal->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Signal.ItemDescriptor)));
 			JSignal->Values.Add("Amount", MakeShared<FJsonValueNumber>(Signal.NumActorsFound));
 
 			JSignalArray.Add(MakeShared<FJsonValueObject>(JSignal));
@@ -582,7 +582,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 		};	
 
 		JRadarTower->Values.Add("Name", MakeShared<FJsonValueString>(RadarTower->mDisplayName.ToString()));
-		JRadarTower->Values.Add("ClassName", MakeShared<FJsonValueString>(RadarTower->GetClass()->GetName()));
+		JRadarTower->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(RadarTower->GetClass())));
 		JRadarTower->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(RadarTower))));
 		JRadarTower->Values.Add("RevealRadius", MakeShared<FJsonValueNumber>(RadarData->GetFogOfWarRevealRadius()));
 		JRadarTower->Values.Add("RevealType", MakeShared<FJsonValueString>(UEnum::GetDisplayValueAsText(RadarData->GetFogOfWarRevealType()).ToString()));

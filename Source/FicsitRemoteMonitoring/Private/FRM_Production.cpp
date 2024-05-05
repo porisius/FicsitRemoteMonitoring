@@ -210,7 +210,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getSinkList(UObject* WorldContex
 		}
 
 		JSinkRow->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(SinkRow->ItemClass).ToString()));
-		JSinkRow->Values.Add("ClassName", MakeShared<FJsonValueString>(SinkRow->ItemClass.GetDefaultObject()->GetClass()->GetName()));
+		JSinkRow->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(SinkRow->ItemClass->GetClass())));
 		JSinkRow->Values.Add("Points", MakeShared<FJsonValueNumber>(SinkPoints));
 		JSinkRow->Values.Add("PointsOverride", MakeShared<FJsonValueNumber>(SinkOverridden));
 
@@ -242,10 +242,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getResourceSink(UObject* WorldCo
 	}
 
 	JCoupon->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(CouponClass).ToString()));
-	JCoupon->Values.Add("ClassName", MakeShared<FJsonValueString>(CouponClass->GetName()));
+	JCoupon->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(CouponClass)));
 
 	JResourceSink->Values.Add("Name", MakeShared<FJsonValueString>(SinkName));
-	JResourceSink->Values.Add("ClassName", MakeShared<FJsonValueString>(ResourceSinkSubsystem->GetClass()->GetName()));
+	JResourceSink->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ResourceSinkSubsystem->GetClass())));
 	JResourceSink->Values.Add("CouponType", MakeShared<FJsonValueObject>(JCoupon));
 	JResourceSink->Values.Add("NumCoupon", MakeShared<FJsonValueNumber>(ResourceSinkSubsystem->GetNumCoupons()));
 	JResourceSink->Values.Add("Percent", MakeShared<FJsonValueNumber>(ResourceSinkSubsystem->GetProgressionTowardsNextCoupon(ResourceSinkTrack)));

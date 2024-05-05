@@ -69,7 +69,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 			TSubclassOf<UFGItemDescriptor> Supplemental = GeneratorFuel->GetSupplementalResourceClass();
 
 			JSupplemental->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Supplemental).ToString()));
-			JSupplemental->Values.Add("ClassName", MakeShared<FJsonValueString>(Supplemental->GetDefaultObjectName().ToString()));
+			JSupplemental->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Supplemental->GetClass())));
 			JSupplemental->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(GeneratorFuel->GetSupplementalConsumptionRateCurrent() * 60));
 			JSupplemental->Values.Add("MaxConsumed", MakeShared<FJsonValueNumber>(GeneratorFuel->GetSupplementalConsumptionRateCurrent() * 60));
 			JSupplemental->Values.Add("PercentFull", MakeShared<FJsonValueNumber>(GeneratorFuel->GetSupplementalAmount() * 100));
@@ -85,7 +85,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 				auto EnergyValue = UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetEnergyValue(FuelClass), UFGItemDescriptor::GetForm(FuelClass));
 
 				JFuel->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(FuelClass).ToString()));
-				JFuel->Values.Add("ClassName", MakeShared<FJsonValueString>((FuelClass)->GetDefaultObjectName().ToString()));
+				JFuel->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(FuelClass->GetClass())));
 				JFuel->Values.Add("Amount", MakeShared<FJsonValueNumber>(EnergyValue));
 
 				JFuelArray.Add(MakeShared<FJsonValueObject>(JFuel));
@@ -161,7 +161,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 		bool IsFullBlast = PowerInfo->IsFullBlast();
 
 		JGenerator->Values.Add("Name", MakeShared<FJsonValueString>(Generator->mDisplayName.ToString()));
-		JGenerator->Values.Add("ClassName", MakeShared<FJsonValueString>(Generator->GetClass()->GetName()));
+		JGenerator->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Generator->GetClass())));
 		JGenerator->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Generator))));
 		JGenerator->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
 		JGenerator->Values.Add("BaseProd", MakeShared<FJsonValueNumber>(Generator->GetPowerProductionCapacity()));

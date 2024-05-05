@@ -185,7 +185,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 						TSharedPtr<FJsonObject> JVehicleFuel = MakeShared<FJsonObject>();
 
 						JVehicleFuel->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-						JVehicleFuel->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+						JVehicleFuel->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ClassName->GetClass())));
 						JVehicleFuel->Values.Add("Amount", MakeShared<FJsonValueNumber>(FuelPetroInventory.FindRef(ClassName)));
 
 						JVehicleFuelArray.Add(MakeShared<FJsonValueObject>(JVehicleFuel));
@@ -229,7 +229,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 						TSharedPtr<FJsonObject> JVehicleStorage = MakeShared<FJsonObject>();
 
 						JVehicleStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-						JVehicleStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+						JVehicleStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ClassName->GetClass())));
 						JVehicleStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageInventory.FindRef(ClassName)));
 
 						JVehicleStorageArray.Add(MakeShared<FJsonValueObject>(JVehicleStorage));
@@ -271,7 +271,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 
 			JVehicle->Values.Add("ID", MakeShared<FJsonValueString>(Vehicle->GetName()));
 			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(Vehicle->mDisplayName.ToString()));
-			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(Vehicle->GetClass()->GetName()));
+			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Vehicle->GetClass())));
 			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Vehicle)));
 			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>("PathName"));
 			JVehicle->Values.Add("Status", MakeShared<FJsonValueString>(FormString));

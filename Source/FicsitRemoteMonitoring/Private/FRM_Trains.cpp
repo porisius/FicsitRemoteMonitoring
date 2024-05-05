@@ -198,7 +198,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 				TSharedPtr<FJsonObject> JInventory = MakeShared<FJsonObject>();
 
 				JInventory->Values.Add("Name", MakeShared<FJsonValueString>((StorageStack.Key.GetDefaultObject()->mDisplayName).ToString()));
-				JInventory->Values.Add("ClassName", MakeShared<FJsonValueString>(StorageStack.Key->GetClass()->GetName()));
+				JInventory->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(StorageStack.Key->GetClass())));
 				JInventory->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageStack.Value));
 
 				JInventoryArray.Add(MakeShared<FJsonValueObject>(JInventory));
@@ -206,7 +206,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 			};
 
 			JTrainPlatform->Values.Add("Name", MakeShared<FJsonValueString>(TrainPlatformCargo->mDisplayName.ToString()));
-			JTrainPlatform->Values.Add("ClassName", MakeShared<FJsonValueString>(TrainPlatformCargo->GetClass()->GetName()));
+			JTrainPlatform->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(TrainPlatformCargo->GetClass())));
 			JTrainPlatform->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(TrainPlatformCargo)));
 			JTrainPlatform->Values.Add("PowerConsumption", MakeShared<FJsonValueNumber>(CargoPowerConsumption));
 			JTrainPlatform->Values.Add("TransferRate", MakeShared<FJsonValueNumber>(CargoTransferRate));
@@ -221,10 +221,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 		}
 
 		float CircuitID = TrainStation->GetStation()->GetPowerInfo()->GetActualConsumption();
-		//float PowerConsumption = JTrainStation->GetPowerInfo()->GetActualConsumption();
+		//float PowerConsumption = TrainStation->GetStation()->GetPowerInfo()->GetActualConsumption();
 
 		JTrainStation->Values.Add("Name", MakeShared<FJsonValueString>(TrainStation->GetStationName().ToString()));
-		JTrainStation->Values.Add("ClassName", MakeShared<FJsonValueString>(TrainStation->GetClass()->GetName()));
+		JTrainStation->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(TrainStation->GetClass())));
 		JTrainStation->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(TrainStation)));
 		JTrainStation->Values.Add("PowerConsumption", MakeShared<FJsonValueNumber>(PowerConsumption));
 		JTrainStation->Values.Add("TransferRate", MakeShared<FJsonValueNumber>(TransferRate));

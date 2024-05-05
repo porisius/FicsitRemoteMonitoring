@@ -47,7 +47,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 				TSharedPtr<FJsonObject> JBatteryStorage = MakeShared<FJsonObject>();
 
 				JBatteryStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-				JBatteryStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+				JBatteryStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ClassName->GetClass())));
 				JBatteryStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(BatteryInventoryTMap.FindRef(ClassName)));
 
 				JBatteryStorageArray.Add(MakeShared<FJsonValueObject>(JBatteryStorage));
@@ -81,7 +81,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 				TSharedPtr<FJsonObject> JInputStorage = MakeShared<FJsonObject>();
 
 				JInputStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-				JInputStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+				JInputStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ClassName->GetClass())));
 				JInputStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(InputInventory.FindRef(ClassName)));
 
 				JInputStorageArray.Add(MakeShared<FJsonValueObject>(JInputStorage));
@@ -115,7 +115,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 				TSharedPtr<FJsonObject> JInputStorage = MakeShared<FJsonObject>();
 
 				JInputStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-				JInputStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+				JInputStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ClassName->GetClass())));
 				JInputStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(InputInventory.FindRef(ClassName)));
 
 				JInputStorageArray.Add(MakeShared<FJsonValueObject>(JInputStorage));
@@ -151,7 +151,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 		};
 
 		JDroneStation->Values.Add("Name", MakeShared<FJsonValueString>(DroneStation->mDisplayName.ToString()));
-		JDroneStation->Values.Add("ClassName", MakeShared<FJsonValueString>(DroneStation->GetClass()->GetName()));
+		JDroneStation->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(DroneStation->GetClass())));
 		JDroneStation->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(DroneStation)));
 		JDroneStation->Values.Add("InputInventory", MakeShared<FJsonValueArray>(JInputStorageArray));
 		JDroneStation->Values.Add("OutputInventory", MakeShared<FJsonValueArray>(JOutputStorageArray));
@@ -233,7 +233,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDrone(UObject* WorldContext) {
 
 		JDrone->Values.Add("ID", MakeShared<FJsonValueString>(Drone->GetName()));
 		JDrone->Values.Add("Name", MakeShared<FJsonValueString>(Drone->mDisplayName.ToString()));
-		JDrone->Values.Add("ClassName", MakeShared<FJsonValueString>(Drone->GetClass()->GetName()));
+		JDrone->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Drone->GetClass())));
 		JDrone->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Drone)));
 		JDrone->Values.Add("HomeStation", MakeShared<FJsonValueString>((Drone->GetHomeStation()->mDisplayName.ToString())));
 		JDrone->Values.Add("PairedStation", MakeShared<FJsonValueString>(PairedStation));
