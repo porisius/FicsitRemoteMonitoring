@@ -132,35 +132,17 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 			JConnectedStationArray.Add(MakeShared<FJsonValueObject>(JConnectedStation));
 		};
 
-		EDroneStatus Form = StationInfo->GetDroneStatus();
-
 		FString FormString = "Unknown";
-		if (Form == EDroneStatus::EDS_CANNOT_UNLOAD) {
-			FormString = "Cannot Unload";
-		}
-		else if (Form == EDroneStatus::EDS_DOCKED) {
-			FormString = "Docked";
-		}
-		else if (Form == EDroneStatus::EDS_DOCKING) {
-			FormString = "Docking";
-		}
-		else if (Form == EDroneStatus::EDS_EN_ROUTE) {
-			FormString = "En Route";
-		}
-		else if (Form == EDroneStatus::EDS_LOADING) {
-			FormString = "Loading";
-		}
-		else if (Form == EDroneStatus::EDS_NOT_ENOUGH_BATTERIES) {
-			FormString = "Not Enough Batteries";
-		}
-		else if (Form == EDroneStatus::EDS_NO_DRONE) {
-			FormString = "No Drone";
-		}
-		else if (Form == EDroneStatus::EDS_TAKEOFF) {
-			FormString = "Taking Off";
-		}
-		else if (Form == EDroneStatus::EDS_UNLOADING) {
-			FormString = "Unloading";
+		switch (StationInfo->GetDroneStatus()) {
+			case EDroneStatus::EDS_CANNOT_UNLOAD : FormString = "Cannot Unload";
+			case EDroneStatus::EDS_DOCKED: FormString = "Docked";
+			case EDroneStatus::EDS_DOCKING : FormString = "Docking";
+			case EDroneStatus::EDS_EN_ROUTE : FormString = "En Route";
+			case EDroneStatus::EDS_LOADING : FormString = "Loading";
+			case EDroneStatus::EDS_NOT_ENOUGH_BATTERIES : FormString = "Not Enough Batteries";
+			case EDroneStatus::EDS_NO_DRONE : FormString = "No Drone";
+			case EDroneStatus::EDS_TAKEOFF : FormString = "Taking Off";
+			case EDroneStatus::EDS_UNLOADING : FormString = "Unloading";
 		};
 
 		FString PairedStation = "None";
