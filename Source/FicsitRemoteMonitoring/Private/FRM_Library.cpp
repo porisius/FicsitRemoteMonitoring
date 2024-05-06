@@ -44,6 +44,22 @@ TSharedPtr<FJsonObject> UFRM_Library::getActorFactoryCompXYZ(UFGFactoryConnectio
 
 };
 
+TSharedPtr<FJsonObject> UFRM_Library::getActorPipeXYZ(UFGPipeConnectionComponent* BeltPipe) {
+
+	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();
+
+	long double primaryX = BeltPipe->GetRelativeTransform().GetTranslation().X;
+	long double primaryY = BeltPipe->GetRelativeTransform().GetTranslation().Y;
+	long double primaryZ = BeltPipe->GetRelativeTransform().GetTranslation().Z;
+
+	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(primaryX));
+	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(primaryY));
+	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(primaryZ));
+
+	return JLibrary;
+
+};
+
 TSharedPtr<FJsonObject> UFRM_Library::getActorFeaturesJSON(AActor* Actor, FString DisplayName, FString TypeName) {
 
 	TSharedPtr<FJsonObject> JProperties = MakeShared<FJsonObject>();

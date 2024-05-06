@@ -51,7 +51,7 @@ TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint_Call(UObject* WorldC
 		case EAPIEndpoints::getPackager: return UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Packager/Build_Packager.Build_Packager_C")));
 		case EAPIEndpoints::getParticle: return UFRM_Factory::getFactory(WorldContext, AFGBuildableManufacturerVariablePower::StaticClass());
 		case EAPIEndpoints::getPaths: return Json;
-		case EAPIEndpoints::getPipes: return Json;
+		case EAPIEndpoints::getPipes: return UFRM_Factory::getPipes(WorldContext);
 		case EAPIEndpoints::getPlayer: return UFRM_Player::getPlayer(WorldContext);
 		case EAPIEndpoints::getPower: return UFRM_Power::getCircuit(WorldContext);
 		case EAPIEndpoints::getPowerSlug: return UFRM_Factory::getPowerSlug(WorldContext);

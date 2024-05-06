@@ -6,6 +6,8 @@
 #include "FGBuildableSubsystem.h"
 #include "FGBlueprintFunctionLibrary.h"
 #include "Buildables/FGBuildableConveyorBase.h"
+#include "Buildables/FGBuildablePipeline.h"
+#include "FGPipeConnectionComponent.h"
 #include "FGFactoryConnectionComponent.h"
 #include "Buildables/FGBuildableFactory.h"
 #include "Buildables/FGBuildableHubTerminal.h"
@@ -50,6 +52,7 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getWorldInv(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getDropPod(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getResourceExtractor(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getPipes(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getModList();
 	static TArray<TSharedPtr<FJsonValue>> getResourceNode(UObject* WorldContext, UClass* ResourceActor);
 	static TArray<TSharedPtr<FJsonValue>> getRadarTower(UObject* WorldContext);
