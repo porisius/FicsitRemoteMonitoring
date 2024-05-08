@@ -38,9 +38,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext) {
 	return JConveyorBeltArray;
 };
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getModList() {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getModList(UObject* WorldContext) {
 
-	UModLoadingLibrary* ModLoadingLibrary = NewObject<UModLoadingLibrary>();
+	const UGameInstance* GameInstance = WorldContext->GetWorld()->GetGameInstance();
+	UModLoadingLibrary* ModLoadingLibrary = GameInstance->GetSubsystem<UModLoadingLibrary>();
 	TArray<FModInfo> ModInfos = ModLoadingLibrary->GetLoadedMods();
 
 	TArray<TSharedPtr<FJsonValue>> JModInfosArray;
