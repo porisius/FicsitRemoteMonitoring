@@ -2,6 +2,7 @@
 
 
 #include "FRM_Production.h"
+#include <FicsitRemoteMonitoring.h>
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldContext) {
 
@@ -11,13 +12,11 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 	TMap<TSubclassOf<UFGItemDescriptor>, float> TotalProduced;
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	TArray<AFGBuildable*> Buildables;
-	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableManufacturer")), Buildables);
+	TArray<AFGBuildableManufacturer*> Buildables;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableManufacturer>(Buildables);
 
 	// Factory Building Production Stats
-	for (AFGBuildable* Buildable : Buildables) {
-
-		AFGBuildableManufacturer* Manufacturer = Cast<AFGBuildableManufacturer>(Buildable);
+	for (AFGBuildableManufacturer* Manufacturer : Buildables) {
 
 		if (IsValid(Manufacturer->GetCurrentRecipe())) {
 			auto CurrentRecipe = Manufacturer->GetCurrentRecipe();
@@ -63,12 +62,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 		};
 	};
 
-	TArray<AFGBuildable*> ExtractorBuildables;
-	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableResourceExtractor")), ExtractorBuildables);
+	TArray<AFGBuildableResourceExtractor*> ExtractorBuildables;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableResourceExtractor>(ExtractorBuildables);
 	// Resource Building Production Stats
-	for (AFGBuildable* BuildableExtractor : ExtractorBuildables) {
-
-		AFGBuildableResourceExtractor* Extractor = Cast<AFGBuildableResourceExtractor>(BuildableExtractor);
+	for (AFGBuildableResourceExtractor* Extractor : ExtractorBuildables) {
 
 		TScriptInterface<IFGExtractableResourceInterface> ResourceClass = Extractor->GetExtractableResource();
 		TSubclassOf<UFGResourceDescriptor> ItemClass = ResourceClass->GetResourceClass();
@@ -87,12 +84,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 		};
 	};
 
-	TArray<AFGBuildable*> GeneratorBuildables;
-	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableGenerator")), GeneratorBuildables);
+	TArray<AFGBuildableGeneratorFuel*> GeneratorBuildables;
+	BuildableSubsystem->GetTypedBuildable< AFGBuildableGeneratorFuel>(GeneratorBuildables);
 	// Power Generator Building Production Stats
-	for (AFGBuildable* BuildableGenerator : GeneratorBuildables) {
-
-		AFGBuildableGeneratorFuel* Generator = Cast<AFGBuildableGeneratorFuel>(BuildableGenerator);
+	for (AFGBuildableGeneratorFuel* Generator : GeneratorBuildables) {
 
 		auto FuelItemClass = Generator->GetCurrentFuelClass();
 		auto EnergyValue = UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetEnergyValue(FuelItemClass), UFGItemDescriptor::GetForm(FuelItemClass));
@@ -194,7 +189,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getSinkList(UObject* WorldContex
 	TArray<FResourceSinkPointsData*> SinkRows;
 	UDataTable* SinkTable = UFGResourceSinkSettings::GetPointsDataTable();
 
-	//TArray<FName> SinkRowNames = SinkTable->GetRowNames();
 	SinkTable->GetAllRows<FResourceSinkPointsData>("", SinkRows);
 
 	TArray<TSharedPtr<FJsonValue>> JSinkPointsArray;
