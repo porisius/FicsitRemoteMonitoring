@@ -68,7 +68,7 @@ TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint_Call(UObject* WorldC
 		case EAPIEndpoints::getSmelter: return UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/SmelterMk1/Build_SmelterMk1.Build_SmelterMk1_C")));
 		case EAPIEndpoints::getSpaceElevator: return UFRM_Factory::getSpaceElevator(WorldContext);
 		case EAPIEndpoints::getStorageInv: return UFRM_Factory::getStorageInv(WorldContext);
-		case EAPIEndpoints::getSwitches: return Json;
+		case EAPIEndpoints::getSwitches: return UFRM_Power::getSwitches(WorldContext);
 		case EAPIEndpoints::getTractor: return UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Tractor/BP_Tractor.BP_Tractor_C")));
 		case EAPIEndpoints::getTrains: return UFRM_Trains::getTrains(WorldContext);
 		case EAPIEndpoints::getTrainStation: return UFRM_Trains::getTrainStation(WorldContext);

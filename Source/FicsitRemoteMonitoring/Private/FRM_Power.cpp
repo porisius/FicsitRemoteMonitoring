@@ -37,6 +37,40 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getCircuit(UObject* WorldContext)
 	return JCircuitArray;
 };
 
+TArray<TSharedPtr<FJsonValue>> UFRM_Power::getSwitches(UObject* WorldContext)
+{
+
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	TArray<AFGBuildableCircuitSwitch*> PowerSwitches;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableCircuitSwitch>(PowerSwitches);
+
+	TArray<TSharedPtr<FJsonValue>> JSwitchesArray;
+
+	for (AFGBuildableCircuitSwitch* PowerSwitch : PowerSwitches) {
+
+		TSharedPtr<FJsonObject> JSwitches = MakeShared<FJsonObject>();
+
+		UFGCircuitConnectionComponent* ConnectionZero = PowerSwitch->GetConnection0();
+		UFGCircuitConnectionComponent* ConnectionOne = PowerSwitch->GetConnection1();
+
+		JSwitches->Values.Add("Name", MakeShared<FJsonValueString>(PowerSwitch->mDisplayName.ToString()));
+		JSwitches->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(PowerSwitch->GetClass())));
+		JSwitches->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(PowerSwitch)));
+		JSwitches->Values.Add("SwitchTag", MakeShared<FJsonValueString>(PowerSwitch->GetBuildingTag_Implementation()));
+		JSwitches->Values.Add("Connected0", MakeShared<FJsonValueNumber>(ConnectionZero->IsConnected()));
+		JSwitches->Values.Add("IsOn", MakeShared<FJsonValueBoolean>(PowerSwitch->IsSwitchOn()));
+		JSwitches->Values.Add("Connected1", MakeShared<FJsonValueNumber>(ConnectionOne->IsConnected()));
+		JSwitches->Values.Add("Primary", MakeShared<FJsonValueNumber>(ConnectionZero->GetCircuitID()));
+		JSwitches->Values.Add("Secondary", MakeShared<FJsonValueNumber>(ConnectionOne->GetCircuitID()));
+		JSwitches->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(PowerSwitch), PowerSwitch->GetBuildingTag_Implementation(), TEXT("Power Switch"))));
+
+		JSwitchesArray.Add(MakeShared<FJsonValueObject>(JSwitches));
+
+	}
+
+	return JSwitchesArray;
+}
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, UClass* TypedBuildable)
 {
 
