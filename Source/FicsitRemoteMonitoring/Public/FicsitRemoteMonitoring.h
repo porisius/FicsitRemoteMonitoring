@@ -56,6 +56,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void RecipeNames_BIE(TSubclassOf<class UFGRecipe> recipeClass, FString& Name, FString& ClassName, FString& CategoryName);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void CircuitID_BIE(UFGPowerInfoComponent* PowerInfo, TSubclassOf<class UFGBuildingDescriptor> Buildable, int32& CircuitID, float& PowerConsumption, float& MinPower, float& MaxPower, bool& VariblePower);
+
 	//UFUNCTION(BlueprintImplementableEvent)
 	//void OpenSerial(const FString ComPort, int32 BaudRate, int32 StackSize, bool& Success);
 
