@@ -171,7 +171,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 			ProdPerMin.Append("/ min");
 
 			JProductionStats->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-			JProductionStats->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
+			JProductionStats->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ClassName.Get())));
 			JProductionStats->Values.Add("ProdPerMin", MakeShared<FJsonValueString>(ProdPerMin));
 			JProductionStats->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UKismetMathLibrary::SafeDivide(Produced, MaxProduced)))));
 			JProductionStats->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>((100 * (UKismetMathLibrary::SafeDivide(Consumption, MaxConsumption)))));
