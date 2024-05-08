@@ -90,7 +90,7 @@ TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint_Call(UObject* WorldC
 TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::getAll(UObject* WorldContext) {
 
 	TArray<TSharedPtr<FJsonValue>> JsonArray;
-	TSharedPtr<FJsonObject> Json;
+	TSharedPtr<FJsonObject> Json = MakeShared<FJsonObject>();
 	
 	Json->Values.Add("getBelts", MakeShared<FJsonValueArray>(API_Endpoint_Call(WorldContext, EAPIEndpoints::getBelts)));
 	Json->Values.Add("getDrone", MakeShared<FJsonValueArray>(API_Endpoint_Call(WorldContext, EAPIEndpoints::getDrone)));
