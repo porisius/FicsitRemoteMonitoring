@@ -723,15 +723,15 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPipes(UObject* WorldContext) {
 		UFGPipeConnectionComponent* ConnectionZero = Pipe->GetPipeConnection0();
 		UFGPipeConnectionComponent* ConnectionOne = Pipe->GetPipeConnection1();
 
-		JPipe->Values.Add("Name", MakeShared<FJsonValueString>(Pipe->mDisplayName.ToString()));
-		JPipe->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ConveyorBelt->GetClass())));
-		JPipe->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorFactoryCompXYZ(ConnectionZero)));
+		JPipe->Values.Add("Name", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetDisplayName(Pipe)));
+		JPipe->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Pipe->GetClass())));
+		JPipe->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorPipeXYZ(ConnectionZero)));
 		JPipe->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
-		JPipe->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorFactoryCompXYZ(ConnectionOne)));
+		JPipe->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorPipeXYZ(ConnectionOne)));
 		JPipe->Values.Add("Connected1", MakeShared<FJsonValueBoolean>(ConnectionOne->IsConnected()));
 		JPipe->Values.Add("Length", MakeShared<FJsonValueNumber>(Pipe->GetLength()));
 		JPipe->Values.Add("Speed", MakeShared<FJsonValueNumber>(Pipe->GetFlowLimit()));
-		JPipe->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(ConveyorBelt), ConveyorBelt->mDisplayName.ToString(), ConveyorBelt->mDisplayName.ToString())));
+		JPipe->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Pipe), Pipe->mDisplayName.ToString(), Pipe->mDisplayName.ToString())));
 
 		JPipeArray.Add(MakeShared<FJsonValueObject>(JPipe));
 
