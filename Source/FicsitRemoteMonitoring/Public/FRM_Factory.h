@@ -53,7 +53,7 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getDropPod(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getResourceExtractor(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getPipes(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getModList();
+	static TArray<TSharedPtr<FJsonValue>> getModList(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getResourceNode(UObject* WorldContext, UClass* ResourceActor);
 	static TArray<TSharedPtr<FJsonValue>> getRadarTower(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getSpaceElevator(UObject* WorldContext);
