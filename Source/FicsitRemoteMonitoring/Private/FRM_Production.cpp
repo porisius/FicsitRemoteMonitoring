@@ -257,3 +257,207 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getResourceSink(UObject* WorldCo
 
 	return JResourceSinkArray;
 }
+
+TSharedPtr<FJsonObject> UFRM_Production::getRecipe(UObject* WorldContext, TSubclassOf<UFGRecipe> Recipe) {
+	
+	TSharedPtr<FJsonObject> JRecipe = MakeShared<FJsonObject>();
+	
+	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
+	fgcheck(ModSubsystem);
+
+	if (!IsValid(Recipe)) { return JRecipe; };
+
+	float ManualDuration = UFGRecipe::GetManualManufacturingDuration(Recipe);
+	float FactoryDuration = UFGRecipe::GetManufacturingDuration(Recipe);
+
+	TArray<TSharedPtr<FJsonValue>> JEventsArray;
+
+	for (EEvents Event : UFGRecipe::GetRelevantEvents(Recipe)) {
+
+		FString EventString;
+
+		switch (Event) {
+		case EEvents::EV_Birthday: EventString = TEXT("Satisfactory Birthday");
+		case EEvents::EV_Christmas: EventString = TEXT("Christmas");
+		case EEvents::EV_CSSBirthday: EventString = TEXT("Coffee Stain Studios Birthday");
+		case EEvents::EV_FirstOfApril: EventString = TEXT("April Fools Day");
+		case EEvents::EV_None: EventString = TEXT("");
+		}
+
+		JEventsArray.Add(MakeShared<FJsonValueString>(EventString));
+	}
+
+	TArray<TSharedPtr<FJsonValue>> JIngredientArray;
+
+	for (FItemAmount Ingredient : UFGRecipe::GetIngredients(Recipe)) {
+		TSharedPtr<FJsonObject> JIngredient = MakeShared<FJsonObject>();
+
+		auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Ingredient.Amount, UFGItemDescriptor::GetForm(Ingredient.ItemClass));
+		auto ManualRate = (UKismetMathLibrary::SafeDivide(60, ManualDuration)) * RecipeAmount;
+		auto FactoryRate = (UKismetMathLibrary::SafeDivide(60, FactoryDuration)) * RecipeAmount;
+
+		JIngredient->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Ingredient.ItemClass).ToString()));
+		JIngredient->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Ingredient.ItemClass)));
+		JIngredient->Values.Add("Amount", MakeShared<FJsonValueNumber>(RecipeAmount));
+		JIngredient->Values.Add("ManualRate", MakeShared<FJsonValueNumber>(ManualRate));
+		JIngredient->Values.Add("FactoryRate", MakeShared<FJsonValueNumber>(FactoryRate));
+
+		JIngredientArray.Add(MakeShared<FJsonValueObject>(JIngredient));
+	};
+
+	TArray<TSharedPtr<FJsonValue>> JProductArray;
+
+	for (FItemAmount Product : UFGRecipe::GetProducts(Recipe)) {
+		TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
+
+		auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Product.Amount, UFGItemDescriptor::GetForm(Product.ItemClass));
+		auto ManualRate = (UKismetMathLibrary::SafeDivide(60, ManualDuration)) * RecipeAmount;
+		auto FactoryRate = (UKismetMathLibrary::SafeDivide(60, FactoryDuration)) * RecipeAmount;
+
+		JProduct->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Product.ItemClass).ToString()));
+		JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Product.ItemClass)));
+		JProduct->Values.Add("Amount", MakeShared<FJsonValueNumber>(RecipeAmount));
+		JProduct->Values.Add("ManualRate", MakeShared<FJsonValueNumber>(ManualRate));
+		JProduct->Values.Add("FactoryRate", MakeShared<FJsonValueNumber>(FactoryRate));
+
+		JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
+	};
+
+	TArray<TSharedPtr<FJsonValue>> JProducedInArray;
+
+	for (TSubclassOf<UObject> Workshop : UFGRecipe::GetProducedIn(Recipe)) {
+		JProducedInArray.Add(MakeShared<FJsonValueString>(UKismetSystemLibrary::GetDisplayName(Workshop)));
+	}
+
+	FString DisplayName;
+	FString ClassName;
+	FString CategoryName;
+
+	ModSubsystem->RecipeNames_BIE(Recipe, DisplayName, ClassName, CategoryName);
+
+	UE_LOG(LogFRMAPI, Warning, TEXT("Recipe: %s - Class: %s - Category Name: %s"), *FString(DisplayName), *FString(ClassName), *FString(CategoryName));
+
+	JRecipe->Values.Add("Name", MakeShared<FJsonValueString>(DisplayName));
+	JRecipe->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName));
+	JRecipe->Values.Add("Category", MakeShared<FJsonValueString>((CategoryName)));
+	JRecipe->Values.Add("Events", MakeShared<FJsonValueArray>(JEventsArray));
+	JRecipe->Values.Add("Ingredients", MakeShared<FJsonValueArray>(JIngredientArray));
+	JRecipe->Values.Add("Products", MakeShared<FJsonValueArray>(JProductArray));
+	JRecipe->Values.Add("ProducedIn", MakeShared<FJsonValueArray>(JProducedInArray));
+	JRecipe->Values.Add("ManualDuration", MakeShared<FJsonValueNumber>(ManualDuration));
+	JRecipe->Values.Add("FactoryDuration", MakeShared<FJsonValueNumber>(FactoryDuration));
+
+	return JRecipe;
+}
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Production::getRecipes(UObject* WorldContext) {
+
+	AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(WorldContext->GetWorld());
+
+	TArray<TSharedPtr<FJsonValue>> JRecipeArray;
+
+	TArray<TSubclassOf<UFGSchematic>> Schematics;
+	SchematicManager->GetAllSchematics(Schematics);
+
+	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
+	fgcheck(ModSubsystem);
+
+	for (TSubclassOf<UFGSchematic> Schematic : Schematics) {
+
+		TSharedPtr<FJsonObject> JSchematic = MakeShared<FJsonObject>();
+
+		TArray<TSubclassOf<UFGRecipe>> Recipes;
+
+		bool Purchased = false;
+		bool HasUnlocks = false;
+		bool LockedAny = false;
+		bool LockedTutorial = false;
+		bool LockedDependent = false;
+		bool LockedPhase = false;
+		bool Tutorial = false;
+
+		ModSubsystem->SchematicToRecipes_BIE(WorldContext, Schematic, Recipes, Purchased, HasUnlocks, LockedAny, LockedTutorial, LockedDependent, LockedPhase, Tutorial);
+
+		for (TSubclassOf<UFGRecipe> Recipe : Recipes) {
+
+			TSharedPtr<FJsonObject> JRecipe = UFRM_Production::getRecipe(WorldContext, Recipe);
+			JRecipeArray.Add(MakeShared<FJsonValueObject>(JRecipe));
+
+		}
+
+	}
+
+	return JRecipeArray;
+
+}
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Production::getSchematics(UObject* WorldContext) {
+
+	AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(WorldContext->GetWorld());
+
+	TArray<TSharedPtr<FJsonValue>> JSchematicsArray;
+
+	TArray<TSubclassOf<UFGSchematic>> Schematics;
+	SchematicManager->GetAllSchematics(Schematics);
+
+	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
+	fgcheck(ModSubsystem);
+
+	for (TSubclassOf<UFGSchematic> Schematic : Schematics) {
+
+		TSharedPtr<FJsonObject> JSchematic = MakeShared<FJsonObject>();
+
+		TArray<TSharedPtr<FJsonValue>> JRecipeArray;
+		TArray<TSubclassOf<UFGRecipe>> Recipes;
+
+		bool Purchased = false;
+		bool HasUnlocks = false;
+		bool LockedAny = false;
+		bool LockedTutorial = false;
+		bool LockedDependent = false;
+		bool LockedPhase = false;
+		bool Tutorial = false;
+				
+		ModSubsystem->SchematicToRecipes_BIE(WorldContext, Schematic, Recipes, Purchased, HasUnlocks, LockedAny, LockedTutorial, LockedDependent, LockedPhase, Tutorial);
+
+		for (TSubclassOf<UFGRecipe> Recipe : Recipes) {
+
+			TSharedPtr<FJsonObject> JRecipe = UFRM_Production::getRecipe(WorldContext, Recipe);
+			JRecipeArray.Add(MakeShared<FJsonValueObject>(JRecipe));
+
+		}
+
+		FString SchematicType;
+
+		switch (UFGSchematic::GetType(Schematic)) {
+			case ESchematicType::EST_Alternate: SchematicType = TEXT("Alternate");
+			case ESchematicType::EST_Cheat: SchematicType = TEXT("Cheat");
+			case ESchematicType::EST_Custom: SchematicType = TEXT("Custom");
+			case ESchematicType::EST_HardDrive: SchematicType = TEXT("Hard Drive");
+			case ESchematicType::EST_MAM: SchematicType = TEXT("M.A.M.");
+			case ESchematicType::EST_Milestone: SchematicType = TEXT("Milestone");
+			case ESchematicType::EST_Prototype: SchematicType = TEXT("Prototype");
+			case ESchematicType::EST_ResourceSink: SchematicType = TEXT("Resource Sink");
+			case ESchematicType::EST_Story: SchematicType = TEXT("Story");
+			case ESchematicType::EST_Tutorial: SchematicType = TEXT("Tutorial");
+		}
+
+		JSchematic->Values.Add("Name", MakeShared<FJsonValueString>(UFGSchematic::GetSchematicDisplayName(Schematic).ToString()));
+		JSchematic->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Schematic->GetClass())));
+		JSchematic->Values.Add("TechTier", MakeShared<FJsonValueNumber>(UFGSchematic::GetTechTier(Schematic)));
+		JSchematic->Values.Add("Type", MakeShared<FJsonValueString>(SchematicType));
+		JSchematic->Values.Add("Recipes", MakeShared<FJsonValueArray>(JRecipeArray));
+		JSchematic->Values.Add("HasUnlocks", MakeShared<FJsonValueBoolean>(HasUnlocks));
+		JSchematic->Values.Add("Locked", MakeShared<FJsonValueBoolean>(LockedAny));
+		JSchematic->Values.Add("Purchased", MakeShared<FJsonValueBoolean>(Purchased));
+		JSchematic->Values.Add("DepLocked", MakeShared<FJsonValueBoolean>(LockedDependent));
+		JSchematic->Values.Add("LockedTutorial", MakeShared<FJsonValueBoolean>(LockedTutorial));
+		JSchematic->Values.Add("LockedPhase", MakeShared<FJsonValueBoolean>(LockedPhase));
+		JSchematic->Values.Add("Tutorial", MakeShared<FJsonValueBoolean>(Tutorial));
+
+		JSchematicsArray.Add(MakeShared<FJsonValueObject>(JSchematic));
+	}
+
+	return JSchematicsArray;
+
+}

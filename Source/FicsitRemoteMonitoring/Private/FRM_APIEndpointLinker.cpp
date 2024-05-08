@@ -57,13 +57,13 @@ TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint_Call(UObject* WorldC
 		case EAPIEndpoints::getPowerSlug: return UFRM_Factory::getPowerSlug(WorldContext);
 		case EAPIEndpoints::getProdStats: return UFRM_Production::getProdStats(WorldContext);
 		case EAPIEndpoints::getRadarTower: return UFRM_Factory::getRadarTower(WorldContext);
-		case EAPIEndpoints::getRecipes: return Json;
+		case EAPIEndpoints::getRecipes: return UFRM_Production::getRecipes(WorldContext);
 		case EAPIEndpoints::getRefinery: return UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/OilRefinery/Build_OilRefinery.Build_OilRefinery_C")));
 		case EAPIEndpoints::getResourceGeyser: return UFRM_Factory::getResourceNode(WorldContext, AFGResourceNodeFrackingCore::StaticClass());
 		case EAPIEndpoints::getResourceNode: return UFRM_Factory::getResourceNode(WorldContext, AFGResourceNodeFrackingSatellite::StaticClass());
 		case EAPIEndpoints::getResourceSink: return UFRM_Production::getResourceSink(WorldContext, EResourceSinkTrack::RST_Default);
 		case EAPIEndpoints::getResourceWell: return UFRM_Factory::getResourceNode(WorldContext, AFGResourceNode::StaticClass());
-		case EAPIEndpoints::getSchematics: return Json;
+		case EAPIEndpoints::getSchematics: return UFRM_Production::getSchematics(WorldContext);
 		case EAPIEndpoints::getSinkList: return UFRM_Production::getSinkList(WorldContext);
 		case EAPIEndpoints::getSmelter: return UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/SmelterMk1/Build_SmelterMk1.Build_SmelterMk1_C")));
 		case EAPIEndpoints::getSpaceElevator: return UFRM_Factory::getSpaceElevator(WorldContext);

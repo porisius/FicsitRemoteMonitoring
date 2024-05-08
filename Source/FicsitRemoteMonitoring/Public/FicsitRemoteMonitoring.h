@@ -15,6 +15,8 @@
 #include "Configs/Config_DiscITStruct.h"
 #include "Patching/NativeHookManager.h"
 #include "FGResearchManager.h"
+#include "FGRecipeManager.h"
+#include "FGSchematicManager.h"
 #include "FRM_APIEndpointLinker.h"
 #include "Subsystems/HttpServer.h"
 #include "Resources/FGItemDescriptor.h"
@@ -47,6 +49,12 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void GetDoggoInfo_BIE(const AActor* Doggo, FString& DisplayName, TArray<FInventoryStack>& Inventory);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SchematicToRecipes_BIE(UObject* WorldContext, TSubclassOf<class UFGSchematic> schematicClass, TArray<TSubclassOf< class UFGRecipe >>& out_RecipeClasses, bool& Purchased, bool& HasUnlocks, bool& LockedAny, bool& LockedTutorial, bool& LockedDependent, bool& LockedPhase, bool& Tutorial);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void RecipeNames_BIE(TSubclassOf<class UFGRecipe> recipeClass, FString& Name, FString& ClassName, FString& CategoryName);
 
 	//UFUNCTION(BlueprintImplementableEvent)
 	//void OpenSerial(const FString ComPort, int32 BaudRate, int32 StackSize, bool& Success);

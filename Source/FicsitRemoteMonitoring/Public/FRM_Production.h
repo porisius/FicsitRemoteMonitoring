@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "FGBuildableSubsystem.h"
 #include "Buildables\FGBuildableFactory.h"
 #include "Buildables\FGBuildableManufacturer.h"
@@ -15,6 +16,10 @@
 #include "FGBlueprintFunctionLibrary.h"
 #include "FGResourceSinkSettings.h"
 #include "FGResourceSinkSubsystem.h"
+#include "FGRecipeManager.h"
+#include "Unlocks/FGUnlockRecipe.h"
+#include "FGSchematicManager.h"
+#include "FGCategory.h"
 #include "Engine/DataTable.h"
 #include "Buildables\FGBuildableResourceExtractor.h"
 #include "Buildables\FGBuildableGenerator.h"
@@ -36,4 +41,10 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getProdStats(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getSinkList(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getResourceSink(UObject* WorldContext, EResourceSinkTrack ResourceSinkTrack);
+	static TArray<TSharedPtr<FJsonValue>> getRecipes(UObject* WorldContext);
+	static TSharedPtr<FJsonObject> getRecipe(UObject* WorldContext, TSubclassOf<UFGRecipe> Recipe);
+	static TArray<TSharedPtr<FJsonValue>> getSchematics(UObject* WorldContext);
+
+	friend class AFGRecipeManager;
+	friend class AFGSchematicManager;
 };
