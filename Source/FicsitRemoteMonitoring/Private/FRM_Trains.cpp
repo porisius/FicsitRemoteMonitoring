@@ -29,7 +29,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 		float TMaxPlayloadMass = 0.0;
 
 		AFGLocomotive* MultiUnitMaster = Train->GetMultipleUnitMaster();
-		UFGRailroadVehicleMovementComponent* VehicleMovement = MultiUnitMaster->GetRailroadVehicleMovementComponent();
+		//UFGRailroadVehicleMovementComponent* VehicleMovement = MultiUnitMaster->GetRailroadVehicleMovementComponent();
 		UFGLocomotiveMovementComponent* LocomotiveMovement = MultiUnitMaster->GetLocomotiveMovementComponent();
 
 		TArray<AFGRailroadVehicle *> Railcars = Train->mConsistData.Vehicles;
@@ -82,7 +82,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 		JTrain->Values.Add("Name", MakeShared<FJsonValueString>(Train->GetTrainName().ToString()));
 		JTrain->Values.Add("ClassName", MakeShared<FJsonValueString>(Train->GetClass()->GetName()));
 		JTrain->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Train)));
-		JTrain->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(VehicleMovement->GetForwardSpeed()));
+		JTrain->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(LocomotiveMovement->GetForwardSpeed()));
 		JTrain->Values.Add("TotalMass", MakeShared<FJsonValueNumber>(TTotalMass));
 		JTrain->Values.Add("PayloadMass", MakeShared<FJsonValueNumber>(TPayloadMass));
 		JTrain->Values.Add("MaxPayloadMass", MakeShared<FJsonValueNumber>(TMaxPlayloadMass));
