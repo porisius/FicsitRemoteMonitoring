@@ -14,7 +14,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext) {
 
 	for (AFGBuildableConveyorBase* ConveyorBelt : ConveyorBelts) {
 
-		TSharedPtr<FJsonObject> JConveyorBelt;
+		if (!IsValid(ConveyorBelt)) { continue; }
+
+		TSharedPtr<FJsonObject> JConveyorBelt = MakeShared<FJsonObject>();
 		
 		UFGFactoryConnectionComponent* ConnectionZero = ConveyorBelt->GetConnection0();
 		UFGFactoryConnectionComponent* ConnectionOne = ConveyorBelt->GetConnection1();
@@ -45,7 +47,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getModList() {
 
 	for (FModInfo ModInfo : ModInfos) {
 
-		TSharedPtr<FJsonObject> JModInfos;
+		TSharedPtr<FJsonObject> JModInfos = MakeShared<FJsonObject>();
 
 		JModInfos->Values.Add("Name", MakeShared<FJsonValueString>(ModInfo.FriendlyName));
 		JModInfos->Values.Add("SMRName", MakeShared<FJsonValueString>(ModInfo.Name));
@@ -194,7 +196,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 	for (AFGBuildable* Buildable : Buildables) {
 
 		AFGBuildableHubTerminal* HubTerminal = Cast<AFGBuildableHubTerminal>(Buildable);
-		TSharedPtr<FJsonObject> JHubTerminal;
+		TSharedPtr<FJsonObject> JHubTerminal = MakeShared<FJsonObject>();
 		TSubclassOf<UFGSchematic> ActiveSchematic = SchematicManager->GetActiveSchematic();
 		FString SchematicName = UFGSchematic::GetSchematicDisplayName(ActiveSchematic).ToString();
 		AFGBuildableTradingPost* TradingPost = HubTerminal->GetTradingPost();
@@ -716,7 +718,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPipes(UObject* WorldContext) {
 
 	for (AFGBuildablePipeline* Pipe : Pipes) {
 
-		TSharedPtr<FJsonObject> JPipe;
+		TSharedPtr<FJsonObject> JPipe = MakeShared<FJsonObject>();
 
 		UFGPipeConnectionComponent* ConnectionZero = Pipe->GetPipeConnection0();
 		UFGPipeConnectionComponent* ConnectionOne = Pipe->GetPipeConnection1();

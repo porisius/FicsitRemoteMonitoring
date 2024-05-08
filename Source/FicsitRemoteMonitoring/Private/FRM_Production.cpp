@@ -223,7 +223,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getSinkList(UObject* WorldContex
 TArray<TSharedPtr<FJsonValue>> UFRM_Production::getResourceSink(UObject* WorldContext, EResourceSinkTrack ResourceSinkTrack) {
 
 	TArray<TSharedPtr<FJsonValue>> JResourceSinkArray;
-	TSharedPtr<FJsonObject> JResourceSink;
+	TSharedPtr<FJsonObject> JResourceSink = MakeShared<FJsonObject>();
 	FString SinkName;
 
 	AFGResourceSinkSubsystem* ResourceSinkSubsystem = AFGResourceSinkSubsystem::Get(WorldContext);
@@ -233,7 +233,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getResourceSink(UObject* WorldCo
 		case EResourceSinkTrack::RST_Exploration	: SinkName = "Exploration";
 	}
 
-	TSharedPtr<FJsonObject> JCoupon;
+	TSharedPtr<FJsonObject> JCoupon = MakeShared<FJsonObject>();
 	TSubclassOf<UFGItemDescriptor> CouponClass = ResourceSinkSubsystem->GetCouponClass();
 	TArray<TSharedPtr<FJsonValue>> PointHistory;
 	
