@@ -21,7 +21,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 
 		if (IsValid(Manufacturer->GetCurrentRecipe())) {
 			auto CurrentRecipe = Manufacturer->GetCurrentRecipe();
-			auto ProdCycle = 60 / Manufacturer->GetProductionCycleTimeForRecipe(Manufacturer->GetCurrentRecipe());
+			auto ProdCycle = UKismetMathLibrary::SafeDivide(60, Manufacturer->GetProductionCycleTimeForRecipe(Manufacturer->GetCurrentRecipe()));
 			auto CurrentPotential = Manufacturer->GetCurrentPotential();
 			auto Productivity = Manufacturer->GetProductivity();
 
@@ -173,8 +173,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 			JProductionStats->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
 			JProductionStats->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName.GetDefaultObject()->GetClass()->GetName()));
 			JProductionStats->Values.Add("ProdPerMin", MakeShared<FJsonValueString>(ProdPerMin));
-			JProductionStats->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UFRM_Library::SafeDivide(Produced, MaxProduced)))));
-			JProductionStats->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>((100 * (UFRM_Library::SafeDivide(Consumption, MaxConsumption)))));
+			JProductionStats->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UKismetMathLibrary::SafeDivide(Produced, MaxProduced)))));
+			JProductionStats->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>((100 * (UKismetMathLibrary::SafeDivide(Consumption, MaxConsumption)))));
 			JProductionStats->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(Produced));
 			JProductionStats->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProduced));
 			JProductionStats->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(Consumption));

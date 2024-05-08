@@ -106,7 +106,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 				JProduct->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
 				JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
 				JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
-				JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UFRM_Library::SafeDivide(CurrentProd, MaxProd)))));
+				JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UKismetMathLibrary::SafeDivide(CurrentProd, MaxProd)))));
 
 				JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
 			};
@@ -124,7 +124,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 				JIngredients->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
 				JIngredients->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(CurrentConsumed));
 				JIngredients->Values.Add("MaxConsumed", MakeShared<FJsonValueNumber>(MaxConsumed));
-				JIngredients->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>((100 * (UFRM_Library::SafeDivide(CurrentConsumed, MaxConsumed)))));
+				JIngredients->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>((100 * (UKismetMathLibrary::SafeDivide(CurrentConsumed, MaxConsumed)))));
 
 				JIngredientsArray.Add(MakeShared<FJsonValueObject>(JIngredients));
 			};
@@ -444,7 +444,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 		JProduct->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
 		JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
 		JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
-		JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UFRM_Library::SafeDivide(CurrentProd, MaxProd)))));
+		JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UKismetMathLibrary::SafeDivide(CurrentProd, MaxProd)))));
 
 		JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
 

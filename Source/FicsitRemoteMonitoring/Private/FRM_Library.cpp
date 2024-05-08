@@ -91,18 +91,6 @@ TSharedPtr<FJsonObject> UFRM_Library::getActorFeaturesJSON(AActor* Actor, FStrin
 
 };
 
-float UFRM_Library::SafeDivide(float NumberA, float NumberB) {
-
-	if (NumberB == 0) {
-		return 0;
-	};
-
-	float divide = NumberA / NumberB;
-
-	return divide;
-
-};
-
 FString UFRM_Library::APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext) {
 
 	FString Write;

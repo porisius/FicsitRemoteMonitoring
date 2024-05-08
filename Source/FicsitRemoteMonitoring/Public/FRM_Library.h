@@ -21,7 +21,6 @@ public:
 	static TSharedPtr<FJsonObject> getActorFactoryCompXYZ(UFGFactoryConnectionComponent* BeltPipe);
 	static TSharedPtr<FJsonObject> getActorPipeXYZ(UFGPipeConnectionComponent* BeltPipe);
 	static TSharedPtr<FJsonObject> getActorFeaturesJSON(AActor* Actor, FString DisplayName, FString TypeName);
-	static float SafeDivide(float NumberA, float NumberB);
 	static FString APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext);
 
 };
