@@ -13,33 +13,66 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 
 	for (AFGTrain* Train : Trains) {
 
-		AFGLocomotive* MasterTrain = Train->GetMultipleUnitMaster();
-		AFGRailroadTimeTable* TimeTable = Train->GetTimeTable();
-		FTimeTableStop CurrentStop; 
 		TSharedPtr<FJsonObject> JTrain = MakeShared<FJsonObject>();
+		TArray<TSharedPtr<FJsonValue>> JTimetableArray;
 
-		int32 StopIndex = TimeTable->GetCurrentStop();
-		CurrentStop = TimeTable->GetStop(StopIndex);
-		TArray<FTimeTableStop> TrainStops;
-		TimeTable->GetStops(TrainStops);
-		AFGTrainStationIdentifier* CurrentStation = CurrentStop.Station;
+		AFGLocomotive* MasterTrain = Train->GetMultipleUnitMaster();
 
 		float TTotalMass = 0.0;
 		float TPayloadMass = 0.0;
 		float TMaxPlayloadMass = 0.0;
+		float ForwardSpeed = 0.0;
+		float ThrottlePercent = 0.0;
+		FString TrainStation;
+
+		//UE_LOG(LogFRMAPI, Log, TEXT("Train Unit: %s - Prior to multi-master"), *FString(Train->GetTrainName().ToString()));
 
 		AFGLocomotive* MultiUnitMaster = Train->GetMultipleUnitMaster();
-		//UFGRailroadVehicleMovementComponent* VehicleMovement = MultiUnitMaster->GetRailroadVehicleMovementComponent();
-		UFGLocomotiveMovementComponent* LocomotiveMovement = MultiUnitMaster->GetLocomotiveMovementComponent();
 
-		TArray<AFGRailroadVehicle *> Railcars = Train->mConsistData.Vehicles;
+		//UE_LOG(LogFRMAPI, Log, TEXT("MultiMaster Valid: %s"), IsValid(MultiUnitMaster) ? TEXT("true") : TEXT("false"));
+
 		TArray<TSharedPtr<FJsonValue>> JPlayerArray;
 		TArray<TSharedPtr<FJsonValue>> JRailcarsArray;
+		TSharedPtr<FJsonObject> TrainLocation;
+
+		if (IsValid(MultiUnitMaster)) {
+
+			AFGRailroadTimeTable* TimeTable = Train->GetTimeTable();
+			FTimeTableStop CurrentStop;
+
+			int32 StopIndex = TimeTable->GetCurrentStop();
+
+			TrainLocation = UFRM_Library::getActorJSON(MultiUnitMaster);
+
+			CurrentStop = TimeTable->GetStop(StopIndex);
+			TArray<FTimeTableStop> TrainStops;
+			TimeTable->GetStops(TrainStops);
+			AFGTrainStationIdentifier* CurrentStation = CurrentStop.Station;
+			TrainStation = CurrentStation->GetStationName().ToString();
+
+			UFGLocomotiveMovementComponent* LocomotiveMovement = MultiUnitMaster->GetLocomotiveMovementComponent();
+
+			for (FTimeTableStop TrainStop : TrainStops) {
+				TSharedPtr<FJsonObject> JTimetable = MakeShared<FJsonObject>();
+				JTimetable->Values.Add("StationName", MakeShared<FJsonValueString>(TrainStop.Station->GetStationName().ToString()));
+				JTimetableArray.Add(MakeShared<FJsonValueObject>(JTimetable));
+			};
+
+			ForwardSpeed = LocomotiveMovement->GetForwardSpeed();
+			ThrottlePercent = LocomotiveMovement->GetThrottle() * 100;
+			
+		} else {
+
+			TrainLocation = UFRM_Library::getActorJSON(Train);
+
+		}
+
+		TArray<AFGRailroadVehicle*> Railcars = Train->mConsistData.Vehicles;
 
 		for (AFGRailroadVehicle* Railcar : Railcars) {
-			
+
 			TSharedPtr<FJsonObject> JRailcars = MakeShared<FJsonObject>();
-			
+
 			UFGRailroadVehicleMovementComponent* RailcarVehicleMovement = Railcar->GetRailroadVehicleMovementComponent();
 
 			JRailcars->Values.Add("Name", MakeShared<FJsonValueString>(Railcar->mDisplayName.ToString()));
@@ -55,39 +88,23 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 			JRailcarsArray.Add(MakeShared<FJsonValueObject>(JRailcars));
 		};
 
-		TArray<TSharedPtr<FJsonValue>> JTimetableArray;
-
-		for (FTimeTableStop TrainStop : TrainStops) {
-			TSharedPtr<FJsonObject> JTimetable = MakeShared<FJsonObject>();
-			JTimetable->Values.Add("StationName", MakeShared<FJsonValueString>(TrainStop.Station->GetStationName().ToString()));
-			JTimetableArray.Add(MakeShared<FJsonValueObject>(JTimetable));
-		};
-
-		ETrainStatus Form = Train->GetTrainStatus();
-
 		FString FormString = "Unknown";
-		if (Form == ETrainStatus::TS_Parked) {
-			FormString = "Parked";
-		}
-		else if (Form == ETrainStatus::TS_ManualDriving) {
-			FormString = "Manual Driving";
-		}
-		else if (Form == ETrainStatus::TS_SelfDriving) {
-			FormString = "Self-Driving";
-		}
-		else if (Form == ETrainStatus::TS_Derailed) {
-			FormString = "Derailed";
+		switch (Train->GetTrainStatus()) {
+			case ETrainStatus::TS_Parked : FormString = "Parked";
+			case ETrainStatus::TS_ManualDriving:FormString = "Manual Driving";
+			case ETrainStatus::TS_SelfDriving:FormString = "Self-Driving";
+			case ETrainStatus::TS_Derailed:	FormString = "Derailed";
 		};
 
 		JTrain->Values.Add("Name", MakeShared<FJsonValueString>(Train->GetTrainName().ToString()));
 		JTrain->Values.Add("ClassName", MakeShared<FJsonValueString>(Train->GetClass()->GetName()));
-		JTrain->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Train)));
-		JTrain->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(LocomotiveMovement->GetForwardSpeed()));
+		JTrain->Values.Add("location", MakeShared<FJsonValueObject>(TrainLocation));
 		JTrain->Values.Add("TotalMass", MakeShared<FJsonValueNumber>(TTotalMass));
 		JTrain->Values.Add("PayloadMass", MakeShared<FJsonValueNumber>(TPayloadMass));
 		JTrain->Values.Add("MaxPayloadMass", MakeShared<FJsonValueNumber>(TMaxPlayloadMass));
-		JTrain->Values.Add("TrainStation", MakeShared<FJsonValueString>(CurrentStation->GetStationName().ToString()));
-		JTrain->Values.Add("ThrottlePercent", MakeShared<FJsonValueNumber>(LocomotiveMovement->GetThrottle() * 100));
+		JTrain->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(ForwardSpeed));
+		JTrain->Values.Add("ThrottlePercent", MakeShared<FJsonValueNumber>(ThrottlePercent));
+		JTrain->Values.Add("TrainStation", MakeShared<FJsonValueString>(TrainStation));
 		JTrain->Values.Add("Derailed", MakeShared<FJsonValueBoolean>(Train->IsDerailed()));
 		JTrain->Values.Add("PendingDerail", MakeShared<FJsonValueBoolean>(Train->HasPendingCollision()));
 		JTrain->Values.Add("Status", MakeShared<FJsonValueString>(FormString));
