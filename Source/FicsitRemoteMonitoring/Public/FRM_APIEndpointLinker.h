@@ -10,7 +10,7 @@
 #include "Misc/EnumRange.h"
 #include "FRM_APIEndpointLinker.generated.h"
 
-UENUM()
+UENUM(BlueprintType)
 enum class EAPIEndpoints : uint8
 {
 	// Read API Endpoints

@@ -78,6 +78,9 @@ public:
 
 	void InitOutageNotification();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void TextToAPI(UPARAM(ref) FString& API, bool& Success, EAPIEndpoints& enumAPI);
+
 	UPROPERTY()
 	UHttpServer* HttpServer;
 

@@ -15,7 +15,7 @@ UCLASS()
 class FICSITREMOTEMONITORING_API UFRM_Library : public UFGBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
-	
+
 public:
 	static TSharedPtr<FJsonObject> getActorJSON(AActor* Actor);
 	static TSharedPtr<FJsonObject> getActorFactoryCompXYZ(UFGFactoryConnectionComponent* BeltPipe);
