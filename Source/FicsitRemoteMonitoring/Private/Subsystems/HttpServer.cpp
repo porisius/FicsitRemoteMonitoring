@@ -1,4 +1,4 @@
-#include "Subsystems/HttpServer.h"
+﻿#include "Subsystems/HttpServer.h"
 #include <httplib.h>
 
 #include <mutex>
@@ -249,7 +249,7 @@ void FHttpResponse::getCoffee()
 						"#PraiseAlpaca"
 						"#BlameSimon");
 
-	UE_LOG(LogHttpServer, Log, TEXT("Easter Egg: %s "), *noCoffee);
+	//UE_LOG(LogHttpServer, Log, TEXT("Easter Egg: %s "), *noCoffee);
 
 	const TMap<FString, FString>& DefaultHeaders = UHttpServer::GetDefaultHeaders();
 	httplib::Headers Headers;
