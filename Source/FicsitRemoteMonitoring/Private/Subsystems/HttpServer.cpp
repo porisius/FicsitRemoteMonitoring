@@ -1,4 +1,4 @@
-﻿#include "Subsystems/HttpServer.h"
+#include "Subsystems/HttpServer.h"
 #include <httplib.h>
 
 #include <mutex>
@@ -235,6 +235,7 @@ void FHttpResponse::ReplyJSON(const FString& Json, const FString& MimeType)
 
 	START_INTERNAL_SYNCHRONIZED(httplib::Response & Response);
 
+	Response.headers = Headers;
 	Response.body = TCHAR_TO_UTF8(*Json);
 	Response.set_content(Response.body, "application/json");
 	
@@ -260,6 +261,7 @@ void FHttpResponse::getCoffee()
 
 	START_INTERNAL_SYNCHRONIZED(httplib::Response & Response);
 
+	Response.headers = Headers;
 	Response.body = TCHAR_TO_UTF8(*noCoffee);
 	Response.reason = TCHAR_TO_UTF8(TEXT("Reason: Am Teapot"));
 	Response.status = 418;
