@@ -65,13 +65,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void ReadSerial(FString& SerialBytes);
 
-	//UFUNCTION(BlueprintImplementableEvent)
-	//void BytesToString(const TArray<uint8>* SerialBytes, FString& APIEndpoint);
-
-	//UFUNCTION(BlueprintImplementableEvent)
-	//void WriteSerial(FString* Json);
-
 	void InitHttpService();
+	bool StartHttpService(FString Listen_IP, int32 Port);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void InitSerialDevice();
@@ -81,7 +76,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void TextToAPI(UPARAM(ref) FString& API, bool& Success, EAPIEndpoints& enumAPI);
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	UHttpServer* HttpServer;
 
 	UPROPERTY()

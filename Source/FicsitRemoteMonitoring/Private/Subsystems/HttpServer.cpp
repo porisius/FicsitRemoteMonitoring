@@ -1,4 +1,4 @@
-﻿#include "Subsystems/HttpServer.h"
+#include "Subsystems/HttpServer.h"
 #include <httplib.h>
 
 #include <mutex>

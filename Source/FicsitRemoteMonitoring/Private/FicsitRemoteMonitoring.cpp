@@ -33,6 +33,21 @@ AFicsitRemoteMonitoring::~AFicsitRemoteMonitoring()
 
 }
 
+bool AFicsitRemoteMonitoring::StartHttpService(FString Listen_IP, int32 Port) {
+
+	bool bSuccess = false;
+
+	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(GetWorld());
+	fgcheck(ModSubsystem);
+
+	ModSubsystem->HttpServer->Listen(Listen_IP, Port, FHttpServerListenCallback::CreateLambda([bSuccess](const bool Success) mutable
+		{
+			bSuccess = Success;
+		})
+	);
+
+	return bSuccess;
+}
 
 void AFicsitRemoteMonitoring::InitHttpService() {
 
