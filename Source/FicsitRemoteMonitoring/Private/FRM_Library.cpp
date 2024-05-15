@@ -107,3 +107,11 @@ FString UFRM_Library::APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObjec
 	return Write;
 
 }
+
+bool UFRM_Library::IsIntInRange(int32 Number, int32 LowerBound, int32 UpperBound)
+{
+	bool bIsMoreThanLowerBound = Number > LowerBound;
+	bool bIsLessThanUpperBound = Number < UpperBound;
+
+	return bIsMoreThanLowerBound && bIsLessThanUpperBound;
+}
