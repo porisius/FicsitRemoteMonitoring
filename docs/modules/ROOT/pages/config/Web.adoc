@@ -16,7 +16,7 @@ File: Config/FicsitRemoteMonitoring/WebServer.cfg
 |Web Server Port
 |Web_Port
 |Integer
-|TCP Port for Web Server, Default: 8081
+|TCP Port for Web Server, Default: 8080
 
 |Autostart Web Server
 |Web_Autostart
