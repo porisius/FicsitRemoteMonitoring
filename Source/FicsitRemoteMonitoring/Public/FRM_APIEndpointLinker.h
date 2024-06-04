@@ -8,6 +8,7 @@
 #include "FRM_Trains.h"
 #include "FRM_Vehicles.h"
 #include "Misc/EnumRange.h"
+#include "JsonObjectWrapper.h"
 #include "FRM_APIEndpointLinker.generated.h"
 
 UENUM(BlueprintType)
@@ -82,9 +83,13 @@ class FICSITREMOTEMONITORING_API UAPI_Endpoints : public UBlueprintFunctionLibra
 public:
 
    
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
     static FString API_Endpoint(UObject* WorldContext, EAPIEndpoints APICall);
+
+    UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
+    static FString API_Endpoint_Interface(UObject* WorldContext, FJsonObjectWrapper Json);
 
     static TArray<TSharedPtr<FJsonValue>> getAll(UObject* WorldContext);
     static TArray<TSharedPtr<FJsonValue>> API_Endpoint_Call(UObject* WorldContext, EAPIEndpoints APICall);
+
 };

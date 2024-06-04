@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "FRM_Production.h"
 #include <FicsitRemoteMonitoring.h>
 
@@ -89,13 +86,13 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 	// Power Generator Building Production Stats
 	for (AFGBuildableGeneratorFuel* Generator : GeneratorBuildables) {
 
-		auto FuelItemClass = Generator->GetCurrentFuelClass();
-		auto EnergyValue = UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetEnergyValue(FuelItemClass), UFGItemDescriptor::GetForm(FuelItemClass));
-		auto ProductionCapacity = Generator->GetCurrentPotential();
-		auto Productivity = Generator->GetProductivity();
+		TSubclassOf<UFGItemDescriptor> FuelItemClass = Generator->GetCurrentFuelClass();
+		float EnergyValue = UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetEnergyValue(FuelItemClass), UFGItemDescriptor::GetForm(FuelItemClass));
+		float ProductionCapacity = Generator->GetCurrentPotential();
+		float Productivity = Generator->GetProductivity();
 		
-		auto MaxFuelConsumption = 60 * (ProductionCapacity / EnergyValue);
-		auto FuelConsumption = MaxFuelConsumption * Productivity;
+		float MaxFuelConsumption = 60 * (ProductionCapacity / EnergyValue);
+		float FuelConsumption = MaxFuelConsumption * Productivity;
 
 		if (CurrentProduced.Contains(FuelItemClass)) {
 			CurrentConsumed.Add(FuelItemClass) = FuelConsumption + CurrentConsumed.FindRef(FuelItemClass);
@@ -108,9 +105,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 
 		if (Generator->GetRequiresSupplementalResource()) {
 
-			auto SupplementalItemClass = Generator->GetSupplementalResourceClass();
-			auto Consumption = Generator->GetSupplementalConsumptionRateCurrent() * 60;
-			auto MaxConsumption = Generator->GetSupplementalConsumptionRateMaximum() * 60;
+			TSubclassOf<UFGItemDescriptor> SupplementalItemClass = Generator->GetSupplementalResourceClass();
+			float Consumption = Generator->GetSupplementalConsumptionRateCurrent() * 60;
+			float MaxConsumption = Generator->GetSupplementalConsumptionRateMaximum() * 60;
 
 			if (CurrentProduced.Contains(SupplementalItemClass)) {
 				CurrentConsumed.Add(SupplementalItemClass) = Consumption + CurrentConsumed.FindRef(SupplementalItemClass);
@@ -304,9 +301,9 @@ TSharedPtr<FJsonObject> UFRM_Production::getRecipe(UObject* WorldContext, TSubcl
 	for (FItemAmount Product : UFGRecipe::GetProducts(Recipe)) {
 		TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
 
-		auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Product.Amount, UFGItemDescriptor::GetForm(Product.ItemClass));
-		auto ManualRate = (UKismetMathLibrary::SafeDivide(60, ManualDuration)) * RecipeAmount;
-		auto FactoryRate = (UKismetMathLibrary::SafeDivide(60, FactoryDuration)) * RecipeAmount;
+		float RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Product.Amount, UFGItemDescriptor::GetForm(Product.ItemClass));
+		double ManualRate = (UKismetMathLibrary::SafeDivide(60, ManualDuration)) * RecipeAmount;
+		double FactoryRate = (UKismetMathLibrary::SafeDivide(60, FactoryDuration)) * RecipeAmount;
 
 		JProduct->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Product.ItemClass).ToString()));
 		JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Product.ItemClass)));

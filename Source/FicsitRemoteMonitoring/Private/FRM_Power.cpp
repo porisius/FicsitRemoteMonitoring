@@ -2,6 +2,7 @@
 
 #include "FRM_Power.h"
 
+#undef GetForm
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Power::getCircuit(UObject* WorldContext)
 {
