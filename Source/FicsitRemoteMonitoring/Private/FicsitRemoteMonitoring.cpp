@@ -18,7 +18,7 @@ void AFicsitRemoteMonitoring::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InitHttpService();
+	//InitHttpService();
 	//InitSerialDevice();
 
 }
@@ -32,26 +32,56 @@ AFicsitRemoteMonitoring::~AFicsitRemoteMonitoring()
 {
 
 }
-
-bool AFicsitRemoteMonitoring::StartHttpService(FString Listen_IP, int32 Port) {
-
-	bool bSuccess = false;
-
-	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(GetWorld());
-	fgcheck(ModSubsystem);
-
-	ModSubsystem->HttpServer->Listen(Listen_IP, Port, FHttpServerListenCallback::CreateLambda([bSuccess](const bool Success) mutable
-		{
-			bSuccess = Success;
-		})
-	);
-
-	return bSuccess;
+/*
+void AFicsitRemoteMonitoring::RegisterAPIEndpoint_Implementation(FString Name, FAPIRegistry Callback)
+{
+	APIRegister.Add(Name, Callback);
 }
+*/
 
+void AFicsitRemoteMonitoring::InitWSService() {
+
+	FString ModPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/";
+	FString IconsPath = ModPath + "Icons";
+	FString UIPath;
+
+	auto World = GetWorld();
+	auto config = FConfig_HTTPStruct::GetActiveConfig(World);
+
+	if (config.Web_Root.IsEmpty()) {
+		UIPath = ModPath + "www";
+	}
+	else
+	{
+		UIPath = config.Web_Root;
+	}
+
+	//HttpServer->Mount(TEXT("/"), UIPath);
+	//HttpServer->Mount(TEXT("/Icons/"), IconsPath);
+
+	int port = config.HTTP_Port;
+
+	char* root = TCHAR_TO_ANSI(*UIPath);
+	char* icon = TCHAR_TO_ANSI(*IconsPath);
+
+	//AsyncFileStreamer UIRoot(root);
+	//AsyncFileStreamer IconRoot(icon);
+	/*
+	uWS::App app = uWS::App();
+
+	app.listen(port, [&port](auto* listen_socket) {
+		if (listen_socket) {
+			UE_LOG(LogWSServer, Log, TEXT("Listening on port"));
+		}
+	}).run();
+	*/
+};
+
+
+/*
 void AFicsitRemoteMonitoring::InitHttpService() {
 
-	AFicsitRemoteMonitoring::HttpServer = UHttpServer::CreateHttpServer();
+	HttpServer = UHttpServer::CreateHttpServer();
 
 	FString ModPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/";
 	FString IconsPath = ModPath + "Icons";
@@ -80,6 +110,15 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 	HttpServer->Get(TEXT("/getCoffee"), FHttpServerAPICallback::CreateLambda([](const FHttpRequest& Request, FHttpResponse& Response) -> void
 		{
 			Response.getCoffee();
+			Response.Send();
+		})
+	);
+
+	HttpServer->Get("/:API", FHttpServerAPICallback::CreateLambda([World](const FHttpRequest& Request, FHttpResponse& Response) -> void
+		{
+			
+			FString Json = UAPI_Endpoints::API_Endpoint(World, EAPIEndpoints::getAssembler);
+			Response.ReplyJSON(Json, TEXT("application/json"));
 			Response.Send();
 		})
 	);
@@ -519,8 +558,8 @@ void AFicsitRemoteMonitoring::InitHttpService() {
 		);
 	};
 
-	
 }
+*/
 
 void AFicsitRemoteMonitoring::InitOutageNotification() {
 

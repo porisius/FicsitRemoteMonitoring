@@ -21,6 +21,28 @@ FString UAPI_Endpoints::API_Endpoint(UObject* WorldContext, EAPIEndpoints APICal
 	return Write;
 }
 
+
+FString UAPI_Endpoints::API_Endpoint_Interface(UObject* WorldContext, FJsonObjectWrapper JsonWrapper)
+{
+	TArray<TSharedPtr<FJsonValue>> Json;
+
+	Json.Add(MakeShared<FJsonValueObject>(JsonWrapper.JsonObject));
+
+	FString Write;
+	auto config = FConfig_FactoryStruct::GetActiveConfig(WorldContext);
+
+	if (config.JSONDebugMode) {
+		const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write);
+		FJsonSerializer::Serialize(Json, JsonWriter);
+	}
+	else {
+		const TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+		FJsonSerializer::Serialize(Json, JsonWriter);
+	}
+
+	return Write;
+}
+
 TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint_Call(UObject* WorldContext, const EAPIEndpoints APICall)
 {
 	TArray<TSharedPtr<FJsonValue>> Json;
@@ -77,7 +99,7 @@ TArray<TSharedPtr<FJsonValue>> UAPI_Endpoints::API_Endpoint_Call(UObject* WorldC
 		case EAPIEndpoints::getWorldInv: return UFRM_Factory::getWorldInv(WorldContext);
 
 			// Read API Group Endpoints
-		case EAPIEndpoints::getAll: return Json; //getAll(WorldContext);
+		case EAPIEndpoints::getAll: return getAll(WorldContext);
 		case EAPIEndpoints::getFactory: return UFRM_Factory::getFactory(WorldContext, AFGBuildableManufacturer::StaticClass());
 		case EAPIEndpoints::getGenerators: return UFRM_Power::getGenerators(WorldContext, AFGBuildableGenerator::StaticClass());
 		case EAPIEndpoints::getVehicles: return UFRM_Vehicles::getVehicles(WorldContext, AFGWheeledVehicle::StaticClass());
