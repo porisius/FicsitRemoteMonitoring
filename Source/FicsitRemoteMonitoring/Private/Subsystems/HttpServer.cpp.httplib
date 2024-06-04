@@ -98,7 +98,7 @@ public:
 
 			Response.Internal->SetupWaiter(&LocalWaiter);
 
-			AsyncTask(ENamedThreads::GameThread, [Callback, Request, Response]() mutable -> void
+			AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [Callback, Request, Response]() mutable -> void
 			{
 				Callback.ExecuteIfBound(Request, Response);
 			});
