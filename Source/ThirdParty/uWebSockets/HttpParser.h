@@ -365,13 +365,13 @@ private:
 
         /* The request line is different from the field names / field values */
         postPaddedBuffer = consumeRequestLine(postPaddedBuffer, headers[0]);
-
-        if (!(postPaddedBuffer)) {
+        if (!postPaddedBuffer) {
             /* Error - invalid request line */
             /* Assuming it is 505 HTTP Version Not Supported */
             err = HTTP_ERROR_505_HTTP_VERSION_NOT_SUPPORTED;
             return 0;
         }
+
         headers++;
 
         for (unsigned int i = 1; i < UWS_HTTP_MAX_HEADERS_COUNT - 1; i++) {
@@ -458,11 +458,14 @@ private:
         data[length] = '\r';
         data[length + 1] = 'a'; /* Anything that is not \n, to trigger "invalid request" */
 
+        //for (unsigned int consumed; length && (consumed = getHeaders(data, data + length, req->headers, reserved, err)); ) {
         unsigned int consumed;
+        while (length) {
+            consumed = getHeaders(data, data + length, req->headers, reserved, err);
+            if (!consumed) {
+                break;
+            }
 
-        consumed = getHeaders(data, data + length, req->headers, reserved, err);
-
-        for (length && (consumed);) {
             data += consumed;
             length -= consumed;
             consumedTotal += consumed;
@@ -547,7 +550,7 @@ private:
                     if (isParsingInvalidChunkedEncoding(remainingStreamingBytes)) {
                         return {HTTP_ERROR_400_BAD_REQUEST, FULLPTR};
                     }
-                    consumed = (length - (unsigned int) dataToConsume.length());
+                    unsigned int consumed = (length - (unsigned int) dataToConsume.length());
                     data = (char *) dataToConsume.data();
                     length = (unsigned int) dataToConsume.length();
                     consumedTotal += consumed;

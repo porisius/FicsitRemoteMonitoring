@@ -56,25 +56,17 @@ void AFicsitRemoteMonitoring::InitWSService() {
 		UIPath = config.Web_Root;
 	}
 
-	//HttpServer->Mount(TEXT("/"), UIPath);
-	//HttpServer->Mount(TEXT("/Icons/"), IconsPath);
-
 	int port = config.HTTP_Port;
 
 	char* root = TCHAR_TO_ANSI(*UIPath);
 	char* icon = TCHAR_TO_ANSI(*IconsPath);
 
-	//AsyncFileStreamer UIRoot(root);
-	//AsyncFileStreamer IconRoot(icon);
-	/*
-	uWS::App app = uWS::App();
+	//UWebSocketsWrapper::StartServer(9001);
 
-	app.listen(port, [&port](auto* listen_socket) {
-		if (listen_socket) {
-			UE_LOG(LogWSServer, Log, TEXT("Listening on port"));
-		}
-	}).run();
-	*/
+	UWebSocketsWrapper* WebsocketServer = UWebSocketsWrapper::CreateHttpServer();
+
+	WebsocketServer->StartServer(9001);
+
 };
 
 

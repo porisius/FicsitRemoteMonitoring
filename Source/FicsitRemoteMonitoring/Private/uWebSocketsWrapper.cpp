@@ -16,6 +16,13 @@ UWebSocketsWrapper::~UWebSocketsWrapper()
     StopServer();
 }
 
+UWebSocketsWrapper* UWebSocketsWrapper::CreateHttpServer()
+{
+    UWebSocketsWrapper* const Server = NewObject<UWebSocketsWrapper>();
+
+    return Server;
+}
+
 void UWebSocketsWrapper::StartServer(int32 Port)
 {
     WebSocketApp->get("/*", [this](uWS::HttpResponse<false>* res, uWS::HttpRequest* req) {

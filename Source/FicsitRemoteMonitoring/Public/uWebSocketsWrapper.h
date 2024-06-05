@@ -1,10 +1,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "App.h" // Include the uWebSockets header
+
+THIRD_PARTY_INCLUDES_START
+#include "ThirdParty/uWebSockets/App.h"
+THIRD_PARTY_INCLUDES_END
+
 #include <memory>
 
-class UWebSocketsWrapper
+class UWebSocketsWrapper : public UObject
 {
 public:
     UWebSocketsWrapper();
@@ -13,9 +17,16 @@ public:
     void StartServer(int32 Port);
     void StopServer();
 
+    static UWebSocketsWrapper* CreateHttpServer();
+
     // Handlers
     void OnHttpRequest(uWS::HttpResponse<false>* res, uWS::HttpRequest* req);
 
 private:
+
+    UPROPERTY()
+    UWebSocketsWrapper* WebsocketServer;
+
+    UPROPERTY()
     std::unique_ptr<uWS::App> WebSocketApp;
 };

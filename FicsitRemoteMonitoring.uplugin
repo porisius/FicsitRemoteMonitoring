@@ -21,10 +21,6 @@
 			"Name": "FicsitRemoteMonitoring",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
-		},{
-			"Name": "uWebSockets",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
 		}
 	],
 	"Plugins": [

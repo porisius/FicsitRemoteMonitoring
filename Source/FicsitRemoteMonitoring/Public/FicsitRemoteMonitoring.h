@@ -20,6 +20,7 @@
 #include "FGRecipeManager.h"
 #include "FGSchematicManager.h"
 #include "FRM_APIEndpointLinker.h"
+#include "uWebSocketsWrapper.h"
 //#include "Subsystems/HttpServer.h"
 #include "Resources/FGItemDescriptor.h"
 #include "FGDropPod.h"
