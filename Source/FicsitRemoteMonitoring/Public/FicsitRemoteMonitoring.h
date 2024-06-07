@@ -1,8 +1,14 @@
 #pragma once
 
+#include <thread>
+#include <atomic>
+
 #include "CoreMinimal.h"
 #include "Engine.h"
 #include "EngineUtils.h"
+#include "Misc/OutputDevice.h"
+#include "Misc/OutputDeviceDebug.h"
+#include "HAL/PlatformFileManager.h"
 #include "FicsitRemoteMonitoringModule.h"
 #include "Json.h"
 #include "Misc/FileHelper.h"
@@ -27,9 +33,19 @@
 #include "Subsystem/SubsystemActorManager.h"
 #include "Subsystem/ModSubsystem.h"
 #include "NotificationLoader.h"
+#include "Misc/OutputDevice.h"
+#include "Misc/ScopeLock.h"
+#include "HAL/PlatformProcess.h"
+#include "Async/Async.h"
+#include "Misc/Paths.h"
 #include "FicsitRemoteMonitoring.generated.h"
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FAPIModRegistry, FString&, Output, FJsonObjectWrapper&, Json);
+
+// Declare a critical section
+FCriticalSection WebSocketCriticalSection;
+TQueue<FString, EQueueMode::Mpsc> MessageQueue;
+FThreadSafeBool bIsRunning = true;
 
 USTRUCT(BlueprintType)
 struct FAPIRegistry
@@ -62,9 +78,15 @@ class FICSITREMOTEMONITORING_API AFicsitRemoteMonitoring : public AModSubsystem 
 {
 	GENERATED_BODY()
 
+	std::thread WebSocketThread;
+	std::atomic<bool> bRunning;
+
 private:
 	//friend class UHttpServer;
 	friend class UFGPowerCircuitGroup;
+
+	using FHttpServerPtr = TSharedPtr<uWS::App, ESPMode::ThreadSafe>;
+	using FThreadPtr = TUniquePtr<std::thread>;
 
 public:
 
@@ -97,8 +119,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void ReadSerial(FString& SerialBytes);
 
-	//void InitHttpService();
-
 	void InitWSService();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
@@ -109,8 +129,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void TextToAPI(UPARAM(ref) FString& API, bool& Success, EAPIEndpoints& enumAPI);
 
-	//UPROPERTY(EditAnywhere)
-	//UHttpServer* HttpServer;
+	void RunWebSocketServer();
 
 	UPROPERTY(BlueprintReadWrite)
 	TMap<FString, FAPIRegistry> APIRegister;

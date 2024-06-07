@@ -30,9 +30,7 @@ public class FicsitRemoteMonitoring : ModuleRules
                 "Chaos", 
                 "ChaosVehiclesCore", 
                 "ChaosVehicles", 
-                "HTTP",
-                "Sockets", 
-                "Networking"
+                "HTTP"
             }
         );
 
@@ -46,17 +44,19 @@ public class FicsitRemoteMonitoring : ModuleRules
 
         // Add uWebSockets
         LoaduWebSockets(Target);
+
+        // Enable exception handling
+        bEnableExceptions = true;
     }
 
     public bool LoaduWebSockets(ReadOnlyTargetRules Target)
     {
         bool isLibrarySupported = false;
+        string LibrariesPath = Path.Combine(ThirdPartyPath, "uWebSockets", "lib");
 
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {
             isLibrarySupported = true;
-
-            string LibrariesPath = Path.Combine(ThirdPartyPath, "uWebSockets", "lib");
 
             PublicAdditionalLibraries.AddRange(new string[] {
                 Path.Combine(LibrariesPath, "uSockets.lib"),
@@ -68,14 +68,15 @@ public class FicsitRemoteMonitoring : ModuleRules
         {
             isLibrarySupported = true;
 
-            string LibrariesPath = Path.Combine(ThirdPartyPath, "uWebSockets", "lib");
-
             PublicAdditionalLibraries.AddRange(new string[] {
                 Path.Combine(LibrariesPath, "libuSockets.a"),
                 Path.Combine(LibrariesPath, "libuv.a"),
                 Path.Combine(LibrariesPath, "libz.a")
             });
         }
+
+        RuntimeDependencies.Add(Path.Combine(LibrariesPath, "zlib1.dll"));
+        RuntimeDependencies.Add(Path.Combine(LibrariesPath, "uv.dll"));
 
         PublicDefinitions.Add(string.Format("WITH_UWEBSOCKETS_BINDING={0}", isLibrarySupported ? 1 : 0));
 
