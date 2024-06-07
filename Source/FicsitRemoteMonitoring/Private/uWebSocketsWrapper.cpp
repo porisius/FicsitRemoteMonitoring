@@ -1,7 +1,7 @@
 #include "uWebSocketsWrapper.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
-#include "HAL/PlatformFilemanager.h"
+#include "HAL/PlatformFileManager.h"
 
 // Disable deprecation warning for getenv
 #define _CRT_SECURE_NO_WARNINGS
