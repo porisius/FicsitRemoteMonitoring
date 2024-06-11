@@ -24,7 +24,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, class UC
 
 		if (bSuccess) {
 
-			FString Json = UAPI_Endpoints::API_Endpoint(WorldContext, eEndpoint);
+			FString Json = AFicsitRemoteMonitoring::API_Endpoint(WorldContext, eEndpoint);
 
 			if (OutputType == "file") {
 

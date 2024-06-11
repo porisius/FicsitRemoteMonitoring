@@ -9,6 +9,17 @@
 #include "Misc/OutputDevice.h"
 #include "Misc/OutputDeviceDebug.h"
 #include "HAL/PlatformFileManager.h"
+#include "UObject/NoExportTypes.h"
+#include "Async/Async.h"
+#include "FRM_Drones.h"
+#include "FRM_Factory.h"
+#include "FRM_Player.h"
+#include "FRM_Power.h"
+#include "FRM_Production.h"
+#include "FRM_Trains.h"
+#include "FRM_Vehicles.h"
+#include "Misc/EnumRange.h"
+#include "JsonObjectWrapper.h"
 #include "FicsitRemoteMonitoringModule.h"
 #include "Json.h"
 #include "Misc/FileHelper.h"
@@ -39,6 +50,70 @@
 #include "Async/Async.h"
 #include "Misc/Paths.h"
 #include "FicsitRemoteMonitoring.generated.h"
+
+UENUM(BlueprintType)
+enum class EAPIEndpoints : uint8
+{
+	// Read API Endpoints
+	getAssembler,           //Done
+	getBelts,
+	getBiomassGenerator,    //Done
+	getBlender,             //Done
+	getCoalGenerator,       //Done
+	getConstructor,         //Done
+	getDoggo,
+	getDrone,               //Done
+	getDroneStation,        //Done
+	getDropPod,             //Done
+	getExplorationSink,
+	getExplorer,            //Done
+	getExtractor,           //Done
+	getFactoryCart,         //Done
+	getFoundry,             //Done
+	getFuelGenerator,       //Done
+	getGeothermalGenerator, //Done
+	getHUBTerminal,
+	getManufacturer,        //Done
+	getModList,
+	getNuclearGenerator,    //Done
+	getPackager,
+	getParticle,            //Done
+	getPaths,
+	getPipes,
+	getPlayer,              //Done
+	getPower,               //Done
+	getPowerSlug,           //Done
+	getProdStats,           //Done
+	getRadarTower,
+	getRecipes,
+	getRefinery,            //Done
+	getResourceGeyser,
+	getResourceNode,
+	getResourceSink,
+	getResourceWell,
+	getSchematics,
+	getSinkList,
+	getSmelter,             //Done
+	getSpaceElevator,
+	getStorageInv,          //Done
+	getSwitches,
+	getTractor,             //Done
+	getTrains,              //Done
+	getTrainStation,
+	getTruck,               //Done
+	getTruckStation,        //Done
+	getWorldInv,            //Done
+
+	// Read API Group Endpoints
+	getAll,
+	getFactory,             //Done
+	getGenerators,          //Done
+	getVehicles,            //Done
+
+	Count UMETA(Hidden)
+};
+
+ENUM_RANGE_BY_COUNT(EAPIEndpoints, EAPIEndpoints::Count);
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FAPIModRegistry, FString&, Output, FJsonObjectWrapper&, Json);
 
@@ -119,8 +194,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void ReadSerial(FString& SerialBytes);
 
-	void InitWSService();
-
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void InitSerialDevice();
 
@@ -129,7 +202,22 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void TextToAPI(UPARAM(ref) FString& API, bool& Success, EAPIEndpoints& enumAPI);
 
+	void StartWebSocketServer();
+	void StopWebSocketServer();
 	void RunWebSocketServer();
+
+	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
+	static FString API_Endpoint(UObject* WorldContext, EAPIEndpoints APICall);
+
+	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
+	static FString API_Endpoint_Interface(UObject* WorldContext, FJsonObjectWrapper Json);
+
+	static TArray<TSharedPtr<FJsonValue>> getAll(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> API_Endpoint_Call(UObject* WorldContext, EAPIEndpoints APICall);
+
+	void HandleAPICall(EAPIEndpoints APICall, UObject* WorldContext);
+
+	TArray<TSharedPtr<FJsonValue>> Json;
 
 	UPROPERTY(BlueprintReadWrite)
 	TMap<FString, FAPIRegistry> APIRegister;
@@ -153,7 +241,9 @@ public:
 	TArray<FString> Flavor_Train;
 
 protected:
+protected:
+	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	//virtual void Tick(DeltaTime) override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 };
