@@ -12,9 +12,7 @@ Have you ever left your base for an adventure or a side project, wondering about
 
 ---
 
-### [Explore the Fiscit Web UI Source](https://github.com/GalaxyVOID/FRM-s-WebUI-Source)
-- [Download the Latest Release](https://github.com/GalaxyVOID/FRM-s-WebUI-Source/releases/latest) 
-- [GitHub release](https://img.shields.io/github/v/release/GalaxyVOID/FRM-s-WebUI-Source?style=for-the-badge&logo=github)
+[Explore the Fiscit Web UI Source](https://github.com/V0IDL355/FRM-s-WebUI-Source)
 
 ### **Discover Third-party Support and Apps**
 
