@@ -113,13 +113,14 @@ enum class EAPIEndpoints : uint8
 
 ENUM_RANGE_BY_COUNT(EAPIEndpoints, EAPIEndpoints::Count);
 
-// Delegate signature
-DECLARE_DELEGATE_RetVal(FString, FAPIBPCallbackSignature)
-
 // Declare a critical section
 FCriticalSection WebSocketCriticalSection;
 TQueue<FString, EQueueMode::Mpsc> MessageQueue;
 FThreadSafeBool bIsRunning = true;
+
+// Delegate signature
+DECLARE_DELEGATE_RetVal(FString, FAPIBPCallbackSignature)
+DECLARE_DELEGATE_RetVal(TArray<TSharedPtr<FJsonValue>>, FAPICallbackSignature)
 
 USTRUCT(BlueprintType)
 struct FAPIEndpoint
@@ -136,7 +137,7 @@ struct FAPIEndpoint
 	bool bRequireGameThread;
 
 	UPROPERTY(EditAnywhere, Category = "Ficsit Remote Monitoring")
-	FAPICallbackDelegate OnAPIResponse;
+	FAPICallbackSignature FAPICallbackDelegate;
 };
 
 USTRUCT(BlueprintType)
@@ -154,7 +155,7 @@ struct FAPIBPEndpoint
 	bool bRequireGameThread;
 
 	UPROPERTY(EditAnywhere, Category = "Ficsit Remote Monitoring")
-	FAPIBPCallbackSignature FAPICallbackDelegate;
+	FAPIBPCallbackSignature FAPIBPCallbackDelegate;
 };
 
 UCLASS()
@@ -233,8 +234,11 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getAll(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> API_Endpoint_Call(UObject* WorldContext, EAPIEndpoints APICall);
 
-    //UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ficsit Remote Monitoring")
-    //TArray<FEndpointInfo> Endpoints;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ficsit Remote Monitoring")
+    TArray<FAPIEndpoint> Endpoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ficsit Remote Monitoring")
+	TArray<FAPIBPEndpoint> BPEndpoints;
 
 	UPROPERTY()
 	TArray<FString> Flavor_Battery;

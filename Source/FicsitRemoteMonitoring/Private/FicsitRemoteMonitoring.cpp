@@ -280,13 +280,13 @@ FString AFicsitRemoteMonitoring::API_Endpoint(UObject* WorldContext, FString API
 
 void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& InEndpoint, bool InGetAll, bool InExecuteOnGameThread, const FSimpleDelegate& InCallback)
 {
-    FEndpointInfo NewEndpoint;
-    NewEndpoint.Endpoint = InEndpoint;
-    NewEndpoint.bgetAll = InGetAll;
-    NewEndpoint.bExecuteOnGameThread = InExecuteOnGameThread;
-    NewEndpoint.Callback = InCallback;
+	FAPIEndpoint NewEndpoint;
+    NewEndpoint.APIName = InEndpoint;
+    NewEndpoint.bGetAll = InGetAll;
+    NewEndpoint.bRequireGameThread = InExecuteOnGameThread;
+    NewEndpoint = InCallback;
 
-    Endpoints.Add(NewEndpoint);
+	FAPIEndpoint.Add(NewEndpoint);
 }
 
 FString AFicsitRemoteMonitoring::ExecuteBPCallback(const FString& APIName)
