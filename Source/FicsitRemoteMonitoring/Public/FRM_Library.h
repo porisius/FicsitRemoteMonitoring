@@ -9,6 +9,8 @@
 #include "Buildables\FGBuildableManufacturer.h"
 #include "FGPowerInfoComponent.h"
 #include "Serialization/JsonWriter.h"
+#include "Json.h"
+#include "JsonUtilities.h"
 #include "FRM_Library.generated.h"
 
 UCLASS()
@@ -24,4 +26,5 @@ public:
 	static FString APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext);
 	static bool IsIntInRange(int32 Number, int32 LowerBound, int32 UpperBound);
 
+	static TSharedPtr<FJsonValue> ConvertStringToFJsonValue(const FString& JsonString);
 };
