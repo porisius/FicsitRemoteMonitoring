@@ -1,4 +1,5 @@
 #include "FicsitRemoteMonitoring.h"
+#include "Async/Async.h"
 
 AFicsitRemoteMonitoring* AFicsitRemoteMonitoring::Get(UWorld* WorldContext)
 {
@@ -55,7 +56,7 @@ void AFicsitRemoteMonitoring::RunWebSocketServer()
 {
 	bRunning = true;
 
-	UE_LOG(LogTemp, Warning, TEXT("Initializing WebSocket Service"));
+	UE_LOGFMT(LogHttpServer, Warning, "Initializing WebSocket Service");
 
 	try {
 		auto app = uWS::App();
@@ -277,6 +278,79 @@ FString AFicsitRemoteMonitoring::API_Endpoint(UObject* WorldContext, FString API
 	return Write;
 }
 
+void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& InEndpoint, bool InGetAll, bool InExecuteOnGameThread, const FSimpleDelegate& InCallback)
+{
+    FEndpointInfo NewEndpoint;
+    NewEndpoint.Endpoint = InEndpoint;
+    NewEndpoint.bgetAll = InGetAll;
+    NewEndpoint.bExecuteOnGameThread = InExecuteOnGameThread;
+    NewEndpoint.Callback = InCallback;
+
+    Endpoints.Add(NewEndpoint);
+}
+
+FString AFicsitRemoteMonitoring::ExecuteBPCallback(const FString& APIName)
+{
+	FString Request;
+
+	// Find the endpoint by APIName
+	for (FAPIEndpoint& Endpoint : APIEndpoints)
+	{
+		if (Endpoint.APIName == APIName)
+		{
+			// Check if the callback is bound
+			if (Endpoint.OnAPIResponse.IsBound())
+			{
+
+				if (EndpointInfo.bExecuteOnGameThread)
+            	{
+                	AsyncTask(ENamedThreads::GameThread, [Callback, Request]() {
+						Endpoint.OnAPIResponse.Execute(Request)
+					}
+				} else 
+					Endpoint.OnAPIResponse.Execute(Request)
+				}
+
+			}
+			break;
+		}
+	}
+
+	// Return an empty string if no endpoint found or callback not bound
+	return FString();
+}
+
+TArray<TSharedPtr<FJsonValue>> AFicsitRemoteMonitoring::CallEndpoint(const FString& InEndpoint)
+{
+    for (FEndpointInfo& EndpointInfo : Endpoints)
+    {
+        if (EndpointInfo.Endpoint == InEndpoint)
+        {
+
+			TArray<TSharedPtr<FJsonValue>> Request;
+			FSimpleDelegate Callback = EndpointInfo.Callback;
+
+            if (EndpointInfo.bExecuteOnGameThread)
+            {
+                AsyncTask(ENamedThreads::GameThread, [Callback, Request]() {
+					if Callback.IsBound() {
+						Callback.Execute(Request);
+					};
+                });
+            }
+            else
+            {
+                Callback.ExecuteIfBound(Request);
+            }
+
+			return Request;
+
+        }
+    }
+
+    // Return an empty JSON object if the endpoint is not found
+    return MakeShared<FJsonValueNull>();
+}
 
 FString AFicsitRemoteMonitoring::API_Endpoint_Interface(UObject* WorldContext, FJsonObjectWrapper JsonWrapper)
 {

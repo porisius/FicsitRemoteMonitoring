@@ -115,7 +115,8 @@ enum class EAPIEndpoints : uint8
 
 ENUM_RANGE_BY_COUNT(EAPIEndpoints, EAPIEndpoints::Count);
 
-DECLARE_DYNAMIC_DELEGATE_TwoParams(FAPIModRegistry, FString&, Output, FJsonObjectWrapper&, Json);
+// Delegate signature
+DECLARE_DELEGATE_RetVal(FString, FAPIBPCallbackSignature)
 
 // Declare a critical section
 FCriticalSection WebSocketCriticalSection;
@@ -123,33 +124,43 @@ TQueue<FString, EQueueMode::Mpsc> MessageQueue;
 FThreadSafeBool bIsRunning = true;
 
 USTRUCT(BlueprintType)
-struct FAPIRegistry
+struct FAPIEndpoint
 {
 	GENERATED_BODY()
-public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool getAllGroup;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	FAPIModRegistry Callback;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ficsit Remote Monitoring")
+	FString APIName;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ficsit Remote Monitoring")
+	bool bGetAll;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ficsit Remote Monitoring")
+	bool bRequireGameThread;
+
+	UPROPERTY(EditAnywhere, Category = "Ficsit Remote Monitoring")
+	FAPICallbackDelegate OnAPIResponse;
 };
 
-/*class UAPIRegisterInterface : public UInterface
+USTRUCT(BlueprintType)
+struct FAPIBPEndpoint
 {
 	GENERATED_BODY()
-};
 
-UINTERFACE(MinimalAPI, BlueprintType)
-class FICSITREMOTEMONITORING_API IAPIRegistry
-{
-	GENERATED_BODY()
-public:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void RegisterAPIEndpoint(FString Name, FAPIRegistry Callback);
-};*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ficsit Remote Monitoring")
+	FString APIName;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ficsit Remote Monitoring")
+	bool bGetAll;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ficsit Remote Monitoring")
+	bool bRequireGameThread;
+
+	UPROPERTY(EditAnywhere, Category = "Ficsit Remote Monitoring")
+	FAPIBPCallbackSignature FAPICallbackDelegate;
+};
 
 UCLASS()
-class FICSITREMOTEMONITORING_API AFicsitRemoteMonitoring : public AModSubsystem //, public IAPIRegistry
+class FICSITREMOTEMONITORING_API AFicsitRemoteMonitoring : public AModSubsystem
 {
 	GENERATED_BODY()
 
@@ -165,13 +176,14 @@ private:
 
 public:
 
-	//virtual void RegisterAPIEndpoint_Implementation(FString Name, FAPIRegistry Callback) override;
-
 	AFicsitRemoteMonitoring();
 	virtual ~AFicsitRemoteMonitoring();
 
 	/** Get the subsystem in the current world, can be nullptr, e.g. on game ending (destroy) or game startup. */
 	static AFicsitRemoteMonitoring* Get(UWorld* world);
+
+    void RegisterEndpoint(const FString& InEndpoint, bool InGetAll, bool InExecuteOnGameThread, const FSimpleDelegate& InCallback);
+    static TSharedPtr<FJsonValue> CallEndpoint(const FString& InEndpoint);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void GetDropPodInfo_BIE(const AFGDropPod* Droppod, TSubclassOf<UFGItemDescriptor>& ItemClass, int32& Amount, float& Power);
@@ -187,6 +199,14 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void CircuitID_BIE(UFGPowerInfoComponent* PowerInfo, TSubclassOf<class UFGBuildingDescriptor> Buildable, int32& CircuitID, float& PowerConsumption, float& MinPower, float& MaxPower, bool& VariblePower);
+
+	// Array of API endpoints
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ficsit Remote Monitoring")
+	TArray<FAPIEndpoint> APIEndpoints;
+
+	// Function to execute the callback for a specific API endpoint and return the result as a string
+	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
+	FString ExecuteCallback(const FString& APIName);
 
 	//UFUNCTION(BlueprintImplementableEvent)
 	//void OpenSerial(const FString ComPort, int32 BaudRate, int32 StackSize, bool& Success);
@@ -215,12 +235,8 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getAll(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> API_Endpoint_Call(UObject* WorldContext, EAPIEndpoints APICall);
 
-	void HandleAPICall(EAPIEndpoints APICall, UObject* WorldContext);
-
-	TArray<TSharedPtr<FJsonValue>> Json;
-
-	UPROPERTY(BlueprintReadWrite)
-	TMap<FString, FAPIRegistry> APIRegister;
+    //UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ficsit Remote Monitoring")
+    //TArray<FEndpointInfo> Endpoints;
 
 	UPROPERTY()
 	TArray<FString> Flavor_Battery;
@@ -247,3 +263,4 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 };
+
