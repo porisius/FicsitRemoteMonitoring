@@ -372,7 +372,7 @@ FString AFicsitRemoteMonitoring::API_Endpoint_Interface(UObject* WorldContext, F
 
 	return Write;
 }
-
+/*
 TArray<TSharedPtr<FJsonValue>> AFicsitRemoteMonitoring::API_Endpoint_Call(UObject* WorldContext, const EAPIEndpoints APICall)
 {
 	TArray<TSharedPtr<FJsonValue>> Json;
@@ -481,3 +481,4 @@ TArray<TSharedPtr<FJsonValue>> AFicsitRemoteMonitoring::getAll(UObject* WorldCon
 	return JsonArray;
 
 }
+*/
