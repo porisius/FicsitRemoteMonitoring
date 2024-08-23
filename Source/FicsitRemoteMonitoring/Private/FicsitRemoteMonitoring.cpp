@@ -193,6 +193,8 @@ void AFicsitRemoteMonitoring::RunWebSocketServer()
 				}
 				});
 
+			app.close();	
+
 	}
 	catch (const std::exception& e) {
 		FScopeLock ScopeLock(&WebSocketCriticalSection);
