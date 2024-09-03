@@ -118,12 +118,12 @@ bool UFRM_Library::IsIntInRange(int32 Number, int32 LowerBound, int32 UpperBound
 
 TSharedPtr<FJsonValue> ConvertStringToFJsonValue(const FString& JsonString)
 {
-	TSharedPtr<FJsonValue> JsonValue;
+	TSharedPtr<FJsonValue> FJsonValue;
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
 
-	if (FJsonSerializer::Deserialize(Reader, JsonValue) && JsonValue.IsValid())
+	if (FJsonSerializer::Deserialize(Reader, FJsonValue) && FJsonValue.IsValid())
 	{
-		return JsonValue;
+		return FJsonValue;
 	}
 
 	UE_LOGFMT(LogFRMDebug, Log, "Invalid JSON Detected: {0}", JsonString);
