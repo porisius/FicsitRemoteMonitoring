@@ -532,7 +532,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 
 	for (AFGBuildableRadarTower* RadarTower : RadarTowers) {
 
-		UFGRadarTowerRepresentation* RadarData = RadarTower->GetRadarTowerRepresentation();
+		UFGRadarTowerRepresentation* RadarData = RadarTower->FindRadarTowerRepresentation();
 
 		TSharedPtr<FJsonObject> JRadarTower = MakeShared<FJsonObject>();
 		TArray<TSharedPtr<FJsonValue>> JFaunaArray;

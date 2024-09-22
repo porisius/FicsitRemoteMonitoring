@@ -111,9 +111,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 			JSupplemental->Values.Add("PercentFull", MakeShared<FJsonValueNumber>(GeneratorFuel->GetSupplementalAmount() * 100));
 
 			FuelAmount = GeneratorFuel->GetFuelAmount();
-			FuelForm = GeneratorFuel->GetFuelResourceForm();
+			FuelForm = UFGItemDescriptor::GetForm(GeneratorFuel->GetCurrentFuelClass());
 			
-			TArray<TSubclassOf<UFGItemDescriptor>> FuelClasses = GeneratorFuel->GetAvailableFuelClasses();
+			TArray<TSubclassOf<UFGItemDescriptor>> FuelClasses = GeneratorFuel->GetAvailableFuelClasses(GeneratorFuel->GetFuelInventory());
 			for (TSubclassOf<UFGItemDescriptor> FuelClass : FuelClasses) {
 
 				TSharedPtr<FJsonObject> JFuel = MakeShared<FJsonObject>();
@@ -153,7 +153,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 
 				TSharedPtr<FJsonObject> JWaste = MakeShared<FJsonObject>();
 
-				AActor* ItemState;
+				FFGDynamicStruct ItemState;
 				TSubclassOf<UFGItemDescriptor> WasteClass;
 				FInventoryItem WasteClassItem;
 				int32 Amount = 0;

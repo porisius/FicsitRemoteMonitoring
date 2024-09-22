@@ -18,9 +18,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 		TSharedPtr<FJsonObject> JDroneStation = MakeShared<FJsonObject>();
 
 		TArray<FInventoryStack> BatteryInventoryStacks;
-		UFGInventoryComponent* BatteryInventory = DroneStation->GetBatteryInventory();
+//		UFGInventoryComponent* BatteryInventory = DroneStation->GetBatteryInventory();
 		TMap<TSubclassOf<UFGItemDescriptor>, float> BatteryInventoryTMap;
-		BatteryInventory->GetInventoryStacks(BatteryInventoryStacks);
+//		BatteryInventory->GetInventoryStacks(BatteryInventoryStacks);
 		for (FInventoryStack BatteryInventoryStack : BatteryInventoryStacks) {
 
 			auto ItemClass = BatteryInventoryStack.Item.GetItemClass();
@@ -139,7 +139,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 			case EDroneStatus::EDS_DOCKING : FormString = "Docking";
 			case EDroneStatus::EDS_EN_ROUTE : FormString = "En Route";
 			case EDroneStatus::EDS_LOADING : FormString = "Loading";
-			case EDroneStatus::EDS_NOT_ENOUGH_BATTERIES : FormString = "Not Enough Batteries";
+			//case EDroneStatus::EDS_NOT_ENOUGH_BATTERIES : FormString = "Not Enough Batteries";
 			case EDroneStatus::EDS_NO_DRONE : FormString = "No Drone";
 			case EDroneStatus::EDS_TAKEOFF : FormString = "Taking Off";
 			case EDroneStatus::EDS_UNLOADING : FormString = "Unloading";
@@ -169,7 +169,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 		JDroneStation->Values.Add("AvgTotalOutStack", MakeShared<FJsonValueNumber>(StationInfo->GetAverageTotalOutgoingItemStackRate()));
 		JDroneStation->Values.Add("AvgTripIncAmt", MakeShared<FJsonValueNumber>(StationInfo->GetAverageTripIncomingItemAmount()));
 		JDroneStation->Values.Add("AvgTripOutAmt", MakeShared<FJsonValueNumber>(StationInfo->GetAverageTripOutgoingItemAmount()));
-		JDroneStation->Values.Add("EstRndTrip", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(StationInfo->GetEstimatedRoundTripTime())));
+//		JDroneStation->Values.Add("EstRndTrip", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(StationInfo->GetEstimatedRoundTripTime())));
 		JDroneStation->Values.Add("EstTotalTransRate", MakeShared<FJsonValueNumber>(StationInfo->GetEstimatedTotalTransportRate()));
 		JDroneStation->Values.Add("EstLatestTotalIncStack", MakeShared<FJsonValueNumber>(StationInfo->GetLatestEstimatedTotalIncomingItemStackRate()));
 		JDroneStation->Values.Add("EstLatestTotalOutStack", MakeShared<FJsonValueNumber>(StationInfo->GetLatestEstimatedTotalOutgoingItemStackRate()));
@@ -181,7 +181,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 		JDroneStation->Values.Add("MedianRndTrip", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(StationInfo->GetMedianRoundTripTime())));
 		JDroneStation->Values.Add("MedianTripIncAmt", MakeShared<FJsonValueNumber>(StationInfo->GetMedianTripIncomingItemAmount()));
 		JDroneStation->Values.Add("MedianTripOutAmt", MakeShared<FJsonValueNumber>(StationInfo->GetMedianTripOutgoingItemAmount()));
-		JDroneStation->Values.Add("EstBatteryRate", MakeShared<FJsonValueNumber>(StationInfo->GetEstimatedBatteryRequirementRate()));
+//		JDroneStation->Values.Add("EstBatteryRate", MakeShared<FJsonValueNumber>(StationInfo->GetEstimatedBatteryRequirementRate()));
 		JDroneStation->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(DroneStation, DroneStation->mDisplayName.ToString(), "Drone Station")));
 
 		JDroneStationArray.Add(MakeShared<FJsonValueObject>(JDroneStation));
@@ -206,7 +206,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDrone(UObject* WorldContext) {
 
 		AFGDroneVehicle* Drone = Cast<AFGDroneVehicle>(FoundActor);
 
-		EDroneFlyingMode Form = Drone->GetCurrentFlyingMode();
+		EDroneFlyingMode Form = Drone->GetDroneMovementComponent()->GetFlyingMode();
 
 		FString FormString = "Unknown";
 		if (Form == EDroneFlyingMode::DFM_Flying) {
@@ -238,7 +238,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDrone(UObject* WorldContext) {
 		JDrone->Values.Add("HomeStation", MakeShared<FJsonValueString>((Drone->GetHomeStation()->mDisplayName.ToString())));
 		JDrone->Values.Add("PairedStation", MakeShared<FJsonValueString>(PairedStation));
 		JDrone->Values.Add("CurrentDestination", MakeShared<FJsonValueString>(Destination));
-		JDrone->Values.Add("FlyingSpeed", MakeShared<FJsonValueNumber>(Drone->GetCurrentVelocity().Length()));
+		JDrone->Values.Add("FlyingSpeed", MakeShared<FJsonValueNumber>(Drone->GetDroneMovementComponent()->GetVelocity().Length()));
 		JDrone->Values.Add("CurrentFlyingMode", MakeShared<FJsonValueString>(FormString));
 		JDrone->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Drone, Drone->mDisplayName.ToString(), "Drone")));
 

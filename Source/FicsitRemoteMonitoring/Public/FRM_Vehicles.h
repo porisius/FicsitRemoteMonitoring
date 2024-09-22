@@ -32,5 +32,6 @@ public:
 
 protected: 
 	friend class AFGVehicleSubsystem;
+	friend class AFGBuildableDockingStation;
 	friend class AFGSavedWheeledVehiclePath;
 };
