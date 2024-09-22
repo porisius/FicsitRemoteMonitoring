@@ -2,7 +2,7 @@
 #include "Commands/multi.h"
 #include <regex>
 
-FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, class UCommandSender* Sender, const TArray<FString> Arguments) {
+FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, class UCommandSender* Sender, TArray<FString> Arguments) {
 
 	FChatReturn ChatReturn;
 	FLinearColor color = FLinearColor::Red;
@@ -17,39 +17,32 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, class UC
 
 		FString OutputType = Arguments[1].ToLower();
 		FString sEndpoint = Arguments[2];
-		bool bSuccess = false;
-		EAPIEndpoints eEndpoint;
 
-		ModSubsystem->TextToAPI(sEndpoint, bSuccess, eEndpoint);
+		FString Json = ModSubsystem->HandleEndpoint(WorldContext, sEndpoint);
 
-		if (bSuccess) {
+		if (OutputType == "file") {
 
-			FString Json = AFicsitRemoteMonitoring::API_Endpoint(WorldContext, eEndpoint);
+			FString JsonPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/Debug/" + sEndpoint + ".json";
 
-			if (OutputType == "file") {
+			UNotificationLoader::FileSaveString(Json, JsonPath);
 
-				FString JsonPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/Debug/" + sEndpoint + ".json";
+			ChatReturn.Chat = TEXT("Data saved to Mod location in the Debug folder.");
+			ChatReturn.Color = FLinearColor::White;
+			ChatReturn.Status = EExecutionStatus::COMPLETED;
 
-				UNotificationLoader::FileSaveString(Json, JsonPath);
-
-				ChatReturn.Chat = TEXT("Data saved to Mod location in the Debug folder.");
-				ChatReturn.Color = FLinearColor::White;
-				ChatReturn.Status = EExecutionStatus::COMPLETED;
-
-				return ChatReturn;
-
-			}
-			else if (OutputType == "info") {
-
-				ChatReturn.Chat = Json;
-				ChatReturn.Color = FLinearColor::White;
-				ChatReturn.Status = EExecutionStatus::COMPLETED;
-
-				return ChatReturn;
-
-			}
+			return ChatReturn;
 
 		}
+		else if (OutputType == "info") {
+
+			ChatReturn.Chat = Json;
+			ChatReturn.Color = FLinearColor::White;
+			ChatReturn.Status = EExecutionStatus::COMPLETED;
+
+			return ChatReturn;
+
+		}
+
 		else {
 
 			ChatReturn.Chat = TEXT("Unable to find output type, please refer to the documentation at docs.ficsit.app.");

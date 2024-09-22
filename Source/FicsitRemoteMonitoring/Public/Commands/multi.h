@@ -37,6 +37,6 @@ class FICSITREMOTEMONITORING_API AFRMCommand : public AChatCommandInstance {
 public: 
 
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
-	FChatReturn RemoteMonitoringCommand(UObject* WorldContext, class UCommandSender* Sender, const TArray<FString> Arguments);
+	FChatReturn RemoteMonitoringCommand(UObject* WorldContext, class UCommandSender* Sender, TArray<FString> Arguments);
 
 };

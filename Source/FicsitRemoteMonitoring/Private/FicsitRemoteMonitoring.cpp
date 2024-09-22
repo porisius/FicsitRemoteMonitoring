@@ -117,7 +117,7 @@ void AFicsitRemoteMonitoring::RunWebSocketServer()
 			FString OutJson = "{\"Error: \"API Endpoint Not Found\"}";
 
 			if (bSuccess) {
-				OutJson = AFicsitRemoteMonitoring::API_Endpoint(World, Endpoint);
+				OutJson = this->HandleEndpoint(World, RequestUrl);
 			}
 
 			// Log the request URL
@@ -258,120 +258,54 @@ void AFicsitRemoteMonitoring::InitOutageNotification() {
 
 }
 
-FString AFicsitRemoteMonitoring::API_Endpoint(UObject* WorldContext, FString APICall)
-{
-
-	TArray<TSharedPtr<FJsonValue>> RetrievedJson = AFicsitRemoteMonitoring::CallEndpoint(APICall);
-
-	FString Write;
-	auto config = FConfig_FactoryStruct::GetActiveConfig(WorldContext);
-
-	if (config.JSONDebugMode) {
-		const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write);
-		FJsonSerializer::Serialize(RetrievedJson, JsonWriter);
-	}
-	else {
-		const TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-		FJsonSerializer::Serialize(RetrievedJson, JsonWriter);
-	}
-
-	return Write;
-}
-
-void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& InEndpoint, bool InGetAll, bool InExecuteOnGameThread, const FSimpleDelegate& InCallback)
+void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FAPICallback InCallback, UClass* Class)
 {
 	FAPIEndpoint NewEndpoint;
-    NewEndpoint.APIName = InEndpoint;
-    NewEndpoint.bGetAll = InGetAll;
-    NewEndpoint.bRequireGameThread = InExecuteOnGameThread;
-    NewEndpoint = InCallback;
+    NewEndpoint.APIName = APIName;
+    NewEndpoint.bGetAll = bGetAll;
+    NewEndpoint.bRequireGameThread = bRequireGameThread;
+    NewEndpoint.Callback = InCallback;
+	NewEndpoint.ClassType = Class;
 
-	FAPIEndpoint.Add(NewEndpoint);
+	APIEndpoints.Add(NewEndpoint);
 }
 
-FString AFicsitRemoteMonitoring::ExecuteBPCallback(const FString& APIName)
+UBlueprintJsonObject* AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint)
 {
-	FString Request;
-
-	// Find the endpoint by APIName
-	for (FAPIEndpoint& Endpoint : APIEndpoints)
-	{
-		if (Endpoint.APIName == APIName)
-		{
-			// Check if the callback is bound
-			if (Endpoint.OnAPIResponse.IsBound())
-			{
-
-				if (EndpointInfo.bExecuteOnGameThread)
-            	{
-                	AsyncTask(ENamedThreads::GameThread, [Callback, Request]() {
-						Endpoint.OnAPIResponse.Execute(Request)
-					}
-				} else 
-					Endpoint.OnAPIResponse.Execute(Request)
-				}
-
-			}
-			break;
-		}
-	}
-
-	// Return an empty string if no endpoint found or callback not bound
-	return FString();
-}
-
-TArray<TSharedPtr<FJsonValue>> AFicsitRemoteMonitoring::CallEndpoint(const FString& InEndpoint)
-{
-    for (FEndpointInfo& EndpointInfo : Endpoints)
+    for (FAPIEndpoint& EndpointInfo : APIEndpoints)
     {
-        if (EndpointInfo.Endpoint == InEndpoint)
+        if (EndpointInfo.APIName == InEndpoint)
         {
+            FAPICallback Callback = EndpointInfo.Callback;
 
-			TArray<TSharedPtr<FJsonValue>> Request;
-			FSimpleDelegate Callback = EndpointInfo.Callback;
-
-            if (EndpointInfo.bExecuteOnGameThread)
+            if (EndpointInfo.bRequireGameThread)
             {
-                AsyncTask(ENamedThreads::GameThread, [Callback, Request]() {
-					if Callback.IsBound() {
-						Callback.Execute(Request);
-					};
+                AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext, ClassType = EndpointInfo.ClassType]() {
+                    // Handle null ClassType: pass nullptr if ClassType is not required
+                    return Callback.Execute(WorldContext, ClassType);
                 });
             }
             else
             {
-                Callback.ExecuteIfBound(Request);
+                // Directly execute the callback, handling nullptr for ClassType
+                return Callback.Execute(WorldContext, EndpointInfo.ClassType);
             }
-
-			return Request;
-
         }
     }
 
-    // Return an empty JSON object if the endpoint is not found
-    return MakeShared<FJsonValueNull>();
+    // Return an empty JSON object if no matching endpoint is found
+    return nullptr;
 }
 
-FString AFicsitRemoteMonitoring::API_Endpoint_Interface(UObject* WorldContext, FJsonObjectWrapper JsonWrapper)
+FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoin)
 {
-	TArray<TSharedPtr<FJsonValue>> Json;
+	UBlueprintJsonObject* Json = this->CallEndpoint(WorldContext, InEndpoin);
 
-	Json.Add(MakeShared<FJsonValueObject>(JsonWrapper.JsonObject));
+	FConfig_FactoryStruct config = FConfig_FactoryStruct::GetActiveConfig(WorldContext);
+	return Json->Stringify(config.JSONDebugMode);
 
-	FString Write;
-	auto config = FConfig_FactoryStruct::GetActiveConfig(WorldContext);
-
-	if (config.JSONDebugMode) {
-		const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write);
-		FJsonSerializer::Serialize(Json, JsonWriter);
-	}
-	else {
-		const TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-		FJsonSerializer::Serialize(Json, JsonWriter);
-	}
-
-	return Write;
 }
+
 /*
 TArray<TSharedPtr<FJsonValue>> AFicsitRemoteMonitoring::API_Endpoint_Call(UObject* WorldContext, const EAPIEndpoints APICall)
 {
