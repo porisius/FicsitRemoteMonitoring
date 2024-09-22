@@ -122,23 +122,25 @@ FThreadSafeBool bIsRunning = true;
 
 DECLARE_DELEGATE_RetVal_TwoParams(UBlueprintJsonObject*, FAPICallback, const UObject* /* WorldContext */, const UClass* /* Class */);
 
-USTRUCT()
+USTRUCT(BlueprintType, meta = (DontUseGenericSpawnObject = "True"))
 struct FAPIEndpoint
 {
     GENERATED_BODY()
 
-    UPROPERTY()
+public:
+
+    UPROPERTY(BlueprintReadWrite)
     FString APIName;
 
-    UPROPERTY()
+    UPROPERTY(BlueprintReadWrite)
     bool bGetAll;
 
-    UPROPERTY()
+    UPROPERTY(BlueprintReadWrite)
     bool bRequireGameThread;
 
     FAPICallback Callback;
 
-    UPROPERTY()
+    UPROPERTY(BlueprintReadWrite)
     UClass* ClassType;
 };
 
