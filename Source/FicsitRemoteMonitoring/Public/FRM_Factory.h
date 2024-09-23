@@ -17,6 +17,7 @@
 #include "Buildables/FGBuildableResourceExtractor.h"
 #include "Buildables/FGBuildableSpaceElevator.h"
 #include "Buildables/FGBuildableRadarTower.h"
+#include "FGScannableSubsystem.h"
 #include "Resources/FGExtractableResourceInterface.h"
 #include "Resources/FGResourceNode.h"
 #include "Resources/FGResourceNodeBase.h"

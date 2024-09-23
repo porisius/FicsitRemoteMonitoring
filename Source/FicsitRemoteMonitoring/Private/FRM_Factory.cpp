@@ -388,15 +388,18 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext) {
 
 		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
 		fgcheck(ModSubsystem);
-		
-		ModSubsystem->GetDropPodInfo_BIE(DropPod, ItemClass, ItemAmount, PowerRequired);
+
+		FFGDropPodUnlockCost DropPodCost = DropPod->GetUnlockCost();
 
 		FString JItemName = "No Item";
 		FString JItemClass = "Desc_NoItem";
 
+		ItemAmount = DropPodCost.ItemCost.Amount;
+		TSubclassOf<UFGItemDescriptor> ItemClass = DropPodCost.ItemCost.ItemClass;
+
 		if (ItemAmount > 0) {
 			JItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
-			JItemClass = UKismetSystemLibrary::GetClassDisplayName(ItemClass);
+			JItemClass = UKismetSystemLibrary::GetClassDisplayName(DropPodCost.ItemCost.ItemClass);
 		};
 
 		JDropPod->Values.Add("ID", MakeShared<FJsonValueString>(DropPod->GetName()));
