@@ -31,7 +31,8 @@ public class FicsitRemoteMonitoring : ModuleRules
                 "ChaosVehiclesCore", 
                 "ChaosVehicles", 
                 "HTTP",
-                "JsonBlueprint"
+                "JsonBlueprint",
+                "FicsitRemoteMonitoring"
             }
         );
 

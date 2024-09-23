@@ -120,7 +120,7 @@ FCriticalSection WebSocketCriticalSection;
 TQueue<FString, EQueueMode::Mpsc> MessageQueue;
 FThreadSafeBool bIsRunning = true;
 
-DECLARE_DELEGATE_RetVal_TwoParams(UBlueprintJsonObject*, FAPICallback, const UObject* /* WorldContext */, const UClass* /* Class */);
+UDELEGATE(BlueprintCallable) DECLARE_DYNAMIC_DELEGATE_RetVal_TwoParams(UBlueprintJsonObject*, FAPICallback, const UObject*, WorldContext, const UClass*, Class);
 
 USTRUCT(BlueprintType, meta = (DontUseGenericSpawnObject = "True"))
 struct FAPIEndpoint
@@ -167,9 +167,13 @@ public:
 	/** Get the subsystem in the current world, can be nullptr, e.g. on game ending (destroy) or game startup. */
 	static AFicsitRemoteMonitoring* Get(UWorld* world);
 
+	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
     void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FAPICallback InCallback, UClass* Class);
 
+	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
 	FString HandleEndpoint (UObject* WorldContext, FString InEndpoin);
+	
+	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
     UBlueprintJsonObject* CallEndpoint(UObject* WorldContext, FString InEndpoin);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
