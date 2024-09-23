@@ -13,7 +13,7 @@ class UBlueprintJsonObject;
  * Json Values, as they might occur in arrays or generally values without specific type.
  */
 UCLASS(Blueprintable)
-class FICSITREMOTEMONITORING_API UBlueprintJsonValue : public UObject
+class JSONBLUEPRINT_API UBlueprintJsonValue : public UObject
 {
 	GENERATED_BODY()
 

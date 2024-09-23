@@ -15,7 +15,7 @@
  * A Class for handling Json in C++ as well as Blueprints. If you only want to use Json in C++, use the integrated Json module; use this plugin only if you want to export Json Objects to Blueprint
  */
 UCLASS(Blueprintable)
-class FICSITREMOTEMONITORING_API UBlueprintJsonObject : public UObject
+class JSONBLUEPRINT_API UBlueprintJsonObject : public UObject
 {
 	GENERATED_BODY()
 

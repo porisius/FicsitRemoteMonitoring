@@ -47,7 +47,7 @@
 #include "HAL/PlatformProcess.h"
 #include "Async/Async.h"
 #include "Misc/Paths.h"
-#include "JsonBlueprint/BlueprintJsonObject.h"
+#include "BlueprintJsonObject.h"
 
 #include "FicsitRemoteMonitoring.generated.h"
 

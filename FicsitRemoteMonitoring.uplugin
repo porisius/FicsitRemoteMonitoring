@@ -21,6 +21,11 @@
 			"Name": "FicsitRemoteMonitoring",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "JsonBlueprint",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
 		}
 	],
 	"Plugins": [

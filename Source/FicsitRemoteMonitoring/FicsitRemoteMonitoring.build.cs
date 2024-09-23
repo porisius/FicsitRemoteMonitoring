@@ -30,13 +30,15 @@ public class FicsitRemoteMonitoring : ModuleRules
                 "Chaos", 
                 "ChaosVehiclesCore", 
                 "ChaosVehicles", 
-                "HTTP"
+                "HTTP",
+                "JsonBlueprint"
             }
         );
 
         PrivateDependencyModuleNames.AddRange(new string[] { 
             "HTTP", 
-            "HTTPServer"
+            "HTTPServer",
+            "JsonBlueprint"
         });
 
         PublicIncludePaths.Add(Path.Combine(ThirdPartyPath, "uWebSockets"));
