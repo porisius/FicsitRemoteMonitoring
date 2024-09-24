@@ -6,10 +6,11 @@
 #include "Json.h"
 #include <cmath>
 #include <typeinfo>
-
+#include "JsonUtilities/Public/JsonObjectConverter.h"
 #include "BlueprintJsonValue.h"
 
 #include "BlueprintJsonObject.generated.h"
+
 
 /**
  * A Class for handling Json in C++ as well as Blueprints. If you only want to use Json in C++, use the integrated Json module; use this plugin only if you want to export Json Objects to Blueprint
@@ -156,4 +157,59 @@ public:
 	// Sets a certain Json Array as value in a Json Object without specifying a type
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Set Array", Keywords = "Json Set Array", ShortTooltip = "Sets a certain Json Array as value in a Json Object without specifying a type"), Category = "Json|Object")
 	UBlueprintJsonObject* SetArray(FString Key, TArray<UBlueprintJsonValue*> Values);
+
+	// BlueprintCallable function using Custom Thunk to support arbitrary struct conversion
+	UFUNCTION(BlueprintCallable, CustomThunk, Category = "JSON", meta = (CustomStructureParam = "Struct"))
+	static UBlueprintJsonObject* StructToJsonObject(const UStruct* Struct);  // Placeholder
+
+	// Declare the custom exec function (thunk)
+	DECLARE_FUNCTION(execStructToJsonObject)
+	{
+		// Step into the struct parameter passed via Blueprint
+		Stack.StepCompiledIn<FStructProperty>(nullptr); // Retrieve the struct
+		FStructProperty* StructProperty = CastField<FStructProperty>(Stack.MostRecentProperty);
+		void* StructPtr = Stack.MostRecentPropertyAddress;
+
+		// Check for validity of the struct
+		if (!StructProperty)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Invalid struct parameter."));
+			return;
+		}
+
+		// Finish processing the call
+		P_FINISH;
+
+		// Call the C++ conversion function to serialize the struct to JSON
+		*(UBlueprintJsonObject**)RESULT_PARAM = StructToJson(StructProperty->Struct, StructPtr);
+	}
+
+	// Helper function to convert struct to JSON
+	static UBlueprintJsonObject* StructToJson(const UStruct* StructDefinition, const void* StructData)
+	{
+		if (!StructDefinition || !StructData)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Invalid input to StructToJson."));
+			return nullptr;
+		}
+
+		// Create a new JSON object
+		TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+		// Use FJsonObjectConverter to convert the struct to a JSON object
+		if (FJsonObjectConverter::UStructToJsonObject(StructDefinition, StructData, JsonObject.ToSharedRef(), 0, 0))
+		{
+			// Create a UBlueprintJsonObject to wrap the JSON data
+			UBlueprintJsonObject* BlueprintJsonObject = NewObject<UBlueprintJsonObject>();
+
+			// Populate the UBlueprintJsonObject with the serialized JSON data
+			BlueprintJsonObject->FromSharedPointer(JsonObject);
+
+			return BlueprintJsonObject;
+		}
+
+		UE_LOG(LogTemp, Error, TEXT("Failed to serialize struct to JSON."));
+		return nullptr;
+	}
+
 };

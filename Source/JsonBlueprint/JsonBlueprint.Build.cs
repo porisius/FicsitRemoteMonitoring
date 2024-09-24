@@ -7,7 +7,7 @@ public class JsonBlueprint : ModuleRules
 	public JsonBlueprint(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-		
+
 		PublicIncludePaths.AddRange(
 			new string[] {
 				"JsonBlueprint/Public"
@@ -28,6 +28,10 @@ public class JsonBlueprint : ModuleRules
 			new string[]
 			{
 				"Core",
+				"CoreUObject",
+				"Engine",
+				"Json",
+				"JsonUtilities"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -41,6 +45,7 @@ public class JsonBlueprint : ModuleRules
 				"Slate",
 				"SlateCore",
                 "Json",
+				"JsonUtilities"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
