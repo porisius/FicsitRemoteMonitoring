@@ -32,9 +32,7 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"PlatformAllowList": [
-				"Win64",
-				"Linux",
-				"Mac"
+				"Win64"
 			]
 		},
 		{
@@ -52,10 +50,9 @@
 		{
 			"Name": "SML",
 			"SemVersion": "^3.8.0-dev",
-			"Enabled": true,
-			"BasePlugin": false
+			"Enabled": true
 		}
 	],
-	"RemoteVersionRange": "",
-	"GameVersion": ">=365306"
+	"GameVersion": ">=365306",
+	"RequiredOnRemote": false
 }
