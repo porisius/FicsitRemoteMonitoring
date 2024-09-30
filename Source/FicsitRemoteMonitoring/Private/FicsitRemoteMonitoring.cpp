@@ -24,6 +24,7 @@ AFicsitRemoteMonitoring::~AFicsitRemoteMonitoring()
 void AFicsitRemoteMonitoring::BeginPlay()
 {
 	Super::BeginPlay();
+//	InitAPIRegistry();
 	StartWebSocketServer();
 }
 
@@ -35,179 +36,28 @@ void AFicsitRemoteMonitoring::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AFicsitRemoteMonitoring::StopWebSocketServer()
 {
-	if (WebSocketThread.joinable())
+	// Ensure the WebSocket server is stopped and destroyed
+	if (IsValid(WebSocketServer))
 	{
-		bRunning = false;
-		WebSocketThread.join();
-	}
-}
-
-void AFicsitRemoteMonitoring::StartWebSocketServer() {
-
-	if (WebSocketThread.joinable())
-	{
-		WebSocketThread.join();
+		WebSocketServer->Stop();
+		//WebSocketServer.Reset();
 	}
 
-	WebSocketThread = std::thread(&AFicsitRemoteMonitoring::RunWebSocketServer, this);
 };
 
-void AFicsitRemoteMonitoring::RunWebSocketServer()
+void AFicsitRemoteMonitoring::StartWebSocketServer()
 {
-	bRunning = true;
+    FString ModPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/";
+    FString UIPath = ModPath + "www";
+    FString IconsPath = ModPath + "Icons";
+    int Port = 3000;
 
-	UE_LOGFMT(LogHttpServer, Warning, "Initializing WebSocket Service");
-
-	try {
-		auto app = uWS::App();
-
-		auto World = GetWorld();
-		auto config = FConfig_HTTPStruct::GetActiveConfig(World);
-
-		FString ModPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/";
-		FString IconsPath = ModPath + "Icons";
-		FString UIPath;
-
-		if (config.Web_Root.IsEmpty()) {
-			UIPath = ModPath + "www";
-		}
-		else
-		{
-			UIPath = config.Web_Root;
-		};
-
-		int port = config.HTTP_Port;
-
-		app.get("/getCoffee", [](auto* res, auto* req) {
-			FScopeLock ScopeLock(&WebSocketCriticalSection);
-			if (!res || !req) {
-				UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
-				return;
-			}
-
-			FString noCoffee = TEXT("Error getting coffee, coffee cup, or red solo cup: (418) I'm a teapot."
-				"#PraiseAlpaca"
-				"#BlameSimon");
-
-
-			// Set CORS headers
-			res->writeHeader("Access-Control-Allow-Origin", "*");
-			res->writeHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-			res->writeHeader("Access-Control-Allow-Headers", "Content-Type");
-
-			res->writeStatus("418 I'm a teapot")->end(TCHAR_TO_UTF8(*noCoffee));
-
-			});
-
-		app.get("/:APIEndpoint", [this, World](auto* res, auto* req) {
-			FScopeLock ScopeLock(&WebSocketCriticalSection);
-			if (!res || !req) {
-				UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
-				return;
-			}
-
-			std::string url(req->getParameter("APIEndpoint"));
-			FString RequestUrl = FString(url.c_str());
-
-			bool bSuccess = false;
-			EAPIEndpoints Endpoint;
-
-			this->TextToAPI(RequestUrl, bSuccess, Endpoint);
-
-			FString OutJson = "{\"Error: \"API Endpoint Not Found\"}";
-
-			if (bSuccess) {
-				OutJson = this->HandleEndpoint(World, RequestUrl);
-			}
-
-			// Log the request URL
-			UE_LOG(LogHttpServer, Log, TEXT("Request URL: %s"), *RequestUrl);
-
-			// Set CORS headers
-			res->writeHeader("Access-Control-Allow-Origin", "*");
-			res->writeHeader("Access-Control-Allow-Methods", "GET, POST");
-			res->writeHeader("Access-Control-Allow-Headers", "Content-Type");
-
-			res->end(TCHAR_TO_UTF8(*OutJson));
-
-			});
-
-		app.get("/", [](auto* res, auto* req) {
-			FScopeLock ScopeLock(&WebSocketCriticalSection);
-			res->writeStatus("301 Moved Permanently")->writeHeader("Location", "/index.html")->end();
-		});
-
-		app.get("/icons/*", [IconsPath](auto* res, auto* req) {
-			std::string url(req->getUrl().begin(), req->getUrl().end());
-			FString RelativePath = FString(url.c_str()).Replace(TEXT("/icons/"), TEXT(""));
-			FString FilePath = FPaths::Combine(IconsPath, RelativePath);
-
-			FString FileContent;
-			if (FPaths::FileExists(FilePath) && FFileHelper::LoadFileToString(FileContent, *FilePath))
-			{
-				res->writeHeader("Access-Control-Allow-Origin", "*")->end(TCHAR_TO_UTF8(*FileContent));
-			}
-			else
-			{
-				res->writeStatus("404 Not Found")->end("File not found");
-			}
-			}
-		);
-
-		app.get("/*", [UIPath](auto* res, auto* req) {
-			std::string url(req->getUrl().begin(), req->getUrl().end());
-			FString RelativePath = FString(url.c_str()).Replace(TEXT("/"), TEXT(""));
-			FString FilePath = FPaths::Combine(UIPath, RelativePath);
-
-			FString FileContent;
-			if (FPaths::FileExists(FilePath) && FFileHelper::LoadFileToString(FileContent, *FilePath))
-			{
-				res->writeHeader("Access-Control-Allow-Origin", "*")->end(TCHAR_TO_UTF8(*FileContent));
-			}
-			else
-			{
-				res->writeStatus("404 Not Found")->end("File not found");
-			}
-		});
-
-		app.listen(port, [](auto* token) {
-			FScopeLock ScopeLock(&WebSocketCriticalSection);
-			if (token) {
-				UE_LOG(LogHttpServer, Warning, TEXT("Listening on port"));
-			}
-			else {
-				UE_LOG(LogHttpServer, Error, TEXT("Failed to listen on port"));
-			}
-			}).run();
-
-			// Asynchronous message processing
-			Async(EAsyncExecution::Thread, [this]() {
-				while (bIsRunning)
-				{
-					FString Message;
-					while (MessageQueue.Dequeue(Message))
-					{
-						// Process message
-						UE_LOG(LogHttpServer, Warning, TEXT("Processing message: %s"), *Message);
-					}
-					FPlatformProcess::Sleep(0.01f);
-				}
-				});
-
-			app.close();	
-
-	}
-	catch (const std::exception& e) {
-		FScopeLock ScopeLock(&WebSocketCriticalSection);
-		UE_LOG(LogHttpServer, Error, TEXT("Exception in InitWSService: %s"), *FString(e.what()));
-	}
-	catch (...) {
-		FScopeLock ScopeLock(&WebSocketCriticalSection);
-		UE_LOG(LogHttpServer, Error, TEXT("Unknown exception in InitWSService"));
-	}
-
-	bRunning = false;
+    // Initialize WebSocketServer properly
+    WebSocketServer = NewObject<UWebSocketServer>();
+    WebSocketServer->Initialize(ModPath, Port, UIPath, IconsPath);
+    WebSocketServer->Start();
 }
+
 
 void AFicsitRemoteMonitoring::InitOutageNotification() {
 

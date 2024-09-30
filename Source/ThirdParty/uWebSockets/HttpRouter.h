@@ -165,7 +165,7 @@ private:
     }
 
     /* Executes as many handlers it can */
-    bool executeHandlers(Node *parent, int urlSegment, USERDATA &newUserData) {
+    bool executeHandlers(Node *parent, int urlSegment, USERDATA &userData) {
 
         auto [segment, isStop] = getUrlSegment(urlSegment);
 

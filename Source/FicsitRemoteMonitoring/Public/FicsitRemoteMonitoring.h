@@ -36,7 +36,6 @@
 #include "FGResearchManager.h"
 #include "FGRecipeManager.h"
 #include "FGSchematicManager.h"
-#include "uWebSocketsWrapper.h"
 #include "Resources/FGItemDescriptor.h"
 #include "FGDropPod.h"
 #include "Subsystem/SubsystemActorManager.h"
@@ -48,6 +47,8 @@
 #include "Async/Async.h"
 #include "Misc/Paths.h"
 #include "BlueprintJsonObject.h"
+#include "FWebSocketServer.h"
+//#include <FRMRegistry.h>
 
 #include "FicsitRemoteMonitoring.generated.h"
 
@@ -153,11 +154,7 @@ class FICSITREMOTEMONITORING_API AFicsitRemoteMonitoring : public AModSubsystem
 	std::atomic<bool> bRunning;
 
 private:
-	//friend class UHttpServer;
 	friend class UFGPowerCircuitGroup;
-
-	using FHttpServerPtr = TSharedPtr<uWS::App, ESPMode::ThreadSafe>;
-	using FThreadPtr = TUniquePtr<std::thread>;
 
 public:
 
@@ -216,6 +213,9 @@ public:
 
 	static TArray<TSharedPtr<FJsonValue>> getAll(UObject* WorldContext);
 
+    UPROPERTY()
+    UWebSocketServer* WebSocketServer;
+
     UPROPERTY(EditAnywhere)
     TArray<FAPIEndpoint> Endpoints;
 
@@ -236,12 +236,18 @@ public:
 
 	UPROPERTY()
 	TArray<FString> Flavor_Train;
-
-protected:
+	/*
+	UFUNCTION(BlueprintCallable)
+	static TArray<UBlueprintJsonValue*> getPower(UObject* WorldContext) {
+		//UObject* WorldContext = this->GetWorld();
+		return UFRM_Power::getCircuit(WorldContext);
+	}
+	*/
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 
 };
 
