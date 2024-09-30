@@ -395,7 +395,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext) {
 		FString JItemClass = "Desc_NoItem";
 
 		ItemAmount = DropPodCost.ItemCost.Amount;
-		TSubclassOf<UFGItemDescriptor> ItemClass = DropPodCost.ItemCost.ItemClass;
+		ItemClass = DropPodCost.ItemCost.ItemClass;
 
 		if (ItemAmount > 0) {
 			JItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
