@@ -120,7 +120,20 @@ FCriticalSection WebSocketCriticalSection;
 TQueue<FString, EQueueMode::Mpsc> MessageQueue;
 FThreadSafeBool bIsRunning = true;
 
-UDELEGATE(BlueprintCallable) DECLARE_DYNAMIC_DELEGATE_RetVal_TwoParams(UBlueprintJsonObject*, FAPICallback, const UObject*, WorldContext, const UClass*, Class);
+// Define user data struct for WebSocket connections
+struct FWebSocketUserData
+{
+    FString ClientID;  // You can add more fields if needed for each client
+};
+
+struct FClientInfo
+{
+	uWS::WebSocket<false, true, FWebSocketUserData>* Client;  // Add the third template argument for USERDATA
+	TSet<FString> SubscribedEndpoints;  // Keep track of all endpoints the client has subscribed to
+};
+
+UDELEGATE(BlueprintCallable) 
+DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(TArray<UBlueprintJsonValue*>, FAPICallback, const UObject*, WorldContext);
 
 USTRUCT(BlueprintType, meta = (DontUseGenericSpawnObject = "True"))
 struct FAPIEndpoint
@@ -213,6 +226,15 @@ public:
 	void StartWebSocketServer();
 	void StopWebSocketServer();
 	void RunWebSocketServer();
+
+    TArray<FClientInfo> ConnectedClients;
+    FTimerHandle IntervalTimerHandle;
+    FTimerManager* TimerManager;
+
+	void OnClientConnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws);
+    void OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message);
+    void OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode);
+	void ProcessClientRequest(FClientInfo& ClientInfo, const TSharedPtr<FJsonObject>& JsonRequest);  // Process JSON requests
 
 	static TArray<TSharedPtr<FJsonValue>> getAll(UObject* WorldContext);
 

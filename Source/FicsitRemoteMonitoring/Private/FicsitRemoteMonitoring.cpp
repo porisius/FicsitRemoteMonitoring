@@ -76,7 +76,31 @@ void AFicsitRemoteMonitoring::RunWebSocketServer()
 			UIPath = config.Web_Root;
 		};
 
+		std::string const asyncIcon = TCHAR_TO_UTF8(*IconsPath);
+		std::string const asyncUI = TCHAR_TO_UTF8(*UIPath);
+
 		int port = config.HTTP_Port;
+
+		// Define WebSocket behavior
+		uWS::App::WebSocketBehavior<FWebSocketUserData> wsBehavior;
+
+		wsBehavior.compression = uWS::SHARED_COMPRESSOR;
+
+		// Open handler (for when a client connects)
+		wsBehavior.open = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws) {
+			OnClientConnected(ws);  // Make sure this function has the correct signature
+			};
+
+		// Close handler (for when a client disconnects)
+		wsBehavior.close = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
+			OnClientDisconnected(ws, code, message);  // Ensure this signature matches
+			};
+
+		// Message handler (for when a client sends a message)
+		wsBehavior.message = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode) {
+			OnMessageReceived(ws, message, opCode);  // Make sure this signature matches
+			};
+
 
 		app.get("/getCoffee", [](auto* res, auto* req) {
 			FScopeLock ScopeLock(&WebSocketCriticalSection);
@@ -207,6 +231,79 @@ void AFicsitRemoteMonitoring::RunWebSocketServer()
 	}
 
 	bRunning = false;
+}
+
+void AFicsitRemoteMonitoring::OnClientConnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws) {
+    FScopeLock ScopeLock(&WebSocketCriticalSection);
+    ConnectedClients.Add({ ws, {} });
+    UE_LOG(LogTemp, Warning, TEXT("Client connected. Total clients: %d"), ConnectedClients.Num());
+}
+
+void AFicsitRemoteMonitoring::OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
+    FScopeLock ScopeLock(&WebSocketCriticalSection);
+    ConnectedClients.RemoveAll([ws](const FClientInfo& ClientInfo) { return ClientInfo.Client == ws; });
+    UE_LOG(LogTemp, Warning, TEXT("Client disconnected. Total clients: %d"), ConnectedClients.Num());
+}
+
+void AFicsitRemoteMonitoring::OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode) {
+	FScopeLock ScopeLock(&WebSocketCriticalSection);
+
+	FString MessageContent = FString(message.data());
+
+	// Parse JSON message from the client
+	TSharedPtr<FJsonObject> JsonRequest;
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(MessageContent);
+
+	if (FJsonSerializer::Deserialize(Reader, JsonRequest) && JsonRequest.IsValid())
+	{
+		// Find the client and process the request
+		for (FClientInfo& ClientInfo : ConnectedClients)
+		{
+			if (ClientInfo.Client == ws)
+			{
+				this->ProcessClientRequest(ClientInfo, JsonRequest);
+				break;
+			}
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to parse client message: %s"), *MessageContent);
+	}
+}
+
+void AFicsitRemoteMonitoring::ProcessClientRequest(FClientInfo& ClientInfo, const TSharedPtr<FJsonObject>& JsonRequest)
+{
+    FString Action = JsonRequest->GetStringField("action");
+    const TArray<TSharedPtr<FJsonValue>>* EndpointsArray;
+
+    if (JsonRequest->TryGetArrayField("endpoints", EndpointsArray))
+    {
+        for (const TSharedPtr<FJsonValue>& EndpointValue : *EndpointsArray)
+        {
+            FString Endpoint = EndpointValue->AsString();
+
+            if (Action == "subscribe")
+            {
+                ClientInfo.SubscribedEndpoints.Add(Endpoint);
+                UE_LOG(LogTemp, Warning, TEXT("Client subscribed to endpoint: %s"), *Endpoint);
+            }
+            else if (Action == "unsubscribe")
+            {
+                ClientInfo.SubscribedEndpoints.Remove(Endpoint);
+                UE_LOG(LogTemp, Warning, TEXT("Client unsubscribed from endpoint: %s"), *Endpoint);
+            }
+        }
+    }
+}
+
+void AFicsitRemoteMonitoring::InitAPIRegistry()
+{
+
+	//Registering Endpoints: API Name, bGetAll, bRequireGameThread, UObject, Function Name
+
+	RegisterEndpoint("getPower", true, false, this->Get(GetWorld()), FName("getCircuit"));
+
 }
 
 void AFicsitRemoteMonitoring::InitOutageNotification() {
