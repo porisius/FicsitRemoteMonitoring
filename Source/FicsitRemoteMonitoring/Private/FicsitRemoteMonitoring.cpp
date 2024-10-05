@@ -113,80 +113,166 @@ void AFicsitRemoteMonitoring::RunWebSocketServer()
 				"#PraiseAlpaca"
 				"#BlameSimon");
 
-
 			// Set CORS headers
 			res->writeHeader("Access-Control-Allow-Origin", "*");
-			res->writeHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+			res->writeHeader("Access-Control-Allow-Methods", "GET, POST");
 			res->writeHeader("Access-Control-Allow-Headers", "Content-Type");
 
 			res->writeStatus("418 I'm a teapot")->end(TCHAR_TO_UTF8(*noCoffee));
 
 			});
 
-		app.get("/:APIEndpoint", [this, World](auto* res, auto* req) {
+		app.get("/", [](auto* res, auto* req) {
 			FScopeLock ScopeLock(&WebSocketCriticalSection);
-			if (!res || !req) {
-				UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
-				return;
-			}
+			res->writeStatus("301 Moved Permanently")->writeHeader("Location", "/index.html")->end();
+			});
 
+		/* This exists incase the root is redirected from default */
+		/*app.get("/Icons/", [&asyncUI](auto* res, auto* req) {
+
+			// Attach an onAborted handler to avoid crashes if the request is aborted
+			res->onAborted([]() {
+				std::cerr << "Request aborted by the client" << std::endl;
+				});
+
+			// Get the requested URL (file path)
+			std::string url(req->getUrl());
+			std::string fullPath = asyncUI + url;
+
+			// Log that we're serving a file
+			//UE_LOGFMT(LogHttpServer, Log, "Serving UI file: %s", url.c_str());
+
+			// Serve the requested file
+			//serveFile(res, fullPath);
+
+			// Log after serving the file
+			//UE_LOGFMT(LogHttpServer, Log, "Done serving file: %s", url.c_str());
+
+		});*/
+
+		app.get("/api/:APIEndpoint", [this, World](auto* res, auto* req) {
 			std::string url(req->getParameter("APIEndpoint"));
 			FString RequestUrl = FString(url.c_str());
 
-			bool bSuccess = false;
-			EAPIEndpoints Endpoint;
-
-			this->TextToAPI(RequestUrl, bSuccess, Endpoint);
-
-			FString OutJson = "{\"Error: \"API Endpoint Not Found\"}";
-
-			if (bSuccess) {
-				OutJson = this->HandleEndpoint(World, RequestUrl);
-			}
-
 			// Log the request URL
-			UE_LOG(LogHttpServer, Log, TEXT("Request URL: %s"), *RequestUrl);
+			UE_LOGFMT(LogHttpServer, Log, "Request URL: {0}", RequestUrl);
+
+			bool bSuccess = false;
+			FString OutJson = this->HandleEndpoint(World, RequestUrl, bSuccess);
 
 			// Set CORS headers
 			res->writeHeader("Access-Control-Allow-Origin", "*");
 			res->writeHeader("Access-Control-Allow-Methods", "GET, POST");
 			res->writeHeader("Access-Control-Allow-Headers", "Content-Type");
 
-			res->end(TCHAR_TO_UTF8(*OutJson));
-
-			});
-
-		app.get("/", [](auto* res, auto* req) {
-			FScopeLock ScopeLock(&WebSocketCriticalSection);
-			res->writeStatus("301 Moved Permanently")->writeHeader("Location", "/index.html")->end();
-		});
-
-		app.get("/icons/*", [IconsPath](auto* res, auto* req) {
-			std::string url(req->getUrl().begin(), req->getUrl().end());
-			FString RelativePath = FString(url.c_str()).Replace(TEXT("/icons/"), TEXT(""));
-			FString FilePath = FPaths::Combine(IconsPath, RelativePath);
-
-			FString FileContent;
-			if (FPaths::FileExists(FilePath) && FFileHelper::LoadFileToString(FileContent, *FilePath))
-			{
-				res->writeHeader("Access-Control-Allow-Origin", "*")->end(TCHAR_TO_UTF8(*FileContent));
-			}
-			else
-			{
+			if (!bSuccess) {
 				res->writeStatus("404 Not Found")->end("File not found");
 			}
+			else {
+				res->end(TCHAR_TO_UTF8(*OutJson));
 			}
-		);
 
-		app.get("/*", [UIPath](auto* res, auto* req) {
+		});
+
+		app.get("/get*", [UIPath, this, World](auto* res, auto* req) {
+
 			std::string url(req->getUrl().begin(), req->getUrl().end());
-			FString RelativePath = FString(url.c_str()).Replace(TEXT("/"), TEXT(""));
-			FString FilePath = FPaths::Combine(UIPath, RelativePath);
+			FString Endpoint = FString(url.c_str()).Mid(1);
 
+			// Log the request URL
+			UE_LOG(LogHttpServer, Log, TEXT("Request API: %s"), *Endpoint);
+
+			bool bSuccess = false;
+			FString OutJson = this->HandleEndpoint(World, Endpoint, bSuccess);
+
+			// Set CORS headers
+			res->writeHeader("Access-Control-Allow-Origin", "*");
+			res->writeHeader("Access-Control-Allow-Methods", "GET, POST");
+			res->writeHeader("Access-Control-Allow-Headers", "Content-Type");
+
+			if (!bSuccess) {
+				res->writeStatus("404 Not Found")->end("File not found");
+			}
+			else {
+				res->end(TCHAR_TO_UTF8(*OutJson));
+			}
+
+		});
+
+		app.get("/*", [UIPath, this, World](uWS::HttpResponse<false>* res, auto* req) {
+			std::string url(req->getUrl().begin(), req->getUrl().end());
+
+			// Remove initial '/'
+			FString RelativePath = FString(url.c_str()).Mid(1);
+			FString FilePath = FPaths::Combine(UIPath, RelativePath);
 			FString FileContent;
-			if (FPaths::FileExists(FilePath) && FFileHelper::LoadFileToString(FileContent, *FilePath))
-			{
-				res->writeHeader("Access-Control-Allow-Origin", "*")->end(TCHAR_TO_UTF8(*FileContent));
+			bool IsBinary = false; // to flag non-text files (e.g., images)
+
+			UE_LOG(LogHttpServer, Log, TEXT("Request RelativePath: %s"), *RelativePath);
+			UE_LOG(LogHttpServer, Log, TEXT("Request FilePath: %s"), *FilePath);
+
+			FScopeLock ScopeLock(&WebSocketCriticalSection);
+			if (!res || !req) {
+				UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
+				res->writeStatus("500")->end("Internal Server Error");
+				return;
+			}
+
+			// Determine the MIME type based on file extension
+			FString Extension = FPaths::GetExtension(FilePath).ToLower();
+			FString ContentType;
+
+			if (Extension == "js") {
+				ContentType = "application/javascript";
+			} else if (Extension == "css") {
+				ContentType = "text/css";
+			} else if (Extension == "html" || Extension == "htm") {
+				ContentType = "text/html";
+			} else if (Extension == "png") {
+				ContentType = "image/png";
+				IsBinary = true;
+			} else if (Extension == "jpg" || Extension == "jpeg") {
+				ContentType = "image/jpeg";
+				IsBinary = true;
+			} else if (Extension == "gif") {
+				ContentType = "image/gif";
+				IsBinary = true;
+			} else {
+				ContentType = "text/plain";  // Default to plain text for unknown files
+			}
+
+			if (FPaths::FileExists(FilePath)) {
+				bool FileLoaded = false;
+				if (IsBinary) {
+					// For binary files like images, we need to use LoadFileToArray
+					TArray<uint8> BinaryContent;
+					FileLoaded = FFileHelper::LoadFileToArray(BinaryContent, *FilePath);
+					//FileLoaded = FFileHelper::LoadFileToString(FileContent, *FilePath);
+					if (FileLoaded) {
+						std::string contentLength = std::to_string(BinaryContent.Num());
+
+						UE_LOG(LogHttpServer, Log, TEXT("Binary File Found Returning: %s"), *FilePath);
+						res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
+						res->writeHeader("Access-Control-Allow-Origin", "*");
+						res->writeHeader("Content-Length", contentLength.c_str());
+						res->write((char*)BinaryContent.GetData());
+						res->end();
+					}
+				} else {
+					// Text-based files like HTML, CSS, JS
+					FileLoaded = FFileHelper::LoadFileToString(FileContent, *FilePath);
+					if (FileLoaded) {
+						UE_LOG(LogHttpServer, Log, TEXT("File Found Returning: %s"), *FilePath);
+						res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType))
+							->writeHeader("Access-Control-Allow-Origin", "*")
+							->end(TCHAR_TO_UTF8(*FileContent));
+					}
+				}
+
+				if (!FileLoaded) {
+					UE_LOG(LogHttpServer, Error, TEXT("Failed to load file: %s"), *FilePath);
+					res->writeStatus("500")->end("Internal Server Error");
+				}
 			}
 			else
 			{
@@ -204,21 +290,7 @@ void AFicsitRemoteMonitoring::RunWebSocketServer()
 			}
 			}).run();
 
-			// Asynchronous message processing
-			Async(EAsyncExecution::Thread, [this]() {
-				while (bIsRunning)
-				{
-					FString Message;
-					while (MessageQueue.Dequeue(Message))
-					{
-						// Process message
-						UE_LOG(LogHttpServer, Warning, TEXT("Processing message: %s"), *Message);
-					}
-					FPlatformProcess::Sleep(0.01f);
-				}
-				});
-
-			app.close();	
+		//std::this_thread::sleep_for(10ms);
 
 	}
 	catch (const std::exception& e) {
@@ -355,51 +427,69 @@ void AFicsitRemoteMonitoring::InitOutageNotification() {
 
 }
 
-void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FAPICallback InCallback, UClass* Class)
+void AFicsitRemoteMonitoring::BlueprintEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FAPICallback InCallback)
 {
 	FAPIEndpoint NewEndpoint;
     NewEndpoint.APIName = APIName;
     NewEndpoint.bGetAll = bGetAll;
     NewEndpoint.bRequireGameThread = bRequireGameThread;
     NewEndpoint.Callback = InCallback;
-	NewEndpoint.ClassType = Class;
 
 	APIEndpoints.Add(NewEndpoint);
 }
 
-UBlueprintJsonObject* AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint)
+void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, UObject* TargetObject, FName FunctionName)
 {
+	FAPIEndpoint NewEndpoint;
+	NewEndpoint.APIName = APIName;
+	NewEndpoint.bGetAll = bGetAll;
+	NewEndpoint.bRequireGameThread = bRequireGameThread;
+	NewEndpoint.Callback.BindUFunction(TargetObject, FunctionName);
+
+	APIEndpoints.Add(NewEndpoint);
+}
+
+TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, bool& bSuccess)
+{
+	bSuccess = false;
+
     for (FAPIEndpoint& EndpointInfo : APIEndpoints)
     {
         if (EndpointInfo.APIName == InEndpoint)
         {
+			bSuccess = true;
             FAPICallback Callback = EndpointInfo.Callback;
 
             if (EndpointInfo.bRequireGameThread)
             {
-                AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext, ClassType = EndpointInfo.ClassType]() {
-                    // Handle null ClassType: pass nullptr if ClassType is not required
-                    return Callback.Execute(WorldContext, ClassType);
+                AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext]() {
+                    // Execute callback via GameThread
+                    return Callback.Execute(WorldContext);
                 });
             }
             else
             {
-                // Directly execute the callback, handling nullptr for ClassType
-                return Callback.Execute(WorldContext, EndpointInfo.ClassType);
+                // Directly execute the callback
+                return Callback.Execute(WorldContext);
             }
         }
     }
 
     // Return an empty JSON object if no matching endpoint is found
-    return nullptr;
+	return TArray<UBlueprintJsonValue*>{};
 }
 
-FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoin)
+FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoin, bool& bSuccess)
 {
-	UBlueprintJsonObject* Json = this->CallEndpoint(WorldContext, InEndpoin);
+	bSuccess = false;
+	TArray<UBlueprintJsonValue*> Json = this->CallEndpoint(WorldContext, InEndpoin, bSuccess);
+
+	if (!bSuccess) {
+		return "";
+	}
 
 	FConfig_FactoryStruct config = FConfig_FactoryStruct::GetActiveConfig(WorldContext);
-	return Json->Stringify(config.JSONDebugMode);
+	return UBlueprintJsonValue::StringifyArray(Json, config.JSONDebugMode);
 
 }
 
