@@ -24,6 +24,8 @@ public:
 
 private:
 
+    using FHttpServerPtr = TSharedPtr<uWS::App, ESPMode::ThreadSafe>;
+
     UPROPERTY()
     UWebSocketsWrapper* WebsocketServer;
 
