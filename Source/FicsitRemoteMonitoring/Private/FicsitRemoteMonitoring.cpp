@@ -18,6 +18,7 @@ AFicsitRemoteMonitoring::AFicsitRemoteMonitoring() : AModSubsystem()
 
 AFicsitRemoteMonitoring::~AFicsitRemoteMonitoring()
 {
+	// Destructor ensures server is stopped if the actor is destroyed unexpectedly
 	StopWebSocketServer();
 }
 
@@ -25,32 +26,74 @@ void AFicsitRemoteMonitoring::BeginPlay()
 {
 	Super::BeginPlay();
 	StartWebSocketServer();
+	InitAPIRegistry();
+
+	// Register the callback to ensure WebSocket is stopped on crash/exit
+	FCoreDelegates::OnExit.AddUObject(this, &AFicsitRemoteMonitoring::StopWebSocketServer);
 }
 
 void AFicsitRemoteMonitoring::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	// Ensure the server is stopped during normal gameplay exit
 	StopWebSocketServer();
 	Super::EndPlay(EndPlayReason);
 }
 
 void AFicsitRemoteMonitoring::StopWebSocketServer()
 {
+	// Signal the thread to stop
+	bRunning = false;
+
 	if (WebSocketThread.joinable())
 	{
-		bRunning = false;
-		WebSocketThread.join();
+		// Timeout to avoid indefinite hang if the thread doesn't stop in time
+		using namespace std::chrono_literals;
+		auto startTime = std::chrono::steady_clock::now();
+		constexpr auto timeoutDuration = 5s;
+
+		// Continuously check until the timeout expires
+		while (WebSocketThread.joinable() && 
+		       (std::chrono::steady_clock::now() - startTime) < timeoutDuration)
+		{
+			// Give the WebSocket thread some time to finish
+			std::this_thread::sleep_for(100ms);
+		}
+
+		// If the thread is still running after the timeout, force terminate
+		if (WebSocketThread.joinable())
+		{
+			UE_LOG(LogTemp, Error, TEXT("WebSocket thread failed to exit in time, forcing shutdown."));
+			// Depending on the platform, you may use platform-specific thread termination here.
+			// This is a last resort since terminating a thread is not recommended.
+		}
+		else
+		{
+			WebSocketThread.join();  // Successfully join the thread if it exited in time
+		}
 	}
 }
 
-void AFicsitRemoteMonitoring::StartWebSocketServer() {
-
+void AFicsitRemoteMonitoring::StartWebSocketServer() 
+{
+	// Join any previous thread before starting a new one
 	if (WebSocketThread.joinable())
 	{
 		WebSocketThread.join();
 	}
 
-	WebSocketThread = std::thread(&AFicsitRemoteMonitoring::RunWebSocketServer, this);
-};
+	// Start the WebSocket server in a separate thread with proper exception handling
+	WebSocketThread = std::thread([this]() {
+		try
+		{
+			this->RunWebSocketServer();
+		}
+		catch (const std::exception& e)
+		{
+			UE_LOG(LogTemp, Error, TEXT("WebSocketServer crashed: %s"), *FString(e.what()));
+			this->StopWebSocketServer();  // Ensure server is stopped on error
+		}
+	});
+}
 
 void AFicsitRemoteMonitoring::RunWebSocketServer()
 {
@@ -59,14 +102,18 @@ void AFicsitRemoteMonitoring::RunWebSocketServer()
 	UE_LOGFMT(LogHttpServer, Warning, "Initializing WebSocket Service");
 
 	try {
+
 		auto app = uWS::App();
 
 		auto World = GetWorld();
 		auto config = FConfig_HTTPStruct::GetActiveConfig(World);
 
-		FString ModPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/";
+		FString ModPath = FPaths::ProjectModsDir() + "FicsitRemoteMonitoring/";
 		FString IconsPath = ModPath + "Icons";
 		FString UIPath;
+
+		UE_LOG(LogHttpServer, Log, TEXT("Request ModPath: %s"), *ModPath);
+		UE_LOG(LogHttpServer, Log, TEXT("Request IconsPath: %s"), *IconsPath);
 
 		if (config.Web_Root.IsEmpty()) {
 			UIPath = ModPath + "www";

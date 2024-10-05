@@ -151,10 +151,9 @@ public:
     UPROPERTY(BlueprintReadWrite)
     bool bRequireGameThread;
 
+	UPROPERTY(BlueprintReadWrite)
     FAPICallback Callback;
 
-    UPROPERTY(BlueprintReadWrite)
-    UClass* ClassType;
 };
 
 UCLASS()
@@ -166,7 +165,7 @@ class FICSITREMOTEMONITORING_API AFicsitRemoteMonitoring : public AModSubsystem
 	std::atomic<bool> bRunning;
 
 private:
-	//friend class UHttpServer;
+
 	friend class UFGPowerCircuitGroup;
 
 	using FHttpServerPtr = TSharedPtr<uWS::App, ESPMode::ThreadSafe>;
@@ -181,13 +180,15 @@ public:
 	static AFicsitRemoteMonitoring* Get(UWorld* world);
 
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
-    void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FAPICallback InCallback, UClass* Class);
+    void BlueprintEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FAPICallback InCallback);
+
+	void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, UObject* TargetObject, FName FunctionName);
 
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
-	FString HandleEndpoint (UObject* WorldContext, FString InEndpoin);
+	FString HandleEndpoint (UObject* WorldContext, FString InEndpoin, bool& bSuccess);
 	
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
-    UBlueprintJsonObject* CallEndpoint(UObject* WorldContext, FString InEndpoin);
+	TArray<UBlueprintJsonValue*> CallEndpoint(UObject* WorldContext, FString InEndpoin, bool& bSuccess);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void GetDropPodInfo_BIE(const AFGDropPod* Droppod, TSubclassOf<UFGItemDescriptor>& ItemClass, int32& Amount, float& Power);
@@ -208,7 +209,6 @@ public:
 	UPROPERTY()
 	TArray<FAPIEndpoint> APIEndpoints;
 
-
 	//UFUNCTION(BlueprintImplementableEvent)
 	//void OpenSerial(const FString ComPort, int32 BaudRate, int32 StackSize, bool& Success);
 
@@ -218,6 +218,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void InitSerialDevice();
 
+	void InitAPIRegistry();
 	void InitOutageNotification();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
@@ -260,10 +261,16 @@ public:
 	TArray<FString> Flavor_Train;
 
 protected:
-protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+public:
+
+	UFUNCTION()
+	TArray<UBlueprintJsonValue*> getCircuit(UObject* WorldContext) {		
+		return UFRM_Power::getCircuit(WorldContext);
+	}
 
 };
 

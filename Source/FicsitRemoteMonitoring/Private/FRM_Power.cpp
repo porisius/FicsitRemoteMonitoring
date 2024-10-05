@@ -4,21 +4,22 @@
 
 #undef GetForm
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Power::getCircuit(UObject* WorldContext)
+TArray<UBlueprintJsonValue*> UFRM_Power::getCircuit(UObject* WorldContext)
 {
 	AFGCircuitSubsystem* CircuitSubsystem = AFGCircuitSubsystem::Get(WorldContext->GetWorld());
 
-	TArray<TSharedPtr<FJsonValue>> JCircuitArray;
+	TArray<UBlueprintJsonValue*> JCircuitArray;
 
 	for (UFGCircuitGroup* CircuitGroup : CircuitSubsystem->mCircuitGroups) {
 		UFGPowerCircuitGroup* PowerGroup = Cast<UFGPowerCircuitGroup>(CircuitGroup);
 		UFGPowerCircuit* PowerCircuit = (PowerGroup->mCircuits[0]);
 		UFGCircuit* Circuit = Cast<UFGCircuit>(PowerCircuit);
 
-		TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
+		UBlueprintJsonObject* JCircuit = UBlueprintJsonObject::Create();
 
 		int32 CircuitID = Circuit->GetCircuitGroupID();
 
+		/*
 		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
 		JCircuit->Values.Add("PowerProduction", MakeShared<FJsonValueNumber>(PowerGroup->mBaseProduction));
 		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerGroup->mConsumption));
@@ -29,11 +30,26 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getCircuit(UObject* WorldContext)
 		JCircuit->Values.Add("BatteryDifferential", MakeShared<FJsonValueNumber>(PowerCircuit->mBatterySumPowerInput - PowerCircuit->GetBatterySumPowerOutput()));
 		JCircuit->Values.Add("BatteryPercent", MakeShared<FJsonValueNumber>(100 * (PowerGroup->mTotalPowerStore / PowerGroup->mTotalPowerStoreCapacity)));
 		JCircuit->Values.Add("BatteryCapacity", MakeShared<FJsonValueNumber>(PowerGroup->mTotalPowerStoreCapacity));
-		JCircuit->Values.Add("BatteryTimeEmpty", MakeShared<FJsonValueString>(SecondsToTimeString(PowerCircuit->mTimeToBatteriesEmpty)));
-		JCircuit->Values.Add("BatteryTimeFull", MakeShared<FJsonValueString>(SecondsToTimeString(PowerCircuit->mTimeToBatteriesFull)));
+		JCircuit->Values.Add("BatteryTimeEmpty", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(PowerCircuit->mTimeToBatteriesEmpty)));
+		JCircuit->Values.Add("BatteryTimeFull", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(PowerCircuit->mTimeToBatteriesFull)));
 		JCircuit->Values.Add("FuseTriggered", MakeShared<FJsonValueBoolean>(PowerGroup->mIsAnyFuseTriggered));
+		*/
 
-		JCircuitArray.Add(MakeShared<FJsonValueObject>(JCircuit));
+		JCircuit->SetInteger("CircuitID", CircuitID);
+		JCircuit->SetFloat("PowerProduction", PowerGroup->mBaseProduction);
+		JCircuit->SetFloat("PowerConsumed", PowerGroup->mConsumption);
+		JCircuit->SetFloat("PowerCapacity", PowerGroup->mMaximumProductionCapacity);
+		JCircuit->SetFloat("PowerMaxConsumed", PowerGroup->mMaximumPowerConsumption);
+		JCircuit->SetFloat("BatteryInput", PowerCircuit->mBatterySumPowerInput);
+		JCircuit->SetFloat("BatteryOutput", PowerCircuit->GetBatterySumPowerOutput());
+		JCircuit->SetFloat("BatteryDifferential", PowerCircuit->mBatterySumPowerInput - PowerCircuit->GetBatterySumPowerOutput());
+		JCircuit->SetFloat("BatteryPercent", 100 * (PowerGroup->mTotalPowerStore / PowerGroup->mTotalPowerStoreCapacity));
+		JCircuit->SetFloat("BatteryCapacity", PowerGroup->mTotalPowerStoreCapacity);
+		JCircuit->SetString("BatteryTimeEmpty", UFGBlueprintFunctionLibrary::SecondsToTimeString(PowerCircuit->mTimeToBatteriesEmpty));
+		JCircuit->SetString("BatteryTimeFull", UFGBlueprintFunctionLibrary::SecondsToTimeString(PowerCircuit->mTimeToBatteriesFull));
+		JCircuit->SetBoolean("FuseTriggered", PowerGroup->mIsAnyFuseTriggered);
+
+		JCircuitArray.Add(UBlueprintJsonValue::FromObject(JCircuit));
 	};
 
 	return JCircuitArray;
