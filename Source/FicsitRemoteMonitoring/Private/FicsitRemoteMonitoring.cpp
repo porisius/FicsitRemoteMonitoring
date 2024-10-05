@@ -294,7 +294,7 @@ void AFicsitRemoteMonitoring::RunWebSocketServer()
 					// For binary files like images, we need to use LoadFileToArray
 					TArray<uint8> BinaryContent;
 					FileLoaded = FFileHelper::LoadFileToArray(BinaryContent, *FilePath);
-					//FileLoaded = FFileHelper::LoadFileToString(FileContent, *FilePath);
+
 					if (FileLoaded) {
 						std::string contentLength = std::to_string(BinaryContent.Num());
 
@@ -302,7 +302,7 @@ void AFicsitRemoteMonitoring::RunWebSocketServer()
 						res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
 						res->writeHeader("Access-Control-Allow-Origin", "*");
 						res->writeHeader("Content-Length", contentLength.c_str());
-						res->write((char*)BinaryContent.GetData());
+						res->write(std::string_view((char*)BinaryContent.GetData(), BinaryContent.Num()));
 						res->end();
 					}
 				} else {
