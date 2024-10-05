@@ -101,7 +101,7 @@ public:
         perMessageDeflate = (token == TOK_PERMESSAGE_DEFLATE);
         xWebKitDeflateFrame = (token == TOK_X_WEBKIT_DEFLATE_FRAME);
 
-        while ((token == getToken(data, stop))) {
+        while ((token = getToken(data, stop))) {
             switch (token) {
             case TOK_X_WEBKIT_DEFLATE_FRAME:
                 /* Duplicates not allowed/supported */

@@ -29,7 +29,7 @@ namespace uWS {
 
 template <bool SSL, bool isServer, typename USERDATA>
 struct WebSocket : AsyncSocket<SSL> {
-    template <bool, typename> friend struct TemplatedApp;
+    template <bool> friend struct TemplatedApp;
     template <bool> friend struct HttpResponse;
 private:
     typedef AsyncSocket<SSL> Super;
@@ -115,7 +115,7 @@ public:
         /* Special path for long sends of non-compressed, non-SSL messages */
         if (message.length() >= 16 * 1024 && !compress && !SSL && !webSocketData->subscriber && getBufferedAmount() == 0 && Super::getLoopData()->corkOffset == 0) {
             char header[10];
-            int header_length = (int) protocol::formatMessage<isServer>(header, "", 0, opCode, message.length(), compress, fin);
+            int header_length = (int) protocol::formatMessage<isServer>(header, nullptr, 0, opCode, message.length(), compress, fin);
             int written = us_socket_write2(0, (struct us_socket_t *)this, header, header_length, message.data(), (int) message.length());
         
             if (written != header_length + (int) message.length()) {
@@ -208,20 +208,7 @@ public:
         size_t length = std::min<size_t>(MAX_CLOSE_PAYLOAD, message.length());
         char closePayload[MAX_CLOSE_PAYLOAD + 2];
         size_t closePayloadLength = protocol::formatClosePayload(closePayload, (uint16_t) code, message.data(), length);
-        //bool ok = send(std::string_view(closePayload, closePayloadLength), OpCode::CLOSE);
-
-        // Get the SendStatus from the send() function
-        auto sendStatus = send(std::string_view(closePayload, closePayloadLength), OpCode::CLOSE);
-
-        // Explicitly check if the sendStatus represents success
-        bool ok = (sendStatus == uWS::WebSocket<false, true, FWebSocketUserData>::SendStatus::SUCCESS);
-
-        // Now, proceed with your logic based on the success of the send operation
-        if (!this->isCorked()) {
-            if (ok) {
-                this->shutdown();
-            }
-        }
+        bool ok = send(std::string_view(closePayload, closePayloadLength), OpCode::CLOSE);
 
         /* FIN if we are ok and not corked */
         if (!this->isCorked()) {
@@ -254,7 +241,6 @@ public:
         if (webSocketContextData->closeHandler) {
             webSocketContextData->closeHandler(this, code, message);
         }
-        ((USERDATA *) this->getUserData())->~USERDATA();
     }
 
     /* Corks the response if possible. Leaves already corked socket be. */

@@ -61,13 +61,13 @@ public:
     }
 
     void updateDate() {
-        cacheTimepoint = time(0);
+        time_t now = time(0);
         struct tm tstruct = {};
 #ifdef _WIN32
         /* Micro, fucking soft never follows spec. */
-        gmtime_s(&tstruct, &cacheTimepoint);
+        gmtime_s(&tstruct, &now);
 #else
-        gmtime_r(&cacheTimepoint, &tstruct);
+        gmtime_r(&now, &tstruct);
 #endif
         static const char wday_name[][4] = {
             "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
@@ -87,7 +87,6 @@ public:
     }
 
     char date[32];
-    time_t cacheTimepoint = 0;
 
     /* Be silent */
     bool noMark = false;

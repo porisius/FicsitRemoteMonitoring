@@ -44,7 +44,7 @@ struct HttpResponseData : AsyncSocketData<SSL>, HttpParser {
     }
 
     /* Caller of onWritable. It is possible onWritable calls markDone so we need to borrow it. */
-    bool callOnWritable(uintmax_t offset) {
+    bool callOnWritable(uintmax_t newOffset) {
         /* Borrow real onWritable */
         MoveOnlyFunction<bool(uintmax_t)> borrowedOnWritable = std::move(onWritable);
 
