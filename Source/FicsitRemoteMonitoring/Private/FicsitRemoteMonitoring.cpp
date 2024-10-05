@@ -25,6 +25,7 @@ AFicsitRemoteMonitoring::~AFicsitRemoteMonitoring()
 void AFicsitRemoteMonitoring::BeginPlay()
 {
 	Super::BeginPlay();
+//	InitAPIRegistry();
 	StartWebSocketServer();
 	InitAPIRegistry();
 
@@ -71,7 +72,6 @@ void AFicsitRemoteMonitoring::StopWebSocketServer()
 			WebSocketThread.join();  // Successfully join the thread if it exited in time
 		}
 	}
-}
 
 void AFicsitRemoteMonitoring::StartWebSocketServer() 
 {
@@ -95,9 +95,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 	});
 }
 
-void AFicsitRemoteMonitoring::RunWebSocketServer()
+void AFicsitRemoteMonitoring::StartWebSocketServer()
 {
-	bRunning = true;
+    FString ModPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/";
+    FString UIPath = ModPath + "www";
+    FString IconsPath = ModPath + "Icons";
+    int Port = 3000;
 
 	UE_LOGFMT(LogHttpServer, Warning, "Initializing WebSocket Service");
 
