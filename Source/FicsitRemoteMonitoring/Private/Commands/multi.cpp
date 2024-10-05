@@ -18,7 +18,18 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, class UC
 		FString OutputType = Arguments[1].ToLower();
 		FString sEndpoint = Arguments[2];
 
-		FString Json = ModSubsystem->HandleEndpoint(WorldContext, sEndpoint);
+		bool bSuccess = false;
+		FString Json = ModSubsystem->HandleEndpoint(WorldContext, sEndpoint, bSuccess);
+
+		if (!bSuccess) {
+
+			ChatReturn.Chat = TEXT("Unable to find endpoint, please refer to the documentation at docs.ficsit.app or the mod creator.");
+			ChatReturn.Color = FLinearColor::Red;
+			ChatReturn.Status = EExecutionStatus::UNCOMPLETED;
+
+			return ChatReturn;
+
+		}
 
 		if (OutputType == "file") {
 
