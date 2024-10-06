@@ -430,8 +430,60 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 {
 
 	//Registering Endpoints: API Name, bGetAll, bRequireGameThread, UObject, Function Name
+	RegisterEndpoint("getAssembler", false, false, this->Get(GetWorld()), FName("getAssembler"));
+	RegisterEndpoint("getBelts", true, false, this->Get(GetWorld()), FName("getBelts"));
+	RegisterEndpoint("getBiomassGenerator", true, false, this->Get(GetWorld()), FName("getBiomassGenerator"));
+	RegisterEndpoint("getBlender", false, false, this->Get(GetWorld()), FName("getBlender"));
+	RegisterEndpoint("getCloudInv", true, false, this->Get(GetWorld()), FName("getCloudInv"));
+	RegisterEndpoint("getConstructor", true, false, this->Get(GetWorld()), FName("getConstructor"));
+	RegisterEndpoint("getConverter", true, false, this->Get(GetWorld()), FName("getConverter"));
+	RegisterEndpoint("getDoggo", true, true, this->Get(GetWorld()), FName("getDoggo"));
+	RegisterEndpoint("getDrone", true, false, this->Get(GetWorld()), FName("getDrone"));
+	RegisterEndpoint("getDroneStation", true, false, this->Get(GetWorld()), FName("getDroneStation"));
+	RegisterEndpoint("getDropPod", true, true, this->Get(GetWorld()), FName("getDropPod"));
+	RegisterEndpoint("getExplorationSink", true, false, this->Get(GetWorld()), FName("getExplorationSink"));
+	RegisterEndpoint("getExplorer", false, true, this->Get(GetWorld()), FName("getExplorer"));
+	RegisterEndpoint("getExtractor", true, false, this->Get(GetWorld()), FName("getExtractor"));
+	RegisterEndpoint("getFactoryCart", true, false, this->Get(GetWorld()), FName("getFactoryCart"));
+	RegisterEndpoint("getFoundry", true, false, this->Get(GetWorld()), FName("getFoundry"));
+	RegisterEndpoint("getFuelGenerator", true, false, this->Get(GetWorld()), FName("getFuelGenerator"));
+	RegisterEndpoint("getGeothermalGenerator", true, false, this->Get(GetWorld()), FName("getGeothermalGenerator"));
+	RegisterEndpoint("getHUBTerminal", true, false, this->Get(GetWorld()), FName("getHUBTerminal"));
+	RegisterEndpoint("getManufacturer", true, false, this->Get(GetWorld()), FName("getManufacturer"));
+	RegisterEndpoint("getModList", true, false, this->Get(GetWorld()), FName("getModList"));
+	RegisterEndpoint("getNuclearGenerator", true, false, this->Get(GetWorld()), FName("getNuclearGenerator"));
+	RegisterEndpoint("getParticle", true, false, this->Get(GetWorld()), FName("getParticle"));
+	RegisterEndpoint("getPaths", true, false, this->Get(GetWorld()), FName("getPaths"));
+	RegisterEndpoint("getPipes", true, false, this->Get(GetWorld()), FName("getPipes"));
+	RegisterEndpoint("getPlayer", true, false, this->Get(GetWorld()), FName("getPlayer"));
+	RegisterEndpoint("getPower", true, false, this->Get(GetWorld()), FName("getPower"));
+	RegisterEndpoint("getPowerSlug", true, false, this->Get(GetWorld()), FName("getPowerSlug"));
+	RegisterEndpoint("getProdStats", true, false, this->Get(GetWorld()), FName("getProdStats"));
+	RegisterEndpoint("getRadarTower", true, false, this->Get(GetWorld()), FName("getRadarTOwer"));
+	RegisterEndpoint("getRecipes", true, false, this->Get(GetWorld()), FName("getRecipes"));
+	RegisterEndpoint("getRefinery", true, false, this->Get(GetWorld()), FName("getRefinery"));
+	RegisterEndpoint("getResourceGeyser", true, false, this->Get(GetWorld()), FName("getResourceGeyser"));
+	RegisterEndpoint("getResourceNode", true, false, this->Get(GetWorld()), FName("getResourceNode"));
+	RegisterEndpoint("getResourceSink", true, false, this->Get(GetWorld()), FName("getResourceSink"));
+	RegisterEndpoint("getResourceWell", true, false, this->Get(GetWorld()), FName("getResourceWell"));
+	RegisterEndpoint("getSchematics", true, false, this->Get(GetWorld()), FName("getSchematics"));
+	RegisterEndpoint("getSinkList", true, false, this->Get(GetWorld()), FName("getSinkList"));
+	RegisterEndpoint("getSmelter", true, false, this->Get(GetWorld()), FName("getSmelter"));
+	RegisterEndpoint("getSpaceElevator", true, false, this->Get(GetWorld()), FName("getSpaceElevator "));
+	RegisterEndpoint("getStorageInv", true, false, this->Get(GetWorld()), FName("getStorageInv"));
+	RegisterEndpoint("getSwitches", true, false, this->Get(GetWorld()), FName("getSwitches"));
+	RegisterEndpoint("getTractor", true, false, this->Get(GetWorld()), FName("getTractor"));
+	RegisterEndpoint("getTrains", true, false, this->Get(GetWorld()), FName("getTrains"));
+	RegisterEndpoint("getTrainStation", true, false, this->Get(GetWorld()), FName("getTrainStation"));
+	RegisterEndpoint("getTruck", false, false, this->Get(GetWorld()), FName("getTruck"));
+	RegisterEndpoint("getTruckStation", true, false, this->Get(GetWorld()), FName("getTruckStation"));
+	RegisterEndpoint("getWorldInv", true, false, this->Get(GetWorld()), FName("getWorldInv"));
 
-	RegisterEndpoint("getPower", true, false, this->Get(GetWorld()), FName("getCircuit"));
+	//FRM API Endpoint Groups
+	RegisterEndpoint("getAll", false, false, this->Get(GetWorld()), FName("getAll"));
+	RegisterEndpoint("getFactory", true, false, this->Get(GetWorld()), FName("getFactory"));
+	RegisterEndpoint("getGenerators", true, false, this->Get(GetWorld()), FName("getGenerators"));
+	RegisterEndpoint("getVehicles", true, false, this->Get(GetWorld()), FName("getVehicles"));
 
 }
 
