@@ -321,6 +321,16 @@ void AFicsitRemoteMonitoring::RunWebSocketServer()
 					res->writeStatus("500")->end("Internal Server Error");
 				}
 			}
+
+			bool bSuccess = false;
+			FString Json = this->HandleEndpoint(World, RelativePath, bSuccess);
+
+			if (bSuccess) {
+				UE_LOG(LogHttpServer, Log, TEXT("API Found Returning: %s"), *FilePath);
+				res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType))
+					->writeHeader("Access-Control-Allow-Origin", "*")
+					->end(TCHAR_TO_UTF8(*Json));
+			}
 			else
 			{
 				res->writeStatus("404 Not Found")->end("File not found");
