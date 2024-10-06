@@ -6,6 +6,8 @@ API Endpoint: getStorageInv +
 
 This is inventory of the world broken up by their storage containers. This does not include pipes/belts/factory buildings, only buildings whom purpose is to provide storage except Fluid Buffers.
 
+getStorageInv = Inventory of each Storage Container, including the Dimensional Storage containers' inventory not yet uploaded.
+
 [cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
