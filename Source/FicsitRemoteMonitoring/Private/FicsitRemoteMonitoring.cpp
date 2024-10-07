@@ -438,7 +438,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getConstructor", true, false, this->Get(GetWorld()), FName("getConstructor"));
 	RegisterEndpoint("getConverter", true, false, this->Get(GetWorld()), FName("getConverter"));
 	RegisterEndpoint("getDoggo", true, true, this->Get(GetWorld()), FName("getDoggo"));
-	RegisterEndpoint("getDrone", true, false, this->Get(GetWorld()), FName("getDrone"));
+	RegisterEndpoint("getDrone", true, true, this->Get(GetWorld()), FName("getDrone"));
 	RegisterEndpoint("getDroneStation", true, false, this->Get(GetWorld()), FName("getDroneStation"));
 	RegisterEndpoint("getDropPod", true, true, this->Get(GetWorld()), FName("getDropPod"));
 	RegisterEndpoint("getExplorationSink", true, false, this->Get(GetWorld()), FName("getExplorationSink"));
@@ -455,15 +455,15 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getParticle", true, false, this->Get(GetWorld()), FName("getParticle"));
 	RegisterEndpoint("getPaths", true, false, this->Get(GetWorld()), FName("getPaths"));
 	RegisterEndpoint("getPipes", true, false, this->Get(GetWorld()), FName("getPipes"));
-	RegisterEndpoint("getPlayer", true, false, this->Get(GetWorld()), FName("getPlayer"));
+	RegisterEndpoint("getPlayer", true, true, this->Get(GetWorld()), FName("getPlayer"));
 	RegisterEndpoint("getPower", true, false, this->Get(GetWorld()), FName("getPower"));
-	RegisterEndpoint("getPowerSlug", true, false, this->Get(GetWorld()), FName("getPowerSlug"));
+	RegisterEndpoint("getPowerSlug", true, true, this->Get(GetWorld()), FName("getPowerSlug"));
 	RegisterEndpoint("getProdStats", true, false, this->Get(GetWorld()), FName("getProdStats"));
 	RegisterEndpoint("getRadarTower", true, false, this->Get(GetWorld()), FName("getRadarTOwer"));
 	RegisterEndpoint("getRecipes", true, false, this->Get(GetWorld()), FName("getRecipes"));
 	RegisterEndpoint("getRefinery", true, false, this->Get(GetWorld()), FName("getRefinery"));
 	RegisterEndpoint("getResourceGeyser", true, false, this->Get(GetWorld()), FName("getResourceGeyser"));
-	RegisterEndpoint("getResourceNode", true, false, this->Get(GetWorld()), FName("getResourceNode"));
+	RegisterEndpoint("getResourceNode", true, true, this->Get(GetWorld()), FName("getResourceNode"));
 	RegisterEndpoint("getResourceSink", true, false, this->Get(GetWorld()), FName("getResourceSink"));
 	RegisterEndpoint("getResourceWell", true, false, this->Get(GetWorld()), FName("getResourceWell"));
 	RegisterEndpoint("getSchematics", true, false, this->Get(GetWorld()), FName("getSchematics"));
