@@ -157,9 +157,6 @@ public:
 	void InitAPIRegistry();
 	void InitOutageNotification();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
-	void TextToAPI(UPARAM(ref) FString& API, bool& Success, EAPIEndpoints& enumAPI);
-
 	void StartWebSocketServer();
 	void StopWebSocketServer();
 	void RunWebSocketServer();
