@@ -713,6 +713,31 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldCont
 	return JSpaceElevatorArray;
 }
 
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getCloudInv(UObject* WorldContext)
+{
+	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
+
+	AFGCentralStorageSubsystem* CloudSubsystem = AFGCentralStorageSubsystem::Get(WorldContext->GetWorld());
+	TArray<FItemAmount> CloudInventory;
+	TArray<TSharedPtr<FJsonValue>> JCloudArray;
+
+	CloudSubsystem->GetAllItemsFromCentralStorage(CloudInventory);
+
+	for (FItemAmount Storage : CloudInventory) {
+
+		TSharedPtr<FJsonObject> JCloud = MakeShared<FJsonObject>();
+
+		JCloud->Values.Add("Name", MakeShared<FJsonValueString>((Storage.ItemClass.GetDefaultObject()->mDisplayName).ToString()));
+		JCloud->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Storage.ItemClass.GetDefaultObject()->GetClass())));
+		JCloud->Values.Add("Amount", MakeShared<FJsonValueNumber>(Storage.Amount));
+
+		JCloudArray.Add(MakeShared<FJsonValueObject>(JCloud));
+
+	};
+
+	return JCloudArray;
+}
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPipes(UObject* WorldContext) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 

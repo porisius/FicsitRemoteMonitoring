@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "FGCentralStorageSubsystem.h"
 #include "FGBuildableSubsystem.h"
 #include "FGBlueprintFunctionLibrary.h"
 #include "Buildables/FGBuildableConveyorBase.h"
@@ -58,6 +59,7 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getResourceNode(UObject* WorldContext, UClass* ResourceActor);
 	static TArray<TSharedPtr<FJsonValue>> getRadarTower(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getSpaceElevator(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getCloudInv(UObject* WorldContext);
 
 	friend class AFGBuildableConveyorBase;
 
