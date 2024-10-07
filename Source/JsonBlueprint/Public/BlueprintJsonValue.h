@@ -33,6 +33,8 @@ public:
 	// Converts any shared pointer that holds a Json value to a UBlueprintJsonValue so it can be exported to blueprints. Note, that blueprint Json values do not know a type, so have to be re-interpreted in blueprint
 	static UBlueprintJsonValue* FromSharedPointer(TSharedPtr<FJsonValue> JsonValue);
 
+	static TArray<UBlueprintJsonValue*> FromJsonArray(TArray<TSharedPtr<FJsonValue>> JsonArray);
+
 	// Blueprints
 
 	// Parses a Json Array String (["some", "example"])

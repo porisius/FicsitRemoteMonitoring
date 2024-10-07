@@ -15,6 +15,17 @@ UBlueprintJsonValue* UBlueprintJsonValue::FromSharedPointer(TSharedPtr<FJsonValu
 	return Value;
 }
 
+TArray<UBlueprintJsonValue*> UBlueprintJsonValue::FromJsonArray(TArray<TSharedPtr<FJsonValue>> JsonArray)
+{
+	TArray<UBlueprintJsonValue*> Values;
+
+	for (TSharedPtr<FJsonValue> Json : JsonArray) {
+		Values.Add(UBlueprintJsonValue::FromSharedPointer(Json));
+	}
+
+	return Values;
+}
+
 bool UBlueprintJsonValue::ParseArray(FString JsonString, TArray<UBlueprintJsonValue*>& Values) {
 	TSharedPtr<FJsonValue> Value;
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonString);
