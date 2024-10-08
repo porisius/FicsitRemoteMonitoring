@@ -64,8 +64,8 @@ struct FWebSocketUserData
 
 struct FClientInfo
 {
-	uWS::WebSocket<false, true, FWebSocketUserData>* Client;  // Add the third template argument for USERDATA
-	TSet<FString> SubscribedEndpoints;  // Keep track of all endpoints the client has subscribed to
+	FString SubscribedEndpoints;  // Keep track of all endpoints that have been subscribed
+	TArray<uWS::WebSocket<false, true, FWebSocketUserData>*> Client;  // Add the third template argument for USERDATA
 };
 
 UDELEGATE(BlueprintCallable) 
