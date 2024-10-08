@@ -443,12 +443,8 @@ public:
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getWorldInv(WorldContext));
 	}
 
-	/* To be implemented
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getAll(UObject* WorldContext) {		
-		return getAll(WorldContext);
-	}
-	*/
+	TArray<UBlueprintJsonValue*> getAll(UObject* WorldContext);
 
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getFactory(UObject* WorldContext) {		
