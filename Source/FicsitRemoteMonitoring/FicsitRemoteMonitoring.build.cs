@@ -28,8 +28,7 @@ public class FicsitRemoteMonitoring : ModuleRules
                 "FactoryGame", 
                 "SML", 
                 "Chaos", 
-                "ChaosVehiclesCore", 
-                "ChaosVehicles", 
+                "ChaosVehiclesCore", "ChaosVehicles", "ChaosSolverEngine",
                 "HTTP",
                 "JsonBlueprint",
                 "FicsitRemoteMonitoring"
