@@ -25,8 +25,20 @@ AFicsitRemoteMonitoring::~AFicsitRemoteMonitoring()
 void AFicsitRemoteMonitoring::BeginPlay()
 {
 	Super::BeginPlay();
-	StartWebSocketServer();
-	InitAPIRegistry();
+
+    // Load FRM's API Endpoints
+    InitAPIRegistry();
+
+    // If true, autostart web server/socket
+    auto WSconfig = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
+    bool WSStart = WSconfig.Web_Autostart;
+
+    // If true, autostart serial device
+    auto RSconfig = FConfig_SerialStruct::GetActiveConfig(GetWorld());
+    bool RSStart = RSconfig.COM_Autostart;
+
+    if (WSStart) { StartWebSocketServer(); }
+    if (RSStart) { InitSerialDevice(); }	
 
 	// Register the callback to ensure WebSocket is stopped on crash/exit
 	FCoreDelegates::OnExit.AddUObject(this, &AFicsitRemoteMonitoring::StopWebSocketServer);
