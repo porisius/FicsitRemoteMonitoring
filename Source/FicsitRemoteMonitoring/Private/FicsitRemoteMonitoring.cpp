@@ -41,325 +41,184 @@ void AFicsitRemoteMonitoring::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AFicsitRemoteMonitoring::StopWebSocketServer()
 {
-	// Signal the thread to stop
-	bRunning = false;
-
-	if (WebSocketThread.joinable())
-	{
-		// Timeout to avoid indefinite hang if the thread doesn't stop in time
-		using namespace std::chrono_literals;
-		auto startTime = std::chrono::steady_clock::now();
-		constexpr auto timeoutDuration = 5s;
-
-		// Continuously check until the timeout expires
-		while (WebSocketThread.joinable() && 
-		       (std::chrono::steady_clock::now() - startTime) < timeoutDuration)
-		{
-			// Give the WebSocket thread some time to finish
-			std::this_thread::sleep_for(100ms);
-		}
-
-		// If the thread is still running after the timeout, force terminate
-		if (WebSocketThread.joinable())
-		{
-			UE_LOG(LogTemp, Error, TEXT("WebSocket thread failed to exit in time, forcing shutdown."));
-			// Depending on the platform, you may use platform-specific thread termination here.
-			// This is a last resort since terminating a thread is not recommended.
-		}
-		else
-		{
-			WebSocketThread.join();  // Successfully join the thread if it exited in time
-		}
-	}
+    // Signal the WebSocket server to stop
+    if (WebServer.IsValid())
+    {
+        WebServer.Reset();
+    }
 }
 
 void AFicsitRemoteMonitoring::StartWebSocketServer() 
 {
-	// Join any previous thread before starting a new one
-	if (WebSocketThread.joinable())
-	{
-		WebSocketThread.join();
-	}
+    UE_LOGFMT(LogHttpServer, Warning, "Initializing WebSocket Service");
 
-	// Start the WebSocket server in a separate thread with proper exception handling
-	WebSocketThread = std::thread([this]() {
-		try
-		{
-			this->RunWebSocketServer();
-		}
-		catch (const std::exception& e)
-		{
-			UE_LOG(LogTemp, Error, TEXT("WebSocketServer crashed: %s"), *FString(e.what()));
-			this->StopWebSocketServer();  // Ensure server is stopped on error
-		}
-	});
-}
+        // WebSocket server logic runs in a separate thread
+        WebServer = Async(EAsyncExecution::Thread, [this]() {
+            try {
+                auto app = uWS::App();
+                auto World = GetWorld();
+                auto config = FConfig_HTTPStruct::GetActiveConfig(World);
 
-void AFicsitRemoteMonitoring::RunWebSocketServer()
-{
-	bRunning = true;
+                FString ModPath = FPaths::ProjectModsDir() + "FicsitRemoteMonitoring/";
+                FString IconsPath = ModPath + "Icons";
+                FString UIPath;
 
-	UE_LOGFMT(LogHttpServer, Warning, "Initializing WebSocket Service");
+                if (config.Web_Root.IsEmpty()) {
+                    UIPath = ModPath + "www";
+                }
+                else
+                {
+                    UIPath = config.Web_Root;
+                };
 
-	try {
+                int port = config.HTTP_Port;
 
-		auto app = uWS::App();
+                // Define WebSocket behavior
+                uWS::App::WebSocketBehavior<FWebSocketUserData> wsBehavior;
 
-		auto World = GetWorld();
-		auto config = FConfig_HTTPStruct::GetActiveConfig(World);
+                wsBehavior.compression = uWS::SHARED_COMPRESSOR;
 
-		FString ModPath = FPaths::ProjectModsDir() + "FicsitRemoteMonitoring/";
-		FString IconsPath = ModPath + "Icons";
-		FString UIPath;
+                // Open handler (for when a client connects)
+                wsBehavior.open = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws) {
 
-		UE_LOG(LogHttpServer, Log, TEXT("Request ModPath: %s"), *ModPath);
-		UE_LOG(LogHttpServer, Log, TEXT("Request IconsPath: %s"), *IconsPath);
+                    OnClientConnected(ws);  // Make sure this function has the correct signature
+                };
 
-		if (config.Web_Root.IsEmpty()) {
-			UIPath = ModPath + "www";
-		}
-		else
-		{
-			UIPath = config.Web_Root;
-		};
+                // Close handler (for when a client disconnects)
+                wsBehavior.close = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
 
-		std::string const asyncIcon = TCHAR_TO_UTF8(*IconsPath);
-		std::string const asyncUI = TCHAR_TO_UTF8(*UIPath);
+                    OnClientDisconnected(ws, code, message);  // Ensure this signature matches
+                };
 
-		int port = config.HTTP_Port;
+                // Message handler (for when a client sends a message)
+                wsBehavior.message = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode) {
 
-		// Define WebSocket behavior
-		uWS::App::WebSocketBehavior<FWebSocketUserData> wsBehavior;
+                    OnMessageReceived(ws, message, opCode);  // Make sure this signature matches
+                };
 
-		wsBehavior.compression = uWS::SHARED_COMPRESSOR;
+                app.get("/getCoffee", [](auto* res, auto* req) {
+                    FScopeLock ScopeLock(&WebSocketCriticalSection);
+                    if (!res || !req) {
+                        UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
+                        return;
+                    }
 
-		// Open handler (for when a client connects)
-		wsBehavior.open = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws) {
-			OnClientConnected(ws);  // Make sure this function has the correct signature
-			};
+                    FString noCoffee = TEXT("Error getting coffee, coffee cup, or red solo cup: (418) I'm a teapot."
+                        "#PraiseAlpaca"
+                        "#BlameSimon");
 
-		// Close handler (for when a client disconnects)
-		wsBehavior.close = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
-			OnClientDisconnected(ws, code, message);  // Ensure this signature matches
-			};
+                    // Set CORS headers
+                    res->writeHeader("Access-Control-Allow-Origin", "*");
+                    res->writeHeader("Access-Control-Allow-Methods", "GET, POST");
+                    res->writeHeader("Access-Control-Allow-Headers", "Content-Type");
 
-		// Message handler (for when a client sends a message)
-		wsBehavior.message = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode) {
-			OnMessageReceived(ws, message, opCode);  // Make sure this signature matches
-			};
+                    res->writeStatus("418 I'm a teapot")->end(TCHAR_TO_UTF8(*noCoffee));
 
+                    });
 
-		app.get("/getCoffee", [](auto* res, auto* req) {
-			FScopeLock ScopeLock(&WebSocketCriticalSection);
-			if (!res || !req) {
-				UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
-				return;
-			}
+                app.get("/", [](auto* res, auto* req) {
+                    FScopeLock ScopeLock(&WebSocketCriticalSection);
+                    res->writeStatus("301 Moved Permanently")->writeHeader("Location", "/index.html")->end();
+                    });
 
-			FString noCoffee = TEXT("Error getting coffee, coffee cup, or red solo cup: (418) I'm a teapot."
-				"#PraiseAlpaca"
-				"#BlameSimon");
+                /* This exists incase the root is redirected from default */
+                app.get("/Icons/*", [this, IconsPath](auto* res, auto* req) {
 
-			// Set CORS headers
-			res->writeHeader("Access-Control-Allow-Origin", "*");
-			res->writeHeader("Access-Control-Allow-Methods", "GET, POST");
-			res->writeHeader("Access-Control-Allow-Headers", "Content-Type");
+                    std::string url(req->getUrl().begin(), req->getUrl().end());
 
-			res->writeStatus("418 I'm a teapot")->end(TCHAR_TO_UTF8(*noCoffee));
+                    // Remove initial '/Icons/'
+                    FString RelativePath = FString(url.c_str()).Mid(7);
+                    FString FilePath = FPaths::Combine(IconsPath, RelativePath);
 
-			});
+                    UE_LOG(LogHttpServer, Log, TEXT("Request RelativePath: %s"), *RelativePath);
+                    UE_LOG(LogHttpServer, Log, TEXT("Request FilePath: %s"), *FilePath);
 
-		app.get("/", [](auto* res, auto* req) {
-			FScopeLock ScopeLock(&WebSocketCriticalSection);
-			res->writeStatus("301 Moved Permanently")->writeHeader("Location", "/index.html")->end();
-			});
+                    FScopeLock ScopeLock(&WebSocketCriticalSection);
+                    if (!res || !req) {
+                        UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
+                        res->writeStatus("500")->end("Internal Server Error");
+                        return;
+                    }
 
-		/* This exists incase the root is redirected from default */
-		/*app.get("/Icons/", [&asyncUI](auto* res, auto* req) {
+                    if (FPaths::FileExists(FilePath)) {
+                        HandleGetRequest(res, req, FilePath);
+                    }
 
-			// Attach an onAborted handler to avoid crashes if the request is aborted
-			res->onAborted([]() {
-				std::cerr << "Request aborted by the client" << std::endl;
-				});
+                    });
 
-			// Get the requested URL (file path)
-			std::string url(req->getUrl());
-			std::string fullPath = asyncUI + url;
+                app.get("/api/:APIEndpoint", [this, World](auto* res, auto* req) {
+                    std::string url(req->getParameter("APIEndpoint"));
+                    FString Endpoint = FString(url.c_str());
 
-			// Log that we're serving a file
-			//UE_LOGFMT(LogHttpServer, Log, "Serving UI file: %s", url.c_str());
+                    // Log the request URL
+                    UE_LOGFMT(LogHttpServer, Log, "Request URL: {0}", Endpoint);
 
-			// Serve the requested file
-			//serveFile(res, fullPath);
+                    HandleApiRequest(World, res, req, Endpoint);
 
-			// Log after serving the file
-			//UE_LOGFMT(LogHttpServer, Log, "Done serving file: %s", url.c_str());
+                    });
 
-		});*/
+                app.get("/get*", [UIPath, this, World](auto* res, auto* req) {
 
-		app.get("/api/:APIEndpoint", [this, World](auto* res, auto* req) {
-			std::string url(req->getParameter("APIEndpoint"));
-			FString RequestUrl = FString(url.c_str());
+                    std::string url(req->getUrl().begin(), req->getUrl().end());
+                    FString Endpoint = FString(url.c_str()).Mid(1);
 
-			// Log the request URL
-			UE_LOGFMT(LogHttpServer, Log, "Request URL: {0}", RequestUrl);
+                    // Log the request URL
+                    UE_LOG(LogHttpServer, Log, TEXT("Request API: %s"), *Endpoint);
 
-			bool bSuccess = false;
-			FString OutJson = this->HandleEndpoint(World, RequestUrl, bSuccess);
+                    HandleApiRequest(World, res, req, Endpoint);
 
-			// Set CORS headers
-			res->writeHeader("Access-Control-Allow-Origin", "*");
-			res->writeHeader("Access-Control-Allow-Methods", "GET, POST");
-			res->writeHeader("Access-Control-Allow-Headers", "Content-Type");
+                    });
 
-			if (!bSuccess) {
-				res->writeStatus("404 Not Found")->end("File not found");
-			}
-			else {
-				res->end(TCHAR_TO_UTF8(*OutJson));
-			}
+                app.get("/*", [UIPath, this, World](auto* res, auto* req) {
+                    std::string url(req->getUrl().begin(), req->getUrl().end());
 
-		});
+                    // Remove initial '/'
+                    FString RelativePath = FString(url.c_str()).Mid(1);
+                    FString FilePath = FPaths::Combine(UIPath, RelativePath);
+                    FString FileContent;
+                    bool IsBinary = false; // to flag non-text files (e.g., images)
 
-		app.get("/get*", [UIPath, this, World](auto* res, auto* req) {
+                    UE_LOG(LogHttpServer, Log, TEXT("Request RelativePath: %s"), *RelativePath);
+                    UE_LOG(LogHttpServer, Log, TEXT("Request FilePath: %s"), *FilePath);
 
-			std::string url(req->getUrl().begin(), req->getUrl().end());
-			FString Endpoint = FString(url.c_str()).Mid(1);
+                    FScopeLock ScopeLock(&WebSocketCriticalSection);
+                    if (!res || !req) {
+                        UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
+                        res->writeStatus("500")->end("Internal Server Error");
+                        return;
+                    }
 
-			// Log the request URL
-			UE_LOG(LogHttpServer, Log, TEXT("Request API: %s"), *Endpoint);
+                    if (FPaths::FileExists(FilePath)) {
+                        HandleGetRequest(res, req, FilePath);
+                    }
+                    else {
+                        HandleApiRequest(World, res, req, FilePath);
+                    }
 
-			bool bSuccess = false;
-			FString OutJson = this->HandleEndpoint(World, Endpoint, bSuccess);
+                    });
 
-			// Set CORS headers
-			res->writeHeader("Access-Control-Allow-Origin", "*");
-			res->writeHeader("Access-Control-Allow-Methods", "GET, POST");
-			res->writeHeader("Access-Control-Allow-Headers", "Content-Type");
+                app.listen(port, [port](auto* token) {
 
-			if (!bSuccess) {
-				res->writeStatus("404 Not Found")->end("File not found");
-			}
-			else {
-				res->end(TCHAR_TO_UTF8(*OutJson));
-			}
+                    UE_LOG(LogHttpServer, Warning, TEXT("Attempting to listen on port %d"), port);
 
-		});
+                    FScopeLock ScopeLock(&WebSocketCriticalSection);
+                    if (token) {
+                        UE_LOGFMT(LogHttpServer, Warning, "Listening on port {port}", port);
+                    }
+                    else {
+                        UE_LOGFMT(LogHttpServer, Error, "Failed to listen on port {port}", port);
+                    }
+                    });
 
-		app.get("/*", [UIPath, this, World](uWS::HttpResponse<false>* res, auto* req) {
-			std::string url(req->getUrl().begin(), req->getUrl().end());
+                app.run();
 
-			// Remove initial '/'
-			FString RelativePath = FString(url.c_str()).Mid(1);
-			FString FilePath = FPaths::Combine(UIPath, RelativePath);
-			FString FileContent;
-			bool IsBinary = false; // to flag non-text files (e.g., images)
+            } catch (const std::exception& e) {
+                UE_LOG(LogHttpServer, Error, TEXT("WebSocket Server Exception: %s"), *FString(e.what()));
+            } catch (...) {
+                UE_LOG(LogHttpServer, Error, TEXT("Unknown Exception in WebSocket Server"));
+            }
+        });
 
-			UE_LOG(LogHttpServer, Log, TEXT("Request RelativePath: %s"), *RelativePath);
-			UE_LOG(LogHttpServer, Log, TEXT("Request FilePath: %s"), *FilePath);
-
-			FScopeLock ScopeLock(&WebSocketCriticalSection);
-			if (!res || !req) {
-				UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
-				res->writeStatus("500")->end("Internal Server Error");
-				return;
-			}
-
-			// Determine the MIME type based on file extension
-			FString Extension = FPaths::GetExtension(FilePath).ToLower();
-			FString ContentType;
-
-			if (Extension == "js") {
-				ContentType = "application/javascript";
-			} else if (Extension == "css") {
-				ContentType = "text/css";
-			} else if (Extension == "html" || Extension == "htm") {
-				ContentType = "text/html";
-			} else if (Extension == "png") {
-				ContentType = "image/png";
-				IsBinary = true;
-			} else if (Extension == "jpg" || Extension == "jpeg") {
-				ContentType = "image/jpeg";
-				IsBinary = true;
-			} else if (Extension == "gif") {
-				ContentType = "image/gif";
-				IsBinary = true;
-			} else {
-				ContentType = "text/plain";  // Default to plain text for unknown files
-			}
-
-			if (FPaths::FileExists(FilePath)) {
-				bool FileLoaded = false;
-				if (IsBinary) {
-					// For binary files like images, we need to use LoadFileToArray
-					TArray<uint8> BinaryContent;
-					FileLoaded = FFileHelper::LoadFileToArray(BinaryContent, *FilePath);
-
-					if (FileLoaded) {
-						std::string contentLength = std::to_string(BinaryContent.Num());
-
-						UE_LOG(LogHttpServer, Log, TEXT("Binary File Found Returning: %s"), *FilePath);
-						res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
-						res->writeHeader("Access-Control-Allow-Origin", "*");
-						res->writeHeader("Content-Length", contentLength.c_str());
-						res->write(std::string_view((char*)BinaryContent.GetData(), BinaryContent.Num()));
-						res->end();
-					}
-				} else {
-					// Text-based files like HTML, CSS, JS
-					FileLoaded = FFileHelper::LoadFileToString(FileContent, *FilePath);
-					if (FileLoaded) {
-						UE_LOG(LogHttpServer, Log, TEXT("File Found Returning: %s"), *FilePath);
-						res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType))
-							->writeHeader("Access-Control-Allow-Origin", "*")
-							->end(TCHAR_TO_UTF8(*FileContent));
-					}
-				}
-
-				if (!FileLoaded) {
-					UE_LOG(LogHttpServer, Error, TEXT("Failed to load file: %s"), *FilePath);
-					res->writeStatus("500")->end("Internal Server Error");
-				}
-			}
-
-			bool bSuccess = false;
-			FString Json = this->HandleEndpoint(World, RelativePath, bSuccess);
-
-			if (bSuccess) {
-				UE_LOG(LogHttpServer, Log, TEXT("API Found Returning: %s"), *FilePath);
-				res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType))
-					->writeHeader("Access-Control-Allow-Origin", "*")
-					->end(TCHAR_TO_UTF8(*Json));
-			}
-			else
-			{
-				res->writeStatus("404 Not Found")->end("File not found");
-			}
-		});
-
-		app.listen(port, [](auto* token) {
-			FScopeLock ScopeLock(&WebSocketCriticalSection);
-			if (token) {
-				UE_LOG(LogHttpServer, Warning, TEXT("Listening on port"));
-			}
-			else {
-				UE_LOG(LogHttpServer, Error, TEXT("Failed to listen on port"));
-			}
-			}).run();
-
-		//std::this_thread::sleep_for(10ms);
-
-	}
-	catch (const std::exception& e) {
-		FScopeLock ScopeLock(&WebSocketCriticalSection);
-		UE_LOG(LogHttpServer, Error, TEXT("Exception in InitWSService: %s"), *FString(e.what()));
-	}
-	catch (...) {
-		FScopeLock ScopeLock(&WebSocketCriticalSection);
-		UE_LOG(LogHttpServer, Error, TEXT("Unknown exception in InitWSService"));
-	}
-
-	bRunning = false;
 }
 
 void AFicsitRemoteMonitoring::OnClientConnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws) {
@@ -425,6 +284,95 @@ void AFicsitRemoteMonitoring::ProcessClientRequest(FClientInfo& ClientInfo, cons
         }
     }
 }
+
+void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString FilePath)
+{
+
+    FString FileContent;
+    bool IsBinary = false; // to flag non-text files (e.g., images)
+
+    // Determine the MIME type based on file extension
+    FString Extension = FPaths::GetExtension(FilePath).ToLower();
+    FString ContentType;
+
+    if (Extension == "js") {
+        ContentType = "application/javascript";
+    }
+    else if (Extension == "css") {
+        ContentType = "text/css";
+    }
+    else if (Extension == "html" || Extension == "htm") {
+        ContentType = "text/html";
+    }
+    else if (Extension == "png") {
+        ContentType = "image/png";
+        IsBinary = true;
+    }
+    else if (Extension == "jpg" || Extension == "jpeg") {
+        ContentType = "image/jpeg";
+        IsBinary = true;
+    }
+    else if (Extension == "gif") {
+        ContentType = "image/gif";
+        IsBinary = true;
+    }
+    else {
+        ContentType = "text/plain";  // Default to plain text for unknown files
+    }
+
+    bool FileLoaded = false;
+    if (IsBinary) {
+        // For binary files like images, we need to use LoadFileToArray
+        TArray<uint8> BinaryContent;
+        FileLoaded = FFileHelper::LoadFileToArray(BinaryContent, *FilePath);
+
+        if (FileLoaded) {
+            std::string contentLength = std::to_string(BinaryContent.Num());
+
+            UE_LOG(LogHttpServer, Log, TEXT("Binary File Found Returning: %s"), *FilePath);
+            res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
+            res->writeHeader("Access-Control-Allow-Origin", "*");
+            res->writeHeader("Content-Length", contentLength.c_str());
+            res->write(std::string_view((char*)BinaryContent.GetData(), BinaryContent.Num()));
+            res->end();
+        }
+    }
+    else {
+        // Text-based files like HTML, CSS, JS
+        FileLoaded = FFileHelper::LoadFileToString(FileContent, *FilePath);
+        if (FileLoaded) {
+            UE_LOG(LogHttpServer, Log, TEXT("File Found Returning: %s"), *FilePath);
+            res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType))
+                ->writeHeader("Access-Control-Allow-Origin", "*")
+                ->end(TCHAR_TO_UTF8(*FileContent));
+        }
+    }
+
+    if (!FileLoaded) {
+        UE_LOG(LogHttpServer, Error, TEXT("Failed to load file: %s"), *FilePath);
+        res->writeStatus("500")->end("Internal Server Error");
+    }
+}
+
+void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString Endpoint)
+{
+
+    bool bSuccess = false;
+    FString OutJson = this->HandleEndpoint(World, Endpoint, bSuccess);
+
+    if (bSuccess) {
+        UE_LOGFMT(LogHttpServer, Log, "API Found Returning: {Endpoint}", Endpoint);
+        res->writeHeader("Content-Type", "application/json")
+            ->writeHeader("Access-Control-Allow-Origin", "*")
+            ->end(TCHAR_TO_UTF8(*OutJson));
+    }
+    else
+    {
+        res->writeStatus("404 Not Found")->end("File not found");
+    }
+
+}
+
 
 void AFicsitRemoteMonitoring::InitAPIRegistry()
 {

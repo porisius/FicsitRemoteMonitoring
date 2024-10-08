@@ -97,15 +97,11 @@ class FICSITREMOTEMONITORING_API AFicsitRemoteMonitoring : public AModSubsystem
 {
 	GENERATED_BODY()
 
-	std::thread WebSocketThread;
-	std::atomic<bool> bRunning;
-
 private:
 
-	friend class UFGPowerCircuitGroup;
+	TFuture<void> WebServer;
 
-	using FHttpServerPtr = TSharedPtr<uWS::App, ESPMode::ThreadSafe>;
-	using FThreadPtr = TUniquePtr<std::thread>;
+	friend class UFGPowerCircuitGroup;
 
 public:
 
@@ -154,12 +150,13 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void InitSerialDevice();
 
+	void HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString Endpoint);
+
 	void InitAPIRegistry();
 	void InitOutageNotification();
 
 	void StartWebSocketServer();
 	void StopWebSocketServer();
-	void RunWebSocketServer();
 
     TArray<FClientInfo> ConnectedClients;
     FTimerHandle IntervalTimerHandle;
@@ -170,8 +167,7 @@ public:
     void OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode);
 	void ProcessClientRequest(FClientInfo& ClientInfo, const TSharedPtr<FJsonObject>& JsonRequest);  // Process JSON requests
 
-    UPROPERTY(EditAnywhere)
-    TArray<FAPIEndpoint> Endpoints;
+	void HandleGetRequest(uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString FilePath);
 
 	UPROPERTY()
 	TArray<FString> Flavor_Battery;
