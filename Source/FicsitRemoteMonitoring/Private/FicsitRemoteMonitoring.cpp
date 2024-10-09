@@ -525,26 +525,36 @@ TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::CallEndpoint(UObject* Worl
 
             if (EndpointInfo.bRequireGameThread)
             {
-                AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext]() {
+                FThreadSafeBool bAllocationComplete = false;
+                AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext, &JsonArray, &bAllocationComplete]() {
                     // Execute callback via GameThread
-                    return Callback.Execute(WorldContext);
+                    JsonArray = Callback.Execute(WorldContext);
+                    bAllocationComplete = true;
                 });
+
+                //block while not complete
+                while (!bAllocationComplete)
+                {
+                    //100micros sleep, this should be very quick
+                    FPlatformProcess::Sleep(0.0001f);
+                };
             }
             else
             {
                 // Directly execute the callback
-                return Callback.Execute(WorldContext);
+                JsonArray = Callback.Execute(WorldContext);
             }
         }
     }
 
     // Return an empty JSON object if no matching endpoint is found
-	return TArray<UBlueprintJsonValue*>{};
+	return JsonArray;
 }
 
 FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoin, bool& bSuccess)
 {
 	bSuccess = false;
+
 	TArray<UBlueprintJsonValue*> Json = this->CallEndpoint(WorldContext, InEndpoin, bSuccess);
 
 	if (!bSuccess) {
