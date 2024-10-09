@@ -26,5 +26,15 @@ public:
 	static FString APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext);
 	static bool IsIntInRange(int32 Number, int32 LowerBound, int32 UpperBound);
 
+	static double SafeDivide_Double(double Numerator, double Denominator)
+	{
+		return (Denominator == 0.0) ? 0.0 : (Numerator / Denominator);
+	}
+
+	static float SafeDivide_Float(float Numerator, float Denominator)
+	{
+		return (Denominator == 0.0f) ? 0.0f : (Numerator / Denominator);
+	}
+
 	static TSharedPtr<FJsonValue> ConvertStringToFJsonValue(const FString& JsonString);
 };

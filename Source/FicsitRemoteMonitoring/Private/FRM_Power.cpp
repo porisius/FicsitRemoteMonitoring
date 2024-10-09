@@ -43,7 +43,7 @@ TArray<UBlueprintJsonValue*> UFRM_Power::getCircuit(UObject* WorldContext)
 		JCircuit->SetFloat("BatteryInput", PowerCircuit->mBatterySumPowerInput);
 		JCircuit->SetFloat("BatteryOutput", PowerCircuit->GetBatterySumPowerOutput());
 		JCircuit->SetFloat("BatteryDifferential", PowerCircuit->mBatterySumPowerInput - PowerCircuit->GetBatterySumPowerOutput());
-		JCircuit->SetFloat("BatteryPercent", 100 * (PowerGroup->mTotalPowerStore / PowerGroup->mTotalPowerStoreCapacity));
+		JCircuit->SetFloat("BatteryPercent", UFRM_Library::SafeDivide_Float(PowerGroup->mTotalPowerStore, PowerGroup->mTotalPowerStoreCapacity) * 100);
 		JCircuit->SetFloat("BatteryCapacity", PowerGroup->mTotalPowerStoreCapacity);
 		JCircuit->SetString("BatteryTimeEmpty", UFGBlueprintFunctionLibrary::SecondsToTimeString(PowerCircuit->mTimeToBatteriesEmpty));
 		JCircuit->SetString("BatteryTimeFull", UFGBlueprintFunctionLibrary::SecondsToTimeString(PowerCircuit->mTimeToBatteriesFull));
