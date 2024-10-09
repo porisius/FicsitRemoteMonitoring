@@ -204,7 +204,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                         HandleGetRequest(res, req, FilePath);
                     }
                     else {
-                        HandleApiRequest(World, res, req, FilePath);
+                        HandleApiRequest(World, res, req, RelativePath);
                     }
 
                     });
