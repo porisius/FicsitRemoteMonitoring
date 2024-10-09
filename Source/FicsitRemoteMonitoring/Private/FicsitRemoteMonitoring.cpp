@@ -368,7 +368,11 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
     }
     else
     {
-        res->writeStatus("404 Not Found")->end("File not found");
+        UE_LOGFMT(LogHttpServer, Log, "API Not Found: {Endpoint}", Endpoint);
+        res->writeStatus("404 Not Found");
+        res->writeHeader("Content-Type", "application/json")
+            ->writeHeader("Access-Control-Allow-Origin", "*")
+            ->end(TCHAR_TO_UTF8(*OutJson));
     }
 
 }
