@@ -465,7 +465,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 
 		TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
 		JProduct->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ItemClass).ToString()));
-		JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>((ItemClass)->GetDefaultObjectName().ToString()));
+		JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ItemClass)));
 		JProduct->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
 		JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
 		JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
