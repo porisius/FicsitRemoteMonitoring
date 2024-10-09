@@ -56,7 +56,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, class UC
 
 		else {
 
-			ChatReturn.Chat = TEXT("Unable to find output type, please refer to the documentation at docs.ficsit.app.");
+			ChatReturn.Chat = TEXT("Usage: /frm debug <file/info> <Endpoint>");
 			ChatReturn.Color = FLinearColor::Red;
 			ChatReturn.Status = EExecutionStatus::UNCOMPLETED;
 
@@ -68,40 +68,24 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, class UC
 
 		FString arg1 = Arguments[1].ToLower();
 
-		auto World = GetWorld();
-		
-
 		if (arg1 == "start") {
 
-			auto config = FConfig_HTTPStruct::GetActiveConfig(World);
-			FString Listen_IP = config.Listen_IP;
+			auto config = FConfig_HTTPStruct::GetActiveConfig(WorldContext);
 			int32 Port = config.HTTP_Port;
 			
-			//WebSocketServer;
+			ModSubsystem->StartWebSocketServer();
 
-			/*ModSubsystem->HttpServer->Listen(Listen_IP, Port, FHttpServerListenCallback::CreateLambda([&ChatReturn, Listen_IP, Port](const bool Success) -> void
-				{
-					switch (Success) {
-					case true:
-						ChatReturn.Chat = FString(TEXT("HTTP Service Initiated"));
-						ChatReturn.Color = FLinearColor::Green;
-						ChatReturn.Status = EExecutionStatus::COMPLETED;
-						UE_LOG(LogHttpServer, Log, TEXT("HTTP Service started. IP: $s - Port: %d"), *FString(Listen_IP), Port);
-					case false:
-						ChatReturn.Chat = FString(TEXT("HTTP Service failed to start on IP: " + Listen_IP + " - Port: " + FString::FromInt(Port)));
-						ChatReturn.Color = FLinearColor::Red;
-						ChatReturn.Status = EExecutionStatus::UNCOMPLETED;
-						UE_LOG(LogHttpServer, Error, TEXT("HTTP Service failed to start on IP: $s - Port: %d"), *FString(Listen_IP), Port);
-					}
-				})
-			);
-			*/
+			ChatReturn.Chat = FString(TEXT("HTTP Service Initiated on Port: " + FString::FromInt(Port)));
+			ChatReturn.Color = FLinearColor::Green;
+			ChatReturn.Status = EExecutionStatus::COMPLETED;
+			UE_LOG(LogHttpServer, Log, TEXT("HTTP Service started. Port: %d"), Port);
+
 
 			return ChatReturn;
 
 		}
 		else if (arg1 == "stop") {
-			//ModSubsystem->HttpServer->Stop();
+			ModSubsystem->StopWebSocketServer();
 			UE_LOG(LogHttpServer, Log, TEXT("Stopping HTTP Service."));
 
 			ChatReturn.Chat = TEXT("Stopping HTTP Service.");
@@ -110,50 +94,72 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, class UC
 
 			return ChatReturn;
 		}
-		else {
 
-			const FRegexPattern ipv4("(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])");
-			FString IP = Arguments[1];
-			int32 Port = FCString::Atoi(*Arguments[2]);
-			
-			FRegexMatcher listener(ipv4, IP);
+		ChatReturn.Chat = TEXT("Usage: /frm http <start/stop>");
+		ChatReturn.Color = FLinearColor::Red;
+		ChatReturn.Status = EExecutionStatus::UNCOMPLETED;
 
-			if (!listener.FindNext()) {
-				ChatReturn.Chat = FString(TEXT("HTTP Listener IP Address is invalid"));
-				ChatReturn.Color = FLinearColor::Red;
-				ChatReturn.Status = EExecutionStatus::UNCOMPLETED;
-			}
+		return ChatReturn;
 
-			if (!UFRM_Library::IsIntInRange(Port, 1, 65535)) {
-				ChatReturn.Chat = FString(TEXT("Invalid Port Number"));
-				ChatReturn.Color = FLinearColor::Red;
-				ChatReturn.Status = EExecutionStatus::UNCOMPLETED;
-			}
+	}
 
-			/*ModSubsystem->HttpServer->Listen(IP, Port, FHttpServerListenCallback::CreateLambda([&ChatReturn, IP, Port](const bool Success) -> void
-				{
-					switch (Success) {
-					case true:
-						ChatReturn.Chat = FString(TEXT("HTTP Service Initiated"));
-						ChatReturn.Color = FLinearColor::Green;
-						ChatReturn.Status = EExecutionStatus::COMPLETED;
-						UE_LOG(LogHttpServer, Log, TEXT("HTTP Service started. IP: $s - Port: %d"), *FString(IP), Port);
-					case false:
-						ChatReturn.Chat = FString(TEXT("HTTP Service failed to start on IP: " + IP + " - Port: " + FString::FromInt(Port)));
-						ChatReturn.Color = FLinearColor::Red;
-						ChatReturn.Status = EExecutionStatus::UNCOMPLETED;
-						UE_LOG(LogHttpServer, Error, TEXT("HTTP Service failed to start on IP: $s - Port: %d"), *FString(IP), Port);
-					}
-				})
-			);
-			*/
+	if (command == "serial") {
+
+		FString arg1 = Arguments[1].ToLower();
+
+		if (arg1 == "start") {
+
+			auto config = FConfig_SerialStruct::GetActiveConfig(WorldContext);
+			FString Port = config.COM_Port;
+
+			ModSubsystem->StartWebSocketServer();
+
+			ChatReturn.Chat = FString(TEXT("Serial/RS232 Service Initiated on Port: " + Port));
+			ChatReturn.Color = FLinearColor::Green;
+			ChatReturn.Status = EExecutionStatus::COMPLETED;
+			UE_LOGFMT(LogHttpServer, Log, "Serial/RS232 Service started. Port: {Port}");
+
+
 			return ChatReturn;
 
 		}
+		else if (arg1 == "stop") {
+			ModSubsystem->StopWebSocketServer();
+			UE_LOG(LogHttpServer, Log, TEXT("Stopping Serial/RS232 Service."));
 
-		ChatReturn.Chat = TEXT("Unable to find output type, please refer to the documentation at docs.ficsit.app.");
+			ChatReturn.Chat = TEXT("Stopping Serial/RS232 Service.");
+			ChatReturn.Color = FLinearColor::White;
+			ChatReturn.Status = EExecutionStatus::COMPLETED;
+
+			return ChatReturn;
+		}
+
+		ChatReturn.Chat = TEXT("Usage: /frm serial <start/stop>");
 		ChatReturn.Color = FLinearColor::Red;
 		ChatReturn.Status = EExecutionStatus::UNCOMPLETED;
+
+		return ChatReturn;
+
+	}
+
+	if (command == "icon") {
+
+		if (!UKismetSystemLibrary::IsDedicatedServer(WorldContext)) {
+
+			ModSubsystem->IconGenerator_BIE();
+
+			ChatReturn.Chat = TEXT("Icon Generatation Completed");
+			ChatReturn.Color = FLinearColor::Green;
+			ChatReturn.Status = EExecutionStatus::COMPLETED;
+
+		}
+		else {
+
+			ChatReturn.Chat = TEXT("Dedicated Servers do not have graphical assets to extract. Cancelling... Generate locally, then upload to server.");
+			ChatReturn.Color = FLinearColor::Red;
+			ChatReturn.Status = EExecutionStatus::UNCOMPLETED;
+
+		}
 
 		return ChatReturn;
 
