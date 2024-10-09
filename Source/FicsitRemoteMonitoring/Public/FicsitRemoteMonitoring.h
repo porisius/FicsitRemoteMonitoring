@@ -36,7 +36,6 @@
 #include "FGResearchManager.h"
 #include "FGRecipeManager.h"
 #include "FGSchematicManager.h"
-#include "uWebSocketsWrapper.h"
 #include "Resources/FGItemDescriptor.h"
 #include "FGDropPod.h"
 #include "Subsystem/SubsystemActorManager.h"
@@ -48,6 +47,10 @@
 #include "Async/Async.h"
 #include "Misc/Paths.h"
 #include "BlueprintJsonObject.h"
+
+THIRD_PARTY_INCLUDES_START
+#include "ThirdParty/uWebSockets/App.h"
+THIRD_PARTY_INCLUDES_END
 
 #include "FicsitRemoteMonitoring.generated.h"
 
@@ -137,15 +140,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void CircuitID_BIE(UFGPowerInfoComponent* PowerInfo, TSubclassOf<class UFGBuildingDescriptor> Buildable, int32& CircuitID, float& PowerConsumption, float& MinPower, float& MaxPower, bool& VariblePower);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
+	void IconGenerator_BIE();
+
 	// Array of API endpoints
 	UPROPERTY()
 	TArray<FAPIEndpoint> APIEndpoints;
-
-	//UFUNCTION(BlueprintImplementableEvent)
-	//void OpenSerial(const FString ComPort, int32 BaudRate, int32 StackSize, bool& Success);
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
-	void ReadSerial(FString& SerialBytes);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void InitSerialDevice();
@@ -159,8 +159,6 @@ public:
 	void StopWebSocketServer();
 
     TArray<FClientInfo> ConnectedClients;
-    FTimerHandle IntervalTimerHandle;
-    FTimerManager* TimerManager;
 
 	void OnClientConnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws);
     void OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message);

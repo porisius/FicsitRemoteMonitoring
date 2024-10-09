@@ -169,18 +169,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                     });
 
-                app.get("/get*", [UIPath, this, World](auto* res, auto* req) {
-
-                    std::string url(req->getUrl().begin(), req->getUrl().end());
-                    FString Endpoint = FString(url.c_str()).Mid(1);
-
-                    // Log the request URL
-                    UE_LOG(LogHttpServer, Log, TEXT("Request API: %s"), *Endpoint);
-
-                    HandleApiRequest(World, res, req, Endpoint);
-
-                    });
-
                 app.get("/*", [UIPath, this, World](auto* res, auto* req) {
                     std::string url(req->getUrl().begin(), req->getUrl().end());
 
