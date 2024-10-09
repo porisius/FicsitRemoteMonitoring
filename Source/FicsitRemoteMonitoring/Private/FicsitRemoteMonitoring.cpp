@@ -516,6 +516,8 @@ TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::CallEndpoint(UObject* Worl
 {
 	bSuccess = false;
 
+    TArray<UBlueprintJsonValue*> JsonArray = TArray<UBlueprintJsonValue*>{};
+
     for (FAPIEndpoint& EndpointInfo : APIEndpoints)
     {
         if (EndpointInfo.APIName == InEndpoint)
