@@ -508,6 +508,8 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGet
 	NewEndpoint.Callback.BindUFunction(TargetObject, FunctionName);
 
 	APIEndpoints.Add(NewEndpoint);
+
+    UE_LOGFMT(LogHttpServer, Log, "Registered API Endpoint: {APIName} - Current number of endpoints registered: {1}", APIName, APIEndpoints.Num());
 }
 
 TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, bool& bSuccess)
