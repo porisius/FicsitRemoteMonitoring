@@ -157,11 +157,30 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 		TArray<TSharedPtr<FJsonValue>> JCircuitArray;
 
 		TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
-		//int32 CircuitID = Manufacturer->GetPowerInfo()->GetPowerCircuit()->GetCircuitGroupID();
-		//float PowerConsumed = Manufacturer->GetPowerInfo()->GetActualConsumption();
 
-		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(0));
-		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(0));
+		int32 CircuitID = -1;
+		float PowerConsumed = -1;
+
+		FThreadSafeBool bAllocationComplete = false;
+		AsyncTask(ENamedThreads::GameThread, [WorldContext, Manufacturer, &CircuitID, &PowerConsumed, &bAllocationComplete]() {
+			// Execute via GameThread
+			AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
+			fgcheck(ModSubsystem);
+
+			ModSubsystem->CircuitID_BIE(Manufacturer, CircuitID, PowerConsumed);
+
+			bAllocationComplete = true;
+		});
+
+		//block while not complete
+		while (!bAllocationComplete)
+		{
+			//100micros sleep, this should be very quick
+			FPlatformProcess::Sleep(0.0001f);
+		};
+
+		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
+		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerConsumed));
 		JCircuitArray.Add(MakeShared<FJsonValueObject>(JCircuit));
 
 		JFactory->Values.Add("Name", MakeShared<FJsonValueString>(Manufacturer->mDisplayName.ToString()));
@@ -176,7 +195,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 		JFactory->Values.Add("IsProducing", MakeShared<FJsonValueBoolean>(Manufacturer->IsProducing()));
 		JFactory->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(Manufacturer->IsProductionPaused()));
 		JFactory->Values.Add("PowerInfo", MakeShared<FJsonValueArray>(JCircuitArray));
-		JFactory->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(0));
+		JFactory->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
 		JFactory->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Manufacturer), Manufacturer->mDisplayName.ToString(), Manufacturer->mDisplayName.ToString())));
 
 		JFactoryArray.Add(MakeShared<FJsonValueObject>(JFactory));
@@ -457,25 +476,43 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 		TArray<TSharedPtr<FJsonValue>> JCircuitArray;
 
 		TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
-		//int32 CircuitID = Manufacturer->GetPowerInfo()->GetPowerCircuit()->GetCircuitGroupID();
-		//float PowerConsumed = Manufacturer->GetPowerInfo()->GetActualConsumption();
+		int32 CircuitID = -1;
+		float PowerConsumed = -1;
 
-		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(0));
-		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(0));
+		FThreadSafeBool bAllocationComplete = false;
+		AsyncTask(ENamedThreads::GameThread, [WorldContext, Extractor, &CircuitID, &PowerConsumed, &bAllocationComplete]() {
+			// Execute via GameThread
+			AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
+			fgcheck(ModSubsystem);
+
+			ModSubsystem->CircuitID_BIE(Extractor, CircuitID, PowerConsumed);
+
+			bAllocationComplete = true;
+		});
+
+		//block while not complete
+		while (!bAllocationComplete)
+		{
+			//100micros sleep, this should be very quick
+			FPlatformProcess::Sleep(0.0001f);
+		};
+
+		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
+		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerConsumed));
 		JCircuitArray.Add(MakeShared<FJsonValueObject>(JCircuit));
 
 		JExtractor->Values.Add("Name", MakeShared<FJsonValueString>(Extractor->mDisplayName.ToString()));
 		JExtractor->Values.Add("ClassName", MakeShared<FJsonValueString>(Extractor->GetClass()->GetName()));
 		JExtractor->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Extractor))));
 		JExtractor->Values.Add("Recipe", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ItemClass).ToString()));
-		JExtractor->Values.Add("RecipeClassName", MakeShared<FJsonValueString>((ItemClass)->GetDefaultObjectName().ToString()));
+		JExtractor->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ItemClass)));
 		JExtractor->Values.Add("production", MakeShared<FJsonValueArray>(JProductArray));
 		JExtractor->Values.Add("ManuSpeed", MakeShared<FJsonValueNumber>(Extractor->GetCurrentPotential() * 100));
 		JExtractor->Values.Add("IsConfigured", MakeShared<FJsonValueBoolean>(Extractor->IsConfigured()));
 		JExtractor->Values.Add("IsProducing", MakeShared<FJsonValueBoolean>(Extractor->IsProducing()));
 		JExtractor->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(Extractor->IsProductionPaused()));
 		JExtractor->Values.Add("PowerInfo", MakeShared<FJsonValueArray>(JCircuitArray));
-		JExtractor->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(0));
+		JExtractor->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
 		JExtractor->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Extractor), Extractor->mDisplayName.ToString(), Extractor->mDisplayName.ToString())));
 
 		JExtractorArray.Add(MakeShared<FJsonValueObject>(JExtractor));
