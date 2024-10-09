@@ -11,6 +11,8 @@
 #include "HAL/PlatformFileManager.h"
 #include "UObject/NoExportTypes.h"
 #include "Async/Async.h"
+//#include "FactoryDedicatedServer/Public/FGServerSubsystem.h"
+//#include "FactoryDedicatedServer/Public/Networking/FGServerAPIManager.h"
 #include "FRM_Drones.h"
 #include "FRM_Factory.h"
 #include "FRM_Player.h"
@@ -111,6 +113,9 @@ public:
 	AFicsitRemoteMonitoring();
 	virtual ~AFicsitRemoteMonitoring();
 
+	friend class UFGServerSubsystem;
+	friend class UFGServerAPIManager;
+
 	/** Get the subsystem in the current world, can be nullptr, e.g. on game ending (destroy) or game startup. */
 	static AFicsitRemoteMonitoring* Get(UWorld* world);
 
@@ -121,6 +126,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
 	FString HandleEndpoint (UObject* WorldContext, FString InEndpoin, bool& bSuccess);
+
+	//FFGServerErrorResponse HandleCSSEndpoint(FString& out_json, FString InEndpoin);
 	
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
 	TArray<UBlueprintJsonValue*> CallEndpoint(UObject* WorldContext, FString InEndpoin, bool& bSuccess);
@@ -191,6 +198,9 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
+
+	// Store the APIName for later use in the function
+	FString StoredAPIName;
 
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getAssembler(UObject* WorldContext) {		

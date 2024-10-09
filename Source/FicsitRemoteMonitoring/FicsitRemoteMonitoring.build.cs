@@ -25,7 +25,7 @@ public class FicsitRemoteMonitoring : ModuleRules
                 "InputCore",
                 "Json",
                 "JsonUtilities",
-                "FactoryGame", 
+                "FactoryGame",
                 "SML", 
                 "Chaos", 
                 "ChaosVehiclesCore", "ChaosVehicles", "ChaosSolverEngine",
@@ -46,6 +46,11 @@ public class FicsitRemoteMonitoring : ModuleRules
 
         // Add uWebSockets
         LoaduWebSockets(Target);
+
+        if (Target.Type == TargetType.Server)
+        {
+            PublicDependencyModuleNames.Add("FactoryDedicatedServer");
+        }
 
         // Enable exception handling
         bEnableExceptions = true;

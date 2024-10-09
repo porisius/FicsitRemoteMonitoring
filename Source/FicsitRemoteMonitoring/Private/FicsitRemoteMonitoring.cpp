@@ -497,6 +497,7 @@ void AFicsitRemoteMonitoring::BlueprintEndpoint(const FString& APIName, bool bGe
     NewEndpoint.Callback = InCallback;
 
 	APIEndpoints.Add(NewEndpoint);
+
 }
 
 void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, UObject* TargetObject, FName FunctionName)
@@ -510,6 +511,37 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGet
 	APIEndpoints.Add(NewEndpoint);
 
     UE_LOGFMT(LogHttpServer, Log, "Registered API Endpoint: {APIName} - Current number of endpoints registered: {1}", APIName, APIEndpoints.Num());
+
+/*
+    // Store the APIName in a member variable for use in HandleCSSEndpoint
+    StoredAPIName = APIName;
+
+    UFGServerSubsystem* ServerSubsystem = UFGServerSubsystem::Get(GetWorld());
+    if (IsValid(ServerSubsystem)) { return; }
+
+    UFGServerAPIManager* APIManager = ServerSubsystem->GetServerAPIManager();
+    if (IsValid(APIManager)) { return; }
+
+    if (!IsRunningDedicatedServer()) {
+
+        // Store the APIName in a member variable for use in HandleCSSEndpoint
+        StoredAPIName = APIName;
+
+        UFGServerSubsystem* ServerSubsystem = UFGServerSubsystem::Get(GetWorld());
+        if (IsValid(ServerSubsystem)) { return; }
+
+        UFGServerAPIManager* APIManager = ServerSubsystem->GetServerAPIManager();
+        if (IsValid(APIManager)) { return; }
+
+        FFGRequestHandlerRegistration HandleRegistration = FFGRequestHandlerRegistration();
+        HandleRegistration.HandlerObject = this;
+        HandleRegistration.HandlerFunction = this->FindFunction(FName("HandleCSSEndpoint"));
+        HandleRegistration.FunctionName = FName(*APIName);
+        HandleRegistration.PrivilegeLevel = EPrivilegeLevel::None;
+        APIManager->mRegisteredHandlers.Add(FString(APIName), HandleRegistration);
+
+    };
+*/
 }
 
 TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, bool& bSuccess)
@@ -568,6 +600,23 @@ FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString I
 
 }
 
+/*FFGServerErrorResponse AFicsitRemoteMonitoring::HandleCSSEndpoint(FString& out_json, FString InEndpoin)
+{
+    bool bSuccess = false;
+    auto World = GetWorld();
+    TArray<UBlueprintJsonValue*> Json = this->CallEndpoint(World, InEndpoin, bSuccess);
+
+    if (!bSuccess) {
+        out_json = "{'error': 'Endpoint not found. Please consult Endpoint's documentation for more information.'}";
+        return FFGServerErrorResponse::Ok();
+    }
+
+    FConfig_FactoryStruct config = FConfig_FactoryStruct::GetActiveConfig(World);
+    out_json = UBlueprintJsonValue::StringifyArray(Json, config.JSONDebugMode);
+    return FFGServerErrorResponse::Ok();
+
+}
+*/
 TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::getAll(UObject* WorldContext) {
 
 	TArray<UBlueprintJsonValue*> JsonArray;
