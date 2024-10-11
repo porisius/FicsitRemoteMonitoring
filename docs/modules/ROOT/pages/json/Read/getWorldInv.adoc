@@ -6,6 +6,9 @@ API Endpoint: getWorldInv +
 
 This is inventory of the world regardless of location. This does not include pipes/belts/factory buildings, only buildings whom purpose is to provide storage except Fluid Buffers.
 
+getCloudInv = Dimensional Storage that is uploaded to "the cloud", does not include the Storage Containers
+getWorldInv = Combines Dimensional Storage and Storage Containers
+
 [cols="1,2,1,1"]
 |===
 |JSON/JSON Group: |Info: |Data Type: |Input/Output:
