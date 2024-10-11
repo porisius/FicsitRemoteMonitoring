@@ -422,7 +422,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getSchematics", true, true, this->Get(GetWorld()), FName("getSchematics"));
 	RegisterEndpoint("getSinkList", true, true, this->Get(GetWorld()), FName("getSinkList"));
 	RegisterEndpoint("getSmelter", false, false, this->Get(GetWorld()), FName("getSmelter"));
-	RegisterEndpoint("getSpaceElevator", true, false, this->Get(GetWorld()), FName("getSpaceElevator "));
+	RegisterEndpoint("getSpaceElevator", true, false, this->Get(GetWorld()), FName("getSpaceElevator"));
 	RegisterEndpoint("getStorageInv", true, false, this->Get(GetWorld()), FName("getStorageInv"));
 	RegisterEndpoint("getSwitches", true, false, this->Get(GetWorld()), FName("getSwitches"));
 	RegisterEndpoint("getTractor", false, false, this->Get(GetWorld()), FName("getTractor"));
