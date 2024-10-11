@@ -1,8 +1,3 @@
-Source/BlueprintHttpServer/*
-Source/JSONParser/*
-Source/ThirdParty/cpp-httplib/*
-Source/ThirdParty/uWebSockets/*
-Source/WebSocketServer/*
 Binaries/*
 Intermediate/*
 Saved/*
