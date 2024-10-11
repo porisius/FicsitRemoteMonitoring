@@ -23,7 +23,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 		float TMaxPlayloadMass = 0.0;
 		float ForwardSpeed = 0.0;
 		float ThrottlePercent = 0.0;
-		FString TrainStation = TEXT("No Station");
+		FString TrainStation;
 
 		//UE_LOG(LogFRMAPI, Log, TEXT("Train Unit: %s - Prior to multi-master"), *FString(Train->GetTrainName().ToString()));
 
@@ -48,10 +48,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 			TArray<FTimeTableStop> TrainStops;
 			TimeTable->GetStops(TrainStops);
 			AFGTrainStationIdentifier* CurrentStation = CurrentStop.Station;
-
-			if (IsValid(CurrentStation)) {
-				TrainStation = CurrentStation->GetStationName().ToString();
-			}
+			TrainStation = CurrentStation->GetStationName().ToString();
 
 			UFGLocomotiveMovementComponent* LocomotiveMovement = MultiUnitMaster->GetLocomotiveMovementComponent();
 

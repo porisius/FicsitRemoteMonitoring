@@ -91,7 +91,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 		float ProductionCapacity = Generator->GetCurrentPotential();
 		float Productivity = Generator->GetProductivity();
 		
-		float MaxFuelConsumption = 60 * (UFRM_Library::SafeDivide_Float(ProductionCapacity, EnergyValue));
+		float MaxFuelConsumption = 60 * (ProductionCapacity / EnergyValue);
 		float FuelConsumption = MaxFuelConsumption * Productivity;
 
 		if (CurrentProduced.Contains(FuelItemClass)) {
@@ -165,8 +165,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 			JProductionStats->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
 			JProductionStats->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ClassName.Get())));
 			JProductionStats->Values.Add("ProdPerMin", MakeShared<FJsonValueString>(ProdPerMin));
-			JProductionStats->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UFRM_Library::SafeDivide_Float(Produced, MaxProduced)))));
-			JProductionStats->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>((100 * (UFRM_Library::SafeDivide_Float(Consumption, MaxConsumption)))));
+			JProductionStats->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UKismetMathLibrary::SafeDivide(Produced, MaxProduced)))));
+			JProductionStats->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>((100 * (UKismetMathLibrary::SafeDivide(Consumption, MaxConsumption)))));
 			JProductionStats->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(Produced));
 			JProductionStats->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProduced));
 			JProductionStats->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(Consumption));

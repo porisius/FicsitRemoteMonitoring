@@ -172,7 +172,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                 app.get("/*", [UIPath, this, World](auto* res, auto* req) {
                     std::string url(req->getUrl().begin(), req->getUrl().end());
 
-                    bool bFileExists = false;
                     // Remove initial '/'
                     FString RelativePath = FString(url.c_str()).Mid(1);
                     FString FilePath = FPaths::Combine(UIPath, RelativePath);
@@ -190,14 +189,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     }
 
                     if (FPaths::FileExists(FilePath)) {
-                        bFileExists = true;
-                    }
-                    else if (FPaths::FileExists(FilePath + ".html")) {
-                        FilePath = FilePath + ".html";
-                        bFileExists = true;
-                    }
-
-                    if (bFileExists) {
                         HandleGetRequest(res, req, FilePath);
                     }
                     else {
@@ -396,26 +387,23 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getBiomassGenerator", false, false, this->Get(GetWorld()), FName("getBiomassGenerator"));
 	RegisterEndpoint("getBlender", false, false, this->Get(GetWorld()), FName("getBlender"));
 	RegisterEndpoint("getCloudInv", true, false, this->Get(GetWorld()), FName("getCloudInv"));
-	RegisterEndpoint("getCoalGenerator", false, false, this->Get(GetWorld()), FName("getCoalGenerator"));
-    RegisterEndpoint("getConstructor", false, false, this->Get(GetWorld()), FName("getConstructor"));
+	RegisterEndpoint("getConstructor", false, false, this->Get(GetWorld()), FName("getConstructor"));
 	RegisterEndpoint("getConverter", false, false, this->Get(GetWorld()), FName("getConverter"));
 	RegisterEndpoint("getDoggo", true, true, this->Get(GetWorld()), FName("getDoggo"));
 	RegisterEndpoint("getDrone", true, true, this->Get(GetWorld()), FName("getDrone"));
 	RegisterEndpoint("getDroneStation", true, false, this->Get(GetWorld()), FName("getDroneStation"));
 	RegisterEndpoint("getDropPod", true, true, this->Get(GetWorld()), FName("getDropPod"));
-	RegisterEndpoint("getEncoder", true, false, this->Get(GetWorld()), FName("getEncoder"));
 	RegisterEndpoint("getExplorationSink", true, false, this->Get(GetWorld()), FName("getExplorationSink"));
 	RegisterEndpoint("getExplorer", false, true, this->Get(GetWorld()), FName("getExplorer"));
-	RegisterEndpoint("getExtractor", true, true, this->Get(GetWorld()), FName("getExtractor"));
+	RegisterEndpoint("getExtractor", true, false, this->Get(GetWorld()), FName("getExtractor"));
 	RegisterEndpoint("getFactoryCart", false, false, this->Get(GetWorld()), FName("getFactoryCart"));
 	RegisterEndpoint("getFoundry", false, false, this->Get(GetWorld()), FName("getFoundry"));
 	RegisterEndpoint("getFuelGenerator", false, false, this->Get(GetWorld()), FName("getFuelGenerator"));
 	RegisterEndpoint("getGeothermalGenerator", false, false, this->Get(GetWorld()), FName("getGeothermalGenerator"));
-	RegisterEndpoint("getHUBTerminal", true, true, this->Get(GetWorld()), FName("getHUBTerminal"));
+	RegisterEndpoint("getHUBTerminal", false, false, this->Get(GetWorld()), FName("getHUBTerminal"));
 	RegisterEndpoint("getManufacturer", false, false, this->Get(GetWorld()), FName("getManufacturer"));
 	RegisterEndpoint("getModList", true, false, this->Get(GetWorld()), FName("getModList"));
 	RegisterEndpoint("getNuclearGenerator", false, false, this->Get(GetWorld()), FName("getNuclearGenerator"));
-    RegisterEndpoint("getPackager", false, false, this->Get(GetWorld()), FName("getPackager"));
 	RegisterEndpoint("getParticle", false, false, this->Get(GetWorld()), FName("getParticle"));
 	RegisterEndpoint("getPaths", true, false, this->Get(GetWorld()), FName("getPaths"));
 	RegisterEndpoint("getPipes", true, false, this->Get(GetWorld()), FName("getPipes"));
@@ -424,16 +412,16 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getPowerSlug", true, true, this->Get(GetWorld()), FName("getPowerSlug"));
 	RegisterEndpoint("getProdStats", true, false, this->Get(GetWorld()), FName("getProdStats"));
 	RegisterEndpoint("getRadarTower", true, false, this->Get(GetWorld()), FName("getRadarTOwer"));
-	RegisterEndpoint("getRecipes", true, true, this->Get(GetWorld()), FName("getRecipes"));
+	RegisterEndpoint("getRecipes", true, false, this->Get(GetWorld()), FName("getRecipes"));
 	RegisterEndpoint("getRefinery", false, false, this->Get(GetWorld()), FName("getRefinery"));
-	RegisterEndpoint("getResourceGeyser", true, true, this->Get(GetWorld()), FName("getResourceGeyser"));
+	RegisterEndpoint("getResourceGeyser", true, false, this->Get(GetWorld()), FName("getResourceGeyser"));
 	RegisterEndpoint("getResourceNode", true, true, this->Get(GetWorld()), FName("getResourceNode"));
 	RegisterEndpoint("getResourceSink", true, false, this->Get(GetWorld()), FName("getResourceSink"));
-	RegisterEndpoint("getResourceWell", true, true, this->Get(GetWorld()), FName("getResourceWell"));
-	RegisterEndpoint("getSchematics", true, true, this->Get(GetWorld()), FName("getSchematics"));
-	RegisterEndpoint("getSinkList", true, true, this->Get(GetWorld()), FName("getSinkList"));
+	RegisterEndpoint("getResourceWell", true, false, this->Get(GetWorld()), FName("getResourceWell"));
+	RegisterEndpoint("getSchematics", true, false, this->Get(GetWorld()), FName("getSchematics"));
+	RegisterEndpoint("getSinkList", true, false, this->Get(GetWorld()), FName("getSinkList"));
 	RegisterEndpoint("getSmelter", false, false, this->Get(GetWorld()), FName("getSmelter"));
-	RegisterEndpoint("getSpaceElevator", true, false, this->Get(GetWorld()), FName("getSpaceElevator"));
+	RegisterEndpoint("getSpaceElevator", true, false, this->Get(GetWorld()), FName("getSpaceElevator "));
 	RegisterEndpoint("getStorageInv", true, false, this->Get(GetWorld()), FName("getStorageInv"));
 	RegisterEndpoint("getSwitches", true, false, this->Get(GetWorld()), FName("getSwitches"));
 	RegisterEndpoint("getTractor", false, false, this->Get(GetWorld()), FName("getTractor"));
@@ -604,7 +592,7 @@ FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString I
 	TArray<UBlueprintJsonValue*> Json = this->CallEndpoint(WorldContext, InEndpoin, bSuccess);
 
 	if (!bSuccess) {
-		return "{\"error\": \"Endpoint not found. Please consult Endpoint's documentation for more information.\"}";
+		return "{'error': 'Endpoint not found. Please consult Endpoint's documentation for more information.'}";
 	}
 
 	FConfig_FactoryStruct config = FConfig_FactoryStruct::GetActiveConfig(WorldContext);
@@ -633,23 +621,18 @@ TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::getAll(UObject* WorldConte
 
 	TArray<UBlueprintJsonValue*> JsonArray;
 
+    UBlueprintJsonObject* Json = UBlueprintJsonObject::Create();
+
     for ( FAPIEndpoint APIEndpoint : APIEndpoints) {
         
         bool bSuccess = false;
 
         if (APIEndpoint.bGetAll) {
-            UBlueprintJsonObject* Json = UBlueprintJsonObject::Create();
             Json->SetArray(APIEndpoint.APIName, CallEndpoint(WorldContext, APIEndpoint.APIName, bSuccess));
-
-            //block while not complete
-            while (!bSuccess)
-            {
-                //100micros sleep, this should be very quick
-                FPlatformProcess::Sleep(0.0001f);
-            };
-
-            JsonArray.Add(UBlueprintJsonValue::FromObject(Json));
         }
+
+        JsonArray.Add(UBlueprintJsonValue::FromObject(Json));
+
     }
 
 	return JsonArray;

@@ -479,11 +479,23 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 		int32 CircuitID = -1;
 		float PowerConsumed = -1;
 
+		FThreadSafeBool bAllocationComplete = false;
+		AsyncTask(ENamedThreads::GameThread, [WorldContext, Extractor, &CircuitID, &PowerConsumed, &bAllocationComplete]() {
+			// Execute via GameThread
 			AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
 			fgcheck(ModSubsystem);
 
 			ModSubsystem->CircuitID_BIE(Extractor, CircuitID, PowerConsumed);
 
+			bAllocationComplete = true;
+		});
+
+		//block while not complete
+		while (!bAllocationComplete)
+		{
+			//100micros sleep, this should be very quick
+			FPlatformProcess::Sleep(0.0001f);
+		};
 
 		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
 		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerConsumed));

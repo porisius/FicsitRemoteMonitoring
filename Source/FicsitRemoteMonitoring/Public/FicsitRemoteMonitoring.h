@@ -32,6 +32,7 @@
 #include "Logging/StructuredLog.h"
 #include "Configs/Config_HTTPStruct.h"
 #include "Configs/Config_SerialStruct.h"
+#include "Configs/Config_WebSocketStruct.h"
 #include "Configs/Config_DiscITStruct.h"
 #include "Patching/NativeHookManager.h"
 #include "FGResearchManager.h"
@@ -147,9 +148,6 @@ public:
 	void CircuitID_BIE(AFGBuildableFactory* Buildable, int32& CircuitID, float& PowerConsumption);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
-	void PlayerName_BIE(AFGPlayerState* PlayerState, FString& PlayerName);
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void IconGenerator_BIE();
 
 	// Array of API endpoints
@@ -216,7 +214,7 @@ public:
 
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getBiomassGenerator(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorBiomass/Build_GeneratorBiomass.Build_GeneratorBiomass_Automated_C"))));
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorBiomass/Build_GeneratorBiomass.Build_GeneratorBiomass_C"))));
 	}
 
 	UFUNCTION()
@@ -241,7 +239,7 @@ public:
 
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getConverter(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Converter/Build_Converter.Build_Converter_C"))));
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Converter/Build_Converter.Build_Converter"))));
 	}
 
 	UFUNCTION()
@@ -262,11 +260,6 @@ public:
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getDropPod(UObject* WorldContext) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getDropPod(WorldContext));
-	}
-
-	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getEncoder(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/QuantumEncoder/Build_QuantumEncoder.Build_QuantumEncoder_C"))));
 	}
 
 	UFUNCTION()
@@ -325,13 +318,8 @@ public:
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getPackager(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Packager/Build_Packager.Build_Packager_C"))));
-	}
-
-	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getParticle(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/HadronCollider/Build_HadronCollider.Build_HadronCollider_C"))));
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/HadronCollider/Build_HadronCollider.Build_HadronCollider"))));
 	}
 
 	UFUNCTION()

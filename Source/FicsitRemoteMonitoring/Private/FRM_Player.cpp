@@ -20,15 +20,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Player::getPlayer(UObject* WorldContext) {
 		APlayerState* PlayerState = PlayerCharacter->GetPlayerState();
 		AFGPlayerState* FGPlayerState = Cast<AFGPlayerState>(PlayerState);
 
-		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
-		fgcheck(ModSubsystem);
-
-		//TODO: Find way to get player's name when they are offline
-		FString PlayerName = "";
-		ModSubsystem->PlayerName_BIE(FGPlayerState, PlayerName);
-
 		JPlayer->Values.Add("ID", MakeShared<FJsonValueNumber>(Index));
-		JPlayer->Values.Add("Name", MakeShared<FJsonValueString>(PlayerName));
+		JPlayer->Values.Add("Name", MakeShared<FJsonValueString>(PlayerCharacter->mCachedPlayerName));
 		JPlayer->Values.Add("ClassName", MakeShared<FJsonValueString>(Player->GetClass()->GetName()));
 		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Player))); 
 		//JPlayer->Values.Add("PlayerID", MakeShared<FJsonValueString>(PlayerState->GetUserID()));

@@ -8,6 +8,7 @@
 #include "NotificationLoader.h"
 #include "Configs/Config_HTTPStruct.h"
 #include "Configs/Config_SerialStruct.h"
+#include "Configs/Config_WebSocketStruct.h"
 #include "Configs/Config_DiscITStruct.h"
 #include "multi.generated.h"
 
