@@ -214,7 +214,7 @@ public:
 
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getBiomassGenerator(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorBiomass/Build_GeneratorBiomass.Build_GeneratorBiomass_C"))));
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorBiomass/Build_GeneratorBiomass.Build_GeneratorBiomass_Automated_C"))));
 	}
 
 	UFUNCTION()
@@ -239,7 +239,7 @@ public:
 
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getConverter(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Converter/Build_Converter.Build_Converter"))));
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Converter/Build_Converter.Build_Converter_C"))));
 	}
 
 	UFUNCTION()
@@ -319,7 +319,7 @@ public:
 
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getParticle(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/HadronCollider/Build_HadronCollider.Build_HadronCollider"))));
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/HadronCollider/Build_HadronCollider.Build_HadronCollider_C"))));
 	}
 
 	UFUNCTION()
