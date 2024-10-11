@@ -12,9 +12,7 @@ Have you ever left your base for an adventure or a side project, wondering about
 
 ---
 
-### [Explore the Fiscit Web UI Source](https://github.com/GalaxyVOID/FRM-s-WebUI-Source)
-- [Download the Latest Release](https://github.com/GalaxyVOID/FRM-s-WebUI-Source/releases/latest) 
-- [GitHub release](https://img.shields.io/github/v/release/GalaxyVOID/FRM-s-WebUI-Source?style=for-the-badge&logo=github)
+[Explore the Fiscit Web UI Source](https://github.com/V0IDL355/FRM-s-WebUI-Source)
 
 ### **Discover Third-party Support and Apps**
 
@@ -86,7 +84,7 @@ Our journey wouldn't be possible without the help and support of these amazing i
 - [**Andre Aquila**](https://discordapp.com/users/294943551605702667)
 - [**Badger**](https://discordapp.com/users/186896287856197633)
 - [**BLAndrew575**](https://discordapp.com/users/509759568037937152)
-- [**GalaxyVOID**](https://discordapp.com/users/212243828831289344)
+- [**VOID**](https://discordapp.com/users/212243828831289344)
 - [**FeatheredToast**](https://discordapp.com/users/130401633564753920)
 
 ---
