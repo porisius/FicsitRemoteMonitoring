@@ -622,18 +622,15 @@ TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::getAll(UObject* WorldConte
 
 	TArray<UBlueprintJsonValue*> JsonArray;
 
-    UBlueprintJsonObject* Json = UBlueprintJsonObject::Create();
-
     for ( FAPIEndpoint APIEndpoint : APIEndpoints) {
         
         bool bSuccess = false;
 
         if (APIEndpoint.bGetAll) {
+            UBlueprintJsonObject* Json = UBlueprintJsonObject::Create();
             Json->SetArray(APIEndpoint.APIName, CallEndpoint(WorldContext, APIEndpoint.APIName, bSuccess));
+            JsonArray.Add(UBlueprintJsonValue::FromObject(Json));
         }
-
-        JsonArray.Add(UBlueprintJsonValue::FromObject(Json));
-
     }
 
 	return JsonArray;
