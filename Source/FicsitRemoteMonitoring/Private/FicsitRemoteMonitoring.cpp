@@ -387,7 +387,8 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getBiomassGenerator", false, false, this->Get(GetWorld()), FName("getBiomassGenerator"));
 	RegisterEndpoint("getBlender", false, false, this->Get(GetWorld()), FName("getBlender"));
 	RegisterEndpoint("getCloudInv", true, false, this->Get(GetWorld()), FName("getCloudInv"));
-	RegisterEndpoint("getConstructor", false, false, this->Get(GetWorld()), FName("getConstructor"));
+	RegisterEndpoint("getCoalGenerator", false, false, this->Get(GetWorld()), FName("getCoalGenerator"));
+    RegisterEndpoint("getConstructor", false, false, this->Get(GetWorld()), FName("getConstructor"));
 	RegisterEndpoint("getConverter", false, false, this->Get(GetWorld()), FName("getConverter"));
 	RegisterEndpoint("getDoggo", true, true, this->Get(GetWorld()), FName("getDoggo"));
 	RegisterEndpoint("getDrone", true, true, this->Get(GetWorld()), FName("getDrone"));
