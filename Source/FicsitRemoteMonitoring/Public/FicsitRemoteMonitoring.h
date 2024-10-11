@@ -263,6 +263,12 @@ public:
 	}
 
 	UFUNCTION()
+	TArray<UBlueprintJsonValue*> getEncoder(UObject* WorldContext) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/QuantumEncoder/Build_QuantumEncoder.Build_QuantumEncoder_C"))));
+	}
+
+
+	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getExplorationSink(UObject* WorldContext) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Production::getResourceSink(WorldContext, EResourceSinkTrack::RST_Exploration));
 	}
