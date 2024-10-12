@@ -413,12 +413,12 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getPowerSlug", true, true, this->Get(GetWorld()), FName("getPowerSlug"));
 	RegisterEndpoint("getProdStats", true, false, this->Get(GetWorld()), FName("getProdStats"));
 	RegisterEndpoint("getRadarTower", true, false, this->Get(GetWorld()), FName("getRadarTOwer"));
-	RegisterEndpoint("getRecipes", true, false, this->Get(GetWorld()), FName("getRecipes"));
+	RegisterEndpoint("getRecipes", true, true, this->Get(GetWorld()), FName("getRecipes"));
 	RegisterEndpoint("getRefinery", false, false, this->Get(GetWorld()), FName("getRefinery"));
-	RegisterEndpoint("getResourceGeyser", true, false, this->Get(GetWorld()), FName("getResourceGeyser"));
+	RegisterEndpoint("getResourceGeyser", true, true, this->Get(GetWorld()), FName("getResourceGeyser"));
 	RegisterEndpoint("getResourceNode", true, true, this->Get(GetWorld()), FName("getResourceNode"));
 	RegisterEndpoint("getResourceSink", true, false, this->Get(GetWorld()), FName("getResourceSink"));
-	RegisterEndpoint("getResourceWell", true, false, this->Get(GetWorld()), FName("getResourceWell"));
+	RegisterEndpoint("getResourceWell", true, true, this->Get(GetWorld()), FName("getResourceWell"));
 	RegisterEndpoint("getSchematics", true, true, this->Get(GetWorld()), FName("getSchematics"));
 	RegisterEndpoint("getSinkList", true, true, this->Get(GetWorld()), FName("getSinkList"));
 	RegisterEndpoint("getSmelter", false, false, this->Get(GetWorld()), FName("getSmelter"));
@@ -629,6 +629,14 @@ TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::getAll(UObject* WorldConte
         if (APIEndpoint.bGetAll) {
             UBlueprintJsonObject* Json = UBlueprintJsonObject::Create();
             Json->SetArray(APIEndpoint.APIName, CallEndpoint(WorldContext, APIEndpoint.APIName, bSuccess));
+
+            //block while not complete
+            while (!bSuccess)
+            {
+                //100micros sleep, this should be very quick
+                FPlatformProcess::Sleep(0.0001f);
+            };
+
             JsonArray.Add(UBlueprintJsonValue::FromObject(Json));
         }
     }
