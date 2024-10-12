@@ -7,10 +7,27 @@ public class FicsitRemoteMonitoring : ModuleRules
     {
         get { return ModuleDirectory; }
     }
+    private string ModPath
+    {
+        get { return Path.GetFullPath(Path.Combine(ModulePath, "../../")); }
+    }
+
 
     private string ThirdPartyPath
     {
         get { return Path.GetFullPath(Path.Combine(ModulePath, "../ThirdParty/")); }
+    }
+
+    private void CopyToBinaries(string Filepath, ReadOnlyTargetRules Target)
+    {
+        string binariesDir = Path.Combine(ModPath, "Binaries", Target.Platform.ToString());
+        string filename = Path.GetFileName(Filepath);
+
+        if (!Directory.Exists(binariesDir))
+            Directory.CreateDirectory(binariesDir);
+
+        if (!File.Exists(Path.Combine(binariesDir, filename)))
+            File.Copy(Filepath, Path.Combine(binariesDir, filename), true);
     }
 
     public FicsitRemoteMonitoring(ReadOnlyTargetRules Target) : base(Target)
@@ -53,6 +70,8 @@ public class FicsitRemoteMonitoring : ModuleRules
             PublicDependencyModuleNames.Add("FactoryDedicatedServer");
         }
 
+        PublicDefinitions.Add("UWS_STATICLIB"); // If you're using the static version of uWS
+
         // Enable exception handling
         bEnableExceptions = true;
     }
@@ -85,6 +104,9 @@ public class FicsitRemoteMonitoring : ModuleRules
 
         RuntimeDependencies.Add(Path.Combine(LibrariesPath, "zlib1.dll"));
         RuntimeDependencies.Add(Path.Combine(LibrariesPath, "uv.dll"));
+
+        CopyToBinaries(Path.Combine(LibrariesPath, "zlib1.dll"), Target);
+        CopyToBinaries(Path.Combine(LibrariesPath, "uv.dll"), Target);
 
         PublicDefinitions.Add(string.Format("WITH_UWEBSOCKETS_BINDING={0}", isLibrarySupported ? 1 : 0));
 
