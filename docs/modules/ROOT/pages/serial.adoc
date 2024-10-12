@@ -10,8 +10,8 @@ The serial driver, by default, is not activated until the appropriate chat comma
 
 Chat Commands:
 
-/frmserial start - Starts the serial driver +
-/frmserial stop - Stops the serial driver
+/frm serial start - Starts the serial driver +
+/frm serial stop - Stops the serial driver
 
 Data from Serial is in JSON and presented as a string, but their true data types are listed in the table. Input/Output is from the perspective of the FRM mod. Output, FRM sends. Input, FRM receives. You may have FRM auto-send getPower to you every delay per the settings in the FRM config. Please note that Auto_Serial is enabled, the mod will not listen for input. This is due to issues with 
 

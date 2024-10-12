@@ -2,7 +2,7 @@
 
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
-FRM provides a HTTP server that can be configured on a port of your choosing (Default: 8080). This can be modified by either modifying the HTTP_Root value in %SatisfactoryRootFolder%\FactoryGame\Configs\FicsitRemoteMonitoring\WebServer.cfg (Config File Method), or by Satisfactory's Main Menu > Mods > FicsitRemoteMonitoring > HTTP Port (Game UI Method).
+FRM provides a HTTP & WebSocket server that can be configured on a port of your choosing (Default: 8080). This can be modified by either modifying the HTTP_Root value in %SatisfactoryRootFolder%\FactoryGame\Configs\FicsitRemoteMonitoring\WebServer.cfg (Config File Method), or by Satisfactory's Main Menu > Mods > FicsitRemoteMonitoring > HTTP Port (Game UI Method).
 
 Accessing the web server can be done via a browser (Tested on Chrome and Opera) at localhost:<port> (Ex. localhost:8080)
 
@@ -10,11 +10,12 @@ The web server, by default, is not activated until the appropriate chat command 
 
 Chat Commands:
 
-/frmweb start - Starts Web Server +
-/frmweb stop - Stops Web Server
+/frm http start - Starts Web Server +
+/frm http stop - Stops Web Server
 
 Web Documents: +
-The HTML/JS Code for FRM's Web Server can be found at %SatisfactoryRootFolder%\FactoryGame\Mods\FicsitRemoteMonitoring\www. An alternate path for customization without fear of overwrite is being worked on, once a reliable method is found.
+The HTML/JS Code for FRM's Web Server can be found at %SatisfactoryRootFolder%\FactoryGame\Mods\FicsitRemoteMonitoring\www. +
+An alternate path for customization is located in the FRM HTTP Config file.
 
 Private Web Server (Apache/Nginx/IIS) +
 You are able to use a separate web server if you wish to leverage technologies not available to FRM's Web Server library.
