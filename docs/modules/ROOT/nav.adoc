@@ -1,4 +1,5 @@
 * xref:index.adoc[General]
+* xref:commands.adoc[Commands]
 * xref:serial.adoc[Serial]
 * xref:webserver.adoc[Web Server]
 * xref:websockets.adoc[Web Sockets]
@@ -10,7 +11,6 @@
 *** xref:config/Monitoring.adoc[Monitoring]
 *** xref:config/Serial.adoc[Serial Devices]
 *** xref:config/Web.adoc[Web Server]
-*** xref:config/WebSocket.adoc[WebSocket Server]
 
 * xref:json/json.adoc[JSON]
 
@@ -28,6 +28,7 @@
 *** xref:json/Read/getDrone.adoc[getDrone]
 *** xref:json/Read/getDroneStation.adoc[getDroneStation]
 *** xref:json/Read/getDropPod.adoc[getDropPod]
+*** xref:json/Groups/getFactory.adoc[getEncoder]
 *** xref:json/Read/getResourceSink.adoc[getExplorationSink]
 *** xref:json/Groups/getVehicles.adoc[getExplorer]
 *** xref:json/Read/getExtractor.adoc[getExtractor]
