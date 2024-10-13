@@ -394,6 +394,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getDrone", true, true, this->Get(GetWorld()), FName("getDrone"));
 	RegisterEndpoint("getDroneStation", true, false, this->Get(GetWorld()), FName("getDroneStation"));
 	RegisterEndpoint("getDropPod", true, true, this->Get(GetWorld()), FName("getDropPod"));
+	RegisterEndpoint("getEncoder", true, false, this->Get(GetWorld()), FName("getEncoder"));
 	RegisterEndpoint("getExplorationSink", true, false, this->Get(GetWorld()), FName("getExplorationSink"));
 	RegisterEndpoint("getExplorer", false, true, this->Get(GetWorld()), FName("getExplorer"));
 	RegisterEndpoint("getExtractor", true, false, this->Get(GetWorld()), FName("getExtractor"));
@@ -405,6 +406,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getManufacturer", false, false, this->Get(GetWorld()), FName("getManufacturer"));
 	RegisterEndpoint("getModList", true, false, this->Get(GetWorld()), FName("getModList"));
 	RegisterEndpoint("getNuclearGenerator", false, false, this->Get(GetWorld()), FName("getNuclearGenerator"));
+    RegisterEndpoint("getPackager", false, false, this->Get(GetWorld()), FName("getPackager"));
 	RegisterEndpoint("getParticle", false, false, this->Get(GetWorld()), FName("getParticle"));
 	RegisterEndpoint("getPaths", true, false, this->Get(GetWorld()), FName("getPaths"));
 	RegisterEndpoint("getPipes", true, false, this->Get(GetWorld()), FName("getPipes"));
