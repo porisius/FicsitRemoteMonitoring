@@ -266,7 +266,6 @@ public:
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/QuantumEncoder/Build_QuantumEncoder.Build_QuantumEncoder_C"))));
 	}
 
-
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getExplorationSink(UObject* WorldContext) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Production::getResourceSink(WorldContext, EResourceSinkTrack::RST_Exploration));
@@ -320,6 +319,11 @@ public:
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getNuclearGenerator(UObject* WorldContext) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorNuclear/Build_GeneratorNuclear.Build_GeneratorNuclear_C"))));
+	}
+
+	UFUNCTION()
+	TArray<UBlueprintJsonValue*> getPackager(UObject* WorldContext) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Packager/Build_Packager.Build_Packager_C"))));
 	}
 
 	UFUNCTION()
