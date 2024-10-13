@@ -8,15 +8,10 @@ File: Config/FicsitRemoteMonitoring/WebServer.cfg
 |===
 |Configuration |Headless |Type |Description
 
-|Web Server Listening IP
-|Listen_IP
-|String
-|IP Address of Web server to listen on. Default is localhost for security reasons, but can be safely changed to 0.0.0.0 or the server's IP Address
-
 |Web Server Port
 |Web_Port
 |Integer
-|TCP Port for Web Server, Default: 8081
+|TCP Port for Web Server, Default: 8080
 
 |Autostart Web Server
 |Web_Autostart

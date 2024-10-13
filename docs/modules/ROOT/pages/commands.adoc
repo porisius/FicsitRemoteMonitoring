@@ -1,0 +1,37 @@
+= Remote Monitoring Console Commands
+
+:url-repo: https://github.com/porisius/FicsitRemoteMonitoring
+
+This mod uses the in-game chat system along with the Satisfactory Mod Loader's Chat Command system.
+
+All commands stem from `/frm` and are branched off from it. See below for the function you are looking for.
+
+Any use of `< >` denotes an option or variable. For example: `<start/stop>` means you can use either `start` or `stop` in that parameter.
+
+== http
+
+Usage: `/frm http <start/stop>`
+Deperecated Command: `/frmweb <start/stop>`
+
+Starts/stops the HTTP/WebSocket Server
+
+== serial
+
+Usage: `/frm serial <start/stop>`
+Deperecated Command: `/frmserial <start/stop>`
+
+Starts/stops the Serial/RS232 Port Handler
+
+== debug
+
+Usage: `/frm debug <info/file> <endpoint>`
+
+Intended for getting outputs of API Endpoints to save for future information or debugging/troubleshooting.
+
+=== info 
+
+    Info will display back to the in-game chat, this is useful for quickly checking if JSON populates
+
+=== file
+
+    Info will be saved to the *host's* Debug folder located in the Remote Monitoring's Mod Folder
