@@ -91,7 +91,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 		float ProductionCapacity = Generator->GetCurrentPotential();
 		float Productivity = Generator->GetProductivity();
 		
-		float MaxFuelConsumption = 60 * (UFRM_Library::SafeDivide_Float(ProductionCapacity / EnergyValue));
+		float MaxFuelConsumption = 60 * (UFRM_Library::SafeDivide_Float(ProductionCapacity, EnergyValue));
 		float FuelConsumption = MaxFuelConsumption * Productivity;
 
 		if (CurrentProduced.Contains(FuelItemClass)) {
