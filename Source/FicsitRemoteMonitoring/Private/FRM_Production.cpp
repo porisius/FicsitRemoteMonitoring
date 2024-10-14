@@ -65,20 +65,22 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 	for (AFGBuildableResourceExtractor* Extractor : ExtractorBuildables) {
 
 		TScriptInterface<IFGExtractableResourceInterface> ResourceClass = Extractor->GetExtractableResource();
-		TSubclassOf<UFGResourceDescriptor> ItemClass = ResourceClass->GetResourceClass();
-		float ProdCycle = Extractor->GetExtractionPerMinute();;
-		float Productivity = Extractor->GetProductivity();
+		if (ResourceClass != nullptr) {
+			TSubclassOf<UFGResourceDescriptor> ItemClass = ResourceClass->GetResourceClass();
+			float ProdCycle = Extractor->GetExtractionPerMinute();;
+			float Productivity = Extractor->GetProductivity();
 
-		auto CurrentProd = ProdCycle * Productivity;
+			auto CurrentProd = ProdCycle * Productivity;
 
-		if (CurrentProduced.Contains(ItemClass)) {
-			CurrentProduced.Add(ItemClass) = CurrentProd + CurrentProduced.FindRef(ItemClass);
-			TotalProduced.Add(ItemClass) = ProdCycle + TotalProduced.FindRef(ItemClass);
+			if (CurrentProduced.Contains(ItemClass)) {
+				CurrentProduced.Add(ItemClass) = CurrentProd + CurrentProduced.FindRef(ItemClass);
+				TotalProduced.Add(ItemClass) = ProdCycle + TotalProduced.FindRef(ItemClass);
+			}
+			else {
+				CurrentProduced.Add(ItemClass) = CurrentProd;
+				TotalProduced.Add(ItemClass) = ProdCycle;
+			};
 		}
-		else {
-			CurrentProduced.Add(ItemClass) = CurrentProd;
-			TotalProduced.Add(ItemClass) = ProdCycle;
-		};
 	};
 
 	TArray<AFGBuildableGeneratorFuel*> GeneratorBuildables;
