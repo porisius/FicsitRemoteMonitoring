@@ -103,11 +103,6 @@ API Endpoint: getDroneStation +
 |Float
 |Output
 
-|EstRndTrip
-|Estimated Round Trip Time
-|String
-|Output
-
 |EstTotalTransRate
 |Estimated Total Transfer Rate
 |Float
@@ -163,11 +158,6 @@ API Endpoint: getDroneStation +
 |Float
 |Output
 
-|EstBatteryRate
-|Estimated Battery Requirement Rate
-|Float
-|Output
-
 |===
 
 Example:
@@ -197,7 +187,6 @@ Example:
 		"AvgTotalOutRate": 73.087936401367188,
 		"AvgTotalOutStack": 0.47748488187789917,
 		"AvgTripIncAmt": 0,
-		"EstRndTrip": "00:02:10",
 		"EstTotalTransRate": 4.1415610313415527,
 		"EstTransRate": 4.1415610313415527,
 		"EstLatestTotalIncStack": 0,
@@ -210,7 +199,6 @@ Example:
 		"MedianRndTrip": "00:02:54",
 		"MedianTripIncAmt": 0,
 		"MedianTripOutAmt": 212,
-		"EstBatteryRate": 2.7610406875610352,
 		"features":
 		{
 			"properties":
