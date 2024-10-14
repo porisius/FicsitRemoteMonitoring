@@ -397,12 +397,12 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getEncoder", true, false, this->Get(GetWorld()), FName("getEncoder"));
 	RegisterEndpoint("getExplorationSink", true, false, this->Get(GetWorld()), FName("getExplorationSink"));
 	RegisterEndpoint("getExplorer", false, true, this->Get(GetWorld()), FName("getExplorer"));
-	RegisterEndpoint("getExtractor", true, false, this->Get(GetWorld()), FName("getExtractor"));
+	RegisterEndpoint("getExtractor", true, true, this->Get(GetWorld()), FName("getExtractor"));
 	RegisterEndpoint("getFactoryCart", false, false, this->Get(GetWorld()), FName("getFactoryCart"));
 	RegisterEndpoint("getFoundry", false, false, this->Get(GetWorld()), FName("getFoundry"));
 	RegisterEndpoint("getFuelGenerator", false, false, this->Get(GetWorld()), FName("getFuelGenerator"));
 	RegisterEndpoint("getGeothermalGenerator", false, false, this->Get(GetWorld()), FName("getGeothermalGenerator"));
-	RegisterEndpoint("getHUBTerminal", false, false, this->Get(GetWorld()), FName("getHUBTerminal"));
+	RegisterEndpoint("getHUBTerminal", true, true, this->Get(GetWorld()), FName("getHUBTerminal"));
 	RegisterEndpoint("getManufacturer", false, false, this->Get(GetWorld()), FName("getManufacturer"));
 	RegisterEndpoint("getModList", true, false, this->Get(GetWorld()), FName("getModList"));
 	RegisterEndpoint("getNuclearGenerator", false, false, this->Get(GetWorld()), FName("getNuclearGenerator"));
