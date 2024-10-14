@@ -147,6 +147,9 @@ public:
 	void CircuitID_BIE(AFGBuildableFactory* Buildable, int32& CircuitID, float& PowerConsumption);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
+	void PlayerName_BIE(AFGPlayerState* PlayerState, FString& PlayerName);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void IconGenerator_BIE();
 
 	// Array of API endpoints
