@@ -1,95 +1,85 @@
-# **Fiscit Remote Monitoring**
+<h1 align="center">Fiscit Remote Monitoring</h1>
 
-## [Join the FRM Community](https://discord.gg/c6446HTHpu) ![FRM Community](https://img.shields.io/discord/1142919853053841488?style=for-the-badge&logo=discord)
-
----
-
-This mod is an exciting journey into the future of remote monitoring for dedicated servers or your locally run game. If you encounter any bugs or have suggestions, don't hesitate to reach out on [**Discord**](https://discord.gg/c6446HTHpu).
-
-Have you ever left your base for an adventure or a side project, wondering about your home's power status? FRM provides you with a compact gadget and a website to monitor your server's power remotely.
-
-**Note:** FRM is versatile and can be used as a standalone mod or with your gaming group.
+<p align="center">
+   <a href="https://discord.gg/c6446HTHpu"><img src="https://img.shields.io/badge/FRM's Official Discord Server-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800" alt="FRM Official Discord Server"></a>
+   <a href="https://github.com/V0IDL355/FRM-s-WebUI-Source"><img src="https://img.shields.io/badge/Documentation-232634?style=for-the-badge&logo=github&logoColor=232634&color=F2C800" alt="Documentation-232634"></a>
+   <a href="https://docs.ficsit.app/ficsitremotemonitoring/latest/"><img src="https://img.shields.io/badge/Web UI's Source Code-232634?style=for-the-badge&logo=readthedocs&logoColor=232634&color=F2C800" alt="Web UI Source Code"></a>
+</p>
 
 ---
 
-[Explore the Fiscit Web UI Source](https://github.com/V0IDL355/FRM-s-WebUI-Source)
-
-### **Discover Third-party Support and Apps**
-
-Explore these external tools and apps created by talented developers:
-
-- [**Ficsit Remote Monitoring Companion App**](https://github.com/AP-Hunt/FicsitRemoteMonitoringCompanion/releases/) by [Badger](https://discordapp.com/users/186896287856197633)
-- [**Satisfactory Efficiency Terminal**](https://github.com/kikookraft/satisfactory-efficiency-terminal) designed and engineered by u/kikookraft
-- [**Ficsit Remote Monitoring Companion Bundle**](https://github.com/featheredtoast/satisfactory-monitoring) by [FeatheredToast](https://discordapp.com/users/130401633564753920)
-- [**Ficsit Remote Monitoring Dashboard**](https://github.com/Jonathan-Hofmann/ficsit-remote-monitoring-dasboard) by [Arfla](https://discordapp.com/users/354294231134633987) and [JDesignV2](https://discordapp.com/users/402899414785720322)
+<p align="center">This mod is an exciting journey into the future of remote monitoring for dedicated servers or your locally run game. If you encounter any bugs or have suggestions, don't hesitate to reach out on <a href="https://discord.gg/c6446HTHpu">Discord</a>.</p>
+<p align="center">Have you ever left your factory for an adventure or a side project, wondering about your factory's power status? FRM provides an API and a web UI to monitor your factory.</p>
 
 ---
 
-### **Getting Started**
+<h3 align="center">Explore these external tools and apps created by talented developers</h3>
+<p align="center">
+   <a href="https://github.com/AP-Hunt/FicsitRemoteMonitoringCompanion/releases/"><img src="https://img.shields.io/badge/Ficsit Remote Monitoring Companion App-232634?style=for-the-badge&logo=github&logoColor=232634&color=F2C800" alt="Ficsit Remote Monitoring Companion App"></a>
+   <a href="https://github.com/kikookraft/satisfactory-efficiency-terminal"><img src="https://img.shields.io/badge/Satisfactory Efficiency Terminal-232634?style=for-the-badge&logo=github&logoColor=232634&color=F2C800" alt="Satisfactory Efficiency Terminal"></a>
+   <a href="https://github.com/featheredtoast/satisfactory-monitoring"><img src="https://img.shields.io/badge/Ficsit Remote Monitoring Companion Bundle-232634?style=for-the-badge&logo=github&logoColor=232634&color=F2C800" alt="Ficsit Remote Monitoring Companion Bundle"></a>
+   <a href="https://github.com/Jonathan-Hofmann/ficsit-remote-monitoring-dasboard"><img src="https://img.shields.io/badge/Ficsit Remote Monitoring Dashboard-232634?style=for-the-badge&logo=github&logoColor=232634&color=F2C800" alt="Ficsit Remote Monitoring Dashboard"></a>
+</p>
 
-1. Start your journey with our comprehensive [documentation](https://docs.ficsit.app/ficsitremotemonitoring/latest/).
-2. Manage the web server with ease using `/frmweb {start/stop}` in the chat.
-3. Control serial communication effortlessly with `/frmserial {start/stop}` in the chat.
-4. For Serial, specify the Serial port (check Windows Device Manager for help) and set the Baud Rate.
-   - Note: Only the baud rate is adjustable; use 8-N-1 (8 bits, No parity, 1 stop bit).
-
----
-
-### **Features at a Glance**
-
-- Monitor power on your chosen circuit.
-- Track battery status, charge, capacity, and time until power depletion.
-- Connect with Output Serial Devices like Raspberry Pi, Arduino, and more.
-- Remote input support for fuse resets and other commands.
-- JSON Support for flexible data exchange without disrupting setups.
-- Host your Web Server with Power Information and Real-Time Player Tracking.
 
 ---
 
-### **Upcoming Features**
-
-- Exciting input functionality for controlling switches.
-
----
-
-### **Known Bugs**
-
-- For a list of known issues, please visit our [Remote Monitoring Github Issues](https://github.com/porisius/FicsitRemoteMonitoring/issues).
-- Icon system does not work on dedicated servers. Please upload the Icons folder after running your game locally (with Remote Monitoring installed) to your dedicated server's Icons folder. This is not a fault of the mod or even the game. This is due to Unreal Engine assets are not present in server (Windows and Linux) builds.
+<h3 align="center">Getting Started</h3>
+<p align="center">To start and stop the web server use: <code>/frmweb {start/stop}</code></p>
+<p align="center">To start and stop the serial connection use: <code>/frmserial {start/stop}</code></p>
+<p align="center">
+   For Serial, specify the Serial port (check Windows Device Manager for help) and set the Baud Rate.
+   <br>
+   <em><strong>Note:</strong> Only the baud rate is adjustable; use 8-N-1 (8 bits, No parity, 1 stop bit).</em>
+</p>
 
 ---
 
-### **We Value Your Feedback**
-
-If you have suggestions or feature requests, don't hesitate to contact us in the modding Discord.
-
----
-
-### **Permissions Granted**
-
-Feel free to create your own UIs for web and serial and share them on social media platforms like Discord and Reddit. Please adhere to the platform's rules and ToS.
+<h3 align="center">Upcoming Features</h3>
+<p align="center">
+   Ability to toggle fuses
+</p>
 
 ---
 
-### **Special Thanks to Our Supporters**
+<h3 align="center">Known Bugs</h3>
+<p align="center">
+<a href="https://github.com/porisius/FicsitRemoteMonitoring/issues"><img src="https://img.shields.io/badge/FRM GitHub Issues-232634?style=for-the-badge&logo=github&logoColor=232634&color=F2C800" alt="FRM GitHub Issues"></a>
+</p>
+<p align="center">
+The icon system does not work on dedicated servers. Please upload the Icons folder after running your game locally (with Remote Monitoring installed) to your dedicated server's Icons folder. This is not a fault of the mod or even the game. This is due to Unreal Engine assets are not present in server (Windows and Linux) builds.
+   </p>
 
-Our journey wouldn't be possible without the help and support of these amazing individuals:
-
-- [**Feyko**](https://discordapp.com/users/227473074616795137)
-- [**Robb**](https://discordapp.com/users/187385442549628928)
-- [**Vilsol**](https://discordapp.com/users/135134753534771201)
-- [**Nog**](https://discordapp.com/users/277050857852370944)
-- [**Archengius**](https://discordapp.com/users/163955176313585666)
-- [**Deantendo**](https://discordapp.com/users/293484684787056640)
-- [**Andre Aquila**](https://discordapp.com/users/294943551605702667)
-- [**Badger**](https://discordapp.com/users/186896287856197633)
-- [**BLAndrew575**](https://discordapp.com/users/509759568037937152)
-- [**VOID**](https://discordapp.com/users/212243828831289344)
-- [**FeatheredToast**](https://discordapp.com/users/130401633564753920)
 
 ---
 
-### **A Heartfelt Thank You**
+<h3 align="center">Feedback</h3>
+<p align="center">If you have suggestions or feature requests, don't hesitate to drop by the <a href="https://discord.gg/c6446HTHpu">Discord Server</a>.</p>
 
-To all the contributors and supporters who made Fiscit Remote Monitoring a reality, we extend our deepest gratitude. Together, we're shaping the future of remote server monitoring!
 
+---
+
+<h3 align="center">Permissions Granted</h3>
+<p align="center">Feel free to create your own web UI or serial apps.</p>
+
+---
+
+<h3 align="center">Special Thanks to These People</h3>
+<p align="center">
+   <a href="https://discordapp.com/users/227473074616795137"><img src="https://img.shields.io/badge/Feyko-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800" alt="Feyko"></a>
+   <a href="https://discordapp.com/users/187385442549628928"><img src="https://img.shields.io/badge/Robb-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800" alt="Robb"></a>
+   <a href="https://discordapp.com/users/135134753534771201"><img src="https://img.shields.io/badge/Vilsol-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800" alt="Vilsol"></a>
+   <a href="https://discordapp.com/users/277050857852370944"><img src="https://img.shields.io/badge/Nog-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800" alt="Nog"></a>
+   <a href="https://discordapp.com/users/163955176313585666"><img src="https://img.shields.io/badge/Archengius-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800" alt="Archengius"></a>
+   <a href="https://discordapp.com/users/293484684787056640"><img src="https://img.shields.io/badge/Deantendo-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800" alt="Deantendo"></a>
+   <a href="https://discordapp.com/users/294943551605702667"><img src="https://img.shields.io/badge/Andre Aquila-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800" alt="Andre Aquila"></a>
+   <a href="https://discordapp.com/users/186896287856197633"><img src="https://img.shields.io/badge/Badger-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800" alt="Badger"></a>
+   <a href="https://discordapp.com/users/509759568037937152"><img src="https://img.shields.io/badge/BLAndrew575-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800" alt="BLAndrew575"></a>
+   <a href="https://discordapp.com/users/212243828831289344"><img src="https://img.shields.io/badge/VOID-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800" alt="VOID"></a>
+   <a href="https://discordapp.com/users/130401633564753920"><img src="https://img.shields.io/badge/FeatheredToast-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800" alt="FeatheredToast"></a>
+</p>
+
+---
+
+<h3 align="center">A Heartfelt Thank You</h3>
+<p align="center">Thanks to all the contributors for helping shape Ficsit Remote Monitoring!</p>
