@@ -15,10 +15,10 @@ Chat Commands:
 
 Data from Serial is in JSON and presented as a string, but their true data types are listed in the table. Input/Output is from the perspective of the FRM mod. Output, FRM sends. Input, FRM receives. You may have FRM auto-send getPower to you every delay per the settings in the FRM config. Please note that Auto_Serial is enabled, the mod will not listen for input. This is due to issues with 
 
-You may also have your own delay on your serial device and send API Endpoints to FRM to get an output. API Endpoints may be sent manually or programmicly, but require a "copy/paste" approach. +
+You may also have your own delay on your serial device and send API Endpoints to FRM to get an output. API Endpoints may be sent manually or programmatically, but require a "copy/paste" approach. +
 Developer's Note: Tests show that all the data is sent, however, my terminal program only shows 4KB of data regardless of attempts. More information is required.
 
-Theoritical Ardunio Code, shown below: (used for testing ArduinoKit)
+Theoretical Arduino Code, shown below: (used for testing ArduinoKit)
 [source,arduino]
 -----------------
 void setup() {
@@ -45,4 +45,4 @@ A MUCH better example will be from kikookraft and his efficiency terminal. (Link
 Reddit: https://www.reddit.com/r/SatisfactoryGame/comments/x4yioi/i_created_an_efficiency_monitoring_terminal_with/
 GitHub: https://github.com/kikookraft/satisfactory-efficiency-terminal
 
-Any examples of works may be posted on the mod page and the documentation site, with permission of the project's auther.
+Any examples of works may be posted on the mod page and the documentation site, with permission of the project's author.
