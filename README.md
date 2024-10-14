@@ -25,8 +25,8 @@
 ---
 
 <h3 align="center">Getting Started</h3>
-<p align="center">To start and stop the web server use: <code>/frmweb {start/stop}</code></p>
-<p align="center">To start and stop the serial connection use: <code>/frmserial {start/stop}</code></p>
+<p align="center">To start and stop the web server use: <code>//frm http {start/stop}</code></p>
+<p align="center">To start and stop the serial connection use: <code>/frm serial {start/stop}</code></p>
 <p align="center">
    For Serial, specify the Serial port (check Windows Device Manager for help) and set the Baud Rate.
    <br>
