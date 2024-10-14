@@ -172,6 +172,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                 app.get("/*", [UIPath, this, World](auto* res, auto* req) {
                     std::string url(req->getUrl().begin(), req->getUrl().end());
 
+                    bool bFileExists = false;
                     // Remove initial '/'
                     FString RelativePath = FString(url.c_str()).Mid(1);
                     FString FilePath = FPaths::Combine(UIPath, RelativePath);
@@ -189,6 +190,14 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     }
 
                     if (FPaths::FileExists(FilePath)) {
+                        bFileExists = true;
+                    }
+                    else if (FPaths::FileExists(FilePath + ".html")) {
+                        FilePath = FilePath + ".html";
+                        bFileExists = true;
+                    }
+
+                    if (bFileExists) {
                         HandleGetRequest(res, req, FilePath);
                     }
                     else {
