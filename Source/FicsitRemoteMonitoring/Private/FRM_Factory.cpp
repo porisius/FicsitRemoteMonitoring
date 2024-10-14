@@ -453,19 +453,31 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 		TArray<TSharedPtr<FJsonValue>> JProductArray;
 		TArray<TSharedPtr<FJsonValue>> JIngredientsArray;
 
-		TScriptInterface<IFGExtractableResourceInterface> ResourceClass = Extractor->GetExtractableResource();
-		TSubclassOf<UFGResourceDescriptor> ItemClass = ResourceClass->GetResourceClass();
-		float ProdCycle = Extractor->GetExtractionPerMinute();;
-		float Productivity = Extractor->GetProductivity();
-		UFGInventoryComponent* ExtractorInventory = Extractor->GetOutputInventory();
+		FString ItemName = TEXT("Desc_Null");
+		FString ItemClassName = TEXT("Desc_Null");
+		float ProdCycle = 0;
+		float Productivity = 0;
+		float CurrentProd = 0;
+		float MaxProd = 0;
+		int32 Amount = 0;
 
-		int32 Amount = ExtractorInventory->GetNumItems(ItemClass);
-		float CurrentProd = Productivity * ProdCycle;
-		float MaxProd = ProdCycle;
+		TScriptInterface<IFGExtractableResourceInterface> ResourceClass = Extractor->GetExtractableResource();
+		if (ResourceClass != nullptr) {
+			TSubclassOf<UFGResourceDescriptor> ItemClass = ResourceClass->GetResourceClass();
+			ItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
+			ItemClassName = UKismetSystemLibrary::GetClassDisplayName(ItemClass);
+			ProdCycle = Extractor->GetExtractionPerMinute();
+			Productivity = Extractor->GetProductivity();
+			UFGInventoryComponent* ExtractorInventory = Extractor->GetOutputInventory();
+
+			Amount = ExtractorInventory->GetNumItems(ItemClass);
+			CurrentProd = Productivity * ProdCycle;
+			MaxProd = ProdCycle;
+		}
 
 		TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
-		JProduct->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ItemClass).ToString()));
-		JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ItemClass)));
+		JProduct->Values.Add("Name", MakeShared<FJsonValueString>(ItemName));
+		JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>(ItemClassName));
 		JProduct->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
 		JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
 		JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
@@ -479,11 +491,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 		int32 CircuitID = -1;
 		float PowerConsumed = -1;
 
-			AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
-			fgcheck(ModSubsystem);
+		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
+		fgcheck(ModSubsystem);
 
-			ModSubsystem->CircuitID_BIE(Extractor, CircuitID, PowerConsumed);
-
+		ModSubsystem->CircuitID_BIE(Extractor, CircuitID, PowerConsumed);
 
 		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
 		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerConsumed));
@@ -492,8 +503,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 		JExtractor->Values.Add("Name", MakeShared<FJsonValueString>(Extractor->mDisplayName.ToString()));
 		JExtractor->Values.Add("ClassName", MakeShared<FJsonValueString>(Extractor->GetClass()->GetName()));
 		JExtractor->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Extractor))));
-		JExtractor->Values.Add("Recipe", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ItemClass).ToString()));
-		JExtractor->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ItemClass)));
+		JExtractor->Values.Add("Recipe", MakeShared<FJsonValueString>(ItemName));
+		JExtractor->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(ItemClassName));
 		JExtractor->Values.Add("production", MakeShared<FJsonValueArray>(JProductArray));
 		JExtractor->Values.Add("ManuSpeed", MakeShared<FJsonValueNumber>(Extractor->GetCurrentPotential() * 100));
 		JExtractor->Values.Add("IsConfigured", MakeShared<FJsonValueBoolean>(Extractor->IsConfigured()));
