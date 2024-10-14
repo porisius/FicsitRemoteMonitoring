@@ -2,8 +2,8 @@
 
 <p align="center">
    <a href="https://discord.gg/c6446HTHpu"><img src="https://img.shields.io/badge/FRM's Official Discord Server-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800" alt="FRM Official Discord Server"></a>
-   <a href="https://github.com/V0IDL355/FRM-s-WebUI-Source"><img src="https://img.shields.io/badge/Documentation-232634?style=for-the-badge&logo=github&logoColor=232634&color=F2C800" alt="Documentation-232634"></a>
-   <a href="https://docs.ficsit.app/ficsitremotemonitoring/latest/"><img src="https://img.shields.io/badge/Web UI's Source Code-232634?style=for-the-badge&logo=readthedocs&logoColor=232634&color=F2C800" alt="Web UI Source Code"></a>
+   <a href="https://github.com/V0IDL355/FRM-s-WebUI-Source"><img src="https://img.shields.io/badge/Web UI's Source Code-232634?style=for-the-badge&logo=github&logoColor=232634&color=F2C800" alt="Web UI's Source Code-232634"></a>
+   <a href="https://docs.ficsit.app/ficsitremotemonitoring/latest/"><img src="https://img.shields.io/badge/Documentation-232634?style=for-the-badge&logo=readthedocs&logoColor=232634&color=F2C800" alt="Documentation"></a>
 </p>
 
 ---
@@ -20,7 +20,6 @@
    <a href="https://github.com/featheredtoast/satisfactory-monitoring"><img src="https://img.shields.io/badge/Ficsit Remote Monitoring Companion Bundle-232634?style=for-the-badge&logo=github&logoColor=232634&color=F2C800" alt="Ficsit Remote Monitoring Companion Bundle"></a>
    <a href="https://github.com/Jonathan-Hofmann/ficsit-remote-monitoring-dasboard"><img src="https://img.shields.io/badge/Ficsit Remote Monitoring Dashboard-232634?style=for-the-badge&logo=github&logoColor=232634&color=F2C800" alt="Ficsit Remote Monitoring Dashboard"></a>
 </p>
-
 
 ---
 
@@ -50,12 +49,10 @@
 The icon system does not work on dedicated servers. Please upload the Icons folder after running your game locally (with Remote Monitoring installed) to your dedicated server's Icons folder. This is not a fault of the mod or even the game. This is due to Unreal Engine assets are not present in server (Windows and Linux) builds.
    </p>
 
-
 ---
 
 <h3 align="center">Feedback</h3>
 <p align="center">If you have suggestions or feature requests, don't hesitate to drop by the <a href="https://discord.gg/c6446HTHpu">Discord Server</a>.</p>
-
 
 ---
 

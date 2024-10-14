@@ -19,11 +19,6 @@ This is a simple call for information, and not a constant reply. Useful for test
 Subscription/Publishing: +
 A request is needed to be made to "subscribe" to an API function. Afterwards, the mod will then "publish" the output, of the subscribed APIs, to the connecting client as defined by the WebSocket Delay.
 
-Chat Commands:
-
-/frmsocket start - Starts WebSocket Server +
-/frmsocket stop - Stops WebSocket Server
-
 API Endpoints: +
 There are currently several API Endpoints configured, but more are planned. Arguments are reserved for future use and are not currently implemented.
 
