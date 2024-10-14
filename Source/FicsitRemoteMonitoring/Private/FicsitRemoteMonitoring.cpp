@@ -595,7 +595,7 @@ FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString I
 	TArray<UBlueprintJsonValue*> Json = this->CallEndpoint(WorldContext, InEndpoin, bSuccess);
 
 	if (!bSuccess) {
-		return "{'error': 'Endpoint not found. Please consult Endpoint's documentation for more information.'}";
+		return "{\"error\": \"Endpoint not found. Please consult Endpoint's documentation for more information.\"}";
 	}
 
 	FConfig_FactoryStruct config = FConfig_FactoryStruct::GetActiveConfig(WorldContext);
