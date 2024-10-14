@@ -40,6 +40,7 @@
 *** xref:json/Groups/getFactory.adoc[getManufacturer]
 *** xref:json/Read/getModList.adoc[getModList]
 *** xref:json/Groups/getGenerators.adoc[getNuclearGenerator]
+*** xref:json/Groups/getFactory.adoc[getPackager]
 *** xref:json/Groups/getFactory.adoc[getParticle]
 *** xref:json/Read/getPaths.adoc[getPaths]
 *** xref:json/Read/getPipes.adoc[getPipes]

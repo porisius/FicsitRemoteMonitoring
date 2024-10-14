@@ -1,8 +1,8 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "1.0.4",
-	"SemVersion": "1.0.4",
+	"VersionName": "1.0.10",
+	"SemVersion": "1.0.10",
 	"AcceptsAnyRemoteVersion": true,
 	"FriendlyName": "Ficsit Remote Monitoring",
 	"Description": "Statistical and GeoLocation Monitoring for Satisfactory",
@@ -18,30 +18,12 @@
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "BlueprintHttpServer",
-			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"PlatformAllowList": [
-				"Mac",
-				"Win64",
-				"Linux"
-			]
-		},
-		{
-			"Name": "WebSocketServer",
-			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"PlatformAllowList": [
-				"Win64"
-			]
-		},
-		{
-			"Name": "JSONParser",
-			"Type": "Runtime",
-			"LoadingPhase": "PreLoadingScreen"
-		},
-		{
 			"Name": "FicsitRemoteMonitoring",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "JsonBlueprint",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
@@ -49,7 +31,7 @@
 	"Plugins": [
 		{
 			"Name": "SML",
-			"SemVersion": "^3.8.0-dev",
+			"SemVersion": "^3.8.0",
 			"Enabled": true
 		}
 	],
