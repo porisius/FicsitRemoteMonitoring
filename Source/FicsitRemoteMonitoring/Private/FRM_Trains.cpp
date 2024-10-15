@@ -93,10 +93,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 
 		FString FormString = "Unknown";
 		switch (Train->GetTrainStatus()) {
-			case ETrainStatus::TS_Parked : FormString = "Parked";
-			case ETrainStatus::TS_ManualDriving:FormString = "Manual Driving";
-			case ETrainStatus::TS_SelfDriving:FormString = "Self-Driving";
-			case ETrainStatus::TS_Derailed:	FormString = "Derailed";
+			case ETrainStatus::TS_Parked :			FormString = "Parked";
+			case ETrainStatus::TS_ManualDriving:	FormString = "Manual Driving";
+			case ETrainStatus::TS_SelfDriving:		FormString = "Self-Driving";
+			case ETrainStatus::TS_Derailed:			FormString = "Derailed";
 		};
 
 		JTrain->Values.Add("Name", MakeShared<FJsonValueString>(Train->GetTrainName().ToString()));
@@ -181,14 +181,14 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 
 			switch (DockingStatus)
 			{
-			case ETrainPlatformDockingStatus::ETPDS_Complete					:	StatusString = TEXT("Complete");
-			case ETrainPlatformDockingStatus::ETPDS_IdleWaitForTime				:	StatusString = TEXT("Idle Wait For Time");
-			case ETrainPlatformDockingStatus::ETPDS_Loading						:	StatusString = TEXT("Loading");
-			case ETrainPlatformDockingStatus::ETPDS_None						:	StatusString = TEXT("None");
-			case ETrainPlatformDockingStatus::ETPDS_Unloading					:	StatusString = TEXT("UNloading");
-			case ETrainPlatformDockingStatus::ETPDS_WaitForTransferCondition	:	StatusString = TEXT("Wait for Transfer Condition");
-			case ETrainPlatformDockingStatus::ETPDS_WaitingForTransfer			:	StatusString = TEXT("Waiting For Transfer");
-			case ETrainPlatformDockingStatus::ETPDS_WaitingToStart				:	StatusString = TEXT("Waiting To Start");
+				case ETrainPlatformDockingStatus::ETPDS_Complete					:	StatusString = TEXT("Complete");
+				case ETrainPlatformDockingStatus::ETPDS_IdleWaitForTime				:	StatusString = TEXT("Idle Wait For Time");
+				case ETrainPlatformDockingStatus::ETPDS_Loading						:	StatusString = TEXT("Loading");
+				case ETrainPlatformDockingStatus::ETPDS_None						:	StatusString = TEXT("None");
+				case ETrainPlatformDockingStatus::ETPDS_Unloading					:	StatusString = TEXT("UNloading");
+				case ETrainPlatformDockingStatus::ETPDS_WaitForTransferCondition	:	StatusString = TEXT("Wait for Transfer Condition");
+				case ETrainPlatformDockingStatus::ETPDS_WaitingForTransfer			:	StatusString = TEXT("Waiting For Transfer");
+				case ETrainPlatformDockingStatus::ETPDS_WaitingToStart				:	StatusString = TEXT("Waiting To Start");
 			}
 
 			TSharedPtr<FJsonObject> JStorage = MakeShared<FJsonObject>();
