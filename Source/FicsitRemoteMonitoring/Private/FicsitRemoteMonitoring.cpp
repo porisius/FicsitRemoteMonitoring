@@ -40,6 +40,19 @@ void AFicsitRemoteMonitoring::BeginPlay()
     if (WSStart) { StartWebSocketServer(); }
     if (RSStart) { InitSerialDevice(); }	
 
+
+    //WebSocket Timer
+    UWorld* world = GetWorld();
+    auto config = FConfig_HTTPStruct::GetActiveConfig(world);
+
+    world->GetTimerManager().SetTimer(
+        TimerHandle,  // The timer handle
+        this,         // The instance of the class
+        &AFicsitRemoteMonitoring::PushUpdatedData,  // Pointer to member function
+        config.WebSocketPushCycle,        // Time interval in seconds
+        true          // Whether to loop the timer (true = repeating)
+    );
+
 	// Register the callback to ensure WebSocket is stopped on crash/exit
 	FCoreDelegates::OnExit.AddUObject(this, &AFicsitRemoteMonitoring::StopWebSocketServer);
 }
@@ -90,21 +103,13 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                 wsBehavior.compression = uWS::SHARED_COMPRESSOR;
 
-                // Open handler (for when a client connects)
-                wsBehavior.open = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws) {
-
-                    OnClientConnected(ws);  // Make sure this function has the correct signature
-                };
-
                 // Close handler (for when a client disconnects)
                 wsBehavior.close = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
-
                     OnClientDisconnected(ws, code, message);  // Ensure this signature matches
                 };
 
                 // Message handler (for when a client sends a message)
                 wsBehavior.message = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode) {
-
                     OnMessageReceived(ws, message, opCode);  // Make sure this signature matches
                 };
 
@@ -206,6 +211,8 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                     });
 
+                app.ws<FWebSocketUserData>("/*", std::move(wsBehavior));
+
                 app.listen(port, [port](auto* token) {
 
                     UE_LOG(LogHttpServer, Warning, TEXT("Attempting to listen on port %d"), port);
@@ -220,7 +227,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     });
 
                 app.run();
-
+              
             } catch (const std::exception& e) {
                 UE_LOG(LogHttpServer, Error, TEXT("WebSocket Server Exception: %s"), *FString(e.what()));
             } catch (...) {
@@ -230,16 +237,11 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
 }
 
-void AFicsitRemoteMonitoring::OnClientConnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws) {
-    FScopeLock ScopeLock(&WebSocketCriticalSection);
-    ConnectedClients.Add({ ws, {} });
-    UE_LOG(LogTemp, Warning, TEXT("Client connected. Total clients: %d"), ConnectedClients.Num());
-}
-
 void AFicsitRemoteMonitoring::OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
-    FScopeLock ScopeLock(&WebSocketCriticalSection);
-    ConnectedClients.RemoveAll([ws](const FClientInfo& ClientInfo) { return ClientInfo.Client == ws; });
-    UE_LOG(LogTemp, Warning, TEXT("Client disconnected. Total clients: %d"), ConnectedClients.Num());
+    // Remove the client from all endpoint subscriptions
+    for (auto& Elem : EndpointSubscribers) {
+        Elem.Value.Remove(ws);
+    }
 }
 
 void AFicsitRemoteMonitoring::OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode) {
@@ -253,26 +255,19 @@ void AFicsitRemoteMonitoring::OnMessageReceived(uWS::WebSocket<false, true, FWeb
 
 	if (FJsonSerializer::Deserialize(Reader, JsonRequest) && JsonRequest.IsValid())
 	{
-		// Find the client and process the request
-		for (FClientInfo& ClientInfo : ConnectedClients)
-		{
-			if (ClientInfo.Client == ws)
-			{
-				this->ProcessClientRequest(ClientInfo, JsonRequest);
-				break;
-			}
-		}
+		this->ProcessClientRequest(ws, JsonRequest);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to parse client message: %s"), *MessageContent);
+		UE_LOG(LogHttpServer, Error, TEXT("Failed to parse client message: %s"), *MessageContent);
 	}
 }
 
-void AFicsitRemoteMonitoring::ProcessClientRequest(FClientInfo& ClientInfo, const TSharedPtr<FJsonObject>& JsonRequest)
+void AFicsitRemoteMonitoring::ProcessClientRequest(uWS::WebSocket<false, true, FWebSocketUserData>* ws, const TSharedPtr<FJsonObject>& JsonRequest)
 {
     FString Action = JsonRequest->GetStringField("action");
     const TArray<TSharedPtr<FJsonValue>>* EndpointsArray;
+    FString Endpoint;
 
     if (JsonRequest->TryGetArrayField("endpoints", EndpointsArray))
     {
@@ -282,14 +277,63 @@ void AFicsitRemoteMonitoring::ProcessClientRequest(FClientInfo& ClientInfo, cons
 
             if (Action == "subscribe")
             {
-                ClientInfo.SubscribedEndpoints.Add(Endpoint);
-                UE_LOG(LogTemp, Warning, TEXT("Client subscribed to endpoint: %s"), *Endpoint);
+                if (!EndpointSubscribers.Contains(Endpoint)) {
+                    EndpointSubscribers.Add(Endpoint, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>());
+                }
+
+                EndpointSubscribers[Endpoint].Add(ws);
+
+                UE_LOG(LogHttpServer, Warning, TEXT("Client subscribed to endpoint: %s"), *Endpoint);
             }
             else if (Action == "unsubscribe")
             {
-                ClientInfo.SubscribedEndpoints.Remove(Endpoint);
-                UE_LOG(LogTemp, Warning, TEXT("Client unsubscribed from endpoint: %s"), *Endpoint);
+                EndpointSubscribers[Endpoint].Remove(ws);
+                UE_LOG(LogHttpServer, Warning, TEXT("Client unsubscribed from endpoint: %s"), *Endpoint);
             }
+        }
+    }
+    else if (JsonRequest->TryGetStringField("endpoints", Endpoint)) {
+
+        if (Action == "subscribe")
+        {
+            if (!EndpointSubscribers.Contains(Endpoint)) {
+                EndpointSubscribers.Add(Endpoint, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>());
+            }
+
+            EndpointSubscribers[Endpoint].Add(ws);
+
+            UE_LOG(LogHttpServer, Warning, TEXT("Client subscribed to endpoint: %s"), *Endpoint);
+        }
+        else if (Action == "unsubscribe")
+        {
+            EndpointSubscribers[Endpoint].Remove(ws);
+            UE_LOG(LogHttpServer, Warning, TEXT("Client unsubscribed from endpoint: %s"), *Endpoint);
+        }
+    }
+}
+
+void AFicsitRemoteMonitoring::PushUpdatedData() {
+
+    for (auto& Elem : EndpointSubscribers) {
+        FString Endpoint = Elem.Key;
+        
+        if (Elem.Value.Num() == 0) {
+            continue;
+        }
+
+        bool bAllocationComplete = false;
+        FString Json = HandleEndpoint(this, Endpoint, bAllocationComplete);
+
+        //block while not complete
+        while (!bAllocationComplete)
+        {
+            //100micros sleep, this should be very quick
+            FPlatformProcess::Sleep(0.0001f);
+        };        
+
+        // Broadcast updated data to all clients subscribed to this endpoint
+        for (uWS::WebSocket<false, true, FWebSocketUserData>* Client : Elem.Value) {
+            Client->send(TCHAR_TO_UTF8(*Json), uWS::OpCode::TEXT);
         }
     }
 }

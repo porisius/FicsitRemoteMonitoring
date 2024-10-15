@@ -60,10 +60,10 @@ FCriticalSection WebSocketCriticalSection;
 TQueue<FString, EQueueMode::Mpsc> MessageQueue;
 FThreadSafeBool bIsRunning = true;
 
-// Define user data struct for WebSocket connections
-struct FWebSocketUserData
-{
-    FString ClientID;  // You can add more fields if needed for each client
+struct FWebSocketUserData {
+	// Add any fields here you want to track for each WebSocket client
+	int32 ClientID;
+	FString ClientName;
 };
 
 struct FClientInfo
@@ -156,6 +156,8 @@ public:
 	UPROPERTY()
 	TArray<FAPIEndpoint> APIEndpoints;
 
+	TMap<FString, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>> EndpointSubscribers;
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void InitSerialDevice();
 
@@ -169,10 +171,11 @@ public:
 
     TArray<FClientInfo> ConnectedClients;
 
-	void OnClientConnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws);
     void OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message);
     void OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode);
-	void ProcessClientRequest(FClientInfo& ClientInfo, const TSharedPtr<FJsonObject>& JsonRequest);  // Process JSON requests
+	void ProcessClientRequest(uWS::WebSocket<false, true, FWebSocketUserData>* ws, const TSharedPtr<FJsonObject>& JsonRequest);
+
+	void PushUpdatedData();
 
 	void HandleGetRequest(uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString FilePath);
 
@@ -193,6 +196,9 @@ public:
 
 	UPROPERTY()
 	TArray<FString> Flavor_Train;
+
+	// Timer handle for updating data
+	FTimerHandle TimerHandle;
 
 protected:
 	// Called when the game starts or when spawned
