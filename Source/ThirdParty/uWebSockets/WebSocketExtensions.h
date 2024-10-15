@@ -91,7 +91,7 @@ public:
     }
 
     ExtensionsParser(const char *data, size_t length) {
-        const char *stop = data + length;
+        const char* stop = data + length;
         int token = 1;
 
         /* Ignore anything before permessage-deflate or x-webkit-deflate-frame */
@@ -101,7 +101,11 @@ public:
         perMessageDeflate = (token == TOK_PERMESSAGE_DEFLATE);
         xWebKitDeflateFrame = (token == TOK_X_WEBKIT_DEFLATE_FRAME);
 
-        while ((token = getToken(data, stop))) {
+        /* Main loop */
+        while (true) {
+            token = getToken(data, stop);
+            if (!token) break;
+
             switch (token) {
             case TOK_X_WEBKIT_DEFLATE_FRAME:
                 /* Duplicates not allowed/supported */

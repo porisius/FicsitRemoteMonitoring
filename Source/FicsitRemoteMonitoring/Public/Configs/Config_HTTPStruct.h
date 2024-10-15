@@ -10,9 +10,6 @@ struct FConfig_HTTPStruct {
     GENERATED_BODY()
 public:
     UPROPERTY(BlueprintReadWrite)
-    FString Listen_IP{};
-
-    UPROPERTY(BlueprintReadWrite)
     int32 HTTP_Port{};
 
     UPROPERTY(BlueprintReadWrite)
@@ -20,6 +17,9 @@ public:
 
     UPROPERTY(BlueprintReadWrite)
     FString Web_Root{};
+
+    UPROPERTY(BlueprintReadWrite)
+    float WebSocketPushCycle{};
 
     /* Retrieves active configuration value and returns object of this struct containing it */
     static FConfig_HTTPStruct GetActiveConfig(UObject* WorldContext) {
