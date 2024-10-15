@@ -146,7 +146,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 	for (AFGVehicle* Vehicle : Vehicles) {
 
 		if (Vehicle->GetClass()->IsChildOf(VehicleClass)) {
-			UE_LOG(LogFRMAPI, Warning, TEXT("Processing vehicle '%s'"), *Vehicle->GetName());
+			//UE_LOG(LogFRMAPI, Warning, TEXT("Processing vehicle '%s'"), *Vehicle->GetName());
 			TSharedPtr<FJsonObject> JVehicle = MakeShared<FJsonObject>();
 
 			AFGWheeledVehicle* WheeledVehicle = Cast<AFGWheeledVehicle>(Vehicle);
