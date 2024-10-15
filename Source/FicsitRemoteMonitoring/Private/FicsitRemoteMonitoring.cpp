@@ -273,7 +273,7 @@ void AFicsitRemoteMonitoring::ProcessClientRequest(uWS::WebSocket<false, true, F
     {
         for (const TSharedPtr<FJsonValue>& EndpointValue : *EndpointsArray)
         {
-            FString Endpoint = EndpointValue->AsString();
+            Endpoint = EndpointValue->AsString();
 
             if (Action == "subscribe")
             {
