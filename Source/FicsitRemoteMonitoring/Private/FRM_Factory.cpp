@@ -158,16 +158,21 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 
 		TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
 
+		int32 CircuitGroupID = -1;
 		int32 CircuitID = -1;
 		float PowerConsumed = -1;
 
 		FThreadSafeBool bAllocationComplete = false;
-		AsyncTask(ENamedThreads::GameThread, [WorldContext, Manufacturer, &CircuitID, &PowerConsumed, &bAllocationComplete]() {
+		AsyncTask(ENamedThreads::GameThread, [WorldContext, Manufacturer, &CircuitGroupID, &CircuitID, &PowerConsumed, &bAllocationComplete]() {
 			// Execute via GameThread
 			AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
 			fgcheck(ModSubsystem);
 
-			ModSubsystem->CircuitID_BIE(Manufacturer, CircuitID, PowerConsumed);
+			UFGPowerCircuit* PowerCircuit;
+			ModSubsystem->PowerCircuit_BIE(Manufacturer, PowerCircuit, PowerConsumed);
+
+			CircuitGroupID = PowerCircuit->GetCircuitGroupID();
+			CircuitID = PowerCircuit->GetCircuitID();
 
 			bAllocationComplete = true;
 		});
@@ -179,6 +184,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 			FPlatformProcess::Sleep(0.0001f);
 		};
 
+		JCircuit->Values.Add("CircuitGroupID", MakeShared<FJsonValueNumber>(CircuitGroupID));
 		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
 		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerConsumed));
 		JCircuitArray.Add(MakeShared<FJsonValueObject>(JCircuit));
