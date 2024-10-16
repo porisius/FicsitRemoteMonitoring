@@ -6,23 +6,21 @@ TSharedPtr<FJsonObject> UFRM_Library::getActorJSON(AActor* Actor) {
 
 	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();
 
-	long double ZActor = Actor->GetActorRotation().Quaternion().Z;
-
 	long double primaryX = Actor->GetActorLocation().X;
 	long double primaryY = Actor->GetActorLocation().Y;
 	long double primaryZ = Actor->GetActorLocation().Z;
 
+	// UE rotations range from -180 to 180 with zero as "forward" and negative values "left".
+	// In Satisfactory this results in a rotation of zero being due east.
+	// FRM will normalise this to a range of 0 <= x < 360 with zero as due north.
+	long double rotation = Actor->GetActorRotation().Yaw;
+	rotation += 450;
+	rotation = fmod(rotation, 360);
+
 	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(primaryX));
 	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(primaryY));
 	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(primaryZ));
-
-	//Because East is what Epic decided to call heading 0, with a -180 to 180 spread.	
-	ZActor = ZActor + 450;
-	if (ZActor > 360) {
-		ZActor = ZActor - 360;
-	}
-
-	JLibrary->Values.Add("rotation", MakeShared<FJsonValueNumber>(ZActor));
+	JLibrary->Values.Add("rotation", MakeShared<FJsonValueNumber>(rotation));
 		
 	return JLibrary;
 
