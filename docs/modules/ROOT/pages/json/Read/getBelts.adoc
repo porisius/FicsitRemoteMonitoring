@@ -63,9 +63,9 @@ API Endpoint: getBelts +
 |Boolean
 |Output
 
-|Speed
+|ItemsPerMinute
 |Belt Speed
-|Integer
+|Float
 |Output
 
 |features/properties/name
