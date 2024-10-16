@@ -22,7 +22,7 @@ class FICSITREMOTEMONITORING_API UFRM_Power : public UFGBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
-	static TArray<UBlueprintJsonValue*> getCircuit(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getPower(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getSwitches(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getGenerators(UObject* WorldContext, UClass* TypedBuildable);
 

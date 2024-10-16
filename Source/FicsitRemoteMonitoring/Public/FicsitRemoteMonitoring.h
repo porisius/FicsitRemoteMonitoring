@@ -222,7 +222,7 @@ public:
 
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getBiomassGenerator(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorBiomass/Build_GeneratorBiomass.Build_GeneratorBiomass_Automated_C"))));
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorBiomass/Build_GeneratorBiomass_Automated.Build_GeneratorBiomass_Automated_C"))));
 	}
 
 	UFUNCTION()
@@ -357,7 +357,7 @@ public:
 
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getPower(UObject* WorldContext) {		
-		return UFRM_Power::getCircuit(WorldContext);
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getPower(WorldContext));
 	}
 
 	UFUNCTION()
