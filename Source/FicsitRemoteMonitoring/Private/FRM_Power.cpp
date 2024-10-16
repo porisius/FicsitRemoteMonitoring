@@ -32,7 +32,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getPower(UObject* WorldContext)
 		JCircuit->Values.Add("BatteryInput", MakeShared<FJsonValueNumber>(PowerCircuit->mBatterySumPowerInput));
 		JCircuit->Values.Add("BatteryOutput", MakeShared<FJsonValueNumber>(PowerCircuit->GetBatterySumPowerOutput()));
 		JCircuit->Values.Add("BatteryDifferential", MakeShared<FJsonValueNumber>(PowerCircuit->mBatterySumPowerInput - PowerCircuit->GetBatterySumPowerOutput()));
-		JCircuit->Values.Add("BatteryPercent", MakeShared<FJsonValueNumber>(100 * (PowerGroup->mTotalPowerStore / PowerGroup->mTotalPowerStoreCapacity)));
+		JCircuit->Values.Add("BatteryPercent", MakeShared<FJsonValueNumber>(UFRM_Library::SafeDivide_Float(PowerGroup->mTotalPowerStore, PowerGroup->mTotalPowerStoreCapacity) * 100));
 		JCircuit->Values.Add("BatteryCapacity", MakeShared<FJsonValueNumber>(PowerGroup->mTotalPowerStoreCapacity));
 		JCircuit->Values.Add("BatteryTimeEmpty", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(PowerCircuit->mTimeToBatteriesEmpty)));
 		JCircuit->Values.Add("BatteryTimeFull", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(PowerCircuit->mTimeToBatteriesFull)));
