@@ -244,7 +244,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getResourceSink(UObject* WorldCo
 	JResourceSink->Values.Add("Percent", MakeShared<FJsonValueNumber>(ResourceSinkSubsystem->GetProgressionTowardsNextCoupon(ResourceSinkTrack)));
 	JResourceSink->Values.Add("GraphPoints", MakeShared<FJsonValueArray>(PointHistory));
 	JResourceSink->Values.Add("TotalPoints", MakeShared<FJsonValueNumber>(ResourceSinkSubsystem->GetNumTotalPoints(ResourceSinkTrack)));
-	JResourceSink->Values.Add("PointsToCoupon", MakeShared<FJsonValueNumber>(ResourceSinkSubsystem->GetNumCoupons()));
+	JResourceSink->Values.Add("PointsToCoupon", MakeShared<FJsonValueNumber>(ResourceSinkSubsystem->GetNumPointsToNextCoupon(ResourceSinkTrack)));
 
 	JResourceSinkArray.Add(MakeShared<FJsonValueObject>(JResourceSink));
 
