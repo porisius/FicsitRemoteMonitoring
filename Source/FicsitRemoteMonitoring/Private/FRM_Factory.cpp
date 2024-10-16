@@ -27,7 +27,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext) {
 		JConveyorBelt->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorFactoryCompXYZ(ConnectionOne)));
 		JConveyorBelt->Values.Add("Connected1", MakeShared<FJsonValueBoolean>(ConnectionOne->IsConnected()));
 		JConveyorBelt->Values.Add("Length", MakeShared<FJsonValueNumber>(ConveyorBelt->GetLength()));
-		JConveyorBelt->Values.Add("Speed", MakeShared<FJsonValueNumber>(ConveyorBelt->GetSpeed()));
+		JConveyorBelt->Values.Add("ItemsPerMinute", MakeShared<FJsonValueNumber>((UFRM_Library::SafeDivide_Float(ConveyorBelt->GetSpeed(), 2))));
 		JConveyorBelt->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(ConveyorBelt), ConveyorBelt->mDisplayName.ToString(), ConveyorBelt->mDisplayName.ToString())));
 
 		JConveyorBeltArray.Add(MakeShared<FJsonValueObject>(JConveyorBelt));
