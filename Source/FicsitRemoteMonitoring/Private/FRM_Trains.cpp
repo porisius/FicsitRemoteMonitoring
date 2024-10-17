@@ -40,17 +40,19 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 			AFGRailroadTimeTable* TimeTable = Train->GetTimeTable();
 			FTimeTableStop CurrentStop;
 
-			int32 StopIndex = TimeTable->GetCurrentStop();
-
 			TrainLocation = UFRM_Library::getActorJSON(MultiUnitMaster);
 
-			CurrentStop = TimeTable->GetStop(StopIndex);
 			TArray<FTimeTableStop> TrainStops;
-			TimeTable->GetStops(TrainStops);
-			AFGTrainStationIdentifier* CurrentStation = CurrentStop.Station;
 
-			if (IsValid(CurrentStation)) {
-				TrainStation = CurrentStation->GetStationName().ToString();
+			if (IsValid(TimeTable)) {
+				int32 StopIndex = TimeTable->GetCurrentStop();
+				CurrentStop = TimeTable->GetStop(StopIndex);
+				TimeTable->GetStops(TrainStops);
+				AFGTrainStationIdentifier* CurrentStation = CurrentStop.Station;
+
+				if (IsValid(CurrentStation)) {
+					TrainStation = CurrentStation->GetStationName().ToString();
+				}
 			}
 
 			UFGLocomotiveMovementComponent* LocomotiveMovement = MultiUnitMaster->GetLocomotiveMovementComponent();
