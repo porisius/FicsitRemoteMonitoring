@@ -20,18 +20,15 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Player::getPlayer(UObject* WorldContext) {
 		APlayerState* PlayerState = PlayerCharacter->GetPlayerState();
 		AFGPlayerState* FGPlayerState = Cast<AFGPlayerState>(PlayerState);
 
-		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
-		fgcheck(ModSubsystem);
-
 		//TODO: Find way to get player's name when they are offline
-		FString PlayerName = "";
-		ModSubsystem->PlayerName_BIE(FGPlayerState, PlayerName);
+		FString PlayerName = PlayerCharacter->mCachedPlayerName;
 
 		JPlayer->Values.Add("ID", MakeShared<FJsonValueNumber>(Index));
 		JPlayer->Values.Add("Name", MakeShared<FJsonValueString>(PlayerName));
 		JPlayer->Values.Add("ClassName", MakeShared<FJsonValueString>(Player->GetClass()->GetName()));
 		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Player))); 
 		//JPlayer->Values.Add("PlayerID", MakeShared<FJsonValueString>(PlayerState->GetUserID()));
+		JPlayer->Values.Add("Online", MakeShared<FJsonValueBoolean>(PlayerCharacter->IsPlayerOnline()));
 		JPlayer->Values.Add("PlayerHP", MakeShared<FJsonValueNumber>(PlayerCharacter->GetHealthComponent()->GetCurrentHealth()));
 		JPlayer->Values.Add("Dead", MakeShared<FJsonValueBoolean>(PlayerCharacter->GetHealthComponent()->IsDead()));
 		//JPlayer->Values.Add("PingTime", MakeShared<FJsonValueNumber>(int32::FGPlayerState->GetCompressedPing()));
