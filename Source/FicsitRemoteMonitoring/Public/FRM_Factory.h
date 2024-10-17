@@ -62,5 +62,5 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getCloudInv(UObject* WorldContext);
 
 	friend class AFGBuildableConveyorBase;
-
+	friend class AFGBuildableTradingPost;
 };
