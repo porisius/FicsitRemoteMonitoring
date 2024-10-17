@@ -218,11 +218,11 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 	AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(WorldContext->GetWorld());
 
-	TArray<AFGBuildable*> Buildables;
-	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableHubTerminal")), Buildables);
+	TArray<AFGBuildableHubTerminal*> Buildables;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableHubTerminal>(Buildables);
 	TArray<TSharedPtr<FJsonValue>> JHubTerminalArray;
 
-	for (AFGBuildable* Buildable : Buildables) {
+	for (AFGBuildableHubTerminal* HubTerminal : Buildables) {
 
 		AFGBuildableHubTerminal* HubTerminal = Cast<AFGBuildableHubTerminal>(Buildable);
 		TSharedPtr<FJsonObject> JHubTerminal = MakeShared<FJsonObject>();
