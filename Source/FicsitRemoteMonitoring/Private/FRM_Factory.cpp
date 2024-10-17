@@ -100,7 +100,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 			for (FItemAmount Product : CurrentRecipe.GetDefaultObject()->GetProducts()) {
 				TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
 				
-				auto Amount = Manufacturer->GetOutputInventory()->GetNumItems(Product.ItemClass);
+				auto Amount = UFGInventoryLibrary::GetAmountConvertedByForm(Manufacturer->GetOutputInventory()->GetNumItems(Product.ItemClass), UFGItemDescriptor::GetForm(Product.ItemClass));
 				auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Product.Amount, UFGItemDescriptor::GetForm(Product.ItemClass));
 				auto CurrentProd = RecipeAmount * ProdCycle * Productivity * CurrentPotential;
 				auto MaxProd = RecipeAmount * ProdCycle * CurrentPotential;
@@ -118,7 +118,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 			for (FItemAmount Ingredients : CurrentRecipe.GetDefaultObject()->GetIngredients()) {
 				TSharedPtr<FJsonObject> JIngredients = MakeShared<FJsonObject>();
 
-				auto Amount = Manufacturer->GetOutputInventory()->GetNumItems(Ingredients.ItemClass);
+				auto Amount = UFGInventoryLibrary::GetAmountConvertedByForm(Manufacturer->GetInputInventory()->GetNumItems(Ingredients.ItemClass), UFGItemDescriptor::GetForm(Ingredients.ItemClass));
 				auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Ingredients.Amount, UFGItemDescriptor::GetForm(Ingredients.ItemClass));
 				auto CurrentConsumed = RecipeAmount * ProdCycle * Productivity * CurrentPotential;
 				auto MaxConsumed = RecipeAmount * ProdCycle * CurrentPotential;
