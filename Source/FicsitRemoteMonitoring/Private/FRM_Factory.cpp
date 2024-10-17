@@ -85,13 +85,15 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 		TArray<TSharedPtr<FJsonValue>> JProductArray;
 		TArray<TSharedPtr<FJsonValue>> JIngredientsArray;
 
+		float Productivity = 0;
+
 		//UE_LOGFMT(LogFRMAPI, Warning, "Loading FGBuildable {Manufacturer} to get data.", UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetClass()));
 
 		if (IsValid(Manufacturer->GetCurrentRecipe())) {
 			auto CurrentRecipe = Manufacturer->GetCurrentRecipe();
 			auto ProdCycle = 60 / Manufacturer->GetProductionCycleTimeForRecipe(Manufacturer->GetCurrentRecipe());
 			auto CurrentPotential = Manufacturer->GetCurrentPotential();
-			auto Productivity = Manufacturer->GetProductivity();
+			Productivity = Manufacturer->GetProductivity();
 						
 			//UE_LOGFMT(LogFRMAPI, Warning, "Loading FGRecipe {Recipe} to get data.", UKismetSystemLibrary::GetClassDisplayName(CurrentRecipe->GetClass()));
 
@@ -196,6 +198,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 		JFactory->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetCurrentRecipe())));
 		JFactory->Values.Add("production", MakeShared<FJsonValueArray>(JProductArray));
 		JFactory->Values.Add("ingredients", MakeShared<FJsonValueArray>(JIngredientsArray));
+		JFactory->Values.Add("Productivity", MakeShared<FJsonValueNumber>(Productivity * 100));
 		JFactory->Values.Add("ManuSpeed", MakeShared<FJsonValueNumber>(Manufacturer->GetManufacturingSpeed() * 100));
 		JFactory->Values.Add("IsConfigured", MakeShared<FJsonValueBoolean>(Manufacturer->IsConfigured()));
 		JFactory->Values.Add("IsProducing", MakeShared<FJsonValueBoolean>(Manufacturer->IsProducing()));
