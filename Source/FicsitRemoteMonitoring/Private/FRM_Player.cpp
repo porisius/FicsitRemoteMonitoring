@@ -98,7 +98,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Player::getDoggo(UObject* WorldContext) {
 		JDoggo->Values.Add("Name", MakeShared<FJsonValueString>(DisplayName));
 		JDoggo->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Doggo->GetClass())));
 		JDoggo->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Doggo)));
-		JDoggo->Values.Add("PlayerID", MakeShared<FJsonValueArray>(JDoggoStorageArray));
+		JDoggo->Values.Add("Inventory", MakeShared<FJsonValueArray>(JDoggoStorageArray));
 		JDoggo->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Doggo, DisplayName, TEXT("Lizard Doggo"))));
 
 		JDoggoArray.Add(MakeShared<FJsonValueObject>(JDoggo));
