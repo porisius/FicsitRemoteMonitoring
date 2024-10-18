@@ -210,11 +210,54 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 
 	for (AFGBuildableHubTerminal* HubTerminal : Buildables) {
 
-		AFGBuildableHubTerminal* HubTerminal = Cast<AFGBuildableHubTerminal>(Buildable);
+		//AFGBuildableHubTerminal* HubTerminal = Cast<AFGBuildableHubTerminal>(Buildable);
 		TSharedPtr<FJsonObject> JHubTerminal = MakeShared<FJsonObject>();
 		TSubclassOf<UFGSchematic> ActiveSchematic = SchematicManager->GetActiveSchematic();
 		FString SchematicName = UFGSchematic::GetSchematicDisplayName(ActiveSchematic).ToString();
 		AFGBuildableTradingPost* TradingPost = HubTerminal->GetTradingPost();
+		
+		TSharedPtr<FJsonObject> JSchematic = MakeShared<FJsonObject>();
+		TArray<TSharedPtr<FJsonValue>> JRecipeArray;
+
+		if (IsValid(ActiveSchematic)) {			
+
+			TArray<TSubclassOf<UFGRecipe>> Recipes;
+
+			for (TSubclassOf<UFGRecipe> Recipe : Recipes) {
+
+				TSharedPtr<FJsonObject> JRecipe = UFRM_Production::getRecipe(WorldContext, Recipe);
+				JRecipeArray.Add(MakeShared<FJsonValueObject>(JRecipe));
+
+			}
+
+			FString SchematicType;
+
+			switch (UFGSchematic::GetType(ActiveSchematic)) {
+				case ESchematicType::EST_Alternate: SchematicType = TEXT("Alternate");
+				case ESchematicType::EST_Cheat: SchematicType = TEXT("Cheat");
+				case ESchematicType::EST_Custom: SchematicType = TEXT("Custom");
+				case ESchematicType::EST_HardDrive: SchematicType = TEXT("Hard Drive");
+				case ESchematicType::EST_MAM: SchematicType = TEXT("M.A.M.");
+				case ESchematicType::EST_Milestone: SchematicType = TEXT("Milestone");
+				case ESchematicType::EST_Prototype: SchematicType = TEXT("Prototype");
+				case ESchematicType::EST_ResourceSink: SchematicType = TEXT("Resource Sink");
+				case ESchematicType::EST_Story: SchematicType = TEXT("Story");
+				case ESchematicType::EST_Tutorial: SchematicType = TEXT("Tutorial");
+			}
+
+			JSchematic->Values.Add("Name", MakeShared<FJsonValueString>(UFGSchematic::GetSchematicDisplayName(ActiveSchematic).ToString()));
+			JSchematic->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ActiveSchematic->GetClass())));
+			JSchematic->Values.Add("TechTier", MakeShared<FJsonValueNumber>(UFGSchematic::GetTechTier(ActiveSchematic)));
+			JSchematic->Values.Add("Type", MakeShared<FJsonValueString>(SchematicType));
+			JSchematic->Values.Add("Recipes", MakeShared<FJsonValueArray>(JRecipeArray));
+		}
+		else {
+			JSchematic->Values.Add("Name", MakeShared<FJsonValueString>(TEXT("No Milestone Selected")));
+			JSchematic->Values.Add("ClassName", MakeShared<FJsonValueString>(TEXT("Desc_Null_C")));
+			JSchematic->Values.Add("TechTier", MakeShared<FJsonValueNumber>(-1));
+			JSchematic->Values.Add("Type", MakeShared<FJsonValueString>(TEXT("No Milestone Selected")));
+			JSchematic->Values.Add("Recipes", MakeShared<FJsonValueArray>(JRecipeArray));
+		}
 
 		FString ShipReturn = "00:00:00";
 		if (SchematicManager->GetTimeUntilShipReturn() > 0) {
@@ -225,6 +268,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 		JHubTerminal->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(HubTerminal->GetClass())));
 		JHubTerminal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(HubTerminal))));
 		//JHubTerminal->Values.Add("HUBLevel", MakeShared<FJsonValueNumber>(TradingPost->GetTradingPostLevel()));
+		JHubTerminal->Values.Add("ActiveMilestone", MakeShared<FJsonValueObject>(JSchematic));
 		JHubTerminal->Values.Add("ShipDock", MakeShared<FJsonValueBoolean>(SchematicManager->IsShipAtTradingPost()));
 		JHubTerminal->Values.Add("SchName", MakeShared<FJsonValueString>(SchematicName));
 		JHubTerminal->Values.Add("ShipReturn", MakeShared<FJsonValueString>(ShipReturn));
