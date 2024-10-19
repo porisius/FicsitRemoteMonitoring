@@ -131,5 +131,15 @@ The format is AsciiDoc, and is hosted from the [Satisfactory Modding Documentati
 
 Commit messages should be written so that a unassuming user or developer can easily understand the purpose.
 
+## Troubleshooting
+
+### Unknown Nodes in FicsitRemoteMonitoring_BP
+
+Add the [ArduinoKit](https://github.com/porisius/ArduinoKit) repository to your FactoryGame.uproject `Mods` folder.
+
+### Plugin failed to load. There may be an operating system error or the module may not be properly set up.
+
+After your build, Copy `zlib.dll` and `uv.dll` from `Source/ThirdParty/uWebSockets/lib` to the game directory `FactoryGame/Mods/FicsitRemoteMonitoring/Binaries/Win64`.
+
 ## Attribution
 This guide is based on the **contributing-gen**. [Make your own](https://github.com/bttger/contributing-gen)!
