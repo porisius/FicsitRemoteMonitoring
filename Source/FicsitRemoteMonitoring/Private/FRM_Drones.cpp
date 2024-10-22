@@ -17,40 +17,40 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 		AFGBuildableDroneStation* DroneStation = Cast<AFGBuildableDroneStation>(Buildable);
 		TSharedPtr<FJsonObject> JDroneStation = MakeShared<FJsonObject>();
 
-		TArray<FInventoryStack> BatteryInventoryStacks;
-//		UFGInventoryComponent* BatteryInventory = DroneStation->GetBatteryInventory();
-		TMap<TSubclassOf<UFGItemDescriptor>, float> BatteryInventoryTMap;
-//		BatteryInventory->GetInventoryStacks(BatteryInventoryStacks);
-		for (FInventoryStack BatteryInventoryStack : BatteryInventoryStacks) {
+		TArray<FInventoryStack> FuelInventoryStacks;
+		UFGInventoryComponent* FuelInventory = DroneStation->GetFuelInventory();
+		TMap<TSubclassOf<UFGItemDescriptor>, float> FuelInventoryTMap;
+		FuelInventory->GetInventoryStacks(FuelInventoryStacks);
+		for (FInventoryStack FuelInventoryStack : FuelInventoryStacks) {
 
-			auto ItemClass = BatteryInventoryStack.Item.GetItemClass();
-			auto Amount = BatteryInventoryStack.NumItems;
+			auto ItemClass = FuelInventoryStack.Item.GetItemClass();
+			auto Amount = FuelInventoryStack.NumItems;
 
-			if (BatteryInventoryTMap.Contains(ItemClass)) {
-				BatteryInventoryTMap.Add(ItemClass) = Amount + BatteryInventoryTMap.FindRef(ItemClass);
+			if (FuelInventoryTMap.Contains(ItemClass)) {
+				FuelInventoryTMap.Add(ItemClass) = Amount + FuelInventoryTMap.FindRef(ItemClass);
 			}
 			else {
-				BatteryInventoryTMap.Add(ItemClass) = Amount;
+				FuelInventoryTMap.Add(ItemClass) = Amount;
 			};
 
 		};
 
-		TArray<TSharedPtr<FJsonValue>> JBatteryStorageArray;
+		TArray<TSharedPtr<FJsonValue>> JFuelStorageArray;
 
 		TArray<TSubclassOf<UFGItemDescriptor>> ClassNames;
 		UFGBlueprintFunctionLibrary::GetAllDescriptorsSorted(WorldContext->GetWorld(), ClassNames);
 
 		for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
 
-			if (BatteryInventoryTMap.Contains(ClassName))
+			if (FuelInventoryTMap.Contains(ClassName))
 			{
-				TSharedPtr<FJsonObject> JBatteryStorage = MakeShared<FJsonObject>();
+				TSharedPtr<FJsonObject> JFuelStorage = MakeShared<FJsonObject>();
 
-				JBatteryStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-				JBatteryStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ClassName->GetClass())));
-				JBatteryStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(BatteryInventoryTMap.FindRef(ClassName)));
+				JFuelStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
+				JFuelStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ClassName->GetClass())));
+				JFuelStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(FuelInventoryTMap.FindRef(ClassName)));
 
-				JBatteryStorageArray.Add(MakeShared<FJsonValueObject>(JBatteryStorage));
+				JFuelStorageArray.Add(MakeShared<FJsonValueObject>(JFuelStorage));
 			};
 		};
 
@@ -132,23 +132,48 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 			JConnectedStationArray.Add(MakeShared<FJsonValueObject>(JConnectedStation));
 		};
 
-		FString FormString = "Unknown";
+		FString FormString = TEXT("Unknown");
 		switch (StationInfo->GetDroneStatus()) {
-			case EDroneStatus::EDS_CANNOT_UNLOAD : FormString = "Cannot Unload";
-			case EDroneStatus::EDS_DOCKED: FormString = "Docked";
-			case EDroneStatus::EDS_DOCKING : FormString = "Docking";
-			case EDroneStatus::EDS_EN_ROUTE : FormString = "En Route";
-			case EDroneStatus::EDS_LOADING : FormString = "Loading";
-			//case EDroneStatus::EDS_NOT_ENOUGH_BATTERIES : FormString = "Not Enough Batteries";
-			case EDroneStatus::EDS_NO_DRONE : FormString = "No Drone";
-			case EDroneStatus::EDS_TAKEOFF : FormString = "Taking Off";
-			case EDroneStatus::EDS_UNLOADING : FormString = "Unloading";
+			case EDroneStatus::EDS_CANNOT_UNLOAD : FormString = TEXT("Cannot Unload");
+			case EDroneStatus::EDS_DOCKED: FormString = TEXT("Docked");
+			case EDroneStatus::EDS_DOCKING : FormString = TEXT("Docking");
+			case EDroneStatus::EDS_EN_ROUTE : FormString = TEXT("En Route");
+			case EDroneStatus::EDS_LOADING : FormString = TEXT("Loading");
+			case EDroneStatus::EDS_NOT_ENOUGH_FUEL : FormString = TEXT("Not Enough Fuel");
+			case EDroneStatus::EDS_NO_DRONE : FormString = TEXT("No Drone");
+			case EDroneStatus::EDS_TAKEOFF : FormString = TEXT("Taking Off");
+			case EDroneStatus::EDS_UNLOADING : FormString = TEXT("Unloading");
 		};
 
 		FString PairedStation = "None";
 		if (StationInfo->GetPairedStation() != nullptr) {
 			PairedStation = StationInfo->GetPairedStation()->GetStation()->mDisplayName.ToString();
 		};
+
+		TSharedPtr<FJsonObject> JActiveFuel = MakeShared<FJsonObject>();
+		FFGDroneFuelInformation ActiveFuelInfo =  StationInfo->GetActiveFuelInfo();
+		JActiveFuel->SetStringField("FuelName", UFGItemDescriptor::GetItemName(ActiveFuelInfo.FuelItemDescriptor).ToString());
+		JActiveFuel->SetNumberField("SingleTripFuelCost", ActiveFuelInfo.SingleTripFuelCost);
+		JActiveFuel->SetNumberField("EstimatedTransportRate", ActiveFuelInfo.EstimatedTransportRate);
+		JActiveFuel->SetNumberField("EstimatedRoundTripTime", ActiveFuelInfo.EstimatedRoundTripTime);
+		JActiveFuel->SetNumberField("EstimatedFuelCostRate", ActiveFuelInfo.EstimatedFuelCostRate);
+
+		TArray< FFGDroneFuelInformation> FuelInfoArray = StationInfo->GetDroneFuelInformation();
+		TArray<TSharedPtr<FJsonValue>> JFuelInfoArray;
+
+		for (FFGDroneFuelInformation FuelInfo : FuelInfoArray) {
+
+			TSharedPtr<FJsonObject> JFuelInfo = MakeShared<FJsonObject>();
+
+			JFuelInfo->SetStringField("FuelName", UFGItemDescriptor::GetItemName(FuelInfo.FuelItemDescriptor).ToString());
+			JFuelInfo->SetNumberField("SingleTripFuelCost", FuelInfo.SingleTripFuelCost);
+			JFuelInfo->SetNumberField("EstimatedTransportRate", FuelInfo.EstimatedTransportRate);
+			JFuelInfo->SetNumberField("EstimatedRoundTripTime", FuelInfo.EstimatedRoundTripTime);
+			JFuelInfo->SetNumberField("EstimatedFuelCostRate", FuelInfo.EstimatedFuelCostRate);
+			
+			JFuelInfoArray.Add(MakeShared<FJsonValueObject>(JFuelInfo));
+
+		}
 
 		JDroneStation->Values.Add("Name", MakeShared<FJsonValueString>(DroneStation->mDisplayName.ToString()));
 		JDroneStation->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(DroneStation->GetClass())));
@@ -169,7 +194,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 		JDroneStation->Values.Add("AvgTotalOutStack", MakeShared<FJsonValueNumber>(StationInfo->GetAverageTotalOutgoingItemStackRate()));
 		JDroneStation->Values.Add("AvgTripIncAmt", MakeShared<FJsonValueNumber>(StationInfo->GetAverageTripIncomingItemAmount()));
 		JDroneStation->Values.Add("AvgTripOutAmt", MakeShared<FJsonValueNumber>(StationInfo->GetAverageTripOutgoingItemAmount()));
-//		JDroneStation->Values.Add("EstRndTrip", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(StationInfo->GetEstimatedRoundTripTime())));
 		JDroneStation->Values.Add("EstTotalTransRate", MakeShared<FJsonValueNumber>(StationInfo->GetEstimatedTotalTransportRate()));
 		JDroneStation->Values.Add("EstLatestTotalIncStack", MakeShared<FJsonValueNumber>(StationInfo->GetLatestEstimatedTotalIncomingItemStackRate()));
 		JDroneStation->Values.Add("EstLatestTotalOutStack", MakeShared<FJsonValueNumber>(StationInfo->GetLatestEstimatedTotalOutgoingItemStackRate()));
@@ -181,7 +205,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 		JDroneStation->Values.Add("MedianRndTrip", MakeShared<FJsonValueString>(UFGBlueprintFunctionLibrary::SecondsToTimeString(StationInfo->GetMedianRoundTripTime())));
 		JDroneStation->Values.Add("MedianTripIncAmt", MakeShared<FJsonValueNumber>(StationInfo->GetMedianTripIncomingItemAmount()));
 		JDroneStation->Values.Add("MedianTripOutAmt", MakeShared<FJsonValueNumber>(StationInfo->GetMedianTripOutgoingItemAmount()));
-//		JDroneStation->Values.Add("EstBatteryRate", MakeShared<FJsonValueNumber>(StationInfo->GetEstimatedBatteryRequirementRate()));
+		JDroneStation->Values.Add("ActiveFuel", MakeShared<FJsonValueObject>(JActiveFuel));
+		JDroneStation->Values.Add("FuelInfo", MakeShared<FJsonValueArray>(JFuelInfoArray));
 		JDroneStation->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(DroneStation, DroneStation->mDisplayName.ToString(), "Drone Station")));
 
 		JDroneStationArray.Add(MakeShared<FJsonValueObject>(JDroneStation));
