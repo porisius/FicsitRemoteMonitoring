@@ -610,30 +610,52 @@ TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::CallEndpoint(UObject* Worl
     {
         if (EndpointInfo.APIName == InEndpoint)
         {
-			bSuccess = true;
-            FAPICallback Callback = EndpointInfo.Callback;
+            try {
+                bSuccess = true;
+                FAPICallback Callback = EndpointInfo.Callback;
 
-            if (EndpointInfo.bRequireGameThread)
-            {
-                FThreadSafeBool bAllocationComplete = false;
-                AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext, &JsonArray, &bAllocationComplete]() {
-                    // Execute callback via GameThread
-                    JsonArray = Callback.Execute(WorldContext);
-                    bAllocationComplete = true;
-                });
-
-                //block while not complete
-                while (!bAllocationComplete)
+                if (EndpointInfo.bRequireGameThread)
                 {
-                    //100micros sleep, this should be very quick
-                    FPlatformProcess::Sleep(0.0001f);
-                };
-            }
-            else
+                    FThreadSafeBool bAllocationComplete = false;
+                    AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext, &JsonArray, &bAllocationComplete]() {
+                        // Execute callback via GameThread
+                        JsonArray = Callback.Execute(WorldContext);
+                        bAllocationComplete = true;
+                    });
+
+                    //block while not complete
+                    while (!bAllocationComplete)
+                    {
+                        //100micros sleep, this should be very quick
+                        FPlatformProcess::Sleep(0.0001f);
+                    };
+                }
+                else
+                {
+                    // Directly execute the callback
+                    JsonArray = Callback.Execute(WorldContext);
+                }
+            } catch (const std::exception& e) 
             {
-                // Directly execute the callback
-                JsonArray = Callback.Execute(WorldContext);
+
+                FString err = *FString(e.what());
+
+                UBlueprintJsonObject* JsonObject = UBlueprintJsonObject::Create();
+
+                JsonObject->SetString("error", "CallEndpoint Exception: " + err);
+                JsonArray.Add(UBlueprintJsonValue::FromObject(JsonObject));
+
+                JsonObject->SetString("recommendation", "Please relay this error, and logs the the Sysadmin Modding Discord for anaylsis.");
+                JsonArray.Add(UBlueprintJsonValue::FromObject(JsonObject));
+
+                UE_LOGFMT(LogHttpServer, Error, "CallEndpoint Exception: %s", err);
+
+            } catch (...) {
+
+                UE_LOG(LogHttpServer, Error, TEXT("Unknown Exception in CallEndpoint"));
+                
             }
+
         }
     }
 
