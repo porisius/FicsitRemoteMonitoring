@@ -733,6 +733,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldCont
 		SpaceElevator->GetInputInventory()->GetInventoryStacks(InventoryStacks);
 
 		TMap<TSubclassOf<UFGItemDescriptor>, int32> Storage;
+		UE_LOGFMT(LogFRMAPI, Warning, "Space Elevator Inventory Stacks: {InventoryStacks}", InventoryStacks.Num());
 
 		for (FInventoryStack Inventory : InventoryStacks) {
 
@@ -754,7 +755,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldCont
 
 			TSharedPtr<FJsonObject> JInventory = MakeShared<FJsonObject>();
 
-			JInventory->Values.Add("Name", MakeShared<FJsonValueString>((StorageStack.Key.GetDefaultObject()->mDisplayName).ToString()));
+			JInventory->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(StorageStack.Key).ToString()));
 			JInventory->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(StorageStack.Key->GetClass())));
 			JInventory->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageStack.Value));
 
