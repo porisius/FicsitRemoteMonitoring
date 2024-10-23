@@ -135,13 +135,21 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 		FString FormString = TEXT("Unknown");
 		switch (StationInfo->GetDroneStatus()) {
 			case EDroneStatus::EDS_CANNOT_UNLOAD : FormString = TEXT("Cannot Unload");
+				break;
 			case EDroneStatus::EDS_DOCKED: FormString = TEXT("Docked");
+				break;
 			case EDroneStatus::EDS_DOCKING : FormString = TEXT("Docking");
+				break;
 			case EDroneStatus::EDS_EN_ROUTE : FormString = TEXT("En Route");
+				break;
 			case EDroneStatus::EDS_LOADING : FormString = TEXT("Loading");
+				break;
 			case EDroneStatus::EDS_NOT_ENOUGH_FUEL : FormString = TEXT("Not Enough Fuel");
+				break;
 			case EDroneStatus::EDS_NO_DRONE : FormString = TEXT("No Drone");
+				break;
 			case EDroneStatus::EDS_TAKEOFF : FormString = TEXT("Taking Off");
+				break;
 			case EDroneStatus::EDS_UNLOADING : FormString = TEXT("Unloading");
 		};
 

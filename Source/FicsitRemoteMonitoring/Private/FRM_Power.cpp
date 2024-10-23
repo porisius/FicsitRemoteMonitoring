@@ -135,12 +135,17 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 
 			switch (FuelForm)
 			{
-			case EResourceForm::RF_SOLID	:	FormString = TEXT("Solid");
-			case EResourceForm::RF_LIQUID	:	FormString = TEXT("Liquid");
-			case EResourceForm::RF_GAS		:	FormString = TEXT("Gas");
-			case EResourceForm::RF_HEAT		:	FormString = TEXT("Heat");
-			case EResourceForm::RF_INVALID	:	FormString = TEXT("Geothermal");
-			case EResourceForm::RF_LAST_ENUM:	FormString = TEXT("Unknown");
+				case EResourceForm::RF_SOLID	:	FormString = TEXT("Solid");
+					break;
+				case EResourceForm::RF_LIQUID	:	FormString = TEXT("Liquid");
+					break;
+				case EResourceForm::RF_GAS		:	FormString = TEXT("Gas");
+					break;
+				case EResourceForm::RF_HEAT		:	FormString = TEXT("Heat");
+					break;
+				case EResourceForm::RF_INVALID	:	FormString = TEXT("Geothermal");
+					break;
+				case EResourceForm::RF_LAST_ENUM:	FormString = TEXT("Unknown");
 			}
 
 		};
@@ -176,9 +181,11 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 
 			switch (GeneratorNuclear->GetCurrentGeneratorNuclearWarning())
 			{
-			case EGeneratorNuclearWarning::GNW_None								:	NuclearString = TEXT("None");
-			case EGeneratorNuclearWarning::GNW_WasteFull						:	NuclearString = TEXT("Waste Full");
-			case EGeneratorNuclearWarning::GNW_MissmatchBetweenInputAndWaste	:	NuclearString = TEXT("Mismatch Between Input And Waste");
+				case EGeneratorNuclearWarning::GNW_None								:	NuclearString = TEXT("None");
+					break;
+				case EGeneratorNuclearWarning::GNW_WasteFull						:	NuclearString = TEXT("Waste Full");
+					break;
+				case EGeneratorNuclearWarning::GNW_MissmatchBetweenInputAndWaste	:	NuclearString = TEXT("Mismatch Between Input And Waste");
 			}
 
 		}

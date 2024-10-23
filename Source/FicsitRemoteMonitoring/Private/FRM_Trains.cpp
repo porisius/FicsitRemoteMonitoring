@@ -102,7 +102,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 			case ETrainStatus::TS_SelfDriving:		FormString = "Self-Driving";
 				break;
 			case ETrainStatus::TS_Derailed:			FormString = "Derailed";
-				break;
 		};
 
 		JTrain->Values.Add("Name", MakeShared<FJsonValueString>(Train->GetTrainName().ToString()));
@@ -188,12 +187,19 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 			switch (DockingStatus)
 			{
 				case ETrainPlatformDockingStatus::ETPDS_Complete					:	StatusString = TEXT("Complete");
+					break;
 				case ETrainPlatformDockingStatus::ETPDS_IdleWaitForTime				:	StatusString = TEXT("Idle Wait For Time");
+					break;
 				case ETrainPlatformDockingStatus::ETPDS_Loading						:	StatusString = TEXT("Loading");
+					break;
 				case ETrainPlatformDockingStatus::ETPDS_None						:	StatusString = TEXT("None");
+					break;
 				case ETrainPlatformDockingStatus::ETPDS_Unloading					:	StatusString = TEXT("UNloading");
+					break;
 				case ETrainPlatformDockingStatus::ETPDS_WaitForTransferCondition	:	StatusString = TEXT("Wait for Transfer Condition");
+					break;
 				case ETrainPlatformDockingStatus::ETPDS_WaitingForTransfer			:	StatusString = TEXT("Waiting For Transfer");
+					break;
 				case ETrainPlatformDockingStatus::ETPDS_WaitingToStart				:	StatusString = TEXT("Waiting To Start");
 			}
 

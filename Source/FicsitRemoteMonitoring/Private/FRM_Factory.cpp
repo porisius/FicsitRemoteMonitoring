@@ -234,14 +234,23 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 
 			switch (UFGSchematic::GetType(ActiveSchematic)) {
 				case ESchematicType::EST_Alternate: SchematicType = TEXT("Alternate");
+					break;
 				case ESchematicType::EST_Cheat: SchematicType = TEXT("Cheat");
+					break;
 				case ESchematicType::EST_Custom: SchematicType = TEXT("Custom");
+					break;
 				case ESchematicType::EST_HardDrive: SchematicType = TEXT("Hard Drive");
+					break;
 				case ESchematicType::EST_MAM: SchematicType = TEXT("M.A.M.");
+					break;
 				case ESchematicType::EST_Milestone: SchematicType = TEXT("Milestone");
+					break;
 				case ESchematicType::EST_Prototype: SchematicType = TEXT("Prototype");
+					break;
 				case ESchematicType::EST_ResourceSink: SchematicType = TEXT("Resource Sink");
+					break;
 				case ESchematicType::EST_Story: SchematicType = TEXT("Story");
+					break;
 				case ESchematicType::EST_Tutorial: SchematicType = TEXT("Tutorial");
 			}
 
@@ -584,8 +593,11 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceNode(UObject* WorldConte
 
 			switch (ResourceNode->GetResourceNodeType()) {
 				case EResourceNodeType::Geyser: ResourceNodeType = TEXT("Geyser");
+					break;
 				case EResourceNodeType::FrackingCore: ResourceNodeType = TEXT("Fracking Core");
+					break;
 				case EResourceNodeType::FrackingSatellite: ResourceNodeType = TEXT("Fracking Satellite");
+					break;
 				case EResourceNodeType::Node: ResourceNodeType = TEXT("Node");
 			}
 

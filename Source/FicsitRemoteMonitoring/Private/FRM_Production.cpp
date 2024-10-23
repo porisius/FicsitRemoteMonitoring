@@ -223,6 +223,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getResourceSink(UObject* WorldCo
 
 	switch (ResourceSinkTrack) {
 		case EResourceSinkTrack::RST_Default		: SinkName = "Resource";
+			break;
 		case EResourceSinkTrack::RST_Exploration	: SinkName = "Exploration";
 	}
 
@@ -270,11 +271,15 @@ TSharedPtr<FJsonObject> UFRM_Production::getRecipe(UObject* WorldContext, TSubcl
 		FString EventString;
 
 		switch (Event) {
-		case EEvents::EV_Birthday: EventString = TEXT("Satisfactory Birthday");
-		case EEvents::EV_Christmas: EventString = TEXT("Christmas");
-		case EEvents::EV_CSSBirthday: EventString = TEXT("Coffee Stain Studios Birthday");
-		case EEvents::EV_FirstOfApril: EventString = TEXT("April Fools Day");
-		case EEvents::EV_None: EventString = TEXT("");
+			case EEvents::EV_Birthday: EventString = TEXT("Satisfactory Birthday");
+				break;
+			case EEvents::EV_Christmas: EventString = TEXT("Christmas");
+				break;
+			case EEvents::EV_CSSBirthday: EventString = TEXT("Coffee Stain Studios Birthday");
+				break;
+			case EEvents::EV_FirstOfApril: EventString = TEXT("April Fools Day");
+				break;
+			case EEvents::EV_None: EventString = TEXT("");
 		}
 
 		JEventsArray.Add(MakeShared<FJsonValueString>(EventString));
@@ -424,14 +429,23 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getSchematics(UObject* WorldCont
 
 		switch (UFGSchematic::GetType(Schematic)) {
 			case ESchematicType::EST_Alternate: SchematicType = TEXT("Alternate");
+				break;
 			case ESchematicType::EST_Cheat: SchematicType = TEXT("Cheat");
+				break;
 			case ESchematicType::EST_Custom: SchematicType = TEXT("Custom");
+				break;
 			case ESchematicType::EST_HardDrive: SchematicType = TEXT("Hard Drive");
+				break;
 			case ESchematicType::EST_MAM: SchematicType = TEXT("M.A.M.");
+				break;
 			case ESchematicType::EST_Milestone: SchematicType = TEXT("Milestone");
+				break;
 			case ESchematicType::EST_Prototype: SchematicType = TEXT("Prototype");
+				break;
 			case ESchematicType::EST_ResourceSink: SchematicType = TEXT("Resource Sink");
+				break;
 			case ESchematicType::EST_Story: SchematicType = TEXT("Story");
+				break;
 			case ESchematicType::EST_Tutorial: SchematicType = TEXT("Tutorial");
 		}
 
