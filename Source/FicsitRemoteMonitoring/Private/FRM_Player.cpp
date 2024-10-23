@@ -57,48 +57,17 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Player::getDoggo(UObject* WorldContext) {
 		fgcheck(ModSubsystem);
 
 		FString DisplayName;
+
+		// get doggo inventory and display name
 		TArray<FInventoryStack> InventoryStacks;
-
 		ModSubsystem->GetDoggoInfo_BIE(Doggo, DisplayName, InventoryStacks);
-		TMap<TSubclassOf<UFGItemDescriptor>, float> StorageInventory;
-		TArray<TSharedPtr<FJsonValue>> JDoggoStorageArray;
-
-		TArray<TSubclassOf<UFGItemDescriptor>> ClassNames;
-		UFGBlueprintFunctionLibrary::GetAllDescriptorsSorted(WorldContext->GetWorld(), ClassNames);
-
-		for (FInventoryStack Inventory : InventoryStacks) {
-
-			auto ItemClass = Inventory.Item.GetItemClass();
-			auto Amount = Inventory.NumItems;
-
-			if (StorageInventory.Contains(ItemClass)) {
-				StorageInventory.Add(ItemClass) = Amount + StorageInventory.FindRef(ItemClass);
-			}
-			else {
-				StorageInventory.Add(ItemClass) = Amount;
-			};
-
-		};
-
-		for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
-
-			if (StorageInventory.Contains(ClassName))
-			{
-				TSharedPtr<FJsonObject> JDoggoStorage = MakeShared<FJsonObject>();
-
-				JDoggoStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-				JDoggoStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ClassName->GetClass())));
-				JDoggoStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageInventory.FindRef(ClassName)));
-
-				JDoggoStorageArray.Add(MakeShared<FJsonValueObject>(JDoggoStorage));
-			};
-		};
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> DoggoInventory = UFRM_Library::GetGroupedInventoryItems(InventoryStacks);
 
 		JDoggo->Values.Add("ID", MakeShared<FJsonValueNumber>(Index));
 		JDoggo->Values.Add("Name", MakeShared<FJsonValueString>(DisplayName));
 		JDoggo->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Doggo->GetClass())));
 		JDoggo->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Doggo)));
-		JDoggo->Values.Add("Inventory", MakeShared<FJsonValueArray>(JDoggoStorageArray));
+		JDoggo->Values.Add("Inventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(DoggoInventory)));
 		JDoggo->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Doggo, DisplayName, TEXT("Lizard Doggo"))));
 
 		JDoggoArray.Add(MakeShared<FJsonValueObject>(JDoggo));
