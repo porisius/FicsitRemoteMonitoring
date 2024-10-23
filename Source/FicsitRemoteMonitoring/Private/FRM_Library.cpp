@@ -114,6 +114,42 @@ bool UFRM_Library::IsIntInRange(int32 Number, int32 LowerBound, int32 UpperBound
 	return bIsMoreThanLowerBound && bIsLessThanUpperBound;
 }
 
+TMap<TSubclassOf<UFGItemDescriptor>, int32> UFRM_Library::GetGroupedInventoryItems(const TArray<FInventoryStack>& InventoryStacks)
+{
+	TMap<TSubclassOf<UFGItemDescriptor>, int32> InventoryItems;
+
+	for (FInventoryStack Inventory : InventoryStacks) {
+		auto ItemClass = Inventory.Item.GetItemClass();
+		auto Amount = Inventory.NumItems;
+
+		if (InventoryItems.Contains(ItemClass)) {
+			InventoryItems.Add(ItemClass) = Amount + InventoryItems.FindRef(ItemClass);
+		}
+		else {
+			InventoryItems.Add(ItemClass) = Amount;
+		}
+	}
+
+	return InventoryItems;
+}
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Library::GetInventoryJSON(const TMap<TSubclassOf<UFGItemDescriptor>, int32>& Items)
+{
+	TArray<TSharedPtr<FJsonValue>> JInventoryArray;
+
+	for (const TPair<TSubclassOf<UFGItemDescriptor>, int32> Item : Items) {
+		TSharedPtr<FJsonObject> JInventory = MakeShared<FJsonObject>();
+
+		JInventory->Values.Add("Name", MakeShared<FJsonValueString>((Item.Key.GetDefaultObject()->mDisplayName).ToString()));
+		JInventory->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Item.Key)));
+		JInventory->Values.Add("Amount", MakeShared<FJsonValueNumber>(Item.Value));
+
+		JInventoryArray.Add(MakeShared<FJsonValueObject>(JInventory));
+	}
+
+	return JInventoryArray;
+}
+
 TSharedPtr<FJsonValue> ConvertStringToFJsonValue(const FString& JsonString)
 {
 	TSharedPtr<FJsonValue> FJsonValue;
