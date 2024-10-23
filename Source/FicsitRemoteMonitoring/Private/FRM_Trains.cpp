@@ -86,6 +86,18 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 			JRailcars->Values.Add("PayloadMass", MakeShared<FJsonValueNumber>(RailcarVehicleMovement->GetPayloadMass()));
 			JRailcars->Values.Add("MaxPayloadMass", MakeShared<FJsonValueNumber>(RailcarVehicleMovement->GetMaxPayloadMass()));
 
+			// test if Railcar is a FreightWagon and get the inventory
+			if (AFGFreightWagon* FreightWagon = Cast<AFGFreightWagon>(Railcar)) {
+				TArray<FInventoryStack> InventoryStacks;
+				FreightWagon->GetFreightInventory()->GetInventoryStacks(InventoryStacks);
+				TMap<TSubclassOf<UFGItemDescriptor>, int32> FreightInventory = UFRM_Library::GetGroupedInventoryItems(InventoryStacks);
+				JRailcars->Values.Add("Inventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(FreightInventory)));
+			}
+			// otherwise create an empty inventory (for locomotives)
+			else {
+				JRailcars->Values.Add("Inventory", MakeShared<FJsonValueArray>(TArray<TSharedPtr<FJsonValue>>()));
+			}
+
 			TTotalMass = TTotalMass + RailcarVehicleMovement->GetMass();
 			TPayloadMass = TPayloadMass + RailcarVehicleMovement->GetPayloadMass();
 			TMaxPlayloadMass = TMaxPlayloadMass + RailcarVehicleMovement->GetMaxPayloadMass();
@@ -117,6 +129,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 		JTrain->Values.Add("PendingDerail", MakeShared<FJsonValueBoolean>(Train->HasPendingCollision()));
 		JTrain->Values.Add("Status", MakeShared<FJsonValueString>(FormString));
 		JTrain->Values.Add("TimeTable", MakeShared<FJsonValueArray>(JTimetableArray));
+		JTrain->Values.Add("Vehicles", MakeShared<FJsonValueArray>(JRailcarsArray));
 		JTrain->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Train, Train->GetTrainName().ToString(), "Train")));
 
 		JTrainsArray.Add(MakeShared<FJsonValueObject>(JTrain));
