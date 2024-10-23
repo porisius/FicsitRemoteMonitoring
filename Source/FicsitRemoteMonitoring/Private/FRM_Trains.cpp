@@ -96,9 +96,13 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 		FString FormString = "Unknown";
 		switch (Train->GetTrainStatus()) {
 			case ETrainStatus::TS_Parked :			FormString = "Parked";
+				break;
 			case ETrainStatus::TS_ManualDriving:	FormString = "Manual Driving";
+				break;
 			case ETrainStatus::TS_SelfDriving:		FormString = "Self-Driving";
+				break;
 			case ETrainStatus::TS_Derailed:			FormString = "Derailed";
+				break;
 		};
 
 		JTrain->Values.Add("Name", MakeShared<FJsonValueString>(Train->GetTrainName().ToString()));
