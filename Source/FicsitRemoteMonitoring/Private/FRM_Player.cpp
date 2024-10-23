@@ -20,6 +20,11 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Player::getPlayer(UObject* WorldContext) {
 		APlayerState* PlayerState = PlayerCharacter->GetPlayerState();
 		AFGPlayerState* FGPlayerState = Cast<AFGPlayerState>(PlayerState);
 
+		// get player inventory
+		TArray<FInventoryStack> InventoryStacks;
+		PlayerCharacter->GetInventory()->GetInventoryStacks(InventoryStacks);
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> PlayerInventory = UFRM_Library::GetGroupedInventoryItems(InventoryStacks);
+
 		//TODO: Find way to get player's name when they are offline
 		FString PlayerName = PlayerCharacter->mCachedPlayerName;
 
@@ -32,6 +37,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Player::getPlayer(UObject* WorldContext) {
 		JPlayer->Values.Add("PlayerHP", MakeShared<FJsonValueNumber>(PlayerCharacter->GetHealthComponent()->GetCurrentHealth()));
 		JPlayer->Values.Add("Dead", MakeShared<FJsonValueBoolean>(PlayerCharacter->GetHealthComponent()->IsDead()));
 		//JPlayer->Values.Add("PingTime", MakeShared<FJsonValueNumber>(int32::FGPlayerState->GetCompressedPing()));
+		JPlayer->Values.Add("Inventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(PlayerInventory)));
 		JPlayer->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Player, PlayerCharacter->mCachedPlayerName, "Player")));
 
 		JPlayerArray.Add(MakeShared<FJsonValueObject>(JPlayer));
