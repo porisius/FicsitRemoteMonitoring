@@ -714,20 +714,23 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldCont
 
 		};
 
-		TArray<TSharedPtr<FJsonValue>> JNextPhaseArray;
-		TArray<FItemAmount> NextPhaseCost;
+		TArray<TSharedPtr<FJsonValue>> JCurrentPhaseArray;
+		TArray<FRemainingPhaseCost> RemainingPhaseCost;
 
-		SpaceElevator->GetNextPhaseCost(NextPhaseCost);
+		AFGGamePhaseManager* GamePhaseManager = AFGGamePhaseManager::Get(WorldContext->GetWorld());
+		GamePhaseManager->GetRemainingPhaseCosts(RemainingPhaseCost);
 
-		for (FItemAmount NextPhase : NextPhaseCost) {
+		for (FRemainingPhaseCost CurrentPhase : RemainingPhaseCost) {
 
-			TSharedPtr<FJsonObject> JNextPhase = MakeShared<FJsonObject>();
+			TSharedPtr<FJsonObject> JCurrentPhase = MakeShared<FJsonObject>();
 
-			JNextPhase->Values.Add("Name", MakeShared<FJsonValueString>((NextPhase.ItemClass.GetDefaultObject()->mDisplayName.ToString())));
-			JNextPhase->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(NextPhase.ItemClass)));
-			JNextPhase->Values.Add("Amount", MakeShared<FJsonValueNumber>(NextPhase.Amount));
+			JCurrentPhase->Values.Add("Name", MakeShared<FJsonValueString>((CurrentPhase.ItemClass.GetDefaultObject()->mDisplayName.ToString())));
+			JCurrentPhase->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(CurrentPhase.ItemClass)));
+			JCurrentPhase->Values.Add("Amount", MakeShared<FJsonValueNumber>(CurrentPhase.TotalCost - CurrentPhase.RemainingCost));
+			JCurrentPhase->Values.Add("RemainingCost", MakeShared<FJsonValueNumber>(CurrentPhase.RemainingCost));
+			JCurrentPhase->Values.Add("TotalCost", MakeShared<FJsonValueNumber>(CurrentPhase.TotalCost));
 
-			JNextPhaseArray.Add(MakeShared<FJsonValueObject>(JNextPhase));
+			JCurrentPhaseArray.Add(MakeShared<FJsonValueObject>(JCurrentPhase));
 
 		};
 
@@ -735,7 +738,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldCont
 		JSpaceElevator->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(SpaceElevator->GetClass())));
 		JSpaceElevator->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(SpaceElevator)));
 		JSpaceElevator->Values.Add("Inventory", MakeShared<FJsonValueArray>(JInventoryArray));
-		JSpaceElevator->Values.Add("PhaseCost", MakeShared<FJsonValueArray>(JNextPhaseArray));
+		JSpaceElevator->Values.Add("CurrentPhase", MakeShared<FJsonValueArray>(JCurrentPhaseArray));
 		JSpaceElevator->Values.Add("FullyUpgraded", MakeShared<FJsonValueBoolean>(SpaceElevator->IsFullyUpgraded()));
 		JSpaceElevator->Values.Add("UpgradeReady", MakeShared<FJsonValueBoolean>(SpaceElevator->IsReadyToUpgrade()));
 		JSpaceElevator->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(SpaceElevator, SpaceElevator->mDisplayName.ToString(), TEXT("Space Elevator"))));
