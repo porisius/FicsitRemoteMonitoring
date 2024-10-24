@@ -14,7 +14,8 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, class UC
 			"Usage:\n"
 			"/frm debug <file/info> <Endpoint>\n"
 			"/frm http <start/stop>\n"
-			"/frm serial <start/stop>"
+			"/frm serial <start/stop>\n"
+			"/frm icon"
 		);
 
 		return ChatReturn;
@@ -132,7 +133,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, class UC
 		if (!UKismetSystemLibrary::IsDedicatedServer(WorldContext)) {
 			ModSubsystem->IconGenerator_BIE();
 
-			ChatReturn.Chat = TEXT("Icon Generatation Completed");
+			ChatReturn.Chat = TEXT("Icon Generation Completed.");
 			ChatReturn.Color = FLinearColor::Green;
 			ChatReturn.Status = EExecutionStatus::COMPLETED;
 		}

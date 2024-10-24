@@ -550,36 +550,12 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceNode(UObject* WorldConte
 	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), ResourceActor, FoundActors);
 
 	for (AActor* FoundActor : FoundActors) {
-
-		TSharedPtr<FJsonObject> JResourceNode = MakeShared<FJsonObject>();
-
-		AFGResourceNode* ResourceNode = Cast<AFGResourceNode>(FoundActor);
-
-		if (IsValid(ResourceNode)) {
-
-			FString ResourceNodeType;
-
-			switch (ResourceNode->GetResourceNodeType()) {
-				case EResourceNodeType::Geyser: ResourceNodeType = TEXT("Geyser");
-					break;
-				case EResourceNodeType::FrackingCore: ResourceNodeType = TEXT("Fracking Core");
-					break;
-				case EResourceNodeType::FrackingSatellite: ResourceNodeType = TEXT("Fracking Satellite");
-					break;
-				case EResourceNodeType::Node: ResourceNodeType = TEXT("Node");
-			}
-
-			JResourceNode->Values.Add("Name", MakeShared<FJsonValueString>(ResourceNode->GetResourceName().ToString()));
-			JResourceNode->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ResourceNode->GetClass())));
-			JResourceNode->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(ResourceNode))));
-			JResourceNode->Values.Add("EnumPurity", MakeShared<FJsonValueString>(UEnum::GetValueAsString(ResourceNode->GetResoucePurity())));
-			JResourceNode->Values.Add("Purity", MakeShared<FJsonValueString>(ResourceNode->GetResoucePurityText().ToString()));
-			JResourceNode->Values.Add("NodeType", MakeShared<FJsonValueString>(ResourceNodeType));
-			JResourceNode->Values.Add("Exploited", MakeShared<FJsonValueBoolean>(ResourceNode->IsOccupied()));
-			JResourceNode->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(ResourceNode), ResourceNode->GetResourceName().ToString(), TEXT("Resource Node"))));
-
-			JResourceNodeArray.Add(MakeShared<FJsonValueObject>(JResourceNode));
+		TSharedPtr<FJsonObject> JResourceNode = UFRM_Library::GetResourceNodeJSON(FoundActor, true);
+		if (!JResourceNode) {
+			continue;
 		}
+
+		JResourceNodeArray.Add(MakeShared<FJsonValueObject>(JResourceNode));
 	}
 
 	return JResourceNodeArray;
@@ -679,11 +655,21 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 
 		};	
 
+		TArray<TSharedPtr<FJsonValue>> JScannedResourceNodes;
+		for (AFGResourceNodeBase* NodeBase: RadarTower->mScannedResourceNodes)
+		{
+			if (auto JScannedResourceNode = UFRM_Library::GetResourceNodeJSON(NodeBase))
+			{
+				JScannedResourceNodes.Add(MakeShared<FJsonValueObject>(JScannedResourceNode));
+			}
+		}
+
 		JRadarTower->Values.Add("Name", MakeShared<FJsonValueString>(RadarTower->mDisplayName.ToString()));
 		JRadarTower->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(RadarTower->GetClass())));
 		JRadarTower->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(RadarTower))));
 		JRadarTower->Values.Add("RevealRadius", MakeShared<FJsonValueNumber>(RadarData->GetFogOfWarRevealRadius()));
 		JRadarTower->Values.Add("RevealType", MakeShared<FJsonValueString>(UEnum::GetDisplayValueAsText(RadarData->GetFogOfWarRevealType()).ToString()));
+		JRadarTower->Values.Add("ScannedResourceNodes", MakeShared<FJsonValueArray>(JScannedResourceNodes));
 		JRadarTower->Values.Add("Fauna", MakeShared<FJsonValueArray>(JFaunaArray));
 		JRadarTower->Values.Add("Signal", MakeShared<FJsonValueArray>(JSignalArray));
 		JRadarTower->Values.Add("Flora", MakeShared<FJsonValueArray>(JFloraArray));
