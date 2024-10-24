@@ -93,6 +93,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 			auto ProdCycle = 60 / Manufacturer->GetProductionCycleTimeForRecipe(Manufacturer->GetCurrentRecipe());
 			auto CurrentPotential = Manufacturer->GetCurrentPotential();
 			Productivity = Manufacturer->GetProductivity();
+			auto ProductionBoost = Manufacturer->mProductionShardBoostMultiplier;
 						
 			//UE_LOGFMT(LogFRMAPI, Warning, "Loading FGRecipe {Recipe} to get data.", UKismetSystemLibrary::GetClassDisplayName(CurrentRecipe->GetClass()));
 
@@ -101,8 +102,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 				
 				auto Amount = UFGInventoryLibrary::GetAmountConvertedByForm(Manufacturer->GetOutputInventory()->GetNumItems(Product.ItemClass), UFGItemDescriptor::GetForm(Product.ItemClass));
 				auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Product.Amount, UFGItemDescriptor::GetForm(Product.ItemClass));
-				auto CurrentProd = RecipeAmount * ProdCycle * Productivity * CurrentPotential;
-				auto MaxProd = RecipeAmount * ProdCycle * CurrentPotential;
+				auto CurrentProd = RecipeAmount * ProdCycle * Productivity * CurrentPotential * ProductionBoost;
+				auto MaxProd = RecipeAmount * ProdCycle * CurrentPotential * ProductionBoost;
 
 				JProduct->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Product.ItemClass).ToString()));
 				JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Product.ItemClass)));
