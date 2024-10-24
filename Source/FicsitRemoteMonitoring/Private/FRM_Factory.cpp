@@ -708,41 +708,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldCont
 	for (AFGBuildableSpaceElevator* SpaceElevator : SpaceElevators) {
 
 		TSharedPtr<FJsonObject> JSpaceElevator = MakeShared<FJsonObject>();
-
-		TArray<FInventoryStack> InventoryStacks;
-		SpaceElevator->GetInputInventory()->GetInventoryStacks(InventoryStacks);
-
-		TMap<TSubclassOf<UFGItemDescriptor>, int32> Storage;
-		UE_LOGFMT(LogFRMAPI, Warning, "Space Elevator Inventory Stacks: {InventoryStacks}", InventoryStacks.Num());
-
-		for (FInventoryStack Inventory : InventoryStacks) {
-
-			auto ItemClass = Inventory.Item.GetItemClass();
-			auto Amount = Inventory.NumItems;
-
-			if (Storage.Contains(ItemClass)) {
-				Storage.Add(ItemClass) = Amount + Storage.FindRef(ItemClass);
-			}
-			else {
-				Storage.Add(ItemClass) = Amount;
-			};
-
-		};
-
-		TArray<TSharedPtr<FJsonValue>> JInventoryArray;
-
-		for (const TPair< TSubclassOf<UFGItemDescriptor>, int32> StorageStack : Storage) {
-
-			TSharedPtr<FJsonObject> JInventory = MakeShared<FJsonObject>();
-
-			JInventory->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(StorageStack.Key).ToString()));
-			JInventory->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(StorageStack.Key->GetClass())));
-			JInventory->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageStack.Value));
-
-			JInventoryArray.Add(MakeShared<FJsonValueObject>(JInventory));
-
-		};
-
+		
 		TArray<TSharedPtr<FJsonValue>> JCurrentPhaseArray;
 		TArray<FRemainingPhaseCost> RemainingPhaseCost;
 
