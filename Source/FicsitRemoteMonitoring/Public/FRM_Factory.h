@@ -65,4 +65,5 @@ public:
 	friend class AFGBuildableConveyorBase;
 	friend class AFGBuildableTradingPost;
 	friend class AFGSchematicManager;
+	friend class AFGBuildableRadarTower;
 };

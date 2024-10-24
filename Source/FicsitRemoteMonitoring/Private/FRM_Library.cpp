@@ -173,6 +173,63 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Library::GetInventoryJSON(const TMap<TSubcla
 	return JInventoryArray;
 }
 
+TSharedPtr<FJsonObject> UFRM_Library::GetResourceNodeJSON(AActor* Actor, const bool bIncludeFeatures)
+{
+	AFGResourceNode* ResourceNode = Cast<AFGResourceNode>(Actor);
+	if (!ResourceNode) {
+		return nullptr;
+	}
+
+	TSharedPtr<FJsonObject> JResourceNode = MakeShared<FJsonObject>();
+
+	// get purity
+	const EResourcePurity ResourcePurity = ResourceNode->GetResoucePurity();
+	FString Purity = TEXT("Unknown");
+	switch(ResourcePurity)
+	{
+		case RP_Inpure: Purity = TEXT("Impure"); break;
+		case RP_Pure: Purity = TEXT("Pure"); break;
+		case RP_Normal: Purity = TEXT("Normal"); break;
+	}
+
+	// get resource form
+	FString ResourceForm = TEXT("Unknown");
+	switch(ResourceNode->GetResourceForm())
+	{
+		case EResourceForm::RF_INVALID: ResourceForm = TEXT("Invalid"); break;
+		case EResourceForm::RF_SOLID: ResourceForm = TEXT("Solid"); break;
+		case EResourceForm::RF_LIQUID: ResourceForm = TEXT("Liquid"); break;
+		case EResourceForm::RF_GAS: ResourceForm = TEXT("Gas"); break;
+		case EResourceForm::RF_HEAT: ResourceForm = TEXT("Heat"); break;
+	}
+
+	// get resource node type
+	FString ResourceNodeType = TEXT("Unknown");
+	switch (ResourceNode->GetResourceNodeType()) {
+		case EResourceNodeType::Geyser: ResourceNodeType = TEXT("Geyser"); break;
+		case EResourceNodeType::FrackingCore: ResourceNodeType = TEXT("Fracking Core"); break;
+		case EResourceNodeType::FrackingSatellite: ResourceNodeType = TEXT("Fracking Satellite"); break;
+		case EResourceNodeType::Node: ResourceNodeType = TEXT("Node"); break;
+	}
+	
+	FString ResourceName = ResourceNode->GetResourceName().ToString();
+		
+	JResourceNode->Values.Add("Name", MakeShared<FJsonValueString>(ResourceName));
+	JResourceNode->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ResourceNode->GetResourceClass())));
+	JResourceNode->Values.Add("Purity", MakeShared<FJsonValueString>(Purity));
+	JResourceNode->Values.Add("EnumPurity", MakeShared<FJsonValueString>(UEnum::GetValueAsString(ResourcePurity)));
+	JResourceNode->Values.Add("ResourceForm", MakeShared<FJsonValueString>(ResourceForm));
+	JResourceNode->Values.Add("NodeType", MakeShared<FJsonValueString>(ResourceNodeType));
+	JResourceNode->Values.Add("Exploited", MakeShared<FJsonValueBoolean>(ResourceNode->IsOccupied()));
+	JResourceNode->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(Actor)));
+
+	if (bIncludeFeatures) {
+		JResourceNode->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(ResourceNode, ResourceName, "Resource Node")));
+	}
+
+	return JResourceNode;
+}
+
 TSharedPtr<FJsonValue> ConvertStringToFJsonValue(const FString& JsonString)
 {
 	TSharedPtr<FJsonValue> FJsonValue;
