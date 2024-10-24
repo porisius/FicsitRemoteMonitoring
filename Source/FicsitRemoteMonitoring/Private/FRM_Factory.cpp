@@ -341,43 +341,13 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getStorageInv(UObject* WorldContext
 
 		TSharedPtr<FJsonObject> JStorage = MakeShared<FJsonObject>();
 
-		TArray<FInventoryStack> InventoryStacks;
-		StorageContainer->GetStorageInventory()->GetInventoryStacks(InventoryStacks);
-
-		TMap<TSubclassOf<UFGItemDescriptor>, int32> Storage;
-
-		for (FInventoryStack Inventory : InventoryStacks) {
-
-			auto ItemClass = Inventory.Item.GetItemClass();
-			auto Amount = Inventory.NumItems;
-
-			if (Storage.Contains(ItemClass)) {
-				Storage.Add(ItemClass) = Amount + Storage.FindRef(ItemClass);
-			}
-			else {
-				Storage.Add(ItemClass) = Amount;
-			};
-
-		};
-
-		TArray<TSharedPtr<FJsonValue>> JInventoryArray;
-
-		for (const TPair< TSubclassOf<UFGItemDescriptor>, int32> StorageStack : Storage) {
-
-			TSharedPtr<FJsonObject> JInventory = MakeShared<FJsonObject>();
-
-			JInventory->Values.Add("Name", MakeShared<FJsonValueString>((StorageStack.Key.GetDefaultObject()->mDisplayName).ToString()));
-			JInventory->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(StorageStack.Key->GetClass())));
-			JInventory->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageStack.Value));
-
-			JInventoryArray.Add(MakeShared<FJsonValueObject>(JInventory));
-
-		};
+		// get inventory
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> StorageInventory = UFRM_Library::GetGroupedInventoryItems(StorageContainer->GetStorageInventory());
 
 		JStorage->Values.Add("Name", MakeShared<FJsonValueString>(StorageContainer->mDisplayName.ToString()));
 		JStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(StorageContainer->GetClass())));
 		JStorage->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(StorageContainer)));
-		JStorage->Values.Add("Inventory", MakeShared<FJsonValueArray>(JInventoryArray));
+		JStorage->Values.Add("Inventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(StorageInventory)));
 		JStorage->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(StorageContainer, StorageContainer->mDisplayName.ToString(), TEXT("Storage Container"))));
 
 		JStorageArray.Add(MakeShared<FJsonValueObject>(JStorage));
@@ -400,46 +370,15 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getWorldInv(UObject* WorldContext) 
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> StorageTMap;
 
 	for (AFGBuildable* Buildable : Buildables) {
-
 		AFGBuildableStorage* StorageContainer = Cast<AFGBuildableStorage>(Buildable);
 		TSharedPtr<FJsonObject> JStorage = MakeShared<FJsonObject>();
 
-		TArray<FInventoryStack> InventoryStacks;
-		StorageContainer->GetStorageInventory()->GetInventoryStacks(InventoryStacks);
+		// get inventory of the storage container
+		UFRM_Library::GetGroupedInventoryItems(StorageContainer->GetStorageInventory(), StorageTMap);
+	}
 
-		for (FInventoryStack Inventory : InventoryStacks) {
-
-			auto ItemClass = Inventory.Item.GetItemClass();
-			auto Amount = Inventory.NumItems;
-
-			if (StorageTMap.Contains(ItemClass)) {
-				StorageTMap.Add(ItemClass) = Amount + StorageTMap.FindRef(ItemClass);
-			}
-			else {
-				StorageTMap.Add(ItemClass) = Amount;
-			};
-
-		};
-
-	};
-
-	TArray<TSharedPtr<FJsonValue>> JInventoryArray;
-
-	for (const TPair< TSubclassOf<UFGItemDescriptor>, int32> StorageStack : StorageTMap) {
-
-		TSharedPtr<FJsonObject> JInventory = MakeShared<FJsonObject>();
-
-		JInventory->Values.Add("Name", MakeShared<FJsonValueString>((StorageStack.Key.GetDefaultObject()->mDisplayName).ToString()));
-		JInventory->Values.Add("ClassName", MakeShared<FJsonValueString>(StorageStack.Key->GetClass()->GetName()));
-		JInventory->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageStack.Value));
-
-		JInventoryArray.Add(MakeShared<FJsonValueObject>(JInventory));
-
-	};
-
-	return JInventoryArray;
-
-};
+	return UFRM_Library::GetInventoryJSON(StorageTMap);
+}
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext) {
 
