@@ -203,39 +203,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 				case ETrainPlatformDockingStatus::ETPDS_WaitingToStart				:	StatusString = TEXT("Waiting To Start");
 			}
 
-			TSharedPtr<FJsonObject> JStorage = MakeShared<FJsonObject>();
-			TArray<FInventoryStack> InventoryStacks;
-			TrainPlatformCargo->GetInventory()->GetInventoryStacks(InventoryStacks);
-
-			TMap<TSubclassOf<UFGItemDescriptor>, int32> Storage;
-
-			for (FInventoryStack Inventory : InventoryStacks) {
-
-				auto ItemClass = Inventory.Item.GetItemClass();
-				auto Amount = Inventory.NumItems;
-
-				if (Storage.Contains(ItemClass)) {
-					Storage.Add(ItemClass) = Amount + Storage.FindRef(ItemClass);
-				}
-				else {
-					Storage.Add(ItemClass) = Amount;
-				};
-
-			};
-
-			TArray<TSharedPtr<FJsonValue>> JInventoryArray;
-
-			for (const TPair< TSubclassOf<UFGItemDescriptor>, int32> StorageStack : Storage) {
-
-				TSharedPtr<FJsonObject> JInventory = MakeShared<FJsonObject>();
-
-				JInventory->Values.Add("Name", MakeShared<FJsonValueString>((StorageStack.Key.GetDefaultObject()->mDisplayName).ToString()));
-				JInventory->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(StorageStack.Key->GetClass())));
-				JInventory->Values.Add("Amount", MakeShared<FJsonValueNumber>(StorageStack.Value));
-
-				JInventoryArray.Add(MakeShared<FJsonValueObject>(JInventory));
-
-			};
+			// get train platorm inventory
+			TMap<TSubclassOf<UFGItemDescriptor>, int32> TrainPlatformInventory = UFRM_Library::GetGroupedInventoryItems(TrainPlatformCargo->GetInventory());
 
 			JTrainPlatform->Values.Add("Name", MakeShared<FJsonValueString>(TrainPlatformCargo->mDisplayName.ToString()));
 			JTrainPlatform->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(TrainPlatformCargo->GetClass())));
@@ -247,7 +216,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 			JTrainPlatform->Values.Add("LoadingMode", MakeShared<FJsonValueString>(LoadMode));
 			JTrainPlatform->Values.Add("LoadingStatus", MakeShared<FJsonValueString>(LoadingStatus));
 			JTrainPlatform->Values.Add("DockingStatus", MakeShared<FJsonValueString>(StatusString));
-			JTrainPlatform->Values.Add("Inventory", MakeShared<FJsonValueArray>(JInventoryArray));
+			JTrainPlatform->Values.Add("Inventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(TrainPlatformInventory)));
 
 			JTrainPlatformArray.Add(MakeShared<FJsonValueObject>(JTrainPlatform));
 		}

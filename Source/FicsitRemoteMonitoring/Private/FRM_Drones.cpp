@@ -17,110 +17,14 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 		AFGBuildableDroneStation* DroneStation = Cast<AFGBuildableDroneStation>(Buildable);
 		TSharedPtr<FJsonObject> JDroneStation = MakeShared<FJsonObject>();
 
-		TArray<FInventoryStack> FuelInventoryStacks;
-		UFGInventoryComponent* FuelInventory = DroneStation->GetFuelInventory();
-		TMap<TSubclassOf<UFGItemDescriptor>, float> FuelInventoryTMap;
-		FuelInventory->GetInventoryStacks(FuelInventoryStacks);
-		for (FInventoryStack FuelInventoryStack : FuelInventoryStacks) {
+		// get fuel inventory
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> FuelInventory = UFRM_Library::GetGroupedInventoryItems(DroneStation->GetFuelInventory());
 
-			auto ItemClass = FuelInventoryStack.Item.GetItemClass();
-			auto Amount = FuelInventoryStack.NumItems;
+		// get input inventory
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> InputInventory = UFRM_Library::GetGroupedInventoryItems(DroneStation->GetInputInventory());
 
-			if (FuelInventoryTMap.Contains(ItemClass)) {
-				FuelInventoryTMap.Add(ItemClass) = Amount + FuelInventoryTMap.FindRef(ItemClass);
-			}
-			else {
-				FuelInventoryTMap.Add(ItemClass) = Amount;
-			};
-
-		};
-
-		TArray<TSharedPtr<FJsonValue>> JFuelStorageArray;
-
-		TArray<TSubclassOf<UFGItemDescriptor>> ClassNames;
-		UFGBlueprintFunctionLibrary::GetAllDescriptorsSorted(WorldContext->GetWorld(), ClassNames);
-
-		for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
-
-			if (FuelInventoryTMap.Contains(ClassName))
-			{
-				TSharedPtr<FJsonObject> JFuelStorage = MakeShared<FJsonObject>();
-
-				JFuelStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-				JFuelStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ClassName->GetClass())));
-				JFuelStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(FuelInventoryTMap.FindRef(ClassName)));
-
-				JFuelStorageArray.Add(MakeShared<FJsonValueObject>(JFuelStorage));
-			};
-		};
-
-		TArray<FInventoryStack> InputStacks;
-		UFGInventoryComponent* StationInputInventory = DroneStation->GetInputInventory();
-		TMap<TSubclassOf<UFGItemDescriptor>, float> InputInventory;
-		StationInputInventory->GetInventoryStacks(InputStacks);
-		for (FInventoryStack Inventory : InputStacks) {
-
-			auto ItemClass = Inventory.Item.GetItemClass();
-			auto Amount = Inventory.NumItems;
-
-			if (InputInventory.Contains(ItemClass)) {
-				InputInventory.Add(ItemClass) = Amount + InputInventory.FindRef(ItemClass);
-			}
-			else {
-				InputInventory.Add(ItemClass) = Amount;
-			};
-
-		};
-
-		TArray<TSharedPtr<FJsonValue>> JInputStorageArray;
-
-		for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
-
-			if (InputInventory.Contains(ClassName))
-			{
-				TSharedPtr<FJsonObject> JInputStorage = MakeShared<FJsonObject>();
-
-				JInputStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-				JInputStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ClassName->GetClass())));
-				JInputStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(InputInventory.FindRef(ClassName)));
-
-				JInputStorageArray.Add(MakeShared<FJsonValueObject>(JInputStorage));
-			};
-		};
-
-		TArray<FInventoryStack> OutputStacks;
-		UFGInventoryComponent* StationOutputInventory = DroneStation->GetOutputInventory();
-		TMap<TSubclassOf<UFGItemDescriptor>, float> OutputInventory;
-		StationOutputInventory->GetInventoryStacks(OutputStacks);
-		for (FInventoryStack Inventory : OutputStacks) {
-
-			auto ItemClass = Inventory.Item.GetItemClass();
-			auto Amount = Inventory.NumItems;
-
-			if (OutputInventory.Contains(ItemClass)) {
-				OutputInventory.Add(ItemClass) = Amount + OutputInventory.FindRef(ItemClass);
-			}
-			else {
-				OutputInventory.Add(ItemClass) = Amount;
-			};
-
-		};
-
-		TArray<TSharedPtr<FJsonValue>> JOutputStorageArray;
-
-		for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
-
-			if (OutputInventory.Contains(ClassName))
-			{
-				TSharedPtr<FJsonObject> JInputStorage = MakeShared<FJsonObject>();
-
-				JInputStorage->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ClassName).ToString()));
-				JInputStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ClassName->GetClass())));
-				JInputStorage->Values.Add("Amount", MakeShared<FJsonValueNumber>(InputInventory.FindRef(ClassName)));
-
-				JInputStorageArray.Add(MakeShared<FJsonValueObject>(JInputStorage));
-			};
-		};
+		// get output inventory
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> OutputInventory = UFRM_Library::GetGroupedInventoryItems(DroneStation->GetOutputInventory());
 
 		AFGDroneStationInfo* StationInfo = DroneStation->GetInfo();
 
@@ -186,8 +90,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 		JDroneStation->Values.Add("Name", MakeShared<FJsonValueString>(DroneStation->mDisplayName.ToString()));
 		JDroneStation->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(DroneStation->GetClass())));
 		JDroneStation->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(DroneStation)));
-		JDroneStation->Values.Add("InputInventory", MakeShared<FJsonValueArray>(JInputStorageArray));
-		JDroneStation->Values.Add("OutputInventory", MakeShared<FJsonValueArray>(JOutputStorageArray));
+		JDroneStation->Values.Add("InputInventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(InputInventory)));
+		JDroneStation->Values.Add("OutputInventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(OutputInventory)));
+		JDroneStation->Values.Add("FuelInventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(FuelInventory)));
 		JDroneStation->Values.Add("PairedStation", MakeShared<FJsonValueString>(PairedStation));
 		JDroneStation->Values.Add("ConnectedStations", MakeShared<FJsonValueArray>(JConnectedStationArray));
 		JDroneStation->Values.Add("DroneStatus", MakeShared<FJsonValueString>(FormString));

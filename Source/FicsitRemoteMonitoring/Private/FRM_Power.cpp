@@ -12,7 +12,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getPower(UObject* WorldContext)
 
 	for (UFGCircuitGroup* CircuitGroup : CircuitSubsystem->mCircuitGroups) {
 		UFGPowerCircuitGroup* PowerGroup = Cast<UFGPowerCircuitGroup>(CircuitGroup);
-		UFGPowerCircuit* PowerCircuit = (PowerGroup->mCircuits[0]);
+		UFGPowerCircuit* PowerCircuit = PowerGroup->mCircuits[0];
 		UFGCircuit* Circuit = Cast<UFGCircuit>(PowerCircuit);
 
 		TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
@@ -150,34 +150,11 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 
 		};
 
-		TArray<TSharedPtr<FJsonValue>> JWasteArray;
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> WasteInventory;
 		FString NuclearString = "";
 
 		if (IsValid(GeneratorNuclear)) {
-			
-			TArray<FInventoryStack> WasteStacks;
-
-			UFGInventoryComponent* InventoryComponent = GeneratorNuclear->mOutputInventory;
-			InventoryComponent->GetInventoryStacks(WasteStacks);
-
-			for (FInventoryStack WasteStack : WasteStacks) {
-
-				TSharedPtr<FJsonObject> JWaste = MakeShared<FJsonObject>();
-
-				FFGDynamicStruct ItemState;
-				TSubclassOf<UFGItemDescriptor> WasteClass;
-				FInventoryItem WasteClassItem;
-				int32 Amount = 0;
-
-				UFGInventoryLibrary::BreakInventoryStack(WasteStack, Amount, WasteClassItem);
-				UFGInventoryLibrary::BreakInventoryItem(WasteClassItem, WasteClass, ItemState);
-
-				JWaste->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(WasteClass).ToString()));
-				JWaste->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(WasteClass.Get())));
-				JWaste->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
-
-				JWasteArray.Add(MakeShared<FJsonValueObject>(JWaste));
-			};
+			WasteInventory = UFRM_Library::GetGroupedInventoryItems(GeneratorNuclear->mOutputInventory);
 
 			switch (GeneratorNuclear->GetCurrentGeneratorNuclearWarning())
 			{
@@ -187,7 +164,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 					break;
 				case EGeneratorNuclearWarning::GNW_MissmatchBetweenInputAndWaste	:	NuclearString = TEXT("Mismatch Between Input And Waste");
 			}
-
 		}
 
 		float GeoMinPower = 0;
@@ -233,7 +209,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 		JGenerator->Values.Add("GeoMinPower", MakeShared<FJsonValueNumber>(GeoMinPower));
 		JGenerator->Values.Add("GeoMaxPower", MakeShared<FJsonValueNumber>(GeoMaxPower));
 		JGenerator->Values.Add("AvailableFuel", MakeShared<FJsonValueArray>(JFuelArray));
-		JGenerator->Values.Add("WasteInventory", MakeShared<FJsonValueArray>(JWasteArray));
+		JGenerator->Values.Add("WasteInventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(WasteInventory)));
 		JGenerator->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Generator), Generator->mDisplayName.ToString(), Generator->mDisplayName.ToString())));
 
 		JGeneratorArray.Add(MakeShared<FJsonValueObject>(JGenerator));
