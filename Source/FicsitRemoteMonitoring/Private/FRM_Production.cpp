@@ -22,24 +22,16 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 			auto ProdCycle = UKismetMathLibrary::SafeDivide(60, Manufacturer->GetProductionCycleTimeForRecipe(Manufacturer->GetCurrentRecipe()));
 			auto CurrentPotential = Manufacturer->GetCurrentPotential();
 			auto Productivity = Manufacturer->GetProductivity();
-
+			auto ProductionBoost = Manufacturer->mProductionShardBoostMultiplier;
+			
 			for (FItemAmount Product : CurrentRecipe.GetDefaultObject()->GetProducts()) {
 
 				auto ItemClass = Product.ItemClass;
 				auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Product.Amount, UFGItemDescriptor::GetForm(Product.ItemClass));
 		
-				auto CurrentProd = RecipeAmount * ProdCycle * Productivity * CurrentPotential;
-				auto MaxProd = RecipeAmount * ProdCycle * CurrentPotential;
-
-				TArray<int32> Sloops;
-				Manufacturer->GetSlotsForPowerShardType(EPowerShardType::PST_ProductionBoost, Sloops);
+				auto CurrentProd = RecipeAmount * ProdCycle * Productivity * CurrentPotential * ProductionBoost;
+				auto MaxProd = RecipeAmount * ProdCycle * CurrentPotential * ProductionBoost;
 								
-				if (Sloops.Num() != 0)
-				{
-					CurrentProd = CurrentProd * 2;
-					MaxProd = MaxProd *2;
-				}
-				
 				if (CurrentProduced.Contains(ItemClass)) {
 					CurrentProduced.Add(ItemClass) = CurrentProd + CurrentProduced.FindRef(ItemClass);
 					TotalProduced.Add(ItemClass) = MaxProd + TotalProduced.FindRef(ItemClass);
