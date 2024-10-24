@@ -114,13 +114,38 @@ bool UFRM_Library::IsIntInRange(int32 Number, int32 LowerBound, int32 UpperBound
 	return bIsMoreThanLowerBound && bIsLessThanUpperBound;
 }
 
+TMap<TSubclassOf<UFGItemDescriptor>, int32> UFRM_Library::GetGroupedInventoryItems(const UFGInventoryComponent* Inventory)
+{
+	TArray<FInventoryStack> InventoryStacks;
+
+	Inventory->GetInventoryStacks(InventoryStacks);
+
+	return GetGroupedInventoryItems(InventoryStacks);
+}
+
+void UFRM_Library::GetGroupedInventoryItems(const UFGInventoryComponent* Inventory, TMap<TSubclassOf<UFGItemDescriptor>, int32>& InventoryItems)
+{
+	TArray<FInventoryStack> InventoryStacks;
+
+	Inventory->GetInventoryStacks(InventoryStacks);
+
+	GetGroupedInventoryItems(InventoryStacks, InventoryItems);
+}
+
 TMap<TSubclassOf<UFGItemDescriptor>, int32> UFRM_Library::GetGroupedInventoryItems(const TArray<FInventoryStack>& InventoryStacks)
 {
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> InventoryItems;
 
+	GetGroupedInventoryItems(InventoryStacks, InventoryItems);
+
+	return InventoryItems;
+}
+
+void UFRM_Library::GetGroupedInventoryItems(const TArray<FInventoryStack>& InventoryStacks, TMap<TSubclassOf<UFGItemDescriptor>, int32>& InventoryItems)
+{
 	for (FInventoryStack Inventory : InventoryStacks) {
 		auto ItemClass = Inventory.Item.GetItemClass();
-		auto Amount = Inventory.NumItems;
+		const auto Amount = Inventory.NumItems;
 
 		if (InventoryItems.Contains(ItemClass)) {
 			InventoryItems.Add(ItemClass) = Amount + InventoryItems.FindRef(ItemClass);
@@ -129,8 +154,6 @@ TMap<TSubclassOf<UFGItemDescriptor>, int32> UFRM_Library::GetGroupedInventoryIte
 			InventoryItems.Add(ItemClass) = Amount;
 		}
 	}
-
-	return InventoryItems;
 }
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Library::GetInventoryJSON(const TMap<TSubclassOf<UFGItemDescriptor>, int32>& Items)
