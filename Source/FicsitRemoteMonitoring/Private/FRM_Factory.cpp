@@ -1,5 +1,4 @@
 #include "FRM_Factory.h"
-#include <NiagaraPerfBaseline.h>
 #include <FicsitRemoteMonitoring.h>
 
 #undef GetForm
@@ -210,7 +209,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 
 	for (AFGBuildableHubTerminal* HubTerminal : Buildables) {
 
-		//AFGBuildableHubTerminal* HubTerminal = Cast<AFGBuildableHubTerminal>(Buildable);
 		TSharedPtr<FJsonObject> JHubTerminal = MakeShared<FJsonObject>();
 		TSubclassOf<UFGSchematic> ActiveSchematic = SchematicManager->GetActiveSchematic();
 		FString SchematicName = UFGSchematic::GetSchematicDisplayName(ActiveSchematic).ToString();
@@ -218,8 +216,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 		
 		TSharedPtr<FJsonObject> JSchematic = MakeShared<FJsonObject>();
 		TArray<TSharedPtr<FJsonValue>> JRecipeArray;
+		TArray<TSharedPtr<FJsonValue>> JActiveMilestoneArray;
 
-		if (IsValid(ActiveSchematic)) {			
+		if (IsValid(ActiveSchematic)) {
 
 			TArray<TSubclassOf<UFGRecipe>> Recipes;
 
@@ -233,25 +232,55 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 			FString SchematicType;
 
 			switch (UFGSchematic::GetType(ActiveSchematic)) {
-				case ESchematicType::EST_Alternate: SchematicType = TEXT("Alternate");
-					break;
-				case ESchematicType::EST_Cheat: SchematicType = TEXT("Cheat");
-					break;
-				case ESchematicType::EST_Custom: SchematicType = TEXT("Custom");
-					break;
-				case ESchematicType::EST_HardDrive: SchematicType = TEXT("Hard Drive");
-					break;
-				case ESchematicType::EST_MAM: SchematicType = TEXT("M.A.M.");
-					break;
-				case ESchematicType::EST_Milestone: SchematicType = TEXT("Milestone");
-					break;
-				case ESchematicType::EST_Prototype: SchematicType = TEXT("Prototype");
-					break;
-				case ESchematicType::EST_ResourceSink: SchematicType = TEXT("Resource Sink");
-					break;
-				case ESchematicType::EST_Story: SchematicType = TEXT("Story");
-					break;
-				case ESchematicType::EST_Tutorial: SchematicType = TEXT("Tutorial");
+			case ESchematicType::EST_Alternate: SchematicType = TEXT("Alternate");
+				break;
+			case ESchematicType::EST_Cheat: SchematicType = TEXT("Cheat");
+				break;
+			case ESchematicType::EST_Custom: SchematicType = TEXT("Custom");
+				break;
+			case ESchematicType::EST_HardDrive: SchematicType = TEXT("Hard Drive");
+				break;
+			case ESchematicType::EST_MAM: SchematicType = TEXT("M.A.M.");
+				break;
+			case ESchematicType::EST_Milestone: SchematicType = TEXT("Milestone");
+				break;
+			case ESchematicType::EST_Prototype: SchematicType = TEXT("Prototype");
+				break;
+			case ESchematicType::EST_ResourceSink: SchematicType = TEXT("Resource Sink");
+				break;
+			case ESchematicType::EST_Story: SchematicType = TEXT("Story");
+				break;
+			case ESchematicType::EST_Tutorial: SchematicType = TEXT("Tutorial");
+				break;
+			default : SchematicType = TEXT("Unknown");
+			}
+
+			TArray<FItemAmount> ItemsPaid = SchematicManager->GetPaidOffCostFor(ActiveSchematic);
+			TArray<FItemAmount> ItemsCost = UFGSchematic::GetCost(ActiveSchematic);
+			
+			for (FItemAmount ItemCost :ItemsCost) {
+
+				TSharedPtr<FJsonObject> JActiveMilestone = MakeShared<FJsonObject>();
+
+				//Probably an easier way of doing this...
+				int32 MilestonePaid = 0;
+				for (FItemAmount ItemPaid : ItemsPaid)
+				{
+					if (ItemCost.ItemClass == ItemPaid.ItemClass)
+					{
+						MilestonePaid = ItemPaid.Amount;
+						break;
+					}
+				}
+				
+				JActiveMilestone->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ItemCost.ItemClass).ToString()));
+				JActiveMilestone->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ItemCost.ItemClass)));
+				JActiveMilestone->Values.Add("Amount", MakeShared<FJsonValueNumber>(MilestonePaid));
+				JActiveMilestone->Values.Add("RemainingCost", MakeShared<FJsonValueNumber>(ItemCost.Amount - MilestonePaid));
+				JActiveMilestone->Values.Add("TotalCost", MakeShared<FJsonValueNumber>(ItemCost.Amount));
+				
+				JActiveMilestoneArray.Add(MakeShared<FJsonValueObject>(JActiveMilestone));
+		
 			}
 
 			JSchematic->Values.Add("Name", MakeShared<FJsonValueString>(UFGSchematic::GetSchematicDisplayName(ActiveSchematic).ToString()));
@@ -272,7 +301,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 		if (SchematicManager->GetTimeUntilShipReturn() > 0) {
 			UFGBlueprintFunctionLibrary::SecondsToTimeString(SchematicManager->GetTimeUntilShipReturn());
 		}		
-
+		
 		JHubTerminal->Values.Add("Name", MakeShared<FJsonValueString>(HubTerminal->mDisplayName.ToString()));
 		JHubTerminal->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(HubTerminal->GetClass())));
 		JHubTerminal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(HubTerminal))));
