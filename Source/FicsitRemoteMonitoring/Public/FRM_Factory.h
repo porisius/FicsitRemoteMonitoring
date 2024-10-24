@@ -24,6 +24,7 @@
 #include "Resources/FGResourceNodeBase.h"
 #include "Resources/FGResourceNodeFrackingCore.h"
 #include "Resources/FGResourceNodeFrackingSatellite.h"
+#include "FGGamePhaseManager.h"
 #include "Buildables/FGBuildableStorage.h"
 #include "ModLoading/ModLoadingLibrary.h"
 #include "FGSchematicManager.h"
@@ -63,4 +64,5 @@ public:
 
 	friend class AFGBuildableConveyorBase;
 	friend class AFGBuildableTradingPost;
+	friend class AFGSchematicManager;
 };
