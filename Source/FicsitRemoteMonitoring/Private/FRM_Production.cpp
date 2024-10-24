@@ -1,6 +1,8 @@
 #include "FRM_Production.h"
 #include <FicsitRemoteMonitoring.h>
 
+#include "FGPowerShardDescriptor.h"
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldContext) {
 
 	TMap<TSubclassOf<UFGItemDescriptor>, float> CurrentConsumed;
@@ -25,9 +27,19 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 
 				auto ItemClass = Product.ItemClass;
 				auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Product.Amount, UFGItemDescriptor::GetForm(Product.ItemClass));
+		
 				auto CurrentProd = RecipeAmount * ProdCycle * Productivity * CurrentPotential;
 				auto MaxProd = RecipeAmount * ProdCycle * CurrentPotential;
 
+				TArray<int32> Sloops;
+				Manufacturer->GetSlotsForPowerShardType(EPowerShardType::PST_ProductionBoost, Sloops);
+								
+				if (Sloops.Num() != 0)
+				{
+					CurrentProd = CurrentProd * 2;
+					MaxProd = MaxProd *2;
+				}
+				
 				if (CurrentProduced.Contains(ItemClass)) {
 					CurrentProduced.Add(ItemClass) = CurrentProd + CurrentProduced.FindRef(ItemClass);
 					TotalProduced.Add(ItemClass) = MaxProd + TotalProduced.FindRef(ItemClass);
