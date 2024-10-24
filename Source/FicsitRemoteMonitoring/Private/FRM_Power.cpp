@@ -24,7 +24,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getPower(UObject* WorldContext)
 			JCircuits.Add(MakeShared<FJsonValueNumber>(PCircuit->GetCircuitID()));
 		}
 
-		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
+		JCircuit->Values.Add("CircuitGroupID", MakeShared<FJsonValueNumber>(CircuitID));
 		JCircuit->Values.Add("PowerProduction", MakeShared<FJsonValueNumber>(PowerGroup->mBaseProduction));
 		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerGroup->mConsumption));
 		JCircuit->Values.Add("PowerCapacity", MakeShared<FJsonValueNumber>(PowerGroup->mMaximumProductionCapacity));
