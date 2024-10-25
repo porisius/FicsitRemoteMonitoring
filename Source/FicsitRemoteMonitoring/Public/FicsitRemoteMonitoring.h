@@ -404,6 +404,11 @@ public:
 	}
 
 	UFUNCTION()
+	TArray<UBlueprintJsonValue*> getResourceSinkBuilding(UObject* WorldContext) {
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getResourceSinkBuilding(WorldContext));
+	}
+
+	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getResourceWell(UObject* WorldContext) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getResourceNode(WorldContext, AFGResourceNode::StaticClass()));
 	}

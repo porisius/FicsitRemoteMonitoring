@@ -155,27 +155,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 			JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
 			JIngredientsArray.Add(MakeShared<FJsonValueObject>(JIngredients));
 		};
-		
-		TArray<TSharedPtr<FJsonValue>> JCircuitArray;
-
-		TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
-
-		int32 CircuitGroupID = -1;
-		int32 CircuitID = -1;
-		float PowerConsumed = -1;
-
-		UFGPowerCircuit* PowerCircuit = Manufacturer->GetPowerInfo()->GetPowerCircuit();
-
-		if (IsValid(PowerCircuit)) {
-			CircuitGroupID = PowerCircuit->GetCircuitGroupID();
-			CircuitID = PowerCircuit->GetCircuitID();
-			PowerConsumed = Manufacturer->GetPowerInfo()->GetActualConsumption();
-		}
-
-		JCircuit->Values.Add("CircuitGroupID", MakeShared<FJsonValueNumber>(CircuitGroupID));
-		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
-		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerConsumed));
-		JCircuitArray.Add(MakeShared<FJsonValueObject>(JCircuit));
 
 		JFactory->Values.Add("ID", MakeShared<FJsonValueString>(Manufacturer->GetName()));
 		JFactory->Values.Add("Name", MakeShared<FJsonValueString>(Manufacturer->mDisplayName.ToString()));
@@ -190,8 +169,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 		JFactory->Values.Add("IsConfigured", MakeShared<FJsonValueBoolean>(Manufacturer->IsConfigured()));
 		JFactory->Values.Add("IsProducing", MakeShared<FJsonValueBoolean>(Manufacturer->IsProducing()));
 		JFactory->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(Manufacturer->IsProductionPaused()));
-		JFactory->Values.Add("PowerInfo", MakeShared<FJsonValueArray>(JCircuitArray));
-		JFactory->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
+		JFactory->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Manufacturer->GetPowerInfo())));
 		JFactory->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Manufacturer), Manufacturer->mDisplayName.ToString(), Manufacturer->mDisplayName.ToString())));
 
 		JFactoryArray.Add(MakeShared<FJsonValueObject>(JFactory));
@@ -508,20 +486,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 
 		JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
 
-		TArray<TSharedPtr<FJsonValue>> JCircuitArray;
-
-		TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
-		int32 CircuitID = -1;
-		float PowerConsumed = -1;
-
 		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
 		fgcheck(ModSubsystem);
-
-		ModSubsystem->CircuitID_BIE(Extractor, CircuitID, PowerConsumed);
-
-		JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
-		JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerConsumed));
-		JCircuitArray.Add(MakeShared<FJsonValueObject>(JCircuit));
 
 		JExtractor->Values.Add("Name", MakeShared<FJsonValueString>(Extractor->mDisplayName.ToString()));
 		JExtractor->Values.Add("ClassName", MakeShared<FJsonValueString>(Extractor->GetClass()->GetName()));
@@ -533,8 +499,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 		JExtractor->Values.Add("IsConfigured", MakeShared<FJsonValueBoolean>(Extractor->IsConfigured()));
 		JExtractor->Values.Add("IsProducing", MakeShared<FJsonValueBoolean>(Extractor->IsProducing()));
 		JExtractor->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(Extractor->IsProductionPaused()));
-		JExtractor->Values.Add("PowerInfo", MakeShared<FJsonValueArray>(JCircuitArray));
-		JExtractor->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
+		JExtractor->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Extractor->GetPowerInfo())));
 		JExtractor->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Extractor), Extractor->mDisplayName.ToString(), Extractor->mDisplayName.ToString())));
 
 		JExtractorArray.Add(MakeShared<FJsonValueObject>(JExtractor));
@@ -681,6 +646,22 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 	}
 
 	return JRadarTowerArray;
+}
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceSinkBuilding(UObject* WorldContext) {
+
+	TArray<TSharedPtr<FJsonValue>> JResourceSinkBuildingArray;
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	TArray<AFGBuildableResourceSink*> Buildables;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableResourceSink>(Buildables);
+
+	for (AFGBuildableResourceSink* Sink : Buildables) {
+		TSharedPtr<FJsonObject> JSinkBuilding = MakeShared<FJsonObject>();
+		JSinkBuilding->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Sink)));
+		JSinkBuilding->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Sink->GetPowerInfo())));
+		JResourceSinkBuildingArray.Add(MakeShared<FJsonValueObject>(JSinkBuilding));
+	}
+	return JResourceSinkBuildingArray;
 }
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldContext) {

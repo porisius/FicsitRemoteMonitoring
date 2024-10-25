@@ -65,6 +65,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getTruckStation(UObject* WorldCont
 		JTruckStation->Values.Add("Inventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(Inventory)));
 		JTruckStation->Values.Add("FuelInventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(FuelInventory)));
 		JTruckStation->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(TruckStation, TruckStation->mDisplayName.ToString(), "Truck Station")));
+		JTruckStation->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(TruckStation->GetPowerInfo())));
 
 		JTruckStationArray.Add(MakeShared<FJsonValueObject>(JTruckStation));
 	}
