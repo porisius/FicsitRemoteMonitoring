@@ -2,6 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "FGBuildableTrainPlatformEmpty.h"
+#include "FGTrainPlatformConnection.h"
 #include "FGRailroadSubsystem.h"
 #include "Buildables\FGBuildableRailroadStation.h"
 #include "Buildables\FGBuildableTrainPlatform.h"
