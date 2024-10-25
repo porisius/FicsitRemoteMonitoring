@@ -448,6 +448,11 @@ public:
 	}
 
 	UFUNCTION()
+	TArray<UBlueprintJsonValue*> getSessionInfo(UObject* WorldContext) {
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getSessionInfo(WorldContext));
+	}
+
+	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getSpaceElevator(UObject* WorldContext) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getSpaceElevator(WorldContext));
 	}

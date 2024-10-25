@@ -542,6 +542,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getResourceSink", true, false, this->Get(GetWorld()), FName("getResourceSink"));
     RegisterEndpoint("getResourceSinkBuilding", true, false, this->Get(GetWorld()), FName("getResourceSinkBuilding"));
 	RegisterEndpoint("getResourceWell", true, true, this->Get(GetWorld()), FName("getResourceWell"));
+    RegisterEndpoint("getSessionInfo", true, true, true, this->Get(GetWorld()), FName("getSessionInfo"));
 	RegisterEndpoint("getSchematics", true, true, this->Get(GetWorld()), FName("getSchematics"));
 	RegisterEndpoint("getSinkList", true, true, this->Get(GetWorld()), FName("getSinkList"));
 	RegisterEndpoint("getSmelter", false, false, this->Get(GetWorld()), FName("getSmelter"));

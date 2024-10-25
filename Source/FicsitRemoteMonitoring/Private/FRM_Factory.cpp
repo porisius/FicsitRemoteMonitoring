@@ -766,3 +766,17 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPipes(UObject* WorldContext) {
 
 	return JPipeArray;
 };
+
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSessionInfo(UObject* WorldContext) {
+
+	TSharedPtr<FJsonObject> JSessionInfo = MakeShared<FJsonObject>();
+	auto gameState = WorldContext->GetWorld()->GetGameState<AFGGameState>();
+	FString SessionName = gameState->GetSessionName();
+	JSessionInfo->Values.Add("SessionName", MakeShared<FJsonValueString>(SessionName));
+
+	TArray<TSharedPtr<FJsonValue>> JSessionInfoArray;
+	JSessionInfoArray.Add(MakeShared<FJsonValueObject>(JSessionInfo));
+
+	return JSessionInfoArray;
+}
