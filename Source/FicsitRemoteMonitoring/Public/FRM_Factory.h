@@ -16,6 +16,7 @@
 #include "Buildables/FGBuildableManufacturer.h"
 #include "Buildables/FGBuildableManufacturerVariablePower.h"
 #include "Buildables/FGBuildableResourceExtractor.h"
+#include "Buildables/FGBuildableResourceSink.h"
 #include "Buildables/FGBuildableSpaceElevator.h"
 #include "Buildables/FGBuildableRadarTower.h"
 #include "FGScannableSubsystem.h"
@@ -55,6 +56,7 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getWorldInv(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getDropPod(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getResourceExtractor(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getResourceSinkBuilding(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getPipes(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getModList(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getResourceNode(UObject* WorldContext, UClass* ResourceActor);
