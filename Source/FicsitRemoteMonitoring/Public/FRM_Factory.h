@@ -10,6 +10,7 @@
 #include "Buildables/FGBuildablePipeline.h"
 #include "FGPipeConnectionComponent.h"
 #include "FGFactoryConnectionComponent.h"
+#include "FGGameState.h"
 #include "Buildables/FGBuildableFactory.h"
 #include "Buildables/FGBuildableHubTerminal.h"
 #include "Buildables/FGBuildableTradingPost.h"
@@ -63,6 +64,7 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getRadarTower(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getSpaceElevator(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getCloudInv(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getSessionInfo(UObject* WorldContext);
 
 	friend class AFGBuildableConveyorBase;
 	friend class AFGBuildableTradingPost;
