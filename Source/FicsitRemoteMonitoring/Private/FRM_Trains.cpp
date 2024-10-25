@@ -20,7 +20,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 
 		float TTotalMass = 0.0;
 		float TPayloadMass = 0.0;
-		float TMaxPlayloadMass = 0.0;
+		float TMaxPayloadMass = 0.0;
 		float ForwardSpeed = 0.0;
 		float ThrottlePercent = 0.0;
 		FString TrainStation = TEXT("No Station");
@@ -100,7 +100,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 
 			TTotalMass = TTotalMass + RailcarVehicleMovement->GetMass();
 			TPayloadMass = TPayloadMass + RailcarVehicleMovement->GetPayloadMass();
-			TMaxPlayloadMass = TMaxPlayloadMass + RailcarVehicleMovement->GetMaxPayloadMass();
+			TMaxPayloadMass = TMaxPayloadMass + RailcarVehicleMovement->GetMaxPayloadMass();
 
 			JRailcarsArray.Add(MakeShared<FJsonValueObject>(JRailcars));
 		};
@@ -121,7 +121,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 		JTrain->Values.Add("location", MakeShared<FJsonValueObject>(TrainLocation));
 		JTrain->Values.Add("TotalMass", MakeShared<FJsonValueNumber>(TTotalMass));
 		JTrain->Values.Add("PayloadMass", MakeShared<FJsonValueNumber>(TPayloadMass));
-		JTrain->Values.Add("MaxPayloadMass", MakeShared<FJsonValueNumber>(TMaxPlayloadMass));
+		JTrain->Values.Add("MaxPayloadMass", MakeShared<FJsonValueNumber>(TMaxPayloadMass));
 		JTrain->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(ForwardSpeed));
 		JTrain->Values.Add("ThrottlePercent", MakeShared<FJsonValueNumber>(ThrottlePercent));
 		JTrain->Values.Add("TrainStation", MakeShared<FJsonValueString>(TrainStation));
