@@ -245,3 +245,26 @@ TSharedPtr<FJsonValue> ConvertStringToFJsonValue(const FString& JsonString)
 	// Handle error: return nullptr or some default value
 	return nullptr;
 }
+
+TSharedPtr<FJsonObject> UFRM_Library::getPowerConsumptionJSON(UFGPowerInfoComponent* PowerInfo) {
+	return UFRM_Library::getPowerConsumptionJSON(PowerInfo, 0);
+}
+
+TSharedPtr<FJsonObject> UFRM_Library::getPowerConsumptionJSON(UFGPowerInfoComponent* PowerInfo, float additionalPowerConsumed) {
+
+	UFGPowerCircuit* PowerCircuit = PowerInfo->GetPowerCircuit();
+	TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
+	int32 CircuitGroupID = -1;
+	int32 CircuitID = -1;
+	float PowerConsumed = additionalPowerConsumed;
+
+	if (IsValid(PowerCircuit)) {
+		CircuitGroupID = PowerCircuit->GetCircuitGroupID();
+		CircuitID = PowerCircuit->GetCircuitID();
+		PowerConsumed = PowerInfo->GetActualConsumption() + additionalPowerConsumed;
+	}
+	JCircuit->Values.Add("CircuitGroupID", MakeShared<FJsonValueNumber>(CircuitGroupID));
+	JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
+	JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerConsumed));
+	return JCircuit;
+};
