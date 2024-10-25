@@ -35,6 +35,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 		TArray<TSharedPtr<FJsonValue>> JRailcarsArray;
 		TSharedPtr<FJsonObject> TrainLocation;
 
+		UFGPowerInfoComponent* PowerInfo = NULL;
 		if (IsValid(MultiUnitMaster)) {
 
 			AFGRailroadTimeTable* TimeTable = Train->GetTimeTable();
@@ -65,6 +66,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 
 			ForwardSpeed = LocomotiveMovement->GetForwardSpeed();
 			ThrottlePercent = LocomotiveMovement->GetThrottle() * 100;
+			PowerInfo = Train->GetMultipleUnitMaster()->GetPowerInfo();
 			
 		} else {
 
@@ -131,6 +133,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 		JTrain->Values.Add("TimeTable", MakeShared<FJsonValueArray>(JTimetableArray));
 		JTrain->Values.Add("Vehicles", MakeShared<FJsonValueArray>(JRailcarsArray));
 		JTrain->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Train, Train->GetTrainName().ToString(), "Train")));
+		JTrain->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(PowerInfo)));
 
 		JTrainsArray.Add(MakeShared<FJsonValueObject>(JTrain));
 
