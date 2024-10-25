@@ -3,6 +3,8 @@
 
 #include "FRM_Trains.h"
 
+#include "FGTrainPlatformConnection.h"
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 
 	AFGRailroadSubsystem* RailroadSubsystem = AFGRailroadSubsystem::Get(WorldContext->GetWorld());
@@ -159,15 +161,20 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 		TArray<TSharedPtr<FJsonValue>> JCargoStations;
 
 		AFGBuildableRailroadStation* RailStation = TrainStation->GetStation();
-		TArray<AFGBuildableTrainPlatform*> TrainPlatforms = RailStation->mDockedPlatformList;
-
+		
+		UFGTrainPlatformConnection* StationConnection = RailStation->GetConnectionInOppositeDirection(RailStation->GetStationOutputConnection());
+		UFGTrainPlatformConnection* TrainPlatformConnection = StationConnection->GetConnectedTo();
+		AFGBuildableTrainPlatform* TrainPlatform = TrainPlatformConnection->GetPlatformOwner();
+		
 		TArray<TSharedPtr<FJsonValue>> JTrainPlatformArray;
 
-		for (AFGBuildableTrainPlatform* TrainPlatform : TrainPlatforms) {
-
+		bool bCompleted = false;
+		
+		while (!bCompleted) {	
 			AFGBuildableTrainPlatformCargo* TrainPlatformCargo = Cast<AFGBuildableTrainPlatformCargo>(TrainPlatform);
 
 			if (!TrainPlatformCargo) {
+				bCompleted = true;
 				continue;
 			}
 
@@ -232,6 +239,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 			JTrainPlatform->Values.Add("Inventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(TrainPlatformInventory)));
 
 			JTrainPlatformArray.Add(MakeShared<FJsonValueObject>(JTrainPlatform));
+
+			TrainPlatformConnection = TrainPlatform->GetConnectionInOppositeDirection(TrainPlatformConnection);
+			TrainPlatform = TrainPlatformConnection->GetConnectedTo()->GetPlatformOwner();
 		}
 
 		float CircuitID = TrainStation->GetStation()->GetPowerInfo()->GetActualConsumption();
