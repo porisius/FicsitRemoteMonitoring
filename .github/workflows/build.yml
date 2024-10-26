@@ -49,7 +49,7 @@ jobs:
         run: git -C C:\SatisfactoryModLoader pull
 
       - name: Remove any existing mods
-        run: Remove-Item "C:\\SatisfactoryModLoader\\Mods\\ArduinoKit" "C:\\SatisfactoryModLoader\\Mods\\DiscIT" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring" "C:\\SatisfactoryModLoader\\Mods\\JSONQuery"
+        run: Remove-Item "C:\\SatisfactoryModLoader\\Mods\\ArduinoKit" "C:\\SatisfactoryModLoader\\Mods\\DiscIT" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring" "C:\\SatisfactoryModLoader\\Mods\\JSONQuery" -ErrorAction Ignore
 
       - name: Copy FicsitRemoteMontioring to Project
         run: Copy-Item "$Env:GITHUB_WORKSPACE\\FicsitRemoteMontioring" C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring -Recurse -Force -Confirm:$false -ErrorAction Ignore
