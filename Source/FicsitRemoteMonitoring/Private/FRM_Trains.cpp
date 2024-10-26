@@ -279,7 +279,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 			UFGTrainPlatformConnection* TrainPlatformConnectionBuffer = TrainPlatform->GetConnectionInOppositeDirection(TrainPlatformConnection);
 			TrainPlatformConnection = TrainPlatformConnectionBuffer->GetConnectedTo();
 
-			if (TrainPlatformConnection || TrainPlatformConnection->IsValidLowLevel())
+			if (IsValid(TrainPlatformConnection))
 			{
 				TrainPlatform = TrainPlatformConnection->GetPlatformOwner();
 			} else
