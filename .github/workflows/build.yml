@@ -16,6 +16,7 @@ on:
     paths:
       - "Content/**"
       - "Source/**"
+  workflow_dispatch:
 
 jobs:
   build:
