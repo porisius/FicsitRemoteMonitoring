@@ -1,6 +1,8 @@
 #include "FicsitRemoteMonitoring.h"
 #include "Async/Async.h"
 
+us_listen_socket_t* SocketListener;
+
 AFicsitRemoteMonitoring* AFicsitRemoteMonitoring::Get(UWorld* WorldContext)
 {
 	for (TActorIterator<AFicsitRemoteMonitoring> It(WorldContext, AFicsitRemoteMonitoring::StaticClass(), EActorIteratorFlags::AllActors); It; ++It) {
@@ -40,7 +42,6 @@ void AFicsitRemoteMonitoring::BeginPlay()
     if (WSStart) { StartWebSocketServer(); }
     if (RSStart) { InitSerialDevice(); }	
 
-
     //WebSocket Timer
     UWorld* world = GetWorld();
     auto config = FConfig_HTTPStruct::GetActiveConfig(world);
@@ -59,6 +60,10 @@ void AFicsitRemoteMonitoring::BeginPlay()
 
 void AFicsitRemoteMonitoring::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+    // clear the timer
+    UWorld* world = GetWorld();
+    world->GetTimerManager().ClearTimer(TimerHandle);
+
 	// Ensure the server is stopped during normal gameplay exit
 	StopWebSocketServer();
 	Super::EndPlay(EndPlayReason);
@@ -70,6 +75,14 @@ void AFicsitRemoteMonitoring::StopWebSocketServer()
     if (WebServer.IsValid())
     {
         WebServer.Reset();
+    }
+
+    // Close WebSocket listener
+    if (SocketListener)
+    {
+        // Closing = true;
+        us_listen_socket_close(0, SocketListener);
+        SocketListener = nullptr;
     }
 }
 
@@ -131,12 +144,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                     res->writeStatus("418 I'm a teapot")->end(TCHAR_TO_UTF8(*noCoffee));
 
-                    });
+                });
 
                 app.get("/", [](auto* res, auto* req) {
                     FScopeLock ScopeLock(&WebSocketCriticalSection);
                     res->writeStatus("301 Moved Permanently")->writeHeader("Location", "/index.html")->end();
-                    });
+                });
 
                 /* This exists incase the root is redirected from default */
                 app.get("/Icons/*", [this, IconsPath](auto* res, auto* req) {
@@ -161,7 +174,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                         HandleGetRequest(res, req, FilePath);
                     }
 
-                    });
+                });
 
                 app.get("/api/:APIEndpoint", [this, World](auto* res, auto* req) {
                     std::string url(req->getParameter("APIEndpoint"));
@@ -172,11 +185,29 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                     HandleApiRequest(World, res, req, Endpoint);
 
-                    });
+                });
 
                 app.get("/*", [UIPath, this, World](auto* res, auto* req) {
-                    std::string url(req->getUrl().begin(), req->getUrl().end());
+                    if (!res) return;
+                    // if (Closing) res->writeStatus("410");
+                
+                    // prevent browser from using a cache
+                    res
+                        ->writeHeader("Access-Control-Allow-Origin", "*")
+                        ->writeHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0")
+                        ->writeHeader("Content-Type", "application/json")
+                        ->writeHeader("Connection", "close")
+                        ->writeHeader("Pragma", "no-cache");
+                    
+                    // if (Closing)
+                    // {
+                    //     UE_LOGFMT(LogHttpServer, Log, "server is closing STOP IT!");
+                    //     res->end("{\"message\": \"Gone\"}");
+                    //     return;
+                    // }
 
+                    std::string url(req->getUrl().begin(), req->getUrl().end());
+                    
                     bool bFileExists = false;
                     // Remove initial '/'
                     FString RelativePath = FString(url.c_str()).Mid(1);
@@ -208,26 +239,29 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     else {
                         HandleApiRequest(World, res, req, RelativePath);
                     }
-
-                    });
+                });
 
                 app.ws<FWebSocketUserData>("/*", std::move(wsBehavior));
 
-                app.listen(port, [port](auto* token) {
+                app.listen(port, [this, port](us_listen_socket_t* token) {
 
                     UE_LOG(LogHttpServer, Warning, TEXT("Attempting to listen on port %d"), port);
 
                     FScopeLock ScopeLock(&WebSocketCriticalSection);
                     if (token) {
+                        SocketListener = token;
                         UE_LOGFMT(LogHttpServer, Warning, "Listening on port {port}", port);
                     }
                     else {
                         UE_LOGFMT(LogHttpServer, Error, "Failed to listen on port {port}", port);
                     }
-                    });
+                });
 
                 app.run();
-              
+
+                UE_LOG(LogHttpServer, Log, TEXT("WebSocket Server Thread finished."));
+
+                // Closing = false;
             } catch (const std::exception& e) {
                 UE_LOG(LogHttpServer, Error, TEXT("WebSocket Server Exception: %s"), *FString(e.what()));
             } catch (...) {
@@ -384,7 +418,6 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
 
             UE_LOG(LogHttpServer, Log, TEXT("Binary File Found Returning: %s"), *FilePath);
             res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
-            res->writeHeader("Access-Control-Allow-Origin", "*");
             res->writeHeader("Content-Length", contentLength.c_str());
             res->write(std::string_view((char*)BinaryContent.GetData(), BinaryContent.Num()));
             res->end();
@@ -395,8 +428,8 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
         FileLoaded = FFileHelper::LoadFileToString(FileContent, *FilePath);
         if (FileLoaded) {
             UE_LOG(LogHttpServer, Log, TEXT("File Found Returning: %s"), *FilePath);
-            res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType))
-                ->writeHeader("Access-Control-Allow-Origin", "*")
+            res
+                ->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType))
                 ->end(TCHAR_TO_UTF8(*FileContent));
         }
     }
@@ -415,17 +448,12 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 
     if (bSuccess) {
         UE_LOGFMT(LogHttpServer, Log, "API Found Returning: {Endpoint}", Endpoint);
-        res->writeHeader("Content-Type", "application/json")
-            ->writeHeader("Access-Control-Allow-Origin", "*")
-            ->end(TCHAR_TO_UTF8(*OutJson));
+        res->end(TCHAR_TO_UTF8(*OutJson));
     }
     else
     {
         UE_LOGFMT(LogHttpServer, Log, "API Not Found: {Endpoint}", Endpoint);
-        res->writeStatus("404 Not Found");
-        res->writeHeader("Content-Type", "application/json")
-            ->writeHeader("Access-Control-Allow-Origin", "*")
-            ->end(TCHAR_TO_UTF8(*OutJson));
+        res->writeStatus("404 Not Found")->end(TCHAR_TO_UTF8(*OutJson));
     }
 
 }
