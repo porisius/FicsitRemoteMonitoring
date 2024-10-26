@@ -89,11 +89,26 @@ public:
     bool bGetAll;
 
     UPROPERTY(BlueprintReadWrite)
+    bool bUseFirstObject;
+
+    UPROPERTY(BlueprintReadWrite)
     bool bRequireGameThread;
 
 	UPROPERTY(BlueprintReadWrite)
     FAPICallback Callback;
 
+};
+
+USTRUCT(BlueprintType)
+struct FCallEndpointResponse
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "CallEndpointResult")
+	TArray<UBlueprintJsonValue*> JsonValues;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "CallEndpointResult")
+	bool bUseFirstObject;
 };
 
 UCLASS()
@@ -122,14 +137,15 @@ public:
     void BlueprintEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FAPICallback InCallback);
 
 	void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, UObject* TargetObject, FName FunctionName);
+	void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, UObject* TargetObject, FName FunctionName);
 
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
-	FString HandleEndpoint (UObject* WorldContext, FString InEndpoin, bool& bSuccess);
+	FString HandleEndpoint (UObject* WorldContext, FString InEndpoint, bool& bSuccess);
 
 	//FFGServerErrorResponse HandleCSSEndpoint(FString& out_json, FString InEndpoin);
 	
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
-	TArray<UBlueprintJsonValue*> CallEndpoint(UObject* WorldContext, FString InEndpoin, bool& bSuccess);
+	FCallEndpointResponse CallEndpoint(UObject* WorldContext, FString InEndpoint, bool& bSuccess);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void GetDropPodInfo_BIE(const AFGDropPod* Droppod, TSubclassOf<UFGItemDescriptor>& ItemClass, int32& Amount, float& Power);
