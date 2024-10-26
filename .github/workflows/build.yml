@@ -16,33 +16,11 @@ on:
     paths:
       - "Content/**"
       - "Source/**"
-  workflow_dispatch:
-    inputs:
-      ue_version_tag:
-        required: false
-        description: "Release of UnrealEngine-CSS to use. Will use the latest if unspecified"
-  workflow_call:
-    secrets:
-      WWISE_EMAIL:
-        required: true
-      WWISE_PASSWORD:
-        required: true
-      GH_TOKEN:
-        required: false
-
 
 jobs:
   build:
     runs-on: self-hosted
     steps:
-      - name: Cleanup
-        run: Remove-Item C:\workspace\SatisfactoryModLoader -Recurse -Force -Confirm:$false -ErrorAction Ignore
-
-      - name: Setup Unreal Engine
-        uses: mircearoata/satisfactory-modding-ue-action@master
-        with:
-          tag: ${{inputs.ue_version_tag}}
-          token: ${{ secrets.GH_TOKEN }}
 
       - uses: actions/checkout@v2
         with:
@@ -66,57 +44,50 @@ jobs:
           ref: refs/heads/main
           path: ArduinoKit
 
-      - uses: actions/checkout@master
-        with:
-          repository: satisfactorymodding/SatisfactoryModLoader
-          ref: refs/heads/dev
-          path: SatisfactoryModLoader
+      - name: Ensure SML Project is up to date
+        run: git -C C:\SatisfactoryModLoader pull
 
-      - name: Copy Project to Workspace
-        run: Copy-Item "$Env:GITHUB_WORKSPACE\\SatisfactoryModLoader" C:\workspace\ -Recurse -Force -Confirm:$false -ErrorAction Ignore
+      - name: Remove any existing mods
+        run: Remove-Item "C:\\SatisfactoryModLoader\\Mods\\ArduinoKit" "C:\\SatisfactoryModLoader\\Mods\\DiscIT" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring" "C:\\SatisfactoryModLoader\\Mods\\JSONQuery"
 
       - name: Copy FicsitRemoteMontioring to Project
-        run: Copy-Item "$Env:GITHUB_WORKSPACE\\FicsitRemoteMontioring" C:\workspace\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring -Recurse -Force -Confirm:$false -ErrorAction Ignore
-
-      - name: Copy Non-Public Source Files to Mod
-        run: Copy-Item C:\workspace\Source_Files\* C:\workspace\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source -Recurse -Force -Confirm:$false -ErrorAction Ignore
+        run: Copy-Item "$Env:GITHUB_WORKSPACE\\FicsitRemoteMontioring" C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Copy ArduinoKit to Project
-        run: Copy-Item "$Env:GITHUB_WORKSPACE\\ArduinoKit" C:\workspace\SatisfactoryModLoader\Mods\ArduinoKit -Recurse -Force -Confirm:$false -ErrorAction Ignore
+        run: Copy-Item "$Env:GITHUB_WORKSPACE\\ArduinoKit" C:\SatisfactoryModLoader\Mods\ArduinoKit -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Copy DiscIT to Project
-        run: Copy-Item "$Env:GITHUB_WORKSPACE\\DiscIT" C:\workspace\SatisfactoryModLoader\Mods\DiscIT -Recurse -Force -Confirm:$false -ErrorAction Ignore
+        run: Copy-Item "$Env:GITHUB_WORKSPACE\\DiscIT" C:\SatisfactoryModLoader\Mods\DiscIT -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Copy JSONQuery to Project
-        run: Copy-Item "$Env:GITHUB_WORKSPACE\\JSONQuery" C:\workspace\SatisfactoryModLoader\Mods\JSONQuery -Recurse -Force -Confirm:$false -ErrorAction Ignore
-
-      - name: Add Wwise
-        run: |
-          gh release download --repo mircearoata/wwise-cli -p "wwise-cli.exe"
-          ./wwise-cli.exe download     --sdk-version "2022.1.5.8242"          --filter Packages=SDK --filter DeploymentPlatforms=Windows_vc140 --filter DeploymentPlatforms=Windows_vc150 --filter DeploymentPlatforms=Windows_vc160 --filter DeploymentPlatforms=Windows_vc170 --filter DeploymentPlatforms=Linux --filter DeploymentPlatforms=
-          ./wwise-cli.exe integrate-ue --integration-version "2022.1.5.2714"  --project "C:\workspace\SatisfactoryModLoader\FactoryGame.uproject"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          WWISE_EMAIL: ${{ secrets.WWISE_EMAIL }}
-          WWISE_PASSWORD: ${{ secrets.WWISE_PASSWORD }}
+        run: Copy-Item "$Env:GITHUB_WORKSPACE\\JSONQuery" C:\SatisfactoryModLoader\Mods\JSONQuery -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1
 
       - name: Generate VS project files
-        run: C:\workspace\ue\Engine\Build\BatchFiles\Build.bat -projectfiles -project='C:\workspace\SatisfactoryModLoader\FactoryGame.uproject' -game -rocket -progres
+        run: C:\ue\Engine\Build\BatchFiles\Build.bat FactoryEditor Win64 Development -project="C:\\SatisfactoryModLoader\\FactoryGame.uproject"
 
       - name: Build for Development Editor
-        run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Development Editor' /p:Platform='Win64' /t:'Games\FactoryGame' -m
-
-      - name: Build for Shipping/Client
-        run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping' /p:Platform='Win64' /t:'Games\FactoryGame' -m
-
-      #- name: Build for Win64 Dedicated Server
-      #  run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Win64' /t:'Games\FactoryGame' -m
-
-      #- name: Build for Linux Dedicated Server
-      #  run: MSBuild.exe 'C:\workspace\SatisfactoryModLoader\FactoryGame.sln' /p:Configuration='Shipping Server' /p:Platform='Linux' /t:'Games\FactoryGame' -m
+        run: C:\ue\Engine\\Build\\BatchFiles\\Build.bat FactoryEditor Win64 Development -project="C:\\SatisfactoryModLoader\\FactoryGame.uproject"
 
       - name: Package FicsitRemoteMonitoring Mod
-        run: C:\workspace\ue\Engine\Build\BatchFiles\RunUAT.bat -ScriptsForProject='C:\workspace\SatisfactoryModLoader\FactoryGame.uproject' PackagePlugin -Project='C:\workspace\SatisfactoryModLoader\FactoryGame.uproject' -PluginName='FicsitRemoteMonitoring' -PluginTarget='Win64' -PluginTarget='Win64_Server' -PluginTarget='Linux_Server' -MergeArchive
+        run: C:\ue\Engine\Build\BatchFiles\RunUAT.bat -ScriptsForProject='C:\\SatisfactoryModLoader\\FactoryGame.uproject' PackagePlugin -Project="C:\\SatisfactoryModLoader\\FactoryGame.uproject" -dlcname=FicsitRemoteMonitoring -build -server -clientconfig=Shipping -serverconfig=Shipping -platform=Win64 -serverplatform=Win64+Linux -nocompileeditor -installed
+
+      - name: Copy uv.dll and zlib1.dll files to Windows Shipping
+        run: 7z a "C:\\SatisfactoryModLoader\\Saved\\ArchivedPlugins\\FicsitRemoteMonitoring\\FicsitRemoteMonitoring-Windows.zip" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\uv.dll" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\zlib1.dll" -pBinaries/Win64
+
+      - name: Copy uv.dll and zlib1.dll files to Windows Server Shipping
+        run: 7z a "C:\\SatisfactoryModLoader\\Saved\\ArchivedPlugins\\FicsitRemoteMonitoring\\FicsitRemoteMonitoring-WindowsServer.zip" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\uv.dll" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\zlib1.dll" -pBinaries/Win64
+
+      - name: Copy uv.dll and zlib1.dll files to combined Windows Shipping
+        run: 7z a "C:\\SatisfactoryModLoader\\Saved\\ArchivedPlugins\\FicsitRemoteMonitoring\\FicsitRemoteMonitoring.zip" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\uv.dll" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\zlib1.dll" -pWindows/Binaries/Win64
+
+      - name: Copy uv.dll and zlib1.dll files to combined Windows Server Shipping
+        run: 7z a "C:\\SatisfactoryModLoader\\Saved\\ArchivedPlugins\\FicsitRemoteMonitoring\\FicsitRemoteMonitoring.zip" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\uv.dll" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\zlib1.dll" -pWindowsServer/Binaries/Win64
+
+      - name: Archive FRM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frm
+          path: C:\\SatisfactoryModLoader\\Saved\\ArchivedPlugins\\FicsitRemoteMonitoring\\*.zip
