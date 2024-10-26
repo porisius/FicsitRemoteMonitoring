@@ -559,9 +559,15 @@ void AFicsitRemoteMonitoring::BlueprintEndpoint(const FString& APIName, bool bGe
 
 void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, UObject* TargetObject, FName FunctionName)
 {
+	RegisterEndpoint(APIName, bGetAll, bRequireGameThread, false, TargetObject, FunctionName);
+}
+
+void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, const bool bUseFirstObject, UObject* TargetObject, FName FunctionName)
+{
 	FAPIEndpoint NewEndpoint;
 	NewEndpoint.APIName = APIName;
 	NewEndpoint.bGetAll = bGetAll;
+	NewEndpoint.bUseFirstObject = bUseFirstObject;
 	NewEndpoint.bRequireGameThread = bRequireGameThread;
 	NewEndpoint.Callback.BindUFunction(TargetObject, FunctionName);
 
@@ -601,8 +607,10 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGet
 */
 }
 
-TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, bool& bSuccess)
+FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, bool& bSuccess)
 {
+	FCallEndpointResponse Response;
+	Response.bUseFirstObject = false;
 	bSuccess = false;
 
     TArray<UBlueprintJsonValue*> JsonArray = TArray<UBlueprintJsonValue*>{};
@@ -613,6 +621,7 @@ TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::CallEndpoint(UObject* Worl
         {
             try {
                 bSuccess = true;
+            	Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
                 FAPICallback Callback = EndpointInfo.Callback;
 
                 if (EndpointInfo.bRequireGameThread)
@@ -660,23 +669,40 @@ TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::CallEndpoint(UObject* Worl
         }
     }
 
+	Response.JsonValues = JsonArray;
+	
     // Return an empty JSON object if no matching endpoint is found
-	return JsonArray;
+	return Response;
 }
 
-FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoin, bool& bSuccess)
+FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, bool& bSuccess)
 {
 	bSuccess = false;
 
-	TArray<UBlueprintJsonValue*> Json = this->CallEndpoint(WorldContext, InEndpoin, bSuccess);
+	auto [JsonValues, bUseFirstObject] = this->CallEndpoint(WorldContext, InEndpoint, bSuccess);
 
 	if (!bSuccess) {
 		return "{\"error\": \"Endpoint not found. Please consult Endpoint's documentation for more information.\"}";
 	}
 
 	FConfig_FactoryStruct config = FConfig_FactoryStruct::GetActiveConfig(WorldContext);
-	return UBlueprintJsonValue::StringifyArray(Json, config.JSONDebugMode);
 
+	if (bUseFirstObject)
+	{
+		UBlueprintJsonObject* FirstJsonObject;
+		if (JsonValues.Num() > 0)
+		{
+			JsonValues[0]->ToObject(FirstJsonObject);
+		}
+		else
+		{
+			FirstJsonObject = UBlueprintJsonObject::Create();
+		}
+	
+		return FirstJsonObject->Stringify(config.JSONDebugMode);
+	}
+
+	return UBlueprintJsonValue::StringifyArray(JsonValues, config.JSONDebugMode);
 }
 
 /*FFGServerErrorResponse AFicsitRemoteMonitoring::HandleCSSEndpoint(FString& out_json, FString InEndpoin)
@@ -706,7 +732,27 @@ TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::getAll(UObject* WorldConte
 
         if (APIEndpoint.bGetAll) {
             UBlueprintJsonObject* Json = UBlueprintJsonObject::Create();
-            Json->SetArray(APIEndpoint.APIName, CallEndpoint(WorldContext, APIEndpoint.APIName, bSuccess));
+
+            auto [JsonValues, bUseFirstObject] = CallEndpoint(WorldContext, APIEndpoint.APIName, bSuccess);
+
+            if (bUseFirstObject)
+            {
+                UBlueprintJsonObject* FirstJsonObject;
+                if (JsonValues.Num() > 0)
+                {
+                    JsonValues[0]->ToObject(FirstJsonObject);
+                }
+                else
+                {
+                    FirstJsonObject = UBlueprintJsonObject::Create();
+                }
+
+                Json->SetObject(APIEndpoint.APIName, FirstJsonObject);
+            }
+            else
+        	{
+                Json->SetArray(APIEndpoint.APIName, JsonValues);
+        	}
 
             //block while not complete
             while (!bSuccess)
