@@ -46,6 +46,10 @@ void AFicsitRemoteMonitoring::BeginPlay()
     UWorld* world = GetWorld();
     auto config = FConfig_HTTPStruct::GetActiveConfig(world);
 
+    // store JSONDebugMode into a local property to prevent crash while access to GetActiveConfig while the EndPlay process
+    const auto FactoryConfig = FConfig_FactoryStruct::GetActiveConfig(world);
+    JSONDebugMode = FactoryConfig.JSONDebugMode;
+
     world->GetTimerManager().SetTimer(
         TimerHandle,  // The timer handle
         this,         // The instance of the class
@@ -668,8 +672,11 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
                 {
                     FThreadSafeBool bAllocationComplete = false;
                     AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext, &JsonArray, &bAllocationComplete]() {
-                        // Execute callback via GameThread
-                        JsonArray = Callback.Execute(WorldContext);
+                        // Execute callback via GameThread, check if WorldContext is valid and if Callback IsBound (valid)
+                        if (WorldContext && Callback.IsBound())
+                        {
+                            JsonArray = Callback.Execute(WorldContext);
+                        }
                         bAllocationComplete = true;
                     });
 
@@ -725,7 +732,6 @@ FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString I
 		return "{\"error\": \"Endpoint not found. Please consult Endpoint's documentation for more information.\"}";
 	}
 
-	FConfig_FactoryStruct config = FConfig_FactoryStruct::GetActiveConfig(WorldContext);
 
 	if (bUseFirstObject)
 	{
@@ -739,10 +745,10 @@ FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString I
 			FirstJsonObject = UBlueprintJsonObject::Create();
 		}
 	
-		return FirstJsonObject->Stringify(config.JSONDebugMode);
+		return FirstJsonObject->Stringify(JSONDebugMode);
 	}
 
-	return UBlueprintJsonValue::StringifyArray(JsonValues, config.JSONDebugMode);
+	return UBlueprintJsonValue::StringifyArray(JsonValues, JSONDebugMode);
 }
 
 /*FFGServerErrorResponse AFicsitRemoteMonitoring::HandleCSSEndpoint(FString& out_json, FString InEndpoin)
