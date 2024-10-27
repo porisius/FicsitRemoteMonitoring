@@ -27,7 +27,7 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          path: FicsitRemoteMontioring
+          path: FicsitRemoteMonitoring
 
       - name: Ensure SML Project is up to date
         run: git -C C:\SatisfactoryModLoader pull
@@ -35,8 +35,8 @@ jobs:
       - name: Remove any existing FRM
         run: Remove-Item "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring" -Recurse -ErrorAction Ignore -Confirm:$false
 
-      - name: Copy FicsitRemoteMontioring to Project
-        run: Copy-Item "$Env:GITHUB_WORKSPACE\\FicsitRemoteMontioring" C:\SatisfactoryModLoader\Mods -Recurse -Force -Confirm:$false -ErrorAction Ignore
+      - name: Copy FicsitRemoteMonitoring to Project
+        run: Copy-Item "$Env:GITHUB_WORKSPACE\\FicsitRemoteMonitoring" C:\SatisfactoryModLoader\Mods -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1
