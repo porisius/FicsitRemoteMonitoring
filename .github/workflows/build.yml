@@ -10,6 +10,7 @@ on:
       - "FicsitRemoteMonitoring.uplugin"
       - "Content/**"
       - "Source/**"
+      - "www/**"
   pull_request:
     branches:
       - "main"
@@ -18,6 +19,7 @@ on:
       - ".github/**"
       - "Content/**"
       - "Source/**"
+      - "www/**"
   workflow_dispatch:
 
 jobs:
@@ -47,23 +49,42 @@ jobs:
       - name: Package FicsitRemoteMonitoring Mod
         run: C:\ue\Engine\Build\BatchFiles\RunUAT.bat -ScriptsForProject='C:\\SatisfactoryModLoader\\FactoryGame.uproject' PackagePlugin -Project="C:\\SatisfactoryModLoader\\FactoryGame.uproject" -dlcname=FicsitRemoteMonitoring -build -server -clientconfig=Shipping -serverconfig=Shipping -platform=Win64 -serverplatform=Win64+Linux -nocompileeditor -installed
 
-      - name: Copy uv.dll and zlib1.dll files to Windows Shipping
-        run: 7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring-Windows.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pBinaries/Win64
+      - name: Copy uv.dll and zlib1.dll files to Packaged Mod
+        run: |
+          7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring-Windows.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pBinaries/Win64
+          7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring-WindowsServer.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pBinaries/Win64
+          7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pWindows/Binaries/Win64
+          7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pWindowsServer/Binaries/Win64
 
-      - name: Copy uv.dll and zlib1.dll files to Windows Server Shipping
-        run: 7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring-WindowsServer.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pBinaries/Win64
+      - name: Stage for release
+        run: |
+          mkdir $Env:GITHUB_WORKSPACE\\Output
+          Copy-Item C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\* "$Env:GITHUB_WORKSPACE\\Output"
 
-      - name: Copy uv.dll and zlib1.dll files to combined Windows Shipping
-        run: 7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pWindows/Binaries/Win64
+  upload:
+    runs-on: self-hosted
+    needs: [build]
+    if: github.event.pull_request || github.ref == 'refs/heads/dev'
+    steps:
+      - name: Archive FRM artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Client Build
+        path: Output/FicsitRemoteMonitoring-Windows.zip
+      with:
+        name: Windows Server Build
+        path: Output/FicsitRemoteMonitoring-WindowsServer.zip
+      with:
+        name: Linux Server Build
+        path: Output/FicsitRemoteMonitoring-LinuxServer.zip
 
-      - name: Copy uv.dll and zlib1.dll files to combined Windows Server Shipping
-        run: 7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pWindowsServer/Binaries/Win64
-
-      - name: Inject slug/short variables
-        uses: rlespinasse/github-slug-action@v3.x
-
+  release:
+    runs-on: self-hosted
+    needs: [build]
+    if: github.ref == 'refs/heads/main'
+    steps:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\*
-          tag_name: "${{ env.GITHUB_REF_SLUG }}-${{ github.run_number }}"
+          files: Output/*
+          tag_name: "${{ github.event_name }}-${{ github.run_number }}"
