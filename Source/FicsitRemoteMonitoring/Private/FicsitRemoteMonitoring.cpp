@@ -696,18 +696,19 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
         if (EndpointInfo.APIName == InEndpoint)
         {
             try {
-                bSuccess = true;
             	Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
                 FAPICallback Callback = EndpointInfo.Callback;
 
                 if (EndpointInfo.bRequireGameThread)
                 {
                     FThreadSafeBool bAllocationComplete = false;
-                    AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext, &JsonArray, &bAllocationComplete]() {
+                    AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext, &JsonArray, &bAllocationComplete, &bSuccess]() {
                         // Execute callback via GameThread, check if WorldContext is valid and if Callback IsBound (valid)
                         if (WorldContext && Callback.IsBound())
                         {
                             JsonArray = Callback.Execute(WorldContext);
+
+                            bSuccess = true;
                         }
                         bAllocationComplete = true;
                     });
@@ -719,10 +720,11 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
                         FPlatformProcess::Sleep(0.0001f);
                     };
                 }
-                else
+                // Directly execute the callback
+                else if (WorldContext && Callback.IsBound())
                 {
-                    // Directly execute the callback
                     JsonArray = Callback.Execute(WorldContext);
+                    bSuccess = true;
                 }
             } catch (const std::exception& e) 
             {
