@@ -56,35 +56,29 @@ jobs:
           7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pWindows/Binaries/Win64
           7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pWindowsServer/Binaries/Win64
 
-  upload:
-    runs-on: self-hosted
-    needs: build
-    if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/dev' }}
-    steps:
       - name: Archive Client Build Artifact
+        if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Client Build
           path: C:/SatisfactoryModLoader/Saved/ArchivedPlugins/FicsitRemoteMonitoring/FicsitRemoteMonitoring-Windows.zip
 
       - name: Archive Windows Server Build Artifact
+        if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Windows Server Build
           path: C:/SatisfactoryModLoader/Saved/ArchivedPlugins/FicsitRemoteMonitoring/FicsitRemoteMonitoring-WindowsServer.zip
 
       - name: Archive Linux Server Build Artifact
+        if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Linux Server Build
           path: C:/SatisfactoryModLoader/Saved/ArchivedPlugins/FicsitRemoteMonitoring/FicsitRemoteMonitoring-LinuxServer.zip
 
-  release:
-    runs-on: self-hosted
-    needs: [build]
-    if: github.ref == 'refs/heads/main'
-    steps:
       - name: Release
+        if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v1
         with:
           files: C:/SatisfactoryModLoader/Saved/ArchivedPlugins/FicsitRemoteMonitoring/*
