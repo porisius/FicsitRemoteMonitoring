@@ -59,8 +59,11 @@ jobs:
       - name: Copy uv.dll and zlib1.dll files to combined Windows Server Shipping
         run: 7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pWindowsServer/Binaries/Win64
 
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\*.zip
+          files: C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\*
           tag_name: "${{ env.GITHUB_REF_SLUG }}-${{ github.run_number }}"
