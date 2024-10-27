@@ -80,15 +80,14 @@ void AFicsitRemoteMonitoring::StopWebSocketServer()
     // Close WebSocket listener
     if (SocketListener)
     {
-        UE_LOGFMT(LogHttpServer, Log, "Closing current socket listener");
-        // Closing = true;
+        UE_LOGFMT(LogHttpServer, Log, "Stopping uWS listener");
         us_listen_socket_close(0, SocketListener);
         SocketListener = nullptr;
 
-        UE_LOG(LogHttpServer, Log, TEXT("Closing connection to connected clients: %d"), ConnectedClients.Num());
-        for (auto connectedClient : ConnectedClients)
+        UE_LOG(LogHttpServer, Log, TEXT("Closing all %d connections"), ConnectedClients.Num());
+        for (const auto ConnectedClient : ConnectedClients)
         {
-            connectedClient->close();
+            ConnectedClient->close();
         }
         ConnectedClients.Empty();
     }
@@ -208,22 +207,18 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                 app.get("/*", [UIPath, this, World](auto* res, auto* req) {
                     if (!res) return;
-                    // if (Closing) res->writeStatus("410");
                 
-                    // prevent browser from using a cache
+                    // set headers for all responses
+                    // disable cache to prevent any cache issues
                     res
                         ->writeHeader("Access-Control-Allow-Origin", "*")
                         ->writeHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0")
                         ->writeHeader("Content-Type", "application/json")
+                        // uWebSockets does not automatically handle the closing of HTTP connections.
+                        // Therefore, we instruct the client to close the connection by setting the "Connection" header to "close"
+                        // instead of using "keep-alive" (default).
                         ->writeHeader("Connection", "close")
                         ->writeHeader("Pragma", "no-cache");
-                    
-                    // if (Closing)
-                    // {
-                    //     UE_LOGFMT(LogHttpServer, Log, "server is closing STOP IT!");
-                    //     res->end("{\"message\": \"Gone\"}");
-                    //     return;
-                    // }
 
                     std::string url(req->getUrl().begin(), req->getUrl().end());
                     
@@ -279,8 +274,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                 app.run();
 
                 UE_LOG(LogHttpServer, Log, TEXT("WebSocket Server Thread finished."));
-
-                // Closing = false;
             } catch (const std::exception& e) {
                 UE_LOG(LogHttpServer, Error, TEXT("WebSocket Server Exception: %s"), *FString(e.what()));
             } catch (...) {
