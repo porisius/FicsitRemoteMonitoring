@@ -177,6 +177,8 @@ public:
 
 	TMap<FString, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>> EndpointSubscribers;
 
+	TSet<uWS::WebSocket<false, true, FWebSocketUserData>*> ConnectedClients; 
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void InitSerialDevice();
 
@@ -188,7 +190,7 @@ public:
 	void StartWebSocketServer();
 	void StopWebSocketServer();
 
-    TArray<FClientInfo> ConnectedClients;
+    // TArray<FClientInfo> ConnectedClients;
 
     void OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message);
     void OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode);
