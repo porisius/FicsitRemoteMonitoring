@@ -6,6 +6,7 @@ on:
       - main
       - dev
     paths:
+      - ".github/**"
       - "FicsitRemoteMonitoring.uplugin"
       - "Content/**"
       - "Source/**"
@@ -14,6 +15,7 @@ on:
       - "main"
       - "dev"
     paths:
+      - ".github/**"
       - "Content/**"
       - "Source/**"
   workflow_dispatch:
@@ -46,19 +48,19 @@ jobs:
         run: C:\ue\Engine\Build\BatchFiles\RunUAT.bat -ScriptsForProject='C:\\SatisfactoryModLoader\\FactoryGame.uproject' PackagePlugin -Project="C:\\SatisfactoryModLoader\\FactoryGame.uproject" -dlcname=FicsitRemoteMonitoring -build -server -clientconfig=Shipping -serverconfig=Shipping -platform=Win64 -serverplatform=Win64+Linux -nocompileeditor -installed
 
       - name: Copy uv.dll and zlib1.dll files to Windows Shipping
-        run: 7z a "C:\\SatisfactoryModLoader\\Saved\\ArchivedPlugins\\FicsitRemoteMonitoring\\FicsitRemoteMonitoring-Windows.zip" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\uv.dll" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\zlib1.dll" -pBinaries/Win64
+        run: 7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring-Windows.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pBinaries/Win64
 
       - name: Copy uv.dll and zlib1.dll files to Windows Server Shipping
-        run: 7z a "C:\\SatisfactoryModLoader\\Saved\\ArchivedPlugins\\FicsitRemoteMonitoring\\FicsitRemoteMonitoring-WindowsServer.zip" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\uv.dll" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\zlib1.dll" -pBinaries/Win64
+        run: 7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring-WindowsServer.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pBinaries/Win64
 
       - name: Copy uv.dll and zlib1.dll files to combined Windows Shipping
-        run: 7z a "C:\\SatisfactoryModLoader\\Saved\\ArchivedPlugins\\FicsitRemoteMonitoring\\FicsitRemoteMonitoring.zip" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\uv.dll" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\zlib1.dll" -pWindows/Binaries/Win64
+        run: 7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pWindows/Binaries/Win64
 
       - name: Copy uv.dll and zlib1.dll files to combined Windows Server Shipping
-        run: 7z a "C:\\SatisfactoryModLoader\\Saved\\ArchivedPlugins\\FicsitRemoteMonitoring\\FicsitRemoteMonitoring.zip" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\uv.dll" "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring\\Source\\ThirdParty\\uWebSockets\\lib\\zlib1.dll" -pWindowsServer/Binaries/Win64
+        run: 7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pWindowsServer/Binaries/Win64
 
       - name: Archive FRM artifact
         uses: actions/upload-artifact@v4
         with:
           name: frm
-          path: C:\\SatisfactoryModLoader\\Saved\\ArchivedPlugins\\FicsitRemoteMonitoring\\*.zip
+          path: C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\*.zip
