@@ -120,6 +120,8 @@ private:
 
 	TFuture<void> WebServer;
 
+	bool JSONDebugMode;
+	
 	friend class UFGPowerCircuitGroup;
 
 public:
