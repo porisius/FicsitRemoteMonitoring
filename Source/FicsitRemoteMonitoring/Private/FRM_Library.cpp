@@ -156,18 +156,33 @@ void UFRM_Library::GetGroupedInventoryItems(const TArray<FInventoryStack>& Inven
 	}
 }
 
+TSharedPtr<FJsonObject> UFRM_Library::GetItemValueObject(const TSubclassOf<UFGItemDescriptor>& Item, const int Amount)
+{
+	TSharedPtr<FJsonObject> JItem = MakeShared<FJsonObject>();
+
+	JItem->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Item).ToString()));
+	JItem->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Item)));
+	JItem->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
+
+	return JItem;
+}
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Library::GetInventoryJSON(const TArray<FItemAmount>& Items)
+{
+	TArray<TSharedPtr<FJsonValue>> JInventoryArray;
+
+	for (const auto Item : Items) {
+		JInventoryArray.Add(MakeShared<FJsonValueObject>(GetItemValueObject(Item.ItemClass, Item.Amount)));
+	}
+
+	return JInventoryArray;
+}
 TArray<TSharedPtr<FJsonValue>> UFRM_Library::GetInventoryJSON(const TMap<TSubclassOf<UFGItemDescriptor>, int32>& Items)
 {
 	TArray<TSharedPtr<FJsonValue>> JInventoryArray;
 
 	for (const TPair<TSubclassOf<UFGItemDescriptor>, int32> Item : Items) {
-		TSharedPtr<FJsonObject> JInventory = MakeShared<FJsonObject>();
-
-		JInventory->Values.Add("Name", MakeShared<FJsonValueString>((Item.Key.GetDefaultObject()->mDisplayName).ToString()));
-		JInventory->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Item.Key)));
-		JInventory->Values.Add("Amount", MakeShared<FJsonValueNumber>(Item.Value));
-
-		JInventoryArray.Add(MakeShared<FJsonValueObject>(JInventory));
+		JInventoryArray.Add(MakeShared<FJsonValueObject>(GetItemValueObject(Item.Key, Item.Value)));
 	}
 
 	return JInventoryArray;
