@@ -36,7 +36,7 @@ jobs:
         run: Remove-Item "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring" -Recurse -ErrorAction Ignore -Confirm:$false
 
       - name: Copy FicsitRemoteMontioring to Project
-        run: Copy-Item "$Env:GITHUB_WORKSPACE\\FicsitRemoteMontioring" C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring -Recurse -Force -Confirm:$false -ErrorAction Ignore
+        run: Copy-Item "$Env:GITHUB_WORKSPACE\\FicsitRemoteMontioring" C:\SatisfactoryModLoader\Mods -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1
