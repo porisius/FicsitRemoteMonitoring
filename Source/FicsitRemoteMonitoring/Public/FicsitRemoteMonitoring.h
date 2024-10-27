@@ -199,7 +199,7 @@ public:
 	void PushUpdatedData();
 
 	void HandleGetRequest(uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString FilePath);
-	void AddRequestHeaders(uWS::HttpResponse<false>* res, bool bIncludeContentType);
+	void AddResponseHeaders(uWS::HttpResponse<false>* res, bool bIncludeContentType);
 
 	UPROPERTY()
 	TArray<FString> Flavor_Battery;

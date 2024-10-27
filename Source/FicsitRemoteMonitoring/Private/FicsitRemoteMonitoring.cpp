@@ -291,18 +291,14 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
 }
 
-void AFicsitRemoteMonitoring::AddRequestHeaders(uWS::HttpResponse<false>* res, bool bIncludeContentType)
+void AFicsitRemoteMonitoring::AddResponseHeaders(uWS::HttpResponse<false>* res, bool bIncludeContentType)
 {
-    // set headers for all responses
-    // disable cache to prevent any cache issues
     res
         ->writeHeader("Access-Control-Allow-Origin", "*")
-        ->writeHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0")
         // uWebSockets does not automatically handle the closing of HTTP connections.
         // Therefore, we instruct the client to close the connection by setting the "Connection" header to "close"
         // instead of using "keep-alive" (default).
-        ->writeHeader("Connection", "close")
-        ->writeHeader("Pragma", "no-cache");
+        ->writeHeader("Connection", "close");
 
     if (bIncludeContentType) res->writeHeader("Content-Type", "application/json");
 }
@@ -454,7 +450,7 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
 
             res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
             res->writeHeader("Content-Length", contentLength.c_str());
-            AddRequestHeaders(res, false);
+            AddResponseHeaders(res, false);
             res->write(std::string_view((char*)BinaryContent.GetData(), BinaryContent.Num()));
             res->end();
         }
@@ -467,7 +463,7 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
             UE_LOG(LogHttpServer, Log, TEXT("File Found Returning: %s"), *FilePath);
 
             res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
-            AddRequestHeaders(res, false);
+            AddResponseHeaders(res, false);
             res->end(TCHAR_TO_UTF8(*FileContent));
         }
     }
@@ -475,7 +471,7 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
     if (!FileLoaded) {
         UE_LOG(LogHttpServer, Error, TEXT("Failed to load file: %s"), *FilePath);
         res->writeStatus("500");
-        AddRequestHeaders(res, true);
+        AddResponseHeaders(res, true);
         res->end("Internal Server Error");
     }
 }
@@ -488,14 +484,14 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 
     if (bSuccess) {
         UE_LOGFMT(LogHttpServer, Log, "API Found Returning: {Endpoint}", Endpoint);
-        AddRequestHeaders(res, true);
+        AddResponseHeaders(res, true);
         res->end(TCHAR_TO_UTF8(*OutJson));
     }
     else
     {
         UE_LOGFMT(LogHttpServer, Log, "API Not Found: {Endpoint}", Endpoint);
         res->writeStatus("404 Not Found");
-        AddRequestHeaders(res, true);
+        AddResponseHeaders(res, true);
         res->end(TCHAR_TO_UTF8(*OutJson));
     }
 
