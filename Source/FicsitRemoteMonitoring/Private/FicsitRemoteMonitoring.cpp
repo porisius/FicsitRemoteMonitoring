@@ -2,6 +2,7 @@
 #include "Async/Async.h"
 
 us_listen_socket_t* SocketListener;
+bool SocketRunning = false;
 
 AFicsitRemoteMonitoring* AFicsitRemoteMonitoring::Get(UWorld* WorldContext)
 {
@@ -104,6 +105,24 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 {
     UE_LOGFMT(LogHttpServer, Warning, "Initializing WebSocket Service");
 
+    if (SocketRunning)
+    {
+        UE_LOG(LogHttpServer, Log, TEXT("Old Websocket Thread is still running, try again in 3 seconds..."));
+
+        AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this]()
+        {
+            // Sleep for the specified delay
+            FPlatformProcess::Sleep(3.0f);
+        
+            // Then switch back to the game thread to run the task
+            AsyncTask(ENamedThreads::GameThread, [this]()
+            {
+                StartWebSocketServer();
+            });
+        });
+        return;
+    }
+
         // WebSocket server logic runs in a separate thread
         WebServer = Async(EAsyncExecution::Thread, [this]() {
             try {
@@ -148,7 +167,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     UE_LOG(LogHttpServer, Log, TEXT("Client Disconnected. Connections: %d"), ConnectedClients.Num());
                 };
 
-                app.get("/getCoffee", [](auto* res, auto* req) {
+                app.get("/getCoffee", [this](auto* res, auto* req) {
                     FScopeLock ScopeLock(&WebSocketCriticalSection);
                     if (!res || !req) {
                         UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
@@ -160,12 +179,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                         "#BlameSimon");
 
                     // Set CORS headers
-                    res->writeHeader("Access-Control-Allow-Origin", "*");
+                    res->writeStatus("418 I'm a teapot");
                     res->writeHeader("Access-Control-Allow-Methods", "GET, POST");
                     res->writeHeader("Access-Control-Allow-Headers", "Content-Type");
+                    AddRequestHeaders(res, false);
 
-                    res->writeStatus("418 I'm a teapot")->end(TCHAR_TO_UTF8(*noCoffee));
-
+                    res->end(TCHAR_TO_UTF8(*noCoffee));
                 });
 
                 app.get("/", [](auto* res, auto* req) {
@@ -188,7 +207,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     FScopeLock ScopeLock(&WebSocketCriticalSection);
                     if (!res || !req) {
                         UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
-                        res->writeStatus("500")->end("Internal Server Error");
                         return;
                     }
 
@@ -211,18 +229,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                 app.get("/*", [UIPath, this, World](auto* res, auto* req) {
                     if (!res) return;
-                
-                    // set headers for all responses
-                    // disable cache to prevent any cache issues
-                    res
-                        ->writeHeader("Access-Control-Allow-Origin", "*")
-                        ->writeHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0")
-                        ->writeHeader("Content-Type", "application/json")
-                        // uWebSockets does not automatically handle the closing of HTTP connections.
-                        // Therefore, we instruct the client to close the connection by setting the "Connection" header to "close"
-                        // instead of using "keep-alive" (default).
-                        ->writeHeader("Connection", "close")
-                        ->writeHeader("Pragma", "no-cache");
 
                     std::string url(req->getUrl().begin(), req->getUrl().end());
                     
@@ -233,15 +239,9 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     FString FileContent;
                     bool IsBinary = false; // to flag non-text files (e.g., images)
 
-                    UE_LOG(LogHttpServer, Log, TEXT("Request RelativePath: %s"), *RelativePath);
-                    UE_LOG(LogHttpServer, Log, TEXT("Request FilePath: %s"), *FilePath);
+                    UE_LOG(LogHttpServer, Log, TEXT("Request RelativePath/FilePath: %s %s"), *RelativePath, *FilePath);
 
                     FScopeLock ScopeLock(&WebSocketCriticalSection);
-                    if (!res || !req) {
-                        UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
-                        res->writeStatus("500")->end("Internal Server Error");
-                        return;
-                    }
 
                     if (FPaths::FileExists(FilePath)) {
                         bFileExists = true;
@@ -275,7 +275,11 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     }
                 });
 
+                SocketRunning = true;
+                
                 app.run();
+
+                SocketRunning = false;
 
                 UE_LOG(LogHttpServer, Log, TEXT("WebSocket Server Thread finished."));
             } catch (const std::exception& e) {
@@ -285,6 +289,22 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
             }
         });
 
+}
+
+void AFicsitRemoteMonitoring::AddRequestHeaders(uWS::HttpResponse<false>* res, bool bIncludeContentType)
+{
+    // set headers for all responses
+    // disable cache to prevent any cache issues
+    res
+        ->writeHeader("Access-Control-Allow-Origin", "*")
+        ->writeHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0")
+        // uWebSockets does not automatically handle the closing of HTTP connections.
+        // Therefore, we instruct the client to close the connection by setting the "Connection" header to "close"
+        // instead of using "keep-alive" (default).
+        ->writeHeader("Connection", "close")
+        ->writeHeader("Pragma", "no-cache");
+
+    if (bIncludeContentType) res->writeHeader("Content-Type", "application/json");
 }
 
 void AFicsitRemoteMonitoring::OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
@@ -390,8 +410,6 @@ void AFicsitRemoteMonitoring::PushUpdatedData() {
 
 void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString FilePath)
 {
-
-    FString FileContent;
     bool IsBinary = false; // to flag non-text files (e.g., images)
 
     // Determine the MIME type based on file extension
@@ -423,7 +441,7 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
         ContentType = "text/plain";  // Default to plain text for unknown files
     }
 
-    bool FileLoaded = false;
+    bool FileLoaded;
     if (IsBinary) {
         // For binary files like images, we need to use LoadFileToArray
         TArray<uint8> BinaryContent;
@@ -433,26 +451,32 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
             std::string contentLength = std::to_string(BinaryContent.Num());
 
             UE_LOG(LogHttpServer, Log, TEXT("Binary File Found Returning: %s"), *FilePath);
+
             res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
             res->writeHeader("Content-Length", contentLength.c_str());
+            AddRequestHeaders(res, false);
             res->write(std::string_view((char*)BinaryContent.GetData(), BinaryContent.Num()));
             res->end();
         }
     }
     else {
+        FString FileContent;
         // Text-based files like HTML, CSS, JS
         FileLoaded = FFileHelper::LoadFileToString(FileContent, *FilePath);
         if (FileLoaded) {
             UE_LOG(LogHttpServer, Log, TEXT("File Found Returning: %s"), *FilePath);
-            res
-                ->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType))
-                ->end(TCHAR_TO_UTF8(*FileContent));
+
+            res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
+            AddRequestHeaders(res, false);
+            res->end(TCHAR_TO_UTF8(*FileContent));
         }
     }
 
     if (!FileLoaded) {
         UE_LOG(LogHttpServer, Error, TEXT("Failed to load file: %s"), *FilePath);
-        res->writeStatus("500")->end("Internal Server Error");
+        res->writeStatus("500");
+        AddRequestHeaders(res, true);
+        res->end("Internal Server Error");
     }
 }
 
@@ -464,12 +488,15 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 
     if (bSuccess) {
         UE_LOGFMT(LogHttpServer, Log, "API Found Returning: {Endpoint}", Endpoint);
+        AddRequestHeaders(res, true);
         res->end(TCHAR_TO_UTF8(*OutJson));
     }
     else
     {
         UE_LOGFMT(LogHttpServer, Log, "API Not Found: {Endpoint}", Endpoint);
-        res->writeStatus("404 Not Found")->end(TCHAR_TO_UTF8(*OutJson));
+        res->writeStatus("404 Not Found");
+        AddRequestHeaders(res, true);
+        res->end(TCHAR_TO_UTF8(*OutJson));
     }
 
 }
@@ -656,11 +683,17 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
 	FCallEndpointResponse Response;
 	Response.bUseFirstObject = false;
 	bSuccess = false;
-
     TArray<UBlueprintJsonValue*> JsonArray = TArray<UBlueprintJsonValue*>{};
+
+    // socket listener is closed, so we skip the request to prevent any further error/crash
+    if (!SocketListener) return JsonArray;
 
     for (FAPIEndpoint& EndpointInfo : APIEndpoints)
     {
+        // again, maybe SocketListener was killed while we are looping through the api endpoints?
+        // i don't know, but it's better to be safe than to risk a game crash
+        if (!SocketListener) return JsonArray;
+        
         if (EndpointInfo.APIName == InEndpoint)
         {
             try {
@@ -713,6 +746,8 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
                 
             }
 
+            // current api point was found, so we don't need to iterate the other endpoints
+            break;
         }
     }
 
