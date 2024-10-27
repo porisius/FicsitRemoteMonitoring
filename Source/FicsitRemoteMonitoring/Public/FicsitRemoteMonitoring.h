@@ -190,8 +190,6 @@ public:
 	void StartWebSocketServer();
 	void StopWebSocketServer();
 
-    // TArray<FClientInfo> ConnectedClients;
-
     void OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message);
     void OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode);
 	void ProcessClientRequest(uWS::WebSocket<false, true, FWebSocketUserData>* ws, const TSharedPtr<FJsonObject>& JsonRequest);
