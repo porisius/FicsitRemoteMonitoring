@@ -63,20 +63,26 @@ jobs:
 
   upload:
     runs-on: self-hosted
-    needs: [build]
-    if: github.event.pull_request || github.ref == 'refs/heads/dev'
+    needs: build
+    if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/dev' }}
     steps:
-      - name: Archive FRM artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: Client Build
-        path: Output/FicsitRemoteMonitoring-Windows.zip
-      with:
-        name: Windows Server Build
-        path: Output/FicsitRemoteMonitoring-WindowsServer.zip
-      with:
-        name: Linux Server Build
-        path: Output/FicsitRemoteMonitoring-LinuxServer.zip
+      - name: Archive Client Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Client Build
+          path: Output/FicsitRemoteMonitoring-Windows.zip
+
+      - name: Archive Windows Server Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows Server Build
+          path: Output/FicsitRemoteMonitoring-WindowsServer.zip
+
+      - name: Archive Linux Server Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Linux Server Build
+          path: Output/FicsitRemoteMonitoring-LinuxServer.zip
 
   release:
     runs-on: self-hosted
