@@ -560,6 +560,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getTruck", false, false, this->Get(GetWorld()), FName("getTruck"));
 	RegisterEndpoint("getTruckStation", true, false, this->Get(GetWorld()), FName("getTruckStation"));
 	RegisterEndpoint("getWorldInv", true, false, this->Get(GetWorld()), FName("getWorldInv"));
+	RegisterEndpoint("getResearchTrees", true, true, this->Get(GetWorld()), FName("getResearchTrees"));
 
 	//FRM API Endpoint Groups
 	RegisterEndpoint("getAll", false, false, this->Get(GetWorld()), FName("getAll"));

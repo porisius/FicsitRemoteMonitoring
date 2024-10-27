@@ -195,10 +195,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 		
 		TSharedPtr<FJsonObject> JSchematic = MakeShared<FJsonObject>();
 		TArray<TSharedPtr<FJsonValue>> JRecipeArray;
-		TArray<TSharedPtr<FJsonValue>> JActiveMilestoneArray;
 
 		if (IsValid(ActiveSchematic)) {
-
+			TArray<TSharedPtr<FJsonValue>> JCosts;
 			TArray<TSubclassOf<UFGRecipe>> Recipes;
 
 			for (TSubclassOf<UFGRecipe> Recipe : Recipes) {
@@ -239,7 +238,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 			
 			for (FItemAmount ItemCost :ItemsCost) {
 
-				TSharedPtr<FJsonObject> JActiveMilestone = MakeShared<FJsonObject>();
+				TSharedPtr<FJsonObject> JCost = UFRM_Library::GetItemValueObject(ItemCost.ItemClass, ItemCost.Amount);
 
 				//Probably an easier way of doing this...
 				int32 MilestonePaid = 0;
@@ -252,14 +251,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 					}
 				}
 				
-				JActiveMilestone->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(ItemCost.ItemClass).ToString()));
-				JActiveMilestone->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ItemCost.ItemClass)));
-				JActiveMilestone->Values.Add("Amount", MakeShared<FJsonValueNumber>(MilestonePaid));
-				JActiveMilestone->Values.Add("RemainingCost", MakeShared<FJsonValueNumber>(ItemCost.Amount - MilestonePaid));
-				JActiveMilestone->Values.Add("TotalCost", MakeShared<FJsonValueNumber>(ItemCost.Amount));
-				
-				JActiveMilestoneArray.Add(MakeShared<FJsonValueObject>(JActiveMilestone));
-		
+				JCost->Values.Add("RemainingCost", MakeShared<FJsonValueNumber>(ItemCost.Amount - MilestonePaid));
+				JCost->Values.Add("TotalCost", MakeShared<FJsonValueNumber>(ItemCost.Amount));
+
+				JCosts.Add(MakeShared<FJsonValueObject>(JCost));
 			}
 
 			JSchematic->Values.Add("Name", MakeShared<FJsonValueString>(UFGSchematic::GetSchematicDisplayName(ActiveSchematic).ToString()));
@@ -267,6 +262,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 			JSchematic->Values.Add("TechTier", MakeShared<FJsonValueNumber>(UFGSchematic::GetTechTier(ActiveSchematic)));
 			JSchematic->Values.Add("Type", MakeShared<FJsonValueString>(SchematicType));
 			JSchematic->Values.Add("Recipes", MakeShared<FJsonValueArray>(JRecipeArray));
+			JSchematic->Values.Add("Cost", MakeShared<FJsonValueArray>(JCosts));
 		}
 		else {
 			JSchematic->Values.Add("Name", MakeShared<FJsonValueString>(TEXT("No Milestone Selected")));

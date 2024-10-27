@@ -16,6 +16,7 @@
 #include "FRM_Drones.h"
 #include "FRM_Factory.h"
 #include "FRM_Player.h"
+#include "FRM_World.h"
 #include "FRM_Power.h"
 #include "FRM_Production.h"
 #include "FRM_Trains.h"
@@ -48,6 +49,7 @@
 #include "Async/Async.h"
 #include "Misc/Paths.h"
 #include "BlueprintJsonObject.h"
+#include "FGResearchTreeNode.h"
 
 THIRD_PARTY_INCLUDES_START
 #include "ThirdParty/uWebSockets/App.h"
@@ -170,6 +172,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void IconGenerator_BIE();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
+	void ResearchTreeNodeUnlockData_BIE(UFGResearchTreeNode* ResearchTreeNode, TArray<FIntPoint>& Parents, TArray<FIntPoint>& UnhiddenBy, FIntPoint& Coordinates);
+
 	// Array of API endpoints
 	UPROPERTY()
 	TArray<FAPIEndpoint> APIEndpoints;
@@ -272,6 +277,11 @@ public:
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getDoggo(UObject* WorldContext) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Player::getDoggo(WorldContext));
+	}
+	
+	UFUNCTION()
+	TArray<UBlueprintJsonValue*> getResearchTrees(UObject* WorldContext) {
+		return UBlueprintJsonValue::FromJsonArray(UFRM_World::GetResearchTrees(WorldContext));
 	}
 
 	UFUNCTION()
