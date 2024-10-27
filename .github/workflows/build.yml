@@ -56,12 +56,6 @@ jobs:
           7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pWindows/Binaries/Win64
           7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pWindowsServer/Binaries/Win64
 
-      - name: Stage for release
-        run: |
-          Remove-Item $Env:GITHUB_WORKSPACE\\Output -Recurse -Force -Confirm:$false -ErrorAction Ignore
-          New-Item -ItemType Directory -Force -Path $Env:GITHUB_WORKSPACE\\Output
-          Copy-Item C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\* "$Env:GITHUB_WORKSPACE\\Output"
-
   upload:
     runs-on: self-hosted
     needs: build
@@ -71,19 +65,19 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Client Build
-          path: Output/FicsitRemoteMonitoring-Windows.zip
+          path: C:/SatisfactoryModLoader/Saved/ArchivedPlugins/FicsitRemoteMonitoring/FicsitRemoteMonitoring-Windows.zip
 
       - name: Archive Windows Server Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Windows Server Build
-          path: Output/FicsitRemoteMonitoring-WindowsServer.zip
+          path: C:/SatisfactoryModLoader/Saved/ArchivedPlugins/FicsitRemoteMonitoring/FicsitRemoteMonitoring-WindowsServer.zip
 
       - name: Archive Linux Server Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Linux Server Build
-          path: Output/FicsitRemoteMonitoring-LinuxServer.zip
+          path: C:/SatisfactoryModLoader/Saved/ArchivedPlugins/FicsitRemoteMonitoring/FicsitRemoteMonitoring-LinuxServer.zip
 
   release:
     runs-on: self-hosted
@@ -93,5 +87,5 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: Output/*
+          files: C:/SatisfactoryModLoader/Saved/ArchivedPlugins/FicsitRemoteMonitoring/*
           tag_name: "${{ github.event_name }}-${{ github.run_number }}"
