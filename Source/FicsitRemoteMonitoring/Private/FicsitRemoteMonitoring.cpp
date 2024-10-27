@@ -80,10 +80,21 @@ void AFicsitRemoteMonitoring::StopWebSocketServer()
     // Close WebSocket listener
     if (SocketListener)
     {
+        UE_LOGFMT(LogHttpServer, Log, "Closing current socket listener");
         // Closing = true;
         us_listen_socket_close(0, SocketListener);
         SocketListener = nullptr;
+
+        UE_LOG(LogHttpServer, Log, TEXT("Closing connection to connected clients: %d"), ConnectedClients.Num());
+        for (auto connectedClient : ConnectedClients)
+        {
+            connectedClient->close();
+        }
+        ConnectedClients.Empty();
     }
+
+    // clear endpoint subscribers
+    EndpointSubscribers.Empty();
 }
 
 void AFicsitRemoteMonitoring::StartWebSocketServer() 
@@ -118,12 +129,20 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                 // Close handler (for when a client disconnects)
                 wsBehavior.close = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
+                    ConnectedClients.Remove(ws);
+                    UE_LOG(LogHttpServer, Log, TEXT("Client Disconnected. Remaining connections: %d"), ConnectedClients.Num());
                     OnClientDisconnected(ws, code, message);  // Ensure this signature matches
                 };
 
                 // Message handler (for when a client sends a message)
                 wsBehavior.message = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode) {
                     OnMessageReceived(ws, message, opCode);  // Make sure this signature matches
+                };
+
+                wsBehavior.open = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws)
+                {
+                    ConnectedClients.Add(ws);
+                    UE_LOG(LogHttpServer, Log, TEXT("Client Disconnected. Connections: %d"), ConnectedClients.Num());
                 };
 
                 app.get("/getCoffee", [](auto* res, auto* req) {
@@ -243,7 +262,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                 app.ws<FWebSocketUserData>("/*", std::move(wsBehavior));
 
-                app.listen(port, [this, port](us_listen_socket_t* token) {
+                app.listen(port, [port](us_listen_socket_t* token) {
 
                     UE_LOG(LogHttpServer, Warning, TEXT("Attempting to listen on port %d"), port);
 
