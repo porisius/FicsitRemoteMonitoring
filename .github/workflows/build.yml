@@ -59,7 +59,7 @@ jobs:
       - name: Stage for release
         run: |
           Remove-Item $Env:GITHUB_WORKSPACE\\Output -Recurse -Force -Confirm:$false -ErrorAction Ignore
-          mkdir $Env:GITHUB_WORKSPACE\\Output
+          New-Item -ItemType Directory -Force -Path $Env:GITHUB_WORKSPACE\\Output
           Copy-Item C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\* "$Env:GITHUB_WORKSPACE\\Output"
 
   upload:
