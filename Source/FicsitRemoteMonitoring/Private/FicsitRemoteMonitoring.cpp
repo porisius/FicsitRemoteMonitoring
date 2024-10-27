@@ -182,7 +182,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     res->writeStatus("418 I'm a teapot");
                     res->writeHeader("Access-Control-Allow-Methods", "GET, POST");
                     res->writeHeader("Access-Control-Allow-Headers", "Content-Type");
-                    AddRequestHeaders(res, false);
+                    AddResponseHeaders(res, false);
 
                     res->end(TCHAR_TO_UTF8(*noCoffee));
                 });
@@ -681,14 +681,16 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
 	bSuccess = false;
     TArray<UBlueprintJsonValue*> JsonArray = TArray<UBlueprintJsonValue*>{};
 
+    Response.JsonValues = JsonArray;
+
     // socket listener is closed, so we skip the request to prevent any further error/crash
-    if (!SocketListener) return JsonArray;
+    if (!SocketListener) return Response;
 
     for (FAPIEndpoint& EndpointInfo : APIEndpoints)
     {
         // again, maybe SocketListener was killed while we are looping through the api endpoints?
         // i don't know, but it's better to be safe than to risk a game crash
-        if (!SocketListener) return JsonArray;
+        if (!SocketListener) return Response;
         
         if (EndpointInfo.APIName == InEndpoint)
         {
