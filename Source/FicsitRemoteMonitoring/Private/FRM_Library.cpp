@@ -247,25 +247,24 @@ TSharedPtr<FJsonValue> ConvertStringToFJsonValue(const FString& JsonString)
 }
 
 TSharedPtr<FJsonObject> UFRM_Library::getPowerConsumptionJSON(UFGPowerInfoComponent* PowerInfo) {
-	return UFRM_Library::getPowerConsumptionJSON(PowerInfo, 0);
-}
-
-TSharedPtr<FJsonObject> UFRM_Library::getPowerConsumptionJSON(UFGPowerInfoComponent* PowerInfo, float additionalPowerConsumed) {
 	TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
 	int32 CircuitGroupID = -1;
 	int32 CircuitID = -1;
-	float PowerConsumed = additionalPowerConsumed;
+	float PowerConsumed = 0;
+	float MaxPowerConsumed = 0;
 
 	if (IsValid(PowerInfo)) {
 		UFGPowerCircuit* PowerCircuit = PowerInfo->GetPowerCircuit();
 		if (IsValid(PowerCircuit)) {
 			CircuitGroupID = PowerCircuit->GetCircuitGroupID();
 			CircuitID = PowerCircuit->GetCircuitID();
-			PowerConsumed = PowerInfo->GetActualConsumption() + additionalPowerConsumed;
+			PowerConsumed = PowerInfo->GetActualConsumption();
+			MaxPowerConsumed = PowerInfo->GetMaximumTargetConsumption();
 		}
 	}
 	JCircuit->Values.Add("CircuitGroupID", MakeShared<FJsonValueNumber>(CircuitGroupID));
 	JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
 	JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerConsumed));
+	JCircuit->Values.Add("MaxPowerConsumed", MakeShared<FJsonValueNumber>(MaxPowerConsumed));
 	return JCircuit;
 };

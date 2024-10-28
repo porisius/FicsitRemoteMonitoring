@@ -155,7 +155,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 		float TransferRate = 0;
 		float InFlowRate = 0;
 		float OutFlowRate = 0;
-		float PowerConsumption = 0;
 		
 		TSharedPtr<FJsonObject> JTrainStation = MakeShared<FJsonObject>();
 		TArray<TSharedPtr<FJsonValue>> JCargoInventory;
@@ -187,7 +186,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 				JTrainPlatform->Values.Add("Name", MakeShared<FJsonValueString>(TrainPlatform->mDisplayName.ToString()));
 				JTrainPlatform->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(TrainPlatform->GetClass())));
 				JTrainPlatform->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(TrainPlatform)));
-				JTrainPlatform->Values.Add("PowerConsumption", MakeShared<FJsonValueNumber>(0));
+				JTrainPlatform->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(TrainPlatform->GetPowerInfo())));
 				JTrainPlatform->Values.Add("TransferRate", MakeShared<FJsonValueNumber>(0));
 				JTrainPlatform->Values.Add("InflowRate", MakeShared<FJsonValueNumber>(0));
 				JTrainPlatform->Values.Add("OutflowRate", MakeShared<FJsonValueNumber>(0));
@@ -221,17 +220,14 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 			float CargoTransferRate = 0;
 			float CargoInFlowRate = 0;
 			float CargoOutFlowRate = 0;
-			float CargoPowerConsumption = 0;
 
 			CargoTransferRate = TrainPlatformCargo->GetCurrentItemTransferRate();
 			CargoInFlowRate = TrainPlatformCargo->GetInflowRate();
 			CargoOutFlowRate = TrainPlatformCargo->GetOutflowRate();
-			CargoPowerConsumption = TrainPlatformCargo->GetPowerInfo()->GetActualConsumption();
 
 			TransferRate = TransferRate + CargoTransferRate;
 			InFlowRate = InFlowRate + CargoInFlowRate;
 			OutFlowRate = OutFlowRate + CargoOutFlowRate;
-			PowerConsumption = PowerConsumption + CargoPowerConsumption;
 
 			FString LoadMode = TEXT("Unloading");
 			if (TrainPlatformCargo->GetIsInLoadMode()) { LoadMode = TEXT("Loading"); }
@@ -268,7 +264,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 			JTrainPlatform->Values.Add("Name", MakeShared<FJsonValueString>(TrainPlatformCargo->mDisplayName.ToString()));
 			JTrainPlatform->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(TrainPlatformCargo->GetClass())));
 			JTrainPlatform->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(TrainPlatformCargo)));
-			JTrainPlatform->Values.Add("PowerConsumption", MakeShared<FJsonValueNumber>(CargoPowerConsumption));
+			JTrainPlatform->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(TrainPlatformCargo->GetPowerInfo())));
 			JTrainPlatform->Values.Add("TransferRate", MakeShared<FJsonValueNumber>(CargoTransferRate));
 			JTrainPlatform->Values.Add("InflowRate", MakeShared<FJsonValueNumber>(CargoInFlowRate));
 			JTrainPlatform->Values.Add("OutflowRate", MakeShared<FJsonValueNumber>(CargoOutFlowRate));
@@ -302,7 +298,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 		JTrainStation->Values.Add("OutflowRate", MakeShared<FJsonValueNumber>(OutFlowRate));
 		JTrainStation->Values.Add("CargoInventory", MakeShared<FJsonValueArray>(JTrainPlatformArray));
 		JTrainStation->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(TrainStation, TrainStation->GetStationName().ToString(), TEXT("Train Station"))));
-		JTrainStation->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(TrainStation->GetStation()->GetPowerInfo(), PowerConsumption)));
+		JTrainStation->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(TrainStation->GetStation()->GetPowerInfo())));
 
 		JTrainStationArray.Add(MakeShared<FJsonValueObject>(JTrainStation));
 	};
