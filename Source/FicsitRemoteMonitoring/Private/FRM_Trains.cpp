@@ -167,7 +167,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 		UFGTrainPlatformConnection* TrainPlatformConnection = StationConnection->GetConnectedTo();
 		AFGBuildableTrainPlatform* TrainPlatform = nullptr;
 		
-		if (TrainPlatformConnection && TrainPlatformConnection->IsValidLowLevel())
+		if (TrainPlatformConnection)
 		{
 			 TrainPlatform = TrainPlatformConnection->GetPlatformOwner();
 		}
@@ -201,7 +201,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 				UFGTrainPlatformConnection* TrainPlatformConnectionBuffer = TrainPlatform->GetConnectionInOppositeDirection(TrainPlatformConnection);
 				TrainPlatformConnection = TrainPlatformConnectionBuffer->GetConnectedTo();
 
-				if (TrainPlatformConnection && TrainPlatformConnection->IsValidLowLevel())
+				if (TrainPlatformConnection)
 				{
 					TrainPlatform = TrainPlatformConnection->GetPlatformOwner();
 				} else
