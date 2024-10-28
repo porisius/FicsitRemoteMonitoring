@@ -2,6 +2,11 @@
 
 #include "FRM_Drones.h"
 
+FString UFRM_Drones::getDronePortName(AFGBuildableDroneStation* DroneStation) {
+	AFGDroneStationInfo* StationInfo = DroneStation->GetInfo();
+	return StationInfo->Execute_GetBuildingTag(StationInfo);
+}
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContext) {
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
@@ -28,14 +33,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 
 		AFGDroneStationInfo* StationInfo = DroneStation->GetInfo();
 
-		TArray<TSharedPtr<FJsonValue>> JConnectedStationArray;
-		for (AFGDroneStationInfo* ConnectedStation : StationInfo->GetConnectedStations()) {
-			TSharedPtr<FJsonObject> JConnectedStation = MakeShared<FJsonObject>();
-			JConnectedStation->Values.Add("StationName", MakeShared<FJsonValueString>((ConnectedStation->GetStation()->mDisplayName.ToString())));
-
-			JConnectedStationArray.Add(MakeShared<FJsonValueObject>(JConnectedStation));
-		};
-
 		FString FormString = TEXT("Unknown");
 		switch (StationInfo->GetDroneStatus()) {
 			case EDroneStatus::EDS_CANNOT_UNLOAD : FormString = TEXT("Cannot Unload");
@@ -59,7 +56,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 
 		FString PairedStation = "None";
 		if (StationInfo->GetPairedStation() != nullptr) {
-			PairedStation = StationInfo->GetPairedStation()->GetStation()->mDisplayName.ToString();
+			PairedStation = UFRM_Drones::getDronePortName(StationInfo->GetPairedStation()->GetStation());
 		};
 
 		TSharedPtr<FJsonObject> JActiveFuel = MakeShared<FJsonObject>();
@@ -82,19 +79,16 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 			JFuelInfo->SetNumberField("EstimatedTransportRate", FuelInfo.EstimatedTransportRate);
 			JFuelInfo->SetNumberField("EstimatedRoundTripTime", FuelInfo.EstimatedRoundTripTime);
 			JFuelInfo->SetNumberField("EstimatedFuelCostRate", FuelInfo.EstimatedFuelCostRate);
-			
 			JFuelInfoArray.Add(MakeShared<FJsonValueObject>(JFuelInfo));
-
 		}
 
-		JDroneStation->Values.Add("Name", MakeShared<FJsonValueString>(DroneStation->mDisplayName.ToString()));
+		JDroneStation->Values.Add("Name", MakeShared<FJsonValueString>(UFRM_Drones::getDronePortName(DroneStation)));
 		JDroneStation->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(DroneStation->GetClass())));
 		JDroneStation->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(DroneStation)));
 		JDroneStation->Values.Add("InputInventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(InputInventory)));
 		JDroneStation->Values.Add("OutputInventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(OutputInventory)));
 		JDroneStation->Values.Add("FuelInventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(FuelInventory)));
 		JDroneStation->Values.Add("PairedStation", MakeShared<FJsonValueString>(PairedStation));
-		JDroneStation->Values.Add("ConnectedStations", MakeShared<FJsonValueArray>(JConnectedStationArray));
 		JDroneStation->Values.Add("DroneStatus", MakeShared<FJsonValueString>(FormString));
 		JDroneStation->Values.Add("AvgIncRate", MakeShared<FJsonValueNumber>(StationInfo->GetAverageIncomingItemRate()));
 		JDroneStation->Values.Add("AvgIncStack", MakeShared<FJsonValueNumber>(StationInfo->GetAverageIncomingItemStackRate()));
