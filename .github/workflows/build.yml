@@ -77,7 +77,7 @@ jobs:
           7z a ${{ env.CombinedBuild }} ${{ env.UV }} WindowsServer/Binaries/Win64
           7z a ${{ env.CombinedBuild }} ${{ env.ZLIB }} WindowsServer/Binaries/Win64
 
-      - name: Upload artifacts - Laravel Logs
+      - name: Upload artifacts - UnrealAutomationTool Logs
         uses: actions/upload-artifact@master
         if: failure()
         with:
