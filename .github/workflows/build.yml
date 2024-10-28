@@ -56,6 +56,13 @@ jobs:
           7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pWindows/Binaries/Win64
           7z a "C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\uv.dll" "C:\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\ThirdParty\uWebSockets\lib\zlib1.dll" -pWindowsServer/Binaries/Win64
 
+      - name: Upload artifacts - Laravel Logs
+        uses: actions/upload-artifact@master
+        if: failure()
+        with:
+          name: Logs
+          path: "%AppData%/Unreal Engine/AutomationTool/Logs/C+ue/*"
+
       - name: Archive Client Build Artifact
         if: ${{ github.event.pull_request.draft == false || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
