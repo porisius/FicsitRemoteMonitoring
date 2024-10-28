@@ -148,14 +148,14 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 			AFGSavedWheeledVehiclePath* VehiclePath = Cast<AFGSavedWheeledVehiclePath>(Vehicle);
 			if (IsValid(VehiclePath))
 			{
-				VehiclePath->mPathName;
+				PathName = VehiclePath->mPathName;
 			}
 			
 			JVehicle->Values.Add("ID", MakeShared<FJsonValueString>(Vehicle->GetName()));
 			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(Vehicle->mDisplayName.ToString()));
 			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Vehicle->GetClass())));
 			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Vehicle)));
-			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>("PathName"));
+			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>(PathName));
 			JVehicle->Values.Add("Status", MakeShared<FJsonValueString>(FormString));
 			JVehicle->Values.Add("CurrentGear", MakeShared<FJsonValueNumber>(VehicleMovement->GetCurrentGear()));
 			JVehicle->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(VehicleMovement->GetForwardSpeed()));
