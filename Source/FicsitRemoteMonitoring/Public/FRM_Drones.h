@@ -22,4 +22,7 @@ class FICSITREMOTEMONITORING_API UFRM_Drones : public UBlueprintFunctionLibrary
 public:
 	static TArray<TSharedPtr<FJsonValue>> getDroneStation(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getDrone(UObject* WorldContext);
+
+private:
+	static FString getDronePortName(AFGBuildableDroneStation* DroneStation);
 };
