@@ -144,10 +144,13 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 			float RotationSpeed = VehicleMovement->GetEngineRotationSpeed();
 			float Throttle = VehicleMovement->GetThrottleInput();
 
-			//AFGSavedWheeledVehiclePath* VehiclePath = Cast<AFGSavedWheeledVehiclePath>(Vehicle);
-			//fgcheck(VehiclePath);
-			//FString PathName = VehiclePath->mPathName;
-
+			FString PathName = "PathName";
+			AFGSavedWheeledVehiclePath* VehiclePath = Cast<AFGSavedWheeledVehiclePath>(Vehicle);
+			if (IsValid(VehiclePath))
+			{
+				VehiclePath->mPathName;
+			}
+			
 			JVehicle->Values.Add("ID", MakeShared<FJsonValueString>(Vehicle->GetName()));
 			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(Vehicle->mDisplayName.ToString()));
 			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Vehicle->GetClass())));
