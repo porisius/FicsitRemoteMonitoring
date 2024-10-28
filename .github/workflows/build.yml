@@ -77,12 +77,15 @@ jobs:
           7z a ${{ env.CombinedBuild }} ${{ env.UV }} WindowsServer/Binaries/Win64
           7z a ${{ env.CombinedBuild }} ${{ env.ZLIB }} WindowsServer/Binaries/Win64
 
+      - name: Prep UAT Logs for Upload
+        run: 7z a UAT_Log.7z "$env:appdata/Unreal Engine/AutomationTool/Logs/C+ue/*"
+
       - name: Upload artifacts - UnrealAutomationTool Logs
         uses: actions/upload-artifact@master
         if: failure()
         with:
           name: Logs
-          path: "%AppData%/Unreal Engine/AutomationTool/Logs/C+ue/*"
+          path: UAT_Log.7z
 
       - name: Archive Client Build Artifact
         if: ${{ github.event.pull_request.draft == false || github.ref == 'refs/heads/dev' }}
