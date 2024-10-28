@@ -144,7 +144,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 			float RotationSpeed = VehicleMovement->GetEngineRotationSpeed();
 			float Throttle = VehicleMovement->GetThrottleInput();
 
-			FString PathName = "PathName";
+			FString PathName = TEXT("No Path Configured!");
 			AFGSavedWheeledVehiclePath* VehiclePath = Cast<AFGSavedWheeledVehiclePath>(Vehicle);
 			if (IsValid(VehiclePath))
 			{
