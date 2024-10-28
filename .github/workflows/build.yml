@@ -77,7 +77,20 @@ jobs:
           7z a ${{ env.CombinedBuild }} ${{ env.UV }} WindowsServer/Binaries/Win64
           7z a ${{ env.CombinedBuild }} ${{ env.ZLIB }} WindowsServer/Binaries/Win64
 
+          7z rn ${{ env.WindowsBuild }} ${{ env.UV }} Binaries/Win64/${{ env.UV }}
+          7z rn ${{ env.WindowsBuild }} ${{ env.ZLIB }} Binaries/Win64/${{ env.ZLIB }}  
+
+          7z rn ${{ env.WindowsServerBuild }} ${{ env.UV }} Binaries/Win64/${{ env.UV }}
+          7z rn ${{ env.WindowsServerBuild }} ${{ env.ZLIB }} Binaries/Win64/${{ env.ZLIB }}  
+
+          7z rn ${{ env.CombinedBuild }} ${{ env.UV }} Windows/Binaries/Win64/${{ env.UV }}
+          7z rn ${{ env.CombinedBuild }} ${{ env.ZLIB }} Windows/Binaries/Win64/${{ env.ZLIB }}  
+
+          7z rn ${{ env.CombinedBuild }} ${{ env.UV }} WindowsServer/Binaries/Win64/${{ env.UV }}
+          7z rn ${{ env.CombinedBuild }} ${{ env.ZLIB }} WindowsServer/Binaries/Win64/${{ env.ZLIB }}      
+
       - name: Prep UAT Logs for Upload
+        if: failure()
         run: 7z a UAT_Log.7z "$env:appdata/Unreal Engine/AutomationTool/Logs/C+ue/*"
 
       - name: Upload artifacts - UnrealAutomationTool Logs
