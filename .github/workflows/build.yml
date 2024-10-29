@@ -65,29 +65,29 @@ jobs:
 
       - name: Copy uv.dll and zlib1.dll files to Packaged Mod
         run: |
-          7z a ${{ env.WindowsBuild }} ${{ env.UV }} Binaries/Win64
-          7z a ${{ env.WindowsBuild }} ${{ env.ZLIB }} Binaries/Win64
+          7z a ${{ env.WindowsBuild }} ${{ env.UV }}
+          7z a ${{ env.WindowsBuild }} ${{ env.ZLIB }}
 
-          7z a ${{ env.WindowsServerBuild }} ${{ env.UV }} Binaries/Win64
-          7z a ${{ env.WindowsServerBuild }} ${{ env.ZLIB }} Binaries/Win64
+          7z a ${{ env.WindowsServerBuild }} ${{ env.UV }}
+          7z a ${{ env.WindowsServerBuild }} ${{ env.ZLIB }}
 
-          7z a ${{ env.CombinedBuild }} ${{ env.UV }} Windows/Binaries/Win64
-          7z a ${{ env.CombinedBuild }} ${{ env.ZLIB }} Windows/Binaries/Win64
+          7z rn ${{ env.WindowsBuild }} uv.dll Binaries/Win64/uv.dll
+          7z rn ${{ env.WindowsBuild }} zlib1.dll Binaries/Win64/zlib1.dll
 
-          7z a ${{ env.CombinedBuild }} ${{ env.UV }} WindowsServer/Binaries/Win64
-          7z a ${{ env.CombinedBuild }} ${{ env.ZLIB }} WindowsServer/Binaries/Win64
+          7z rn ${{ env.WindowsServerBuild }} uv.dll Binaries/Win64/uv.dll
+          7z rn ${{ env.WindowsServerBuild }} zlib1.dll Binaries/Win64/zlib1.dll  
 
-          7z rn ${{ env.WindowsBuild }} ${{ env.UV }} Binaries/Win64/${{ env.UV }}
-          7z rn ${{ env.WindowsBuild }} ${{ env.ZLIB }} Binaries/Win64/${{ env.ZLIB }}  
+          7z a ${{ env.CombinedBuild }} ${{ env.UV }}
+          7z a ${{ env.CombinedBuild }} ${{ env.ZLIB }}
 
-          7z rn ${{ env.WindowsServerBuild }} ${{ env.UV }} Binaries/Win64/${{ env.UV }}
-          7z rn ${{ env.WindowsServerBuild }} ${{ env.ZLIB }} Binaries/Win64/${{ env.ZLIB }}  
+          7z rn ${{ env.CombinedBuild }} uv.dll Windows/Binaries/Win64/uv.dll
+          7z rn ${{ env.CombinedBuild }} zlib1.dll Windows/Binaries/Win64/zlib1.dll  
 
-          7z rn ${{ env.CombinedBuild }} ${{ env.UV }} Windows/Binaries/Win64/${{ env.UV }}
-          7z rn ${{ env.CombinedBuild }} ${{ env.ZLIB }} Windows/Binaries/Win64/${{ env.ZLIB }}  
+          7z a ${{ env.CombinedBuild }} ${{ env.UV }}
+          7z a ${{ env.CombinedBuild }} ${{ env.ZLIB }}
 
-          7z rn ${{ env.CombinedBuild }} ${{ env.UV }} WindowsServer/Binaries/Win64/${{ env.UV }}
-          7z rn ${{ env.CombinedBuild }} ${{ env.ZLIB }} WindowsServer/Binaries/Win64/${{ env.ZLIB }}      
+          7z rn ${{ env.CombinedBuild }} uv.dll WindowsServer/Binaries/Win64/uv.dll
+          7z rn ${{ env.CombinedBuild }} zlib1.dll WindowsServer/Binaries/Win64/zlib1.dll      
 
       - name: Prep UAT Logs for Upload
         if: failure()
