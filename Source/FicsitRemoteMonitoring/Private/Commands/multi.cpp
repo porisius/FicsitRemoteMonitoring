@@ -37,7 +37,8 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, class UC
 		FString sEndpoint = Arguments[2];
 
 		bool bSuccess = false;
-		FString Json = ModSubsystem->HandleEndpoint(WorldContext, sEndpoint, bSuccess);
+		FRequestData RequestData = FRequestData();
+		FString Json = ModSubsystem->HandleEndpoint(WorldContext, sEndpoint, RequestData, bSuccess);
 
 		if (!bSuccess) {
 			ChatReturn.Chat = TEXT("Unable to find endpoint, please refer to the documentation at docs.ficsit.app or the mod creator.");
