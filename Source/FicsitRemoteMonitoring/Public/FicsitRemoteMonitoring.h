@@ -400,6 +400,11 @@ public:
 	}
 
 	UFUNCTION()
+	TArray<UBlueprintJsonValue*> getPowerUsage(UObject* WorldContext) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getPowerUsage(WorldContext));
+	}
+
+	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getProdStats(UObject* WorldContext) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Production::getProdStats(WorldContext));
 	}
