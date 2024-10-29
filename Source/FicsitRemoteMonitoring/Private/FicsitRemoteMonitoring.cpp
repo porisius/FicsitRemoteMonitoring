@@ -227,7 +227,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                 });
 
-                app.get("/*", [UIPath, this, World](auto* res, auto* req) {
+                app.get("/*", [UIPath, this, World](auto* res, uWS::HttpRequest* req) {
                     if (!res) return;
 
                     std::string url(req->getUrl().begin(), req->getUrl().end());
@@ -289,6 +289,43 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
             }
         });
 
+}
+
+std::string UrlDecode(const std::string &Value) {
+	std::ostringstream Decoded;
+	for (size_t i = 0; i < Value.length(); ++i) {
+		if (Value[i] == '%') {
+			std::istringstream HexStream(Value.substr(i + 1, 2));
+			if (int HexValue; HexStream >> std::hex >> HexValue) {
+				Decoded << static_cast<char>(HexValue);
+				i += 2;
+			} else {
+				Decoded << '%'; // Invalid hex sequence
+			}
+		} else if (Value[i] == '+') {
+			Decoded << ' ';
+		} else {
+			Decoded << Value[i];
+		}
+	}
+	return Decoded.str();
+}
+
+std::unordered_map<std::string, std::string> ParseQueryString(const std::string& Query) {
+	std::unordered_map<std::string, std::string> QueryPairs;
+	std::istringstream QueryStream(Query);
+	std::string Pair;
+    
+	while (std::getline(QueryStream, Pair, '&')) {
+		const auto DelimiterPos = Pair.find('=');
+		if (DelimiterPos == std::string::npos) continue; // Skip if there's no '=' character
+
+		std::string Key = Pair.substr(0, DelimiterPos);
+		std::string Value = Pair.substr(DelimiterPos + 1);
+		QueryPairs[UrlDecode(Key)] = UrlDecode(Value);
+	}
+    
+	return QueryPairs;
 }
 
 void AFicsitRemoteMonitoring::AddResponseHeaders(uWS::HttpResponse<false>* res, bool bIncludeContentType)
@@ -388,7 +425,7 @@ void AFicsitRemoteMonitoring::PushUpdatedData() {
         }
 
         bool bAllocationComplete = false;
-        FString Json = HandleEndpoint(this, Endpoint, bAllocationComplete);
+        FString Json = HandleEndpoint(this, Endpoint, FRequestData(), bAllocationComplete);
 
         //block while not complete
         while (!bAllocationComplete)
@@ -478,9 +515,24 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
 
 void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString Endpoint)
 {
+	// Parse all query parameters
+	const std::string QueryString(req->getQuery().begin(), req->getQuery().end());
+	const auto QueryParams = ParseQueryString(QueryString);
 
+	TMap<FString, FString> RequestQueryParams = TMap<FString, FString>();
+	// Iterate through all query parameters and log them
+	for (const auto& Param : QueryParams) {
+		FString Key(Param.first.c_str());
+		FString Value(Param.second.c_str());
+
+		RequestQueryParams.Add(*Key, *Value);
+	}
+
+	FRequestData RequestData;
+	RequestData.QueryParams = RequestQueryParams;
+	
     bool bSuccess = false;
-    FString OutJson = this->HandleEndpoint(World, Endpoint, bSuccess);
+    FString OutJson = this->HandleEndpoint(World, Endpoint, RequestData, bSuccess);
 
     if (bSuccess) {
         UE_LOGFMT(LogHttpServer, Log, "API Found Returning: {Endpoint}", Endpoint);
@@ -681,7 +733,7 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGet
 */
 }
 
-FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, bool& bSuccess)
+FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess)
 {
 	FCallEndpointResponse Response;
 	Response.bUseFirstObject = false;
@@ -708,11 +760,11 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
                 if (EndpointInfo.bRequireGameThread)
                 {
                     FThreadSafeBool bAllocationComplete = false;
-                    AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext, &JsonArray, &bAllocationComplete, &bSuccess]() {
+                    AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext, &RequestData, &JsonArray, &bAllocationComplete, &bSuccess]() {
                         // Execute callback via GameThread, check if WorldContext is valid and if Callback IsBound (valid)
                         if (WorldContext && Callback.IsBound())
                         {
-                            JsonArray = Callback.Execute(WorldContext);
+                            JsonArray = Callback.Execute(WorldContext, RequestData);
 
                             bSuccess = true;
                         }
@@ -729,7 +781,7 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
                 // Directly execute the callback
                 else if (WorldContext && Callback.IsBound())
                 {
-                    JsonArray = Callback.Execute(WorldContext);
+                    JsonArray = Callback.Execute(WorldContext, RequestData);
                     bSuccess = true;
                 }
             } catch (const std::exception& e) 
@@ -764,33 +816,25 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
 	return Response;
 }
 
-FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, bool& bSuccess)
+FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess)
 {
 	bSuccess = false;
 
-	auto [JsonValues, bUseFirstObject] = this->CallEndpoint(WorldContext, InEndpoint, bSuccess);
+	auto [JsonValues, bUseFirstObject] = this->CallEndpoint(WorldContext, InEndpoint, RequestData, bSuccess);
 
 	if (!bSuccess) {
 		return "{\"error\": \"Endpoint not found. Please consult Endpoint's documentation for more information.\"}";
 	}
 
+	if (!bUseFirstObject) return UBlueprintJsonValue::StringifyArray(JsonValues, JSONDebugMode);
 
-	if (bUseFirstObject)
-	{
-		UBlueprintJsonObject* FirstJsonObject;
-		if (JsonValues.Num() > 0)
-		{
-			JsonValues[0]->ToObject(FirstJsonObject);
-		}
-		else
-		{
-			FirstJsonObject = UBlueprintJsonObject::Create();
-		}
-	
-		return FirstJsonObject->Stringify(JSONDebugMode);
-	}
+	// return empty object, if JsonValues is empty
+	if (JsonValues.Num() == 0) return "{}";
 
-	return UBlueprintJsonValue::StringifyArray(JsonValues, JSONDebugMode);
+	UBlueprintJsonObject* FirstJsonObject;
+	JsonValues[0]->ToObject(FirstJsonObject);
+
+	return FirstJsonObject->Stringify(JSONDebugMode);
 }
 
 /*FFGServerErrorResponse AFicsitRemoteMonitoring::HandleCSSEndpoint(FString& out_json, FString InEndpoin)
@@ -810,7 +854,7 @@ FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString I
 
 }
 */
-TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::getAll(UObject* WorldContext) {
+TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::getAll(UObject* WorldContext, FRequestData RequestData) {
 
 	TArray<UBlueprintJsonValue*> JsonArray;
 
@@ -821,7 +865,7 @@ TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::getAll(UObject* WorldConte
         if (APIEndpoint.bGetAll) {
             UBlueprintJsonObject* Json = UBlueprintJsonObject::Create();
 
-            auto [JsonValues, bUseFirstObject] = CallEndpoint(WorldContext, APIEndpoint.APIName, bSuccess);
+            auto [JsonValues, bUseFirstObject] = CallEndpoint(WorldContext, APIEndpoint.APIName, RequestData, bSuccess);
 
             if (bUseFirstObject)
             {

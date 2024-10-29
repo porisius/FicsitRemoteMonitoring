@@ -50,6 +50,7 @@
 #include "Misc/Paths.h"
 #include "BlueprintJsonObject.h"
 #include "FGResearchTreeNode.h"
+#include "FRM_RequestData.h"
 
 THIRD_PARTY_INCLUDES_START
 #include "ThirdParty/uWebSockets/App.h"
@@ -75,7 +76,7 @@ struct FClientInfo
 };
 
 UDELEGATE(BlueprintCallable) 
-DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(TArray<UBlueprintJsonValue*>, FAPICallback, const UObject*, WorldContext);
+DECLARE_DYNAMIC_DELEGATE_RetVal_TwoParams(TArray<UBlueprintJsonValue*>, FAPICallback, const UObject*, WorldContext, FRequestData&, RequestData);
 
 USTRUCT(BlueprintType, meta = (DontUseGenericSpawnObject = "True"))
 struct FAPIEndpoint
@@ -141,12 +142,12 @@ public:
 	void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, UObject* TargetObject, FName FunctionName);
 
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
-	FString HandleEndpoint (UObject* WorldContext, FString InEndpoint, bool& bSuccess);
+	FString HandleEndpoint (UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess);
 
 	//FFGServerErrorResponse HandleCSSEndpoint(FString& out_json, FString InEndpoin);
 	
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
-	FCallEndpointResponse CallEndpoint(UObject* WorldContext, FString InEndpoint, bool& bSuccess);
+	FCallEndpointResponse CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void GetDropPodInfo_BIE(const AFGDropPod* Droppod, TSubclassOf<UFGItemDescriptor>& ItemClass, int32& Amount, float& Power);
@@ -235,315 +236,315 @@ public:
 	FString StoredAPIName;
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getAssembler(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/AssemblerMk1/Build_AssemblerMk1.Build_AssemblerMk1_C"))));
+	TArray<UBlueprintJsonValue*> getAssembler(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/AssemblerMk1/Build_AssemblerMk1.Build_AssemblerMk1_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getBelts(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getBelts(WorldContext));
+	TArray<UBlueprintJsonValue*> getBelts(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getBelts(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getBiomassGenerator(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getBiomassGenerator(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorBiomass/Build_GeneratorBiomass_Automated.Build_GeneratorBiomass_Automated_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getBlender(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Blender/Build_Blender.Build_Blender_C"))));
+	TArray<UBlueprintJsonValue*> getBlender(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Blender/Build_Blender.Build_Blender_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getCloudInv(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getCloudInv(WorldContext));
+	TArray<UBlueprintJsonValue*> getCloudInv(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getCloudInv(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getCoalGenerator(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getCoalGenerator(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorCoal/Build_GeneratorCoal.Build_GeneratorCoal_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getConstructor(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/ConstructorMk1/Build_ConstructorMk1.Build_ConstructorMk1_C"))));
+	TArray<UBlueprintJsonValue*> getConstructor(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/ConstructorMk1/Build_ConstructorMk1.Build_ConstructorMk1_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getConverter(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Converter/Build_Converter.Build_Converter_C"))));
+	TArray<UBlueprintJsonValue*> getConverter(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Converter/Build_Converter.Build_Converter_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getDoggo(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getDoggo(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Player::getDoggo(WorldContext));
 	}
 	
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getResearchTrees(UObject* WorldContext) {
+	TArray<UBlueprintJsonValue*> getResearchTrees(UObject* WorldContext, FRequestData RequestData) {
 		return UBlueprintJsonValue::FromJsonArray(UFRM_World::GetResearchTrees(WorldContext));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getDrone(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getDrone(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Drones::getDrone(WorldContext));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getDroneStation(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getDroneStation(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Drones::getDroneStation(WorldContext));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getDropPod(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getDropPod(WorldContext));
+	TArray<UBlueprintJsonValue*> getDropPod(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getDropPod(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getEncoder(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/QuantumEncoder/Build_QuantumEncoder.Build_QuantumEncoder_C"))));
+	TArray<UBlueprintJsonValue*> getEncoder(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/QuantumEncoder/Build_QuantumEncoder.Build_QuantumEncoder_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getExplorationSink(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getExplorationSink(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Production::getResourceSink(WorldContext, EResourceSinkTrack::RST_Exploration));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getExplorer(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getExplorer(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Explorer/BP_Explorer.BP_Explorer_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getExtractor(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getResourceExtractor(WorldContext));
+	TArray<UBlueprintJsonValue*> getExtractor(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getResourceExtractor(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getFactoryCart(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getFactoryCart(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Golfcart/BP_Golfcart.BP_Golfcart_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getFoundry(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/FoundryMk1/Build_FoundryMk1.Build_FoundryMk1_C"))));
+	TArray<UBlueprintJsonValue*> getFoundry(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/FoundryMk1/Build_FoundryMk1.Build_FoundryMk1_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getFrackingActivator(UObject* WorldContext) {
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFrackingActivator(WorldContext));
+	TArray<UBlueprintJsonValue*> getFrackingActivator(UObject* WorldContext, FRequestData RequestData) {
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFrackingActivator(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getFuelGenerator(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getFuelGenerator(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorFuel/Build_GeneratorFuel.Build_GeneratorFuel_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getGeothermalGenerator(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getGeothermalGenerator(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorGeoThermal/Build_GeneratorGeoThermal.Build_GeneratorGeoThermal_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getHUBTerminal(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getHubTerminal(WorldContext));
+	TArray<UBlueprintJsonValue*> getHUBTerminal(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getHubTerminal(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getHypertube(UObject* WorldContext) {
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getHypertube(WorldContext));
+	TArray<UBlueprintJsonValue*> getHypertube(UObject* WorldContext, FRequestData RequestData) {
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getHypertube(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getManufacturer(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/ManufacturerMk1/Build_ManufacturerMk1.Build_ManufacturerMk1_C"))));
+	TArray<UBlueprintJsonValue*> getManufacturer(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/ManufacturerMk1/Build_ManufacturerMk1.Build_ManufacturerMk1_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getModList(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getModList(WorldContext));
+	TArray<UBlueprintJsonValue*> getModList(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getModList(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getNuclearGenerator(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getNuclearGenerator(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorNuclear/Build_GeneratorNuclear.Build_GeneratorNuclear_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getPackager(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Packager/Build_Packager.Build_Packager_C"))));
+	TArray<UBlueprintJsonValue*> getPackager(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Packager/Build_Packager.Build_Packager_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getParticle(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/HadronCollider/Build_HadronCollider.Build_HadronCollider_C"))));
+	TArray<UBlueprintJsonValue*> getParticle(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/HadronCollider/Build_HadronCollider.Build_HadronCollider_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getPaths(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getPipes(WorldContext));
+	TArray<UBlueprintJsonValue*> getPaths(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getPipes(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getPipes(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getPipes(WorldContext));
+	TArray<UBlueprintJsonValue*> getPipes(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getPipes(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getPlayer(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getPlayer(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Player::getPlayer(WorldContext));
 	}
 
 	UFUNCTION()
-    TArray<UBlueprintJsonValue*> getPortal(UObject* WorldContext) {
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getPortal(WorldContext));
+    TArray<UBlueprintJsonValue*> getPortal(UObject* WorldContext, FRequestData RequestData) {
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getPortal(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-    TArray<UBlueprintJsonValue*> getPower(UObject* WorldContext) {		
+    TArray<UBlueprintJsonValue*> getPower(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getPower(WorldContext));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getPowerSlug(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getPowerSlug(WorldContext));
+	TArray<UBlueprintJsonValue*> getPowerSlug(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getPowerSlug(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getPowerUsage(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getPowerUsage(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getPowerUsage(WorldContext));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getProdStats(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getProdStats(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Production::getProdStats(WorldContext));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getPump(UObject* WorldContext) {
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getPump(WorldContext));
+	TArray<UBlueprintJsonValue*> getPump(UObject* WorldContext, FRequestData RequestData) {
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getPump(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getRadarTower(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getRadarTower(WorldContext));
+	TArray<UBlueprintJsonValue*> getRadarTower(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getRadarTower(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getRecipes(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getRecipes(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Production::getRecipes(WorldContext));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getRefinery(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/OilRefinery/Build_OilRefinery.Build_OilRefinery_C"))));
+	TArray<UBlueprintJsonValue*> getRefinery(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/OilRefinery/Build_OilRefinery.Build_OilRefinery_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getResourceGeyser(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getResourceNode(WorldContext, AFGResourceNodeFrackingCore::StaticClass()));
+	TArray<UBlueprintJsonValue*> getResourceGeyser(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNodeFrackingCore::StaticClass()));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getResourceNode(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getResourceNode(WorldContext, AFGResourceNodeFrackingSatellite::StaticClass()));
+	TArray<UBlueprintJsonValue*> getResourceNode(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNodeFrackingSatellite::StaticClass()));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getResourceSink(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getResourceSink(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Production::getResourceSink(WorldContext, EResourceSinkTrack::RST_Default));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getResourceSinkBuilding(UObject* WorldContext) {
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getResourceSinkBuilding(WorldContext));
+	TArray<UBlueprintJsonValue*> getResourceSinkBuilding(UObject* WorldContext, FRequestData RequestData) {
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getResourceSinkBuilding(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getResourceWell(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getResourceNode(WorldContext, AFGResourceNode::StaticClass()));
+	TArray<UBlueprintJsonValue*> getResourceWell(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNode::StaticClass()));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getSchematics(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getSchematics(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Production::getSchematics(WorldContext));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getSinkList(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getSinkList(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Production::getSinkList(WorldContext));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getSmelter(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/SmelterMk1/Build_SmelterMk1.Build_SmelterMk1_C"))));
+	TArray<UBlueprintJsonValue*> getSmelter(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/SmelterMk1/Build_SmelterMk1.Build_SmelterMk1_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getSessionInfo(UObject* WorldContext) {
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getSessionInfo(WorldContext));
+	TArray<UBlueprintJsonValue*> getSessionInfo(UObject* WorldContext, FRequestData RequestData) {
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getSessionInfo(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getSpaceElevator(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getSpaceElevator(WorldContext));
+	TArray<UBlueprintJsonValue*> getSpaceElevator(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getSpaceElevator(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getStorageInv(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getStorageInv(WorldContext));
+	TArray<UBlueprintJsonValue*> getStorageInv(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getStorageInv(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getSwitches(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getSwitches(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getSwitches(WorldContext));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getTractor(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getTractor(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Tractor/BP_Tractor.BP_Tractor_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getTrains(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getTrains(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Trains::getTrains(WorldContext));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getTrainStation(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getTrainStation(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Trains::getTrainStation(WorldContext));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getTruck(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getTruck(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Truck/BP_Truck.BP_Truck_C"))));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getTruckStation(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getTruckStation(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Vehicles::getTruckStation(WorldContext));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getWorldInv(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getWorldInv(WorldContext));
+	TArray<UBlueprintJsonValue*> getWorldInv(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getWorldInv(WorldContext, RequestData));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getAll(UObject* WorldContext);
+	TArray<UBlueprintJsonValue*> getAll(UObject* WorldContext, FRequestData RequestData);
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getFactory(UObject* WorldContext) {		
-		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, AFGBuildableManufacturer::StaticClass()));
+	TArray<UBlueprintJsonValue*> getFactory(UObject* WorldContext, FRequestData RequestData) {		
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFactory(WorldContext, RequestData, AFGBuildableManufacturer::StaticClass()));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getGenerators(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getGenerators(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, AFGBuildableGenerator::StaticClass()));
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getVehicles(UObject* WorldContext) {		
+	TArray<UBlueprintJsonValue*> getVehicles(UObject* WorldContext, FRequestData RequestData) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Vehicles::getVehicles(WorldContext, AFGWheeledVehicle::StaticClass()));
 	}
 

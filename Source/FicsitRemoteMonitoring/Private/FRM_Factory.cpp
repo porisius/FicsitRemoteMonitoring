@@ -3,7 +3,7 @@
 
 #undef GetForm
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, FRequestData RequestData) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 
 	TArray<AFGBuildableConveyorBase*> ConveyorBelts;
@@ -36,7 +36,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext) {
 	return JConveyorBeltArray;
 };
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getModList(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getModList(UObject* WorldContext, FRequestData RequestData) {
 
 	const UGameInstance* GameInstance = WorldContext->GetWorld()->GetGameInstance();
 	UModLoadingLibrary* ModLoadingLibrary = GameInstance->GetSubsystem<UModLoadingLibrary>();
@@ -66,7 +66,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getModList(UObject* WorldContext) {
 
 }
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, UClass* TypedBuildable)
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, FRequestData RequestData, UClass* TypedBuildable)
 {
 	
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
@@ -178,7 +178,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, U
 	return JFactoryArray;
 }
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContext, FRequestData RequestData) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 	AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(WorldContext->GetWorld());
 
@@ -294,7 +294,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 	return JHubTerminalArray;
 };
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPowerSlug(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPowerSlug(UObject* WorldContext, FRequestData RequestData) {
 
 	UClass* CrystalClass = LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Resource/Environment/Crystal/BP_Crystal.BP_Crystal_C"));
 	TArray<AActor*> FoundActors;
@@ -332,7 +332,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPowerSlug(UObject* WorldContext)
 	return JSlugArray;
 };
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getStorageInv(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getStorageInv(UObject* WorldContext, FRequestData RequestData) {
 		
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
 
@@ -362,7 +362,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getStorageInv(UObject* WorldContext
 
 };
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getWorldInv(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getWorldInv(UObject* WorldContext, FRequestData RequestData) {
 
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
 
@@ -384,7 +384,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getWorldInv(UObject* WorldContext) 
 	return UFRM_Library::GetInventoryJSON(StorageTMap);
 }
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext, FRequestData RequestData) {
 
 	UClass* DropPodClass = LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGDropPod"));
 	TArray<AActor*> FoundActors;
@@ -436,7 +436,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext) {
 
 };
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* WorldContext)
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* WorldContext, FRequestData RequestData)
 {
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
@@ -504,7 +504,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 	return JExtractorArray;
 };
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceNode(UObject* WorldContext, UClass* ResourceActor) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceNode(UObject* WorldContext, FRequestData RequestData, UClass* ResourceActor) {
 
 	TArray<AActor*> FoundActors;
 	TArray<TSharedPtr<FJsonValue>> JResourceNodeArray;
@@ -523,7 +523,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceNode(UObject* WorldConte
 	return JResourceNodeArray;
 }
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext)
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext, FRequestData RequestData)
 {
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
@@ -644,7 +644,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 	return JRadarTowerArray;
 }
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceSinkBuilding(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceSinkBuilding(UObject* WorldContext, FRequestData RequestData) {
 
 	TArray<TSharedPtr<FJsonValue>> JResourceSinkBuildingArray;
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
@@ -660,7 +660,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceSinkBuilding(UObject* Wo
 	return JResourceSinkBuildingArray;
 }
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPump(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPump(UObject* WorldContext, FRequestData RequestData) {
 
 	TArray<TSharedPtr<FJsonValue>> JPumpArray;
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
@@ -678,7 +678,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPump(UObject* WorldContext) {
 	return JPumpArray;
 }
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPortal(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPortal(UObject* WorldContext, FRequestData RequestData) {
 
 	TArray<TSharedPtr<FJsonValue>> JPortalArray;
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
@@ -707,7 +707,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPortal(UObject* WorldContext) {
 	return JPortalArray;
 }
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHypertube(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHypertube(UObject* WorldContext, FRequestData RequestData) {
 
 	TArray<TSharedPtr<FJsonValue>> JHypertubeArray;
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
@@ -725,7 +725,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHypertube(UObject* WorldContext)
 	return JHypertubeArray;
 }
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFrackingActivator(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFrackingActivator(UObject* WorldContext, FRequestData RequestData) {
 
 	TArray<TSharedPtr<FJsonValue>> JFrackingActivatorArray;
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
@@ -743,7 +743,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFrackingActivator(UObject* World
 	return JFrackingActivatorArray;
 }
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldContext, FRequestData RequestData) {
 
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
 
@@ -790,7 +790,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldCont
 	return JSpaceElevatorArray;
 }
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getCloudInv(UObject* WorldContext)
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getCloudInv(UObject* WorldContext, FRequestData RequestData)
 {
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
 
@@ -815,7 +815,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getCloudInv(UObject* WorldContext)
 	return JCloudArray;
 }
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPipes(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPipes(UObject* WorldContext, FRequestData RequestData) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 
 	TArray<AFGBuildablePipeline*> Pipes;
@@ -847,7 +847,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPipes(UObject* WorldContext) {
 };
 
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSessionInfo(UObject* WorldContext) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSessionInfo(UObject* WorldContext, FRequestData RequestData) {
 
 	TSharedPtr<FJsonObject> JSessionInfo = MakeShared<FJsonObject>();
 	auto gameState = WorldContext->GetWorld()->GetGameState<AFGGameState>();

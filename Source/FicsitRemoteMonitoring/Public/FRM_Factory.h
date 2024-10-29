@@ -45,6 +45,7 @@
 #include "FGItemPickup.h"
 #include "Logging\StructuredLog.h"
 #include "FRM_Library.h"
+#include "FRM_RequestData.h"
 #include "FRM_Factory.generated.h"
 
 UCLASS()
@@ -54,26 +55,26 @@ class FICSITREMOTEMONITORING_API UFRM_Factory : public UFGBlueprintFunctionLibra
 
 public:
 
-	static TArray<TSharedPtr<FJsonValue>> getBelts(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getFactory(UObject* WorldContext, UClass* TypedBuildable);
-	static TArray<TSharedPtr<FJsonValue>> getFrackingActivator(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getHubTerminal(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getPowerSlug(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getStorageInv(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getWorldInv(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getDropPod(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getHypertube(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getPortal(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getPump(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getResourceExtractor(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getResourceSinkBuilding(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getPipes(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getModList(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getResourceNode(UObject* WorldContext, UClass* ResourceActor);
-	static TArray<TSharedPtr<FJsonValue>> getRadarTower(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getSpaceElevator(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getCloudInv(UObject* WorldContext);
-	static TArray<TSharedPtr<FJsonValue>> getSessionInfo(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getBelts(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getFactory(UObject* WorldContext, FRequestData RequestData, UClass* TypedBuildable);
+	static TArray<TSharedPtr<FJsonValue>> getFrackingActivator(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getHubTerminal(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getPowerSlug(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getStorageInv(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getWorldInv(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getDropPod(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getHypertube(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getPortal(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getPump(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getResourceExtractor(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getResourceSinkBuilding(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getPipes(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getModList(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getResourceNode(UObject* WorldContext, FRequestData RequestData, UClass* ResourceActor);
+	static TArray<TSharedPtr<FJsonValue>> getRadarTower(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getSpaceElevator(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getCloudInv(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getSessionInfo(UObject* WorldContext, FRequestData RequestData);
 
 	friend class AFGBuildableConveyorBase;
 	friend class AFGBuildableTradingPost;
