@@ -178,8 +178,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 		float Potential = Generator->GetCurrentPotential();
 		float PotentialCapacity = Generator->CalcPowerProductionCapacityForPotential(Potential);
 
-		int32 CircuitID = 0; // PowerInfo->GetPowerCircuit()->GetCircuitID();
-
 		float BaseProduction = PowerInfo->GetBaseProduction();
 		float DynProductionCapacity = PowerInfo->GetDynamicProductionCapacity();
 		float DynProductionDemand = PowerInfo->GetDynamicProductionDemandFactor() * 100;
@@ -189,7 +187,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 		JGenerator->Values.Add("Name", MakeShared<FJsonValueString>(Generator->mDisplayName.ToString()));
 		JGenerator->Values.Add("ClassName", MakeShared<FJsonValueString>(Generator->GetClass()->GetName()));
 		JGenerator->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Generator))));
-		JGenerator->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
 		JGenerator->Values.Add("BaseProd", MakeShared<FJsonValueNumber>(Generator->GetPowerProductionCapacity()));
 		JGenerator->Values.Add("DynamicProdCapacity", MakeShared<FJsonValueNumber>(DynProductionCapacity));
 		JGenerator->Values.Add("DynamicProdDemandFactor", MakeShared<FJsonValueNumber>(DynProductionDemand));
@@ -211,6 +208,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 		JGenerator->Values.Add("AvailableFuel", MakeShared<FJsonValueArray>(JFuelArray));
 		JGenerator->Values.Add("WasteInventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(WasteInventory)));
 		JGenerator->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Generator), Generator->mDisplayName.ToString(), Generator->mDisplayName.ToString())));
+		JGenerator->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Generator->GetPowerInfo())));
 
 		JGeneratorArray.Add(MakeShared<FJsonValueObject>(JGenerator));
 	};
