@@ -520,9 +520,11 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getExtractor", true, true, this->Get(GetWorld()), FName("getExtractor"));
 	RegisterEndpoint("getFactoryCart", false, false, this->Get(GetWorld()), FName("getFactoryCart"));
 	RegisterEndpoint("getFoundry", false, false, this->Get(GetWorld()), FName("getFoundry"));
+    RegisterEndpoint("getFrackingActivator", false, false, this->Get(GetWorld()), FName("getFrackingActivator"));
 	RegisterEndpoint("getFuelGenerator", false, false, this->Get(GetWorld()), FName("getFuelGenerator"));
 	RegisterEndpoint("getGeothermalGenerator", false, false, this->Get(GetWorld()), FName("getGeothermalGenerator"));
 	RegisterEndpoint("getHUBTerminal", true, true, this->Get(GetWorld()), FName("getHUBTerminal"));
+  RegisterEndpoint("getHypertube", true, false, this->Get(GetWorld()), FName("getHypertube"));
 	RegisterEndpoint("getManufacturer", false, false, this->Get(GetWorld()), FName("getManufacturer"));
 	RegisterEndpoint("getModList", true, false, this->Get(GetWorld()), FName("getModList"));
 	RegisterEndpoint("getNuclearGenerator", false, false, this->Get(GetWorld()), FName("getNuclearGenerator"));
@@ -531,9 +533,11 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getPaths", true, false, this->Get(GetWorld()), FName("getPaths"));
 	RegisterEndpoint("getPipes", true, false, this->Get(GetWorld()), FName("getPipes"));
 	RegisterEndpoint("getPlayer", true, true, this->Get(GetWorld()), FName("getPlayer"));
+  RegisterEndpoint("getPortal", true, false, this->Get(GetWorld()), FName("getPortal"));
 	RegisterEndpoint("getPower", true, false, this->Get(GetWorld()), FName("getPower"));
 	RegisterEndpoint("getPowerSlug", true, true, this->Get(GetWorld()), FName("getPowerSlug"));
 	RegisterEndpoint("getProdStats", true, false, this->Get(GetWorld()), FName("getProdStats"));
+  RegisterEndpoint("getPump", true, false, this->Get(GetWorld()), FName("getPump"));
 	RegisterEndpoint("getRadarTower", true, false, this->Get(GetWorld()), FName("getRadarTower"));
 	RegisterEndpoint("getRecipes", true, true, this->Get(GetWorld()), FName("getRecipes"));
 	RegisterEndpoint("getRefinery", false, false, this->Get(GetWorld()), FName("getRefinery"));

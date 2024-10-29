@@ -664,6 +664,89 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceSinkBuilding(UObject* Wo
 	return JResourceSinkBuildingArray;
 }
 
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPump(UObject* WorldContext) {
+
+	TArray<TSharedPtr<FJsonValue>> JPumpArray;
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+
+	TArray<AFGBuildablePipelinePump*> BuildablePumps;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildablePipelinePump>(BuildablePumps);
+
+	for (AFGBuildablePipelinePump* Pump : BuildablePumps) {
+		TSharedPtr<FJsonObject> JPump = MakeShared<FJsonObject>();
+		JPump->Values.Add("Name", MakeShared<FJsonValueString>(Pump->mDisplayName.ToString()));
+		JPump->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Pump)));
+		JPump->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Pump->GetPowerInfo())));
+		JPumpArray.Add(MakeShared<FJsonValueObject>(JPump));
+	}
+	return JPumpArray;
+}
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPortal(UObject* WorldContext) {
+
+	TArray<TSharedPtr<FJsonValue>> JPortalArray;
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+
+	TArray<AFGBuildablePortal*> BuildablePortal;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildablePortal>(BuildablePortal);
+
+	for (AFGBuildablePortal* Portal : BuildablePortal) {
+		TSharedPtr<FJsonObject> JPortal = MakeShared<FJsonObject>();
+		JPortal->Values.Add("Name", MakeShared<FJsonValueString>(Portal->mDisplayName.ToString()));
+		JPortal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Portal)));
+		JPortal->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Portal->GetPowerInfo())));
+		JPortalArray.Add(MakeShared<FJsonValueObject>(JPortal));
+	}
+
+	TArray<AFGBuildablePortalSatellite*> BuildablePortalSatellite;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildablePortalSatellite>(BuildablePortalSatellite);
+
+	for (AFGBuildablePortalSatellite* Portal : BuildablePortalSatellite) {
+		TSharedPtr<FJsonObject> JPortal = MakeShared<FJsonObject>();
+		JPortal->Values.Add("Name", MakeShared<FJsonValueString>(Portal->mDisplayName.ToString()));
+		JPortal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Portal)));
+		JPortal->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Portal->GetPowerInfo())));
+		JPortalArray.Add(MakeShared<FJsonValueObject>(JPortal));
+	}
+	return JPortalArray;
+}
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHypertube(UObject* WorldContext) {
+
+	TArray<TSharedPtr<FJsonValue>> JHypertubeArray;
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+
+	TArray<AFGPipeHyperStart*> HyperStart;
+	BuildableSubsystem->GetTypedBuildable<AFGPipeHyperStart>(HyperStart);
+
+	for (AFGPipeHyperStart* Hypertube : HyperStart) {
+		TSharedPtr<FJsonObject> JHypertube = MakeShared<FJsonObject>();
+		JHypertube->Values.Add("Name", MakeShared<FJsonValueString>(Hypertube->mDisplayName.ToString()));
+		JHypertube->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Hypertube)));
+		JHypertube->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Hypertube->GetPowerInfo())));
+		JHypertubeArray.Add(MakeShared<FJsonValueObject>(JHypertube));
+	}
+	return JHypertubeArray;
+}
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFrackingActivator(UObject* WorldContext) {
+
+	TArray<TSharedPtr<FJsonValue>> JFrackingActivatorArray;
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+
+	TArray<AFGBuildableFrackingActivator*> FrackingActivator;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableFrackingActivator>(FrackingActivator);
+
+	for (AFGBuildableFrackingActivator* Fracking : FrackingActivator) {
+		TSharedPtr<FJsonObject> JFrackingActivator = MakeShared<FJsonObject>();
+		JFrackingActivator->Values.Add("Name", MakeShared<FJsonValueString>(Fracking->mDisplayName.ToString()));
+		JFrackingActivator->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Fracking)));
+		JFrackingActivator->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Fracking->GetPowerInfo())));
+		JFrackingActivatorArray.Add(MakeShared<FJsonValueObject>(JFrackingActivator));
+	}
+	return JFrackingActivatorArray;
+}
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldContext) {
 
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
