@@ -536,6 +536,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
   RegisterEndpoint("getPortal", true, false, this->Get(GetWorld()), FName("getPortal"));
 	RegisterEndpoint("getPower", true, false, this->Get(GetWorld()), FName("getPower"));
 	RegisterEndpoint("getPowerSlug", true, true, this->Get(GetWorld()), FName("getPowerSlug"));
+	RegisterEndpoint("getPowerUsage", true, false, this->Get(GetWorld()), FName("getPowerUsage"));
 	RegisterEndpoint("getProdStats", true, false, this->Get(GetWorld()), FName("getProdStats"));
   RegisterEndpoint("getPump", true, false, this->Get(GetWorld()), FName("getPump"));
 	RegisterEndpoint("getRadarTower", true, false, this->Get(GetWorld()), FName("getRadarTower"));

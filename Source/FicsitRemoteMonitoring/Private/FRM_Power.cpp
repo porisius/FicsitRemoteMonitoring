@@ -215,3 +215,27 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 
 	return JGeneratorArray;
 };
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Power::getPowerUsage(UObject* WorldContext)
+{
+
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	TArray<AFGBuildableFactory*> BuildableFactories;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableFactory>(BuildableFactories);
+
+	TArray<TSharedPtr<FJsonValue>> JUsageArray;
+
+	for (AFGBuildableFactory* BuildableFactory : BuildableFactories)
+	{
+		TSharedPtr<FJsonObject> JUsage = MakeShared<FJsonObject>();
+
+		JUsage->Values.Add("Name", MakeShared<FJsonValueString>(BuildableFactory->mDisplayName.ToString()));
+		JUsage->Values.Add("ClassName", MakeShared<FJsonValueString>(BuildableFactory->GetClass()->GetName()));
+		JUsage->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(BuildableFactory->GetPowerInfo())));
+
+		JUsageArray.Add(MakeShared<FJsonValueObject>(JUsage));		
+	}
+
+	return JUsageArray;
+	
+}

@@ -25,7 +25,8 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getPower(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getSwitches(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getGenerators(UObject* WorldContext, UClass* TypedBuildable);
-
+	static TArray<TSharedPtr<FJsonValue>> getPowerUsage(UObject* WorldContext);
+	
 private:
 	friend class UFGPowerCircuit;
 	friend class UFGPowerCircuitGroup;
