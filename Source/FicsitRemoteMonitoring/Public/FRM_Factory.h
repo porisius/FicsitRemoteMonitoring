@@ -12,12 +12,17 @@
 #include "FGFactoryConnectionComponent.h"
 #include "FGGameState.h"
 #include "Buildables/FGBuildableFactory.h"
+#include "Buildables/FGBuildableFrackingActivator.h"
 #include "Buildables/FGBuildableHubTerminal.h"
 #include "Buildables/FGBuildableTradingPost.h"
 #include "Buildables/FGBuildableManufacturer.h"
 #include "Buildables/FGBuildableManufacturerVariablePower.h"
 #include "Buildables/FGBuildableResourceExtractor.h"
 #include "Buildables/FGBuildableResourceSink.h"
+#include "Buildables/FGBuildablePortal.h"
+#include "Buildables/FGBuildablePortalSatellite.h"
+#include "Buildables/FGPipeHyperStart.h"
+#include "Buildables/FGBuildablePipelinePump.h"
 #include "Buildables/FGBuildableSpaceElevator.h"
 #include "Buildables/FGBuildableRadarTower.h"
 #include "FGScannableSubsystem.h"
@@ -51,11 +56,15 @@ public:
 
 	static TArray<TSharedPtr<FJsonValue>> getBelts(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getFactory(UObject* WorldContext, UClass* TypedBuildable);
+	static TArray<TSharedPtr<FJsonValue>> getFrackingActivator(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getHubTerminal(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getPowerSlug(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getStorageInv(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getWorldInv(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getDropPod(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getHypertube(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getPortal(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getPump(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getResourceExtractor(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getResourceSinkBuilding(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getPipes(UObject* WorldContext);

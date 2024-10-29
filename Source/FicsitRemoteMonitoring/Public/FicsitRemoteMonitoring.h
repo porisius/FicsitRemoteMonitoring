@@ -320,6 +320,11 @@ public:
 	}
 
 	UFUNCTION()
+	TArray<UBlueprintJsonValue*> getFrackingActivator(UObject* WorldContext) {
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getFrackingActivator(WorldContext));
+	}
+
+	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getFuelGenerator(UObject* WorldContext) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorFuel/Build_GeneratorFuel.Build_GeneratorFuel_C"))));
 	}
@@ -332,6 +337,11 @@ public:
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getHUBTerminal(UObject* WorldContext) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getHubTerminal(WorldContext));
+	}
+
+	UFUNCTION()
+	TArray<UBlueprintJsonValue*> getHypertube(UObject* WorldContext) {
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getHypertube(WorldContext));
 	}
 
 	UFUNCTION()
@@ -375,7 +385,12 @@ public:
 	}
 
 	UFUNCTION()
-	TArray<UBlueprintJsonValue*> getPower(UObject* WorldContext) {		
+    TArray<UBlueprintJsonValue*> getPortal(UObject* WorldContext) {
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getPortal(WorldContext));
+	}
+
+	UFUNCTION()
+    TArray<UBlueprintJsonValue*> getPower(UObject* WorldContext) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Power::getPower(WorldContext));
 	}
 
@@ -387,6 +402,11 @@ public:
 	UFUNCTION()
 	TArray<UBlueprintJsonValue*> getProdStats(UObject* WorldContext) {		
 		return UBlueprintJsonValue::FromJsonArray(UFRM_Production::getProdStats(WorldContext));
+	}
+
+	UFUNCTION()
+	TArray<UBlueprintJsonValue*> getPump(UObject* WorldContext) {
+		return UBlueprintJsonValue::FromJsonArray(UFRM_Factory::getPump(WorldContext));
 	}
 
 	UFUNCTION()
