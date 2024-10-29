@@ -104,10 +104,7 @@ struct FCallEndpointResponse
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "CallEndpointResult")
 	TArray<UBlueprintJsonValue*> JsonValues;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "CallEndpointResult")
 	bool bUseFirstObject;
 };
 
