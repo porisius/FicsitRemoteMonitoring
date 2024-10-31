@@ -753,7 +753,7 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
                 if (EndpointInfo.bRequireGameThread)
                 {
                     FThreadSafeBool bAllocationComplete = false;
-                    AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext, &RequestData, &JsonArray, &bAllocationComplete, &bSuccess]() {
+                    AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &bSuccess]() {
                         // Execute callback via GameThread, check if WorldContext is valid and if Callback IsBound (valid)
                         if (WorldContext && Callback.IsBound())
                         {
