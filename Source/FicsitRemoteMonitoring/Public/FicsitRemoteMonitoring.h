@@ -71,7 +71,7 @@ struct FClientInfo
 };
 
 UDELEGATE(BlueprintCallable) 
-DECLARE_DYNAMIC_DELEGATE_RetVal_TwoParams(TArray<UBlueprintJsonValue*>, FAPICallback, const UObject*, WorldContext, FRequestData&, RequestData);
+DECLARE_DYNAMIC_DELEGATE_RetVal_TwoParams(TArray<UBlueprintJsonValue*>, FAPICallback, const UObject*, WorldContext, FRequestData, RequestData);
 
 USTRUCT(BlueprintType, meta = (DontUseGenericSpawnObject = "True"))
 struct FAPIEndpoint
@@ -137,7 +137,7 @@ public:
 	void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, UObject* TargetObject, FName FunctionName);
 
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
-	FString HandleEndpoint (UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess);
+	FString HandleEndpoint (UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess);
 
 	//FFGServerErrorResponse HandleCSSEndpoint(FString& out_json, FString InEndpoin);
 	
