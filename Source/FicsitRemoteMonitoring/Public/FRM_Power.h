@@ -13,7 +13,6 @@
 #include "Buildables\FGBuildableGeneratorNuclear.h"
 #include "FGPowerCircuit.h"
 #include "FGCircuitSubsystem.h"
-#include "BlueprintJsonObject.h"
 #include "FRM_Power.generated.h"
 
 UCLASS()

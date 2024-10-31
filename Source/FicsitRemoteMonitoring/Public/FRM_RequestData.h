@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "BlueprintJsonObject.h"
 #include "FRM_RequestData.generated.h"
 
 USTRUCT(BlueprintType)
