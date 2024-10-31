@@ -664,18 +664,6 @@ void AFicsitRemoteMonitoring::InitOutageNotification() {
 
 }
 
-void AFicsitRemoteMonitoring::BlueprintEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FAPICallback InCallback)
-{
-	FAPIEndpoint NewEndpoint;
-    NewEndpoint.APIName = APIName;
-    NewEndpoint.bGetAll = bGetAll;
-    NewEndpoint.bRequireGameThread = bRequireGameThread;
-    NewEndpoint.Callback = InCallback;
-
-	APIEndpoints.Add(NewEndpoint);
-
-}
-
 void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, UObject* TargetObject, FName FunctionName)
 {
 	RegisterEndpoint(APIName, bGetAll, bRequireGameThread, false, TargetObject, FunctionName);
@@ -731,7 +719,7 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
 	FCallEndpointResponse Response;
 	Response.bUseFirstObject = false;
 	bSuccess = false;
-    TArray<UBlueprintJsonValue*> JsonArray = TArray<UBlueprintJsonValue*>{};
+    TArray<TSharedPtr<FJsonValue>> JsonArray = TArray<TSharedPtr<FJsonValue>>{};
 
     Response.JsonValues = JsonArray;
 
@@ -782,13 +770,11 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
 
                 FString err = *FString(e.what());
 
-                UBlueprintJsonObject* JsonObject = UBlueprintJsonObject::Create();
+                TSharedPtr<FJsonObject> JsonObject =  MakeShared<FJsonObject>();
 
-                JsonObject->SetString("error", "CallEndpoint Exception: " + err);
-                JsonArray.Add(UBlueprintJsonValue::FromObject(JsonObject));
-
-                JsonObject->SetString("recommendation", "Please relay this error, and logs the the Sysadmin Modding Discord for anaylsis.");
-                JsonArray.Add(UBlueprintJsonValue::FromObject(JsonObject));
+                JsonObject->Values.Add("error", MakeShared<FJsonValueString>("CallEndpoint Exception: " + err));
+                JsonObject->Values.Add("recommendation", MakeShared<FJsonValueString>("Please relay this error, and logs the the Sysadmin Modding Discord for anaylsis."));
+                JsonArray.Add(MakeShared<FJsonValueObject>(JsonObject));
 
                 UE_LOGFMT(LogHttpServer, Error, "CallEndpoint Exception: %s", err);
 
@@ -819,22 +805,22 @@ FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString I
 		return "{\"error\": \"Endpoint not found. Please consult Endpoint's documentation for more information.\"}";
 	}
 
-	if (!bUseFirstObject) return UBlueprintJsonValue::StringifyArray(JsonValues, JSONDebugMode);
+	if (!bUseFirstObject) return JsonArrayToString(JSONDebugMode,JsonValues);
 
 	// return empty object, if JsonValues is empty
 	if (JsonValues.Num() == 0) return "{}";
 
-	UBlueprintJsonObject* FirstJsonObject;
-	JsonValues[0]->ToObject(FirstJsonObject);
+	TSharedPtr<FJsonObject> FirstJsonObject;
+	FirstJsonObject= JsonValues[0]->AsObject();
 
-	return FirstJsonObject->Stringify(JSONDebugMode);
+	return JsonObjectToString(JSONDebugMode, FirstJsonObject);
 }
 
 /*FFGServerErrorResponse AFicsitRemoteMonitoring::HandleCSSEndpoint(FString& out_json, FString InEndpoin)
 {
     bool bSuccess = false;
     auto World = GetWorld();
-    TArray<UBlueprintJsonValue*> Json = this->CallEndpoint(World, InEndpoin, bSuccess);
+    TArray<TSharedPtr<FJsonValue>> Json = this->CallEndpoint(World, InEndpoin, bSuccess);
 
     if (!bSuccess) {
         out_json = "{'error': 'Endpoint not found. Please consult Endpoint's documentation for more information.'}";
@@ -847,36 +833,73 @@ FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString I
 
 }
 */
-TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::getAll(UObject* WorldContext, FRequestData RequestData) {
 
-	TArray<UBlueprintJsonValue*> JsonArray;
+FString JsonArrayToString(bool JSONDebugMode, TArray<TSharedPtr<FJsonValue>> JsonArray)
+{
+	FString Write;
+
+	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> PrettyJsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+	const TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> CondensedJsonWriter = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+	
+	if (JSONDebugMode)
+	{
+		FJsonSerializer::Serialize(JsonArray, PrettyJsonWriter);
+	} else
+	{
+		FJsonSerializer::Serialize(JsonArray, CondensedJsonWriter);	
+	}
+
+	return Write;
+}
+
+FString JsonObjectToString(bool JSONDebugMode, TSharedPtr<FJsonObject> JsonObject)
+{
+	FString Write;
+
+	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> PrettyJsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+	const TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> CondensedJsonWriter = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
+	
+	if (JSONDebugMode)
+	{
+		FJsonSerializer::Serialize(JsonObject.ToSharedRef(), PrettyJsonWriter);
+	} else
+	{
+		FJsonSerializer::Serialize(JsonObject.ToSharedRef(), CondensedJsonWriter);	
+	}
+
+	return Write;
+}
+
+TArray<TSharedPtr<FJsonValue>> AFicsitRemoteMonitoring::getAll(UObject* WorldContext, FRequestData RequestData) {
+
+	TArray<TSharedPtr<FJsonValue>> JsonArray;
 
     for ( FAPIEndpoint APIEndpoint : APIEndpoints) {
         
         bool bSuccess = false;
 
         if (APIEndpoint.bGetAll) {
-            UBlueprintJsonObject* Json = UBlueprintJsonObject::Create();
+            TSharedPtr<FJsonObject> Json =  MakeShared<FJsonObject>();
 
             auto [JsonValues, bUseFirstObject] = CallEndpoint(WorldContext, APIEndpoint.APIName, RequestData, bSuccess);
 
             if (bUseFirstObject)
             {
-                UBlueprintJsonObject* FirstJsonObject;
+                TSharedPtr<FJsonObject> FirstJsonObject;
                 if (JsonValues.Num() > 0)
                 {
-                    JsonValues[0]->ToObject(FirstJsonObject);
+                    FirstJsonObject= JsonValues[0]->AsObject();
                 }
                 else
                 {
-                    FirstJsonObject = UBlueprintJsonObject::Create();
+                    FirstJsonObject =  MakeShared<FJsonObject>();
                 }
 
-                Json->SetObject(APIEndpoint.APIName, FirstJsonObject);
+                Json->Values.Add(APIEndpoint.APIName, MakeShared<FJsonValueObject>(FirstJsonObject));
             }
             else
         	{
-                Json->SetArray(APIEndpoint.APIName, JsonValues);
+                Json->Values.Add(APIEndpoint.APIName, MakeShared<FJsonValueArray>(JsonValues));
         	}
 
             //block while not complete
@@ -886,7 +909,7 @@ TArray<UBlueprintJsonValue*> AFicsitRemoteMonitoring::getAll(UObject* WorldConte
                 FPlatformProcess::Sleep(0.0001f);
             };
 
-            JsonArray.Add(UBlueprintJsonValue::FromObject(Json));
+            JsonArray.Add(MakeShared<FJsonValueObject>(Json));
         }
     }
 
