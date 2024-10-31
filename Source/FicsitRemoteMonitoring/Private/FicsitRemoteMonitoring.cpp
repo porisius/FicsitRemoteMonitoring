@@ -168,7 +168,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                 };
 
                 app.get("/getCoffee", [this](auto* res, auto* req) {
-                    FScopeLock ScopeLock(&WebSocketCriticalSection);
                     if (!res || !req) {
                         UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
                         return;
@@ -188,7 +187,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                 });
 
                 app.get("/", [](auto* res, auto* req) {
-                    FScopeLock ScopeLock(&WebSocketCriticalSection);
                     res->writeStatus("301 Moved Permanently")->writeHeader("Location", "/index.html")->end();
                 });
 
@@ -204,7 +202,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     UE_LOG(LogHttpServer, Log, TEXT("Request RelativePath: %s"), *RelativePath);
                     UE_LOG(LogHttpServer, Log, TEXT("Request FilePath: %s"), *FilePath);
 
-                    FScopeLock ScopeLock(&WebSocketCriticalSection);
                     if (!res || !req) {
                         UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
                         return;
@@ -241,8 +238,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                     UE_LOG(LogHttpServer, Log, TEXT("Request RelativePath/FilePath: %s %s"), *RelativePath, *FilePath);
 
-                    FScopeLock ScopeLock(&WebSocketCriticalSection);
-
                     if (FPaths::FileExists(FilePath)) {
                         bFileExists = true;
                     }
@@ -265,7 +260,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                     UE_LOG(LogHttpServer, Warning, TEXT("Attempting to listen on port %d"), port);
 
-                    FScopeLock ScopeLock(&WebSocketCriticalSection);
                     if (token) {
                         SocketListener = token;
                         UE_LOGFMT(LogHttpServer, Warning, "Listening on port {port}", port);
@@ -348,7 +342,6 @@ void AFicsitRemoteMonitoring::OnClientDisconnected(uWS::WebSocket<false, true, F
 }
 
 void AFicsitRemoteMonitoring::OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode) {
-	FScopeLock ScopeLock(&WebSocketCriticalSection);
 
 	FString MessageContent = FString(message.data());
 

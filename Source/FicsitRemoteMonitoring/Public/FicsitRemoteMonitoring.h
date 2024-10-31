@@ -58,11 +58,6 @@ THIRD_PARTY_INCLUDES_END
 
 #include "FicsitRemoteMonitoring.generated.h"
 
-// Declare a critical section
-FCriticalSection WebSocketCriticalSection;
-TQueue<FString, EQueueMode::Mpsc> MessageQueue;
-FThreadSafeBool bIsRunning = true;
-
 struct FWebSocketUserData {
 	// Add any fields here you want to track for each WebSocket client
 	int32 ClientID;
