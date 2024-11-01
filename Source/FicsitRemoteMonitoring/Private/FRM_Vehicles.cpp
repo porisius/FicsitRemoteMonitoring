@@ -11,7 +11,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getTruckStation(UObject* WorldCont
 	// Factory Building Production Stats
 	for (AFGBuildableDockingStation* TruckStation : Buildables) {
 
-		TSharedPtr<FJsonObject> JTruckStation = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JTruckStation = UFRM_Library::CreateBaseJsonObject(TruckStation);
 
 		FString LoadMode;
 		if (TruckStation->GetIsInLoadMode()) {
@@ -83,7 +83,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 
 		if (Vehicle->GetClass()->IsChildOf(VehicleClass)) {
 			//UE_LOG(LogFRMAPI, Warning, TEXT("Processing vehicle '%s'"), *Vehicle->GetName());
-			TSharedPtr<FJsonObject> JVehicle = MakeShared<FJsonObject>();
+			TSharedPtr<FJsonObject> JVehicle = UFRM_Library::CreateBaseJsonObject(Vehicle);
 
 			AFGWheeledVehicle* WheeledVehicle = Cast<AFGWheeledVehicle>(Vehicle);
 			fgcheck(WheeledVehicle);
@@ -148,7 +148,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 			//fgcheck(VehiclePath);
 			//FString PathName = VehiclePath->mPathName;
 
-			JVehicle->Values.Add("ID", MakeShared<FJsonValueString>(Vehicle->GetName()));
 			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(Vehicle->mDisplayName.ToString()));
 			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Vehicle->GetClass())));
 			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Vehicle)));

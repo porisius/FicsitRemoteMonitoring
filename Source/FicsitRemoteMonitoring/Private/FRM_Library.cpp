@@ -188,6 +188,14 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Library::GetInventoryJSON(const TMap<TSubcla
 	return JInventoryArray;
 }
 
+TSharedPtr<FJsonObject> UFRM_Library::CreateBaseJsonObject(const UObject* Actor)
+{
+	TSharedPtr<FJsonObject> JObject = MakeShared<FJsonObject>();
+	JObject->Values.Add("ID", MakeShared<FJsonValueString>(Actor->GetName()));
+
+	return JObject;
+}
+
 TSharedPtr<FJsonObject> UFRM_Library::GetResourceNodeJSON(AActor* Actor, const bool bIncludeFeatures)
 {
 	AFGResourceNode* ResourceNode = Cast<AFGResourceNode>(Actor);
@@ -195,7 +203,7 @@ TSharedPtr<FJsonObject> UFRM_Library::GetResourceNodeJSON(AActor* Actor, const b
 		return nullptr;
 	}
 
-	TSharedPtr<FJsonObject> JResourceNode = MakeShared<FJsonObject>();
+	TSharedPtr<FJsonObject> JResourceNode = CreateBaseJsonObject(Actor);
 
 	// get purity
 	const EResourcePurity ResourcePurity = ResourceNode->GetResoucePurity();
