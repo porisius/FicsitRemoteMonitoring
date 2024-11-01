@@ -11,6 +11,7 @@
 #include "HAL/PlatformFileManager.h"
 #include "UObject/NoExportTypes.h"
 #include "Async/Async.h"
+#include "Templates/Function.h"  // Required for function pointers
 //#include "FactoryDedicatedServer/Public/FGServerSubsystem.h"
 //#include "FactoryDedicatedServer/Public/Networking/FGServerAPIManager.h"
 #include "FRM_Drones.h"
@@ -69,20 +70,26 @@ struct FClientInfo
 	TArray<uWS::WebSocket<false, true, FWebSocketUserData>*> Client;  // Add the third template argument for USERDATA
 };
 
-USTRUCT(BlueprintType, meta = (DontUseGenericSpawnObject = "True"))
-struct FAPIEndpoint
-{
-    GENERATED_BODY()
+typedef void (AFicsitRemoteMonitoring::*FEndpointFunction)(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray);
 
-public:
-	
-    FString APIName;
-    bool bGetAll;
-    bool bUseFirstObject;
-    bool bRequireGameThread;
-	UObject* TargetObject;
-    FName FunctionName;
+USTRUCT()
+struct FAPIEndpoint {
+	GENERATED_BODY()  // Required for USTRUCT
 
+	UPROPERTY()
+	FString APIName;
+
+	UPROPERTY()
+	bool bGetAll;
+
+	UPROPERTY()
+	bool bUseFirstObject;
+
+	UPROPERTY()
+	bool bRequireGameThread;
+
+	// Function pointer to the endpoint handler (not a UPROPERTY because function pointers aren’t supported by UPROPERTY)
+	FEndpointFunction FunctionPtr;
 };
 
 USTRUCT(BlueprintType)
@@ -118,8 +125,8 @@ public:
 	/** Get the subsystem in the current world, can be nullptr, e.g. on game ending (destroy) or game startup. */
 	static AFicsitRemoteMonitoring* Get(UWorld* world);
 
-	void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, UObject* TargetObject, FName FunctionName);
-	void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, UObject* TargetObject, FName FunctionName);
+	void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FEndpointFunction FunctionPtr);
+	void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, FEndpointFunction FunctionPtr);
 
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
 	FString HandleEndpoint (UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess);
@@ -184,6 +191,7 @@ public:
 
 	void HandleGetRequest(uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString FilePath);
 	void AddResponseHeaders(uWS::HttpResponse<false>* res, bool bIncludeContentType);
+	void AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonArray, const FString& ErrorMessage);
 
 	UPROPERTY()
 	TArray<FString> Flavor_Battery;
