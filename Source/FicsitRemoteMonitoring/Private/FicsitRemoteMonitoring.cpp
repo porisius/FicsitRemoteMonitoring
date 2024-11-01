@@ -542,76 +542,75 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 
 }
 
-
 void AFicsitRemoteMonitoring::InitAPIRegistry()
 {
 
-	//Registering Endpoints: API Name, bGetAll, bRequireGameThread, UObject, Function Name
-	RegisterEndpoint("getAssembler", false, false, this->Get(GetWorld()), FName("getAssembler"));
-	RegisterEndpoint("getBelts", true, false, this->Get(GetWorld()), FName("getBelts"));
-	RegisterEndpoint("getBiomassGenerator", false, false, this->Get(GetWorld()), FName("getBiomassGenerator"));
-	RegisterEndpoint("getBlender", false, false, this->Get(GetWorld()), FName("getBlender"));
-	RegisterEndpoint("getCloudInv", true, false, this->Get(GetWorld()), FName("getCloudInv"));
-	RegisterEndpoint("getCoalGenerator", false, false, this->Get(GetWorld()), FName("getCoalGenerator"));
-    RegisterEndpoint("getConstructor", false, false, this->Get(GetWorld()), FName("getConstructor"));
-	RegisterEndpoint("getConverter", false, false, this->Get(GetWorld()), FName("getConverter"));
-	RegisterEndpoint("getDoggo", true, true, this->Get(GetWorld()), FName("getDoggo"));
-	RegisterEndpoint("getDrone", true, true, this->Get(GetWorld()), FName("getDrone"));
-	RegisterEndpoint("getDroneStation", true, false, this->Get(GetWorld()), FName("getDroneStation"));
-	RegisterEndpoint("getDropPod", true, true, this->Get(GetWorld()), FName("getDropPod"));
-	RegisterEndpoint("getEncoder", true, false, this->Get(GetWorld()), FName("getEncoder"));
-	RegisterEndpoint("getExplorationSink", true, false, this->Get(GetWorld()), FName("getExplorationSink"));
-	RegisterEndpoint("getExplorer", false, true, this->Get(GetWorld()), FName("getExplorer"));
-	RegisterEndpoint("getExtractor", true, true, this->Get(GetWorld()), FName("getExtractor"));
-	RegisterEndpoint("getFactoryCart", false, false, this->Get(GetWorld()), FName("getFactoryCart"));
-	RegisterEndpoint("getFoundry", false, false, this->Get(GetWorld()), FName("getFoundry"));
-    RegisterEndpoint("getFrackingActivator", false, false, this->Get(GetWorld()), FName("getFrackingActivator"));
-	RegisterEndpoint("getFuelGenerator", false, false, this->Get(GetWorld()), FName("getFuelGenerator"));
-	RegisterEndpoint("getGeothermalGenerator", false, false, this->Get(GetWorld()), FName("getGeothermalGenerator"));
-	RegisterEndpoint("getHUBTerminal", true, true, this->Get(GetWorld()), FName("getHUBTerminal"));
-  RegisterEndpoint("getHypertube", true, false, this->Get(GetWorld()), FName("getHypertube"));
-	RegisterEndpoint("getManufacturer", false, false, this->Get(GetWorld()), FName("getManufacturer"));
-	RegisterEndpoint("getModList", true, false, this->Get(GetWorld()), FName("getModList"));
-	RegisterEndpoint("getNuclearGenerator", false, false, this->Get(GetWorld()), FName("getNuclearGenerator"));
-    RegisterEndpoint("getPackager", false, false, this->Get(GetWorld()), FName("getPackager"));
-	RegisterEndpoint("getParticle", false, false, this->Get(GetWorld()), FName("getParticle"));
-	RegisterEndpoint("getPaths", true, false, this->Get(GetWorld()), FName("getPaths"));
-	RegisterEndpoint("getPipes", true, false, this->Get(GetWorld()), FName("getPipes"));
-	RegisterEndpoint("getPlayer", true, true, this->Get(GetWorld()), FName("getPlayer"));
-  RegisterEndpoint("getPortal", true, false, this->Get(GetWorld()), FName("getPortal"));
-	RegisterEndpoint("getPower", true, false, this->Get(GetWorld()), FName("getPower"));
-	RegisterEndpoint("getPowerSlug", true, true, this->Get(GetWorld()), FName("getPowerSlug"));
-	RegisterEndpoint("getPowerUsage", true, false, this->Get(GetWorld()), FName("getPowerUsage"));
-	RegisterEndpoint("getProdStats", true, false, this->Get(GetWorld()), FName("getProdStats"));
-  RegisterEndpoint("getPump", true, false, this->Get(GetWorld()), FName("getPump"));
-	RegisterEndpoint("getRadarTower", true, false, this->Get(GetWorld()), FName("getRadarTower"));
-	RegisterEndpoint("getRecipes", true, true, this->Get(GetWorld()), FName("getRecipes"));
-	RegisterEndpoint("getRefinery", false, false, this->Get(GetWorld()), FName("getRefinery"));
-	RegisterEndpoint("getResourceGeyser", true, true, this->Get(GetWorld()), FName("getResourceGeyser"));
-	RegisterEndpoint("getResourceNode", true, true, this->Get(GetWorld()), FName("getResourceNode"));
-	RegisterEndpoint("getResourceSink", true, false, this->Get(GetWorld()), FName("getResourceSink"));
-    RegisterEndpoint("getResourceSinkBuilding", true, false, this->Get(GetWorld()), FName("getResourceSinkBuilding"));
-	RegisterEndpoint("getResourceWell", true, true, this->Get(GetWorld()), FName("getResourceWell"));
-    RegisterEndpoint("getSessionInfo", true, true, true, this->Get(GetWorld()), FName("getSessionInfo"));
-	RegisterEndpoint("getSchematics", true, true, this->Get(GetWorld()), FName("getSchematics"));
-	RegisterEndpoint("getSinkList", true, true, this->Get(GetWorld()), FName("getSinkList"));
-	RegisterEndpoint("getSmelter", false, false, this->Get(GetWorld()), FName("getSmelter"));
-	RegisterEndpoint("getSpaceElevator", true, false, this->Get(GetWorld()), FName("getSpaceElevator"));
-	RegisterEndpoint("getStorageInv", true, false, this->Get(GetWorld()), FName("getStorageInv"));
-	RegisterEndpoint("getSwitches", true, false, this->Get(GetWorld()), FName("getSwitches"));
-	RegisterEndpoint("getTractor", false, false, this->Get(GetWorld()), FName("getTractor"));
-	RegisterEndpoint("getTrains", true, false, this->Get(GetWorld()), FName("getTrains"));
-	RegisterEndpoint("getTrainStation", true, false, this->Get(GetWorld()), FName("getTrainStation"));
-	RegisterEndpoint("getTruck", false, false, this->Get(GetWorld()), FName("getTruck"));
-	RegisterEndpoint("getTruckStation", true, false, this->Get(GetWorld()), FName("getTruckStation"));
-	RegisterEndpoint("getWorldInv", true, false, this->Get(GetWorld()), FName("getWorldInv"));
-	RegisterEndpoint("getResearchTrees", true, true, this->Get(GetWorld()), FName("getResearchTrees"));
+	//Registering Endpoints: API Name, bGetAll, bRequireGameThread, FunctionPtr
+	RegisterEndpoint("getAssembler", false, false, &AFicsitRemoteMonitoring::getAssembler);
+	RegisterEndpoint("getBelts", true, false, &AFicsitRemoteMonitoring::getBelts);
+	RegisterEndpoint("getBiomassGenerator", false, false, &AFicsitRemoteMonitoring::getBiomassGenerator);
+	RegisterEndpoint("getBlender", false, false, &AFicsitRemoteMonitoring::getBlender);
+	RegisterEndpoint("getCloudInv", true, false, &AFicsitRemoteMonitoring::getCloudInv);
+	RegisterEndpoint("getCoalGenerator", false, false, &AFicsitRemoteMonitoring::getCoalGenerator);
+    RegisterEndpoint("getConstructor", false, false, &AFicsitRemoteMonitoring::getConstructor);
+	RegisterEndpoint("getConverter", false, false, &AFicsitRemoteMonitoring::getConverter);
+	RegisterEndpoint("getDoggo", true, true, &AFicsitRemoteMonitoring::getDoggo);
+	RegisterEndpoint("getDrone", true, true, &AFicsitRemoteMonitoring::getDrone);
+	RegisterEndpoint("getDroneStation", true, false, &AFicsitRemoteMonitoring::getDroneStation);
+	RegisterEndpoint("getDropPod", true, true, &AFicsitRemoteMonitoring::getDropPod);
+	RegisterEndpoint("getEncoder", true, false, &AFicsitRemoteMonitoring::getEncoder);
+	RegisterEndpoint("getExplorationSink", true, false, &AFicsitRemoteMonitoring::getExplorationSink);
+	RegisterEndpoint("getExplorer", false, true, &AFicsitRemoteMonitoring::getExplorer);
+	RegisterEndpoint("getExtractor", true, true, &AFicsitRemoteMonitoring::getExtractor);
+	RegisterEndpoint("getFactoryCart", false, false, &AFicsitRemoteMonitoring::getFactoryCart);
+	RegisterEndpoint("getFoundry", false, false, &AFicsitRemoteMonitoring::getFoundry);
+    RegisterEndpoint("getFrackingActivator", false, false, &AFicsitRemoteMonitoring::getFrackingActivator);
+	RegisterEndpoint("getFuelGenerator", false, false, &AFicsitRemoteMonitoring::getFuelGenerator);
+	RegisterEndpoint("getGeothermalGenerator", false, false, &AFicsitRemoteMonitoring::getGeothermalGenerator);
+	RegisterEndpoint("getHUBTerminal", true, true, &AFicsitRemoteMonitoring::getHUBTerminal);
+  RegisterEndpoint("getHypertube", true, false, &AFicsitRemoteMonitoring::getHypertube);
+	RegisterEndpoint("getManufacturer", false, false, &AFicsitRemoteMonitoring::getManufacturer);
+	RegisterEndpoint("getModList", true, false, &AFicsitRemoteMonitoring::getModList);
+	RegisterEndpoint("getNuclearGenerator", false, false, &AFicsitRemoteMonitoring::getNuclearGenerator);
+    RegisterEndpoint("getPackager", false, false, &AFicsitRemoteMonitoring::getPackager);
+	RegisterEndpoint("getParticle", false, false, &AFicsitRemoteMonitoring::getParticle);
+	RegisterEndpoint("getPaths", true, false, &AFicsitRemoteMonitoring::getPaths);
+	RegisterEndpoint("getPipes", true, false, &AFicsitRemoteMonitoring::getPipes);
+	RegisterEndpoint("getPlayer", true, true, &AFicsitRemoteMonitoring::getPlayer);
+  RegisterEndpoint("getPortal", true, false, &AFicsitRemoteMonitoring::getPortal);
+	RegisterEndpoint("getPower", true, false, &AFicsitRemoteMonitoring::getPower);
+	RegisterEndpoint("getPowerSlug", true, true, &AFicsitRemoteMonitoring::getPowerSlug);
+	RegisterEndpoint("getPowerUsage", true, false, &AFicsitRemoteMonitoring::getPowerUsage);
+	RegisterEndpoint("getProdStats", true, false, &AFicsitRemoteMonitoring::getProdStats);
+  RegisterEndpoint("getPump", true, false, &AFicsitRemoteMonitoring::getPump);
+	RegisterEndpoint("getRadarTower", true, false, &AFicsitRemoteMonitoring::getRadarTower);
+	RegisterEndpoint("getRecipes", true, true, &AFicsitRemoteMonitoring::getRecipes);
+	RegisterEndpoint("getRefinery", false, false, &AFicsitRemoteMonitoring::getRefinery);
+	RegisterEndpoint("getResourceGeyser", true, true, &AFicsitRemoteMonitoring::getResourceGeyser);
+	RegisterEndpoint("getResourceNode", true, true, &AFicsitRemoteMonitoring::getResourceNode);
+	RegisterEndpoint("getResourceSink", true, false, &AFicsitRemoteMonitoring::getResourceSink);
+    RegisterEndpoint("getResourceSinkBuilding", true, false, &AFicsitRemoteMonitoring::getResourceSinkBuilding);
+	RegisterEndpoint("getResourceWell", true, true, &AFicsitRemoteMonitoring::getResourceWell);
+    RegisterEndpoint("getSessionInfo", true, true, true, &AFicsitRemoteMonitoring::getSessionInfo);
+	RegisterEndpoint("getSchematics", true, true, &AFicsitRemoteMonitoring::getSchematics);
+	RegisterEndpoint("getSinkList", true, true, &AFicsitRemoteMonitoring::getSinkList);
+	RegisterEndpoint("getSmelter", false, false, &AFicsitRemoteMonitoring::getSmelter);
+	RegisterEndpoint("getSpaceElevator", true, false, &AFicsitRemoteMonitoring::getSpaceElevator);
+	RegisterEndpoint("getStorageInv", true, false, &AFicsitRemoteMonitoring::getStorageInv);
+	RegisterEndpoint("getSwitches", true, false, &AFicsitRemoteMonitoring::getSwitches);
+	RegisterEndpoint("getTractor", false, false, &AFicsitRemoteMonitoring::getTractor);
+	RegisterEndpoint("getTrains", true, false, &AFicsitRemoteMonitoring::getTrains);
+	RegisterEndpoint("getTrainStation", true, false, &AFicsitRemoteMonitoring::getTrainStation);
+	RegisterEndpoint("getTruck", false, false, &AFicsitRemoteMonitoring::getTruck);
+	RegisterEndpoint("getTruckStation", true, false, &AFicsitRemoteMonitoring::getTruckStation);
+	RegisterEndpoint("getWorldInv", true, false, &AFicsitRemoteMonitoring::getWorldInv);
+	RegisterEndpoint("getResearchTrees", true, true, &AFicsitRemoteMonitoring::getResearchTrees);
 
 	//FRM API Endpoint Groups
-	RegisterEndpoint("getAll", false, false, this->Get(GetWorld()), FName("getAll"));
-	RegisterEndpoint("getFactory", true, false, this->Get(GetWorld()), FName("getFactory"));
-	RegisterEndpoint("getGenerators", true, false, this->Get(GetWorld()), FName("getGenerators"));
-	RegisterEndpoint("getVehicles", true, false, this->Get(GetWorld()), FName("getVehicles"));
+	RegisterEndpoint("getAll", false, false, &AFicsitRemoteMonitoring::getAll);
+	RegisterEndpoint("getFactory", true, false, &AFicsitRemoteMonitoring::getFactory);
+	RegisterEndpoint("getGenerators", true, false, &AFicsitRemoteMonitoring::getGenerators);
+	RegisterEndpoint("getVehicles", true, false, &AFicsitRemoteMonitoring::getVehicles);
 
 }
 
@@ -664,21 +663,20 @@ void AFicsitRemoteMonitoring::InitOutageNotification() {
 
 }
 
-void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, UObject* TargetObject, FName FunctionName)
+void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FEndpointFunction FunctionPtr)
 {
-	RegisterEndpoint(APIName, bGetAll, bRequireGameThread, false, TargetObject, FunctionName);
+	RegisterEndpoint(APIName, bGetAll, bRequireGameThread, false, FunctionPtr);
 }
 
-void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, const bool bUseFirstObject, UObject* TargetObject, FName FunctionName)
+void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, FEndpointFunction FunctionPtr)
 {
 	FAPIEndpoint NewEndpoint;
 	NewEndpoint.APIName = APIName;
 	NewEndpoint.bGetAll = bGetAll;
-	NewEndpoint.bUseFirstObject = bUseFirstObject;
 	NewEndpoint.bRequireGameThread = bRequireGameThread;
-	NewEndpoint.TargetObject = TargetObject;
-	NewEndpoint.FunctionName = FunctionName;
-
+	NewEndpoint.bUseFirstObject = bUseFirstObject;
+	NewEndpoint.FunctionPtr = FunctionPtr;
+	
 	APIEndpoints.Add(NewEndpoint);
 
     UE_LOGFMT(LogHttpServer, Log, "Registered API Endpoint: {APIName} - Current number of endpoints registered: {1}", APIName, APIEndpoints.Num());
@@ -717,109 +715,69 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGet
 
 FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess)
 {
-	FCallEndpointResponse Response;
-	Response.bUseFirstObject = false;
-	bSuccess = false;
-    TArray<TSharedPtr<FJsonValue>> JsonArray = TArray<TSharedPtr<FJsonValue>>{};
+    FCallEndpointResponse Response;
+    Response.bUseFirstObject = false;
+    bSuccess = false;
+    TArray<TSharedPtr<FJsonValue>> JsonArray;
 
-    Response.JsonValues = JsonArray;
+    if (!SocketListener) {
+        UE_LOG(LogHttpServer, Warning, TEXT("SocketListener is closed. Skipping request for endpoint '%s'."), *InEndpoint);
+        return Response;
+    }
 
-    // socket listener is closed, so we skip the request to prevent any further error/crash
-    if (!SocketListener) return Response;
+    bool bEndpointFound = false;
 
     for (FAPIEndpoint& EndpointInfo : APIEndpoints)
     {
-        // again, maybe SocketListener was killed while we are looping through the api endpoints?
-        // i don't know, but it's better to be safe than to risk a game crash
-        if (!SocketListener) return Response;
-        
         if (EndpointInfo.APIName == InEndpoint)
         {
+            bEndpointFound = true;
+            Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
+
             try {
-                Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
-                UObject* TargetObject = EndpointInfo.TargetObject;
-                FName FunctionName = EndpointInfo.FunctionName;
-
-                if (EndpointInfo.bRequireGameThread)
-                {
+                if (EndpointInfo.bRequireGameThread) {
                     FThreadSafeBool bAllocationComplete = false;
-                    AsyncTask(ENamedThreads::GameThread, [TargetObject, FunctionName, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &bSuccess]() {
-                        if (WorldContext && TargetObject) {
-                            UFunction* Function = TargetObject->FindFunction(FunctionName);
-
-                            if (Function) {
-                                // Structure to hold parameters matching the target function's expected signature
-                                struct FCallbackParams {
-                                    UObject* WorldContext;
-                                    FRequestData RequestData;
-                                    TArray<TSharedPtr<FJsonValue>> JsonValues;
-                                } Params;
-
-                                Params.WorldContext = WorldContext;
-                                Params.RequestData = RequestData;
-
-                                // Call the function using ProcessEvent
-                                TargetObject->ProcessEvent(Function, &Params);
-
-                                JsonArray = Params.JsonValues;
-                                bSuccess = true;
-                            }
-                        }
+                    AsyncTask(ENamedThreads::GameThread, [this, &EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &bSuccess]() {
+                        (this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
+                        bSuccess = !JsonArray.IsEmpty();
                         bAllocationComplete = true;
                     });
 
-                    // Block until allocation is complete
                     while (!bAllocationComplete) {
                         FPlatformProcess::Sleep(0.0001f);
                     }
+                } else {
+                    (this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
+                    bSuccess = !JsonArray.IsEmpty();
                 }
-                // Directly execute the callback if GameThread is not required
-                else if (WorldContext && TargetObject) {
-                    UFunction* Function = TargetObject->FindFunction(FunctionName);
-
-                    if (Function) {
-                        struct FCallbackParams {
-                            UObject* WorldContext;
-                            FRequestData RequestData;
-                            TArray<TSharedPtr<FJsonValue>> JsonValues;
-                        } Params;
-
-                        Params.WorldContext = WorldContext;
-                        Params.RequestData = RequestData;
-
-                        // Call the function directly
-                        TargetObject->ProcessEvent(Function, &Params);
-
-                        JsonArray = Params.JsonValues;
-                        bSuccess = true;
-                    }
-                }
-            } 
-            catch (const std::exception& e) 
-            {
-                FString err = *FString(e.what());
-
-                TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
-                JsonObject->Values.Add("error", MakeShared<FJsonValueString>("CallEndpoint Exception: " + err));
-                JsonObject->Values.Add("recommendation", MakeShared<FJsonValueString>("Please relay this error, and log to the Sysadmin Modding Discord for analysis."));
-                JsonArray.Add(MakeShared<FJsonValueObject>(JsonObject));
-
-                UE_LOGFMT(LogHttpServer, Error, "CallEndpoint Exception: %s", *err);
-            } 
-            catch (...) 
-            {
-                UE_LOG(LogHttpServer, Error, TEXT("Unknown Exception in CallEndpoint"));
+            } catch (const std::exception& e) {
+                FString err = FString(e.what());
+                UE_LOG(LogHttpServer, Error, TEXT("Exception in CallEndpoint for endpoint '%s': %s"), *InEndpoint, *err);
+                AddErrorJson(JsonArray, TEXT("Exception: ") + err);
+            } catch (...) {
+                UE_LOG(LogHttpServer, Error, TEXT("Unknown exception in CallEndpoint for endpoint '%s'."), *InEndpoint);
+                AddErrorJson(JsonArray, TEXT("Unknown exception occurred."));
             }
 
-            // Found matching endpoint; break the loop
             break;
         }
     }
 
-    Response.JsonValues = JsonArray;
+    if (!bEndpointFound) {
+        UE_LOG(LogHttpServer, Warning, TEXT("No matching endpoint found for '%s'."), *InEndpoint);
+        AddErrorJson(JsonArray, TEXT("No matching endpoint found."));
+    }
 
-    // Return an empty JSON object if no matching endpoint is found
+    Response.JsonValues = JsonArray;
     return Response;
+}
+
+// Helper function to add error messages to JsonArray
+void AFicsitRemoteMonitoring::AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonArray, const FString& ErrorMessage)
+{
+    TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
+    JsonObject->SetStringField("error", ErrorMessage);
+    JsonArray.Add(MakeShared<FJsonValueObject>(JsonObject));
 }
 
 FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess)
@@ -898,49 +856,62 @@ FString AFicsitRemoteMonitoring::JsonObjectToString(TSharedPtr<FJsonObject> Json
 	return TEXT("Error: Unable to serialize JSON object");
 }
 
-TArray<TSharedPtr<FJsonValue>> AFicsitRemoteMonitoring::getAll(UObject* WorldContext, FRequestData RequestData) {
+void AFicsitRemoteMonitoring::getAll(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+{
+    TArray<TSharedPtr<FJsonValue>> JsonArray;  // The composite JSON array to hold data from each endpoint
 
-	TArray<TSharedPtr<FJsonValue>> JsonArray;
+    // Loop through all registered endpoints
+    for (const FAPIEndpoint& APIEndpoint : APIEndpoints)
+    {
+        // Skip endpoints that aren't marked for inclusion in `getAll`
+        if (!APIEndpoint.bGetAll) continue;
 
-    for ( FAPIEndpoint APIEndpoint : APIEndpoints) {
-        
+        // Prepare to collect the JSON results from this endpoint
         bool bSuccess = false;
+        TArray<TSharedPtr<FJsonValue>> EndpointJsonValues;
 
-        if (APIEndpoint.bGetAll) {
-            TSharedPtr<FJsonObject> Json =  MakeShared<FJsonObject>();
+        if (APIEndpoint.bRequireGameThread)
+        {
+            // If the endpoint requires the GameThread, execute the call asynchronously
+            FThreadSafeBool bAllocationComplete = false;
+            AsyncTask(ENamedThreads::GameThread, [this, &APIEndpoint, WorldContext, RequestData, &EndpointJsonValues, &bAllocationComplete, &bSuccess]() {
+                (this->*APIEndpoint.FunctionPtr)(WorldContext, RequestData, EndpointJsonValues);
+                bSuccess = !EndpointJsonValues.IsEmpty();
+                bAllocationComplete = true;
+            });
 
-            auto [JsonValues, bUseFirstObject] = CallEndpoint(WorldContext, APIEndpoint.APIName, RequestData, bSuccess);
-
-            if (bUseFirstObject)
-            {
-                TSharedPtr<FJsonObject> FirstJsonObject;
-                if (JsonValues.Num() > 0)
-                {
-                    FirstJsonObject= JsonValues[0]->AsObject();
-                }
-                else
-                {
-                    FirstJsonObject =  MakeShared<FJsonObject>();
-                }
-
-                Json->Values.Add(APIEndpoint.APIName, MakeShared<FJsonValueObject>(FirstJsonObject));
-            }
-            else
-        	{
-                Json->Values.Add(APIEndpoint.APIName, MakeShared<FJsonValueArray>(JsonValues));
-        	}
-
-            //block while not complete
-            while (!bSuccess)
-            {
-                //100micros sleep, this should be very quick
+            // Block until completion
+            while (!bAllocationComplete) {
                 FPlatformProcess::Sleep(0.0001f);
-            };
-
-            JsonArray.Add(MakeShared<FJsonValueObject>(Json));
+            }
         }
+        else
+        {
+            // Directly invoke the endpoint function if it doesn't require the GameThread
+            (this->*APIEndpoint.FunctionPtr)(WorldContext, RequestData, EndpointJsonValues);
+            bSuccess = !EndpointJsonValues.IsEmpty();
+        }
+
+        // Create a JSON object to store the endpoint's result
+        TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
+
+        if (APIEndpoint.bUseFirstObject && EndpointJsonValues.Num() > 0)
+        {
+            // If only the first object is required, add it to the JSON object
+            TSharedPtr<FJsonObject> FirstJsonObject = EndpointJsonValues[0]->AsObject();
+            JsonObject->SetObjectField(APIEndpoint.APIName, FirstJsonObject.IsValid() ? FirstJsonObject : MakeShared<FJsonObject>());
+        }
+        else
+        {
+            // Otherwise, include the entire array of JSON values
+            JsonObject->SetArrayField(APIEndpoint.APIName, EndpointJsonValues);
+        }
+
+        // Add the constructed JSON object for this endpoint to the composite JSON array
+        JsonArray.Add(MakeShared<FJsonValueObject>(JsonObject));
     }
 
-	return JsonArray;
-
+    // Assign the assembled JSON array to the output parameter
+    OutJsonArray = JsonArray;
 }
+
