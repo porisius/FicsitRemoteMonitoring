@@ -223,255 +223,260 @@ public:
 
 	// Store the APIName for later use in the function
 	FString StoredAPIName;
-
-	static TArray<TSharedPtr<FJsonValue>> getAssembler(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/AssemblerMk1/Build_AssemblerMk1.Build_AssemblerMk1_C")));
+	
+	void getAssembler(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/AssemblerMk1/Build_AssemblerMk1.Build_AssemblerMk1_C")));
 	}
 	
-	static TArray<TSharedPtr<FJsonValue>> getBelts(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getBelts(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getBiomassGenerator(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorBiomass/Build_GeneratorBiomass_Automated.Build_GeneratorBiomass_Automated_C")));
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getBlender(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Blender/Build_Blender.Build_Blender_C")));
+	void getBelts(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getBelts(WorldContext, RequestData);
 	}
 	
-	static TArray<TSharedPtr<FJsonValue>> getCloudInv(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getCloudInv(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getCoalGenerator(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorCoal/Build_GeneratorCoal.Build_GeneratorCoal_C")));
+	void getBiomassGenerator(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorBiomass/Build_GeneratorBiomass_Automated.Build_GeneratorBiomass_Automated_C")));
 	}
 	
-	static TArray<TSharedPtr<FJsonValue>> getConstructor(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/ConstructorMk1/Build_ConstructorMk1.Build_ConstructorMk1_C")));
+	void getBlender(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Blender/Build_Blender.Build_Blender_C")));
 	}
 	
-	static TArray<TSharedPtr<FJsonValue>> getConverter(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Converter/Build_Converter.Build_Converter_C")));
+	void getCloudInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getCloudInv(WorldContext, RequestData);
 	}
 	
-	static TArray<TSharedPtr<FJsonValue>> getDoggo(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Player::getDoggo(WorldContext);
+	void getCoalGenerator(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorCoal/Build_GeneratorCoal.Build_GeneratorCoal_C")));
+	}
+		
+	void getConstructor(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/ConstructorMk1/Build_ConstructorMk1.Build_ConstructorMk1_C")));
+	}
+		
+	void getConverter(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Converter/Build_Converter.Build_Converter_C")));
+	}
+		
+	void getDoggo(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Player::getDoggo(WorldContext);
+	}
+	
+	void getResearchTrees(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+		OutJsonArray = UFRM_World::GetResearchTrees(WorldContext);
+	}
+	
+	void getDrone(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Drones::getDrone(WorldContext);
+	}
+	
+	void getDroneStation(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Drones::getDroneStation(WorldContext);
+	}
+	
+	void getDropPod(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getDropPod(WorldContext, RequestData);
+	}
+	
+	void getEncoder(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/QuantumEncoder/Build_QuantumEncoder.Build_QuantumEncoder_C")));
+	}
+	
+	void getExplorationSink(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Production::getResourceSink(WorldContext, EResourceSinkTrack::RST_Exploration);
+	}
+	
+	void getExplorer(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Explorer/BP_Explorer.BP_Explorer_C")));
+	}
+	
+	void getExtractor(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getResourceExtractor(WorldContext, RequestData);
+	}
+	
+	void getFactoryCart(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Golfcart/BP_Golfcart.BP_Golfcart_C")));
+	}
+	
+	void getFoundry(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/FoundryMk1/Build_FoundryMk1.Build_FoundryMk1_C")));
+	}
+	
+	void getFrackingActivator(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+		OutJsonArray = UFRM_Factory::getFrackingActivator(WorldContext, RequestData);
+	}
+	
+	void getFuelGenerator(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorFuel/Build_GeneratorFuel.Build_GeneratorFuel_C")));
+	}
+	
+	void getGeothermalGenerator(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorGeoThermal/Build_GeneratorGeoThermal.Build_GeneratorGeoThermal_C")));
+	}
+	
+	void getHUBTerminal(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getHubTerminal(WorldContext, RequestData);
+	}
+	
+	void getHypertube(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+		OutJsonArray = UFRM_Factory::getHypertube(WorldContext, RequestData);
+	}
+	
+	void getManufacturer(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/ManufacturerMk1/Build_ManufacturerMk1.Build_ManufacturerMk1_C")));
+	}
+	
+	void getModList(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getModList(WorldContext, RequestData);
+	}
+	
+	void getNuclearGenerator(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorNuclear/Build_GeneratorNuclear.Build_GeneratorNuclear_C")));
+	}
+	
+	void getPackager(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Packager/Build_Packager.Build_Packager_C")));
+	}
+	
+	void getParticle(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/HadronCollider/Build_HadronCollider.Build_HadronCollider_C")));
+	}
+	
+	void getPaths(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getPipes(WorldContext, RequestData);
+	}
+	
+	void getPipes(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getPipes(WorldContext, RequestData);
+	}
+	
+	void getPlayer(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Player::getPlayer(WorldContext);
 	}
 
-	static TArray<TSharedPtr<FJsonValue>> getResearchTrees(UObject* WorldContext, FRequestData RequestData) {
-		return UFRM_World::GetResearchTrees(WorldContext);
+	
+    void getPortal(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+		OutJsonArray = UFRM_Factory::getPortal(WorldContext, RequestData);
+	}
+	
+    void getPower(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Power::getPower(WorldContext);
 	}
 
-	static TArray<TSharedPtr<FJsonValue>> getDrone(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Drones::getDrone(WorldContext);
+	
+	void getPowerSlug(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getPowerSlug(WorldContext, RequestData);
+	}
+	
+	void getPowerUsage(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Power::getPowerUsage(WorldContext);
+	}
+	
+	void getProdStats(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Production::getProdStats(WorldContext);
+	}
+	
+	void getPump(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+		OutJsonArray = UFRM_Factory::getPump(WorldContext, RequestData);
 	}
 
-	static TArray<TSharedPtr<FJsonValue>> getDroneStation(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Drones::getDroneStation(WorldContext);
+	void getRadarTower(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getRadarTower(WorldContext, RequestData);
+	}
+		
+	void getRecipes(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Production::getRecipes(WorldContext);
+	}
+	
+	void getRefinery(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/OilRefinery/Build_OilRefinery.Build_OilRefinery_C")));
+	}
+	
+	void getResourceGeyser(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNodeFrackingCore::StaticClass());
+	}
+	
+	void getResourceNode(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNodeFrackingSatellite::StaticClass());
+	}
+	
+	void getResourceSink(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Production::getResourceSink(WorldContext, EResourceSinkTrack::RST_Default);
+	}
+	
+	void getResourceSinkBuilding(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+		OutJsonArray = UFRM_Factory::getResourceSinkBuilding(WorldContext, RequestData);
+	}
+	
+	void getResourceWell(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNode::StaticClass());
+	}
+	
+	void getSchematics(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Production::getSchematics(WorldContext);
+	}
+	
+	void getSinkList(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Production::getSinkList(WorldContext);
+	}
+	
+	void getSmelter(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/SmelterMk1/Build_SmelterMk1.Build_SmelterMk1_C")));
+	}
+	
+	void getSessionInfo(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+		OutJsonArray = UFRM_Factory::getSessionInfo(WorldContext, RequestData);
+	}
+	
+	void getSpaceElevator(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getSpaceElevator(WorldContext, RequestData);
+	}
+	
+	void getStorageInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getStorageInv(WorldContext, RequestData);
 	}
 
-	static TArray<TSharedPtr<FJsonValue>> getDropPod(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getDropPod(WorldContext, RequestData);
+	
+	void getSwitches(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Power::getSwitches(WorldContext);
+	}
+	
+	void getTractor(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Tractor/BP_Tractor.BP_Tractor_C")));
+	}
+	
+	void getTrains(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Trains::getTrains(WorldContext);
 	}
 
-	static TArray<TSharedPtr<FJsonValue>> getEncoder(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/QuantumEncoder/Build_QuantumEncoder.Build_QuantumEncoder_C")));
+	
+	void getTrainStation(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Trains::getTrainStation(WorldContext);
+	}
+	
+	void getTruck(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Truck/BP_Truck.BP_Truck_C")));
+	}
+	
+	void getTruckStation(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Vehicles::getTruckStation(WorldContext);
 	}
 
-	static TArray<TSharedPtr<FJsonValue>> getExplorationSink(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Production::getResourceSink(WorldContext, EResourceSinkTrack::RST_Exploration);
+	
+	void getWorldInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getWorldInv(WorldContext, RequestData);
 	}
-
-	static TArray<TSharedPtr<FJsonValue>> getExplorer(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Explorer/BP_Explorer.BP_Explorer_C")));
+	
+	void getAll(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray);
+	
+	void getFactory(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, AFGBuildableManufacturer::StaticClass());
 	}
-
-	static TArray<TSharedPtr<FJsonValue>> getExtractor(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getResourceExtractor(WorldContext, RequestData);
+	
+	void getGenerators(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Power::getGenerators(WorldContext, AFGBuildableGenerator::StaticClass());
 	}
-
-	static TArray<TSharedPtr<FJsonValue>> getFactoryCart(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Golfcart/BP_Golfcart.BP_Golfcart_C")));
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getFoundry(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/FoundryMk1/Build_FoundryMk1.Build_FoundryMk1_C")));
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getFrackingActivator(UObject* WorldContext, FRequestData RequestData) {
-		return UFRM_Factory::getFrackingActivator(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getFuelGenerator(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorFuel/Build_GeneratorFuel.Build_GeneratorFuel_C")));
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getGeothermalGenerator(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorGeoThermal/Build_GeneratorGeoThermal.Build_GeneratorGeoThermal_C")));
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getHUBTerminal(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getHubTerminal(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getHypertube(UObject* WorldContext, FRequestData RequestData) {
-		return UFRM_Factory::getHypertube(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getManufacturer(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/ManufacturerMk1/Build_ManufacturerMk1.Build_ManufacturerMk1_C")));
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getModList(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getModList(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getNuclearGenerator(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorNuclear/Build_GeneratorNuclear.Build_GeneratorNuclear_C")));
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getPackager(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/Packager/Build_Packager.Build_Packager_C")));
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getParticle(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/HadronCollider/Build_HadronCollider.Build_HadronCollider_C")));
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getPaths(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getPipes(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getPipes(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getPipes(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getPlayer(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Player::getPlayer(WorldContext);
-	}
-
-    static TArray<TSharedPtr<FJsonValue>> getPortal(UObject* WorldContext, FRequestData RequestData) {
-		return UFRM_Factory::getPortal(WorldContext, RequestData);
-	}
-
-    static TArray<TSharedPtr<FJsonValue>> getPower(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Power::getPower(WorldContext);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getPowerSlug(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getPowerSlug(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getPowerUsage(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Power::getPowerUsage(WorldContext);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getProdStats(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Production::getProdStats(WorldContext);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getPump(UObject* WorldContext, FRequestData RequestData) {
-		return UFRM_Factory::getPump(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getRadarTower(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getRadarTower(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getRecipes(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Production::getRecipes(WorldContext);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getRefinery(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/OilRefinery/Build_OilRefinery.Build_OilRefinery_C")));
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getResourceGeyser(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNodeFrackingCore::StaticClass());
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getResourceNode(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNodeFrackingSatellite::StaticClass());
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getResourceSink(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Production::getResourceSink(WorldContext, EResourceSinkTrack::RST_Default);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getResourceSinkBuilding(UObject* WorldContext, FRequestData RequestData) {
-		return UFRM_Factory::getResourceSinkBuilding(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getResourceWell(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNode::StaticClass());
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getSchematics(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Production::getSchematics(WorldContext);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getSinkList(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Production::getSinkList(WorldContext);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getSmelter(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/SmelterMk1/Build_SmelterMk1.Build_SmelterMk1_C")));
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getSessionInfo(UObject* WorldContext, FRequestData RequestData) {
-		return UFRM_Factory::getSessionInfo(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getSpaceElevator(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getSpaceElevator(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getStorageInv(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getStorageInv(WorldContext, RequestData);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getSwitches(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Power::getSwitches(WorldContext);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getTractor(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Tractor/BP_Tractor.BP_Tractor_C")));
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getTrains(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Trains::getTrains(WorldContext);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getTrainStation(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Trains::getTrainStation(WorldContext);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getTruck(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Truck/BP_Truck.BP_Truck_C")));
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getTruckStation(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Vehicles::getTruckStation(WorldContext);
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getWorldInv(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getWorldInv(WorldContext, RequestData);
-	}
-
-	TArray<TSharedPtr<FJsonValue>> getAll(UObject* WorldContext, FRequestData RequestData);
-
-	static TArray<TSharedPtr<FJsonValue>> getFactory(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Factory::getFactory(WorldContext, RequestData, AFGBuildableManufacturer::StaticClass());
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getGenerators(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Power::getGenerators(WorldContext, AFGBuildableGenerator::StaticClass());
-	}
-
-	static TArray<TSharedPtr<FJsonValue>> getVehicles(UObject* WorldContext, FRequestData RequestData) {		
-		return UFRM_Vehicles::getVehicles(WorldContext, AFGWheeledVehicle::StaticClass());
+	
+	void getVehicles(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Vehicles::getVehicles(WorldContext, AFGWheeledVehicle::StaticClass());
 	}
 
 };
