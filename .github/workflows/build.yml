@@ -64,11 +64,13 @@ jobs:
       - name: Extract, Copy DLLs to Windows/WindowsServer Builds, Create new Archives
         run: |
 
+          Remove-Item .\Archive\* -Recurse -ErrorAction Ignore -Confirm:$false
           Expand-Archive C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip .\Archive
 
           Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" .\Archive\Windows\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
           Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" .\Archive\WindowsServer\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
 
+          Remove-Item .\Output\* -Recurse -ErrorAction Ignore -Confirm:$false
           Compress-Archive .\Archive\* .\Output\FicsitRemoteMonitoring.zip
           Compress-Archive .\Archive\Windows\* .\Output\FicsitRemoteMonitoring-Windows.zip
           Compress-Archive .\Archive\WindowsServer\* .\Output\FicsitRemoteMonitoring-WindowsServer.zip
