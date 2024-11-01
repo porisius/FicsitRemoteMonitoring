@@ -209,8 +209,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                     if (FPaths::FileExists(FilePath)) {
                         HandleGetRequest(res, req, FilePath);
+                    	return;
                     }
 
+					res->writeStatus("404 Not Found");
+					AddResponseHeaders(res, false);
+					res->end();
                 });
 
                 app.get("/api/:APIEndpoint", [this, World](auto* res, auto* req) {
