@@ -305,18 +305,23 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPowerSlug(UObject* WorldContext,
 	for (AActor* PowerActor : FoundActors) {
 		Index++;
 
-		TSharedPtr<FJsonObject> JPowerSlug = MakeShared<FJsonObject>();
+		const auto ItemPickup = Cast<AFGItemPickup>(PowerActor);
+		if (!ItemPickup) continue;
 
-		auto PowerSlug = Cast<AFGItemPickup>(PowerActor)->GetPickupItems().Item;
+		auto PowerSlug = ItemPickup->GetPickupItems().Item;
+		const auto ItemClass = PowerSlug.GetItemClass();
+		if (!ItemClass) continue;
+
+		TSharedPtr<FJsonObject> JPowerSlug = MakeShared<FJsonObject>();
 		FString SlugName;
 
-		if (PowerSlug.GetItemClass()->GetName() == "Desc_Crystal") {
+		if (ItemClass->GetName() == "Desc_Crystal") {
 			SlugName = "Blue Slug";
 		}
-		else if (PowerSlug.GetItemClass()->GetName() == "Desc_Crystal_mk2") {
+		else if (ItemClass->GetName() == "Desc_Crystal_mk2") {
 			SlugName = "Yellow Slug";
 		}
-		else if (PowerSlug.GetItemClass()->GetName() == "Desc_Crystal_mk3") {
+		else if (ItemClass->GetName() == "Desc_Crystal_mk3") {
 			SlugName = "Purple Slug";
 		};
 
