@@ -9,11 +9,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Player::getPlayer(UObject* WorldContext) {
 	TArray<TSharedPtr<FJsonValue>> JPlayerArray;
 
 	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGCharacterPlayer::StaticClass(), FoundActors);
-	int Index = 0;
 	for (AActor* Player : FoundActors) {
-		Index++;
-
-		TSharedPtr<FJsonObject> JPlayer = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JPlayer = UFRM_Library::CreateBaseJsonObject(Player);
 
 		AFGCharacterPlayer* PlayerCharacter = Cast<AFGCharacterPlayer>(Player);
 		APlayerState* PlayerState = PlayerCharacter->GetPlayerState();
@@ -27,7 +24,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Player::getPlayer(UObject* WorldContext) {
 		//TODO: Find way to get player's name when they are offline
 		FString PlayerName = PlayerCharacter->mCachedPlayerName;
 
-		JPlayer->Values.Add("ID", MakeShared<FJsonValueNumber>(Index));
 		JPlayer->Values.Add("Name", MakeShared<FJsonValueString>(PlayerName));
 		JPlayer->Values.Add("ClassName", MakeShared<FJsonValueString>(Player->GetClass()->GetName()));
 		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Player))); 
@@ -52,11 +48,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Player::getDoggo(UObject* WorldContext) {
 	TArray<TSharedPtr<FJsonValue>> JDoggoArray;
 
 	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), DoggoClass, FoundActors);
-	int Index = 0;
 	for (AActor* Doggo : FoundActors) {
-		Index++;
-
-		TSharedPtr<FJsonObject> JDoggo = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JDoggo = UFRM_Library::CreateBaseJsonObject(Doggo);
 
 		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
 		fgcheck(ModSubsystem);
@@ -68,7 +61,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Player::getDoggo(UObject* WorldContext) {
 		ModSubsystem->GetDoggoInfo_BIE(Doggo, DisplayName, InventoryStacks);
 		TMap<TSubclassOf<UFGItemDescriptor>, int32> DoggoInventory = UFRM_Library::GetGroupedInventoryItems(InventoryStacks);
 
-		JDoggo->Values.Add("ID", MakeShared<FJsonValueNumber>(Index));
 		JDoggo->Values.Add("Name", MakeShared<FJsonValueString>(DisplayName));
 		JDoggo->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Doggo->GetClass())));
 		JDoggo->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Doggo)));

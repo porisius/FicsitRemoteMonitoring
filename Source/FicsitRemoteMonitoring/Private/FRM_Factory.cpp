@@ -14,7 +14,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, FRe
 
 		if (!IsValid(ConveyorBelt)) { continue; }
 
-		TSharedPtr<FJsonObject> JConveyorBelt = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JConveyorBelt = UFRM_Library::CreateBaseJsonObject(ConveyorBelt);
 		
 		UFGFactoryConnectionComponent* ConnectionZero = ConveyorBelt->GetConnection0();
 		UFGFactoryConnectionComponent* ConnectionOne = ConveyorBelt->GetConnection1();
@@ -80,7 +80,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, F
 
 		AFGBuildableManufacturer* Manufacturer = Cast<AFGBuildableManufacturer>(Buildable);
 
-		TSharedPtr<FJsonObject> JFactory = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JFactory = UFRM_Library::CreateBaseJsonObject(Buildable);
 		TArray<TSharedPtr<FJsonValue>> JProductArray;
 		TArray<TSharedPtr<FJsonValue>> JIngredientsArray;
 
@@ -156,7 +156,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, F
 			JIngredientsArray.Add(MakeShared<FJsonValueObject>(JIngredients));
 		};
 
-		JFactory->Values.Add("ID", MakeShared<FJsonValueString>(Manufacturer->GetName()));
 		JFactory->Values.Add("Name", MakeShared<FJsonValueString>(Manufacturer->mDisplayName.ToString()));
 		JFactory->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetClass())));
 		JFactory->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Manufacturer))));
@@ -188,15 +187,16 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 
 	for (AFGBuildableHubTerminal* HubTerminal : Buildables) {
 
-		TSharedPtr<FJsonObject> JHubTerminal = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JHubTerminal = UFRM_Library::CreateBaseJsonObject(HubTerminal);
 		TSubclassOf<UFGSchematic> ActiveSchematic = SchematicManager->GetActiveSchematic();
 		FString SchematicName = UFGSchematic::GetSchematicDisplayName(ActiveSchematic).ToString();
 		AFGBuildableTradingPost* TradingPost = HubTerminal->GetTradingPost();
 		
-		TSharedPtr<FJsonObject> JSchematic = MakeShared<FJsonObject>();
 		TArray<TSharedPtr<FJsonValue>> JRecipeArray;
+		TSharedPtr<FJsonObject> JSchematic;
 
 		if (IsValid(ActiveSchematic)) {
+			JSchematic = UFRM_Library::CreateBaseJsonObject(ActiveSchematic);
 			TArray<TSharedPtr<FJsonValue>> JCosts;
 			TArray<TSubclassOf<UFGRecipe>> Recipes;
 
@@ -265,6 +265,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 			JSchematic->Values.Add("Cost", MakeShared<FJsonValueArray>(JCosts));
 		}
 		else {
+			JSchematic = MakeShared<FJsonObject>();
 			JSchematic->Values.Add("Name", MakeShared<FJsonValueString>(TEXT("No Milestone Selected")));
 			JSchematic->Values.Add("ClassName", MakeShared<FJsonValueString>(TEXT("Desc_Null_C")));
 			JSchematic->Values.Add("TechTier", MakeShared<FJsonValueNumber>(-1));
@@ -301,18 +302,15 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPowerSlug(UObject* WorldContext,
 	TArray<TSharedPtr<FJsonValue>> JSlugArray;
 
 	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), CrystalClass, FoundActors);
-	int Index = 0;
 	for (AActor* PowerActor : FoundActors) {
-		Index++;
-
 		const auto ItemPickup = Cast<AFGItemPickup>(PowerActor);
 		if (!ItemPickup) continue;
-
+		
 		auto PowerSlug = ItemPickup->GetPickupItems().Item;
 		const auto ItemClass = PowerSlug.GetItemClass();
 		if (!ItemClass) continue;
-
-		TSharedPtr<FJsonObject> JPowerSlug = MakeShared<FJsonObject>();
+		
+		TSharedPtr<FJsonObject> JPowerSlug = UFRM_Library::CreateBaseJsonObject(PowerActor);
 		FString SlugName;
 
 		if (ItemClass->GetName() == "Desc_Crystal") {
@@ -325,7 +323,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPowerSlug(UObject* WorldContext,
 			SlugName = "Purple Slug";
 		};
 
-		JPowerSlug->Values.Add("ID", MakeShared<FJsonValueNumber>(Index));
 		JPowerSlug->Values.Add("Name", MakeShared<FJsonValueString>(SlugName));
 		JPowerSlug->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(PowerActor->GetClass())));
 		JPowerSlug->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(PowerActor)));
@@ -348,7 +345,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getStorageInv(UObject* WorldContext
 
 	for (AFGBuildableStorage* StorageContainer : StorageContainers) {
 
-		TSharedPtr<FJsonObject> JStorage = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JStorage = UFRM_Library::CreateBaseJsonObject(StorageContainer);
 
 		// get inventory
 		TMap<TSubclassOf<UFGItemDescriptor>, int32> StorageInventory = UFRM_Library::GetGroupedInventoryItems(StorageContainer->GetStorageInventory());
@@ -398,7 +395,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext, F
 
 	for (AActor* FoundActor : FoundActors) {
 
-		TSharedPtr<FJsonObject> JDropPod = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JDropPod = UFRM_Library::CreateBaseJsonObject(FoundActor);
 
 		AFGDropPod* DropPod = Cast<AFGDropPod>(FoundActor);
 
@@ -423,7 +420,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext, F
 			JItemClass = UKismetSystemLibrary::GetClassDisplayName(DropPodCost.ItemCost.ItemClass);
 		};
 
-		JDropPod->Values.Add("ID", MakeShared<FJsonValueString>(DropPod->GetName()));
 		JDropPod->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(DropPod)));
 		JDropPod->Values.Add("Opened", MakeShared<FJsonValueBoolean>(DropPod->HasBeenOpened()));
 		JDropPod->Values.Add("Looted", MakeShared<FJsonValueBoolean>(DropPod->HasBeenLooted()));
@@ -450,14 +446,12 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 
 	for (AFGBuildableResourceExtractor* Extractor : Extractors) {
 
-		TSharedPtr<FJsonObject> JExtractor = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JExtractor = UFRM_Library::CreateBaseJsonObject(Extractor);
 		TArray<TSharedPtr<FJsonValue>> JProductArray;
 		TArray<TSharedPtr<FJsonValue>> JIngredientsArray;
 
 		FString ItemName = TEXT("Desc_Null");
 		FString ItemClassName = TEXT("Desc_Null");
-		float ProdCycle = 0;
-		float Productivity = 0;
 		float CurrentProd = 0;
 		float MaxProd = 0;
 		int32 Amount = 0;
@@ -467,9 +461,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 			TSubclassOf<UFGResourceDescriptor> ItemClass = ResourceClass->GetResourceClass();
 			ItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
 			ItemClassName = UKismetSystemLibrary::GetClassDisplayName(ItemClass);
-			ProdCycle = Extractor->GetExtractionPerMinute();
-			Productivity = Extractor->GetProductivity();
-			UFGInventoryComponent* ExtractorInventory = Extractor->GetOutputInventory();
+			const float ProdCycle = Extractor->GetExtractionPerMinute();
+			const float Productivity = Extractor->GetProductivity();
+			const UFGInventoryComponent* ExtractorInventory = Extractor->GetOutputInventory();
 
 			Amount = ExtractorInventory->GetNumItems(ItemClass);
 			CurrentProd = Productivity * ProdCycle;
@@ -541,7 +535,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 
 		UFGRadarTowerRepresentation* RadarData = RadarTower->FindRadarTowerRepresentation();
 
-		TSharedPtr<FJsonObject> JRadarTower = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JRadarTower = UFRM_Library::CreateBaseJsonObject(RadarTower);
 		TArray<TSharedPtr<FJsonValue>> JFaunaArray;
 		TArray<TSharedPtr<FJsonValue>> JSignalArray;
 		TArray<TSharedPtr<FJsonValue>> JFloraArray;
@@ -597,6 +591,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 
 		TSet<TSubclassOf<UFGItemDescriptor>> FaunaKeys;
 		FaunaTMap.GetKeys(FaunaKeys);
+
 		for (TSubclassOf <UFGItemDescriptor> Fauna : FaunaKeys) {
 
 			TSharedPtr<FJsonObject> JFauna = MakeShared<FJsonObject>();
@@ -656,7 +651,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceSinkBuilding(UObject* Wo
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableResourceSink>(Buildables);
 
 	for (AFGBuildableResourceSink* Sink : Buildables) {
-		TSharedPtr<FJsonObject> JSinkBuilding = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JSinkBuilding = UFRM_Library::CreateBaseJsonObject(Sink);
 		JSinkBuilding->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Sink)));
 		JSinkBuilding->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Sink->GetPowerInfo())));
 		JResourceSinkBuildingArray.Add(MakeShared<FJsonValueObject>(JSinkBuilding));
@@ -673,7 +668,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPump(UObject* WorldContext, FReq
 	BuildableSubsystem->GetTypedBuildable<AFGBuildablePipelinePump>(BuildablePumps);
 
 	for (AFGBuildablePipelinePump* Pump : BuildablePumps) {
-		TSharedPtr<FJsonObject> JPump = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JPump = UFRM_Library::CreateBaseJsonObject(Pump);
 		JPump->Values.Add("Name", MakeShared<FJsonValueString>(Pump->mDisplayName.ToString()));
 		JPump->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Pump)));
 		JPump->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Pump->GetPowerInfo())));
@@ -691,7 +686,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPortal(UObject* WorldContext, FR
 	BuildableSubsystem->GetTypedBuildable<AFGBuildablePortal>(BuildablePortal);
 
 	for (AFGBuildablePortal* Portal : BuildablePortal) {
-		TSharedPtr<FJsonObject> JPortal = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JPortal = UFRM_Library::CreateBaseJsonObject(Portal);
 		JPortal->Values.Add("Name", MakeShared<FJsonValueString>(Portal->mDisplayName.ToString()));
 		JPortal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Portal)));
 		JPortal->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Portal->GetPowerInfo())));
@@ -702,12 +697,13 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPortal(UObject* WorldContext, FR
 	BuildableSubsystem->GetTypedBuildable<AFGBuildablePortalSatellite>(BuildablePortalSatellite);
 
 	for (AFGBuildablePortalSatellite* Portal : BuildablePortalSatellite) {
-		TSharedPtr<FJsonObject> JPortal = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JPortal = UFRM_Library::CreateBaseJsonObject(Portal);
 		JPortal->Values.Add("Name", MakeShared<FJsonValueString>(Portal->mDisplayName.ToString()));
 		JPortal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Portal)));
 		JPortal->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Portal->GetPowerInfo())));
 		JPortalArray.Add(MakeShared<FJsonValueObject>(JPortal));
 	}
+
 	return JPortalArray;
 }
 
@@ -720,7 +716,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHypertube(UObject* WorldContext,
 	BuildableSubsystem->GetTypedBuildable<AFGPipeHyperStart>(HyperStart);
 
 	for (AFGPipeHyperStart* Hypertube : HyperStart) {
-		TSharedPtr<FJsonObject> JHypertube = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JHypertube = UFRM_Library::CreateBaseJsonObject(Hypertube);
 		JHypertube->Values.Add("Name", MakeShared<FJsonValueString>(Hypertube->mDisplayName.ToString()));
 		JHypertube->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Hypertube)));
 		JHypertube->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Hypertube->GetPowerInfo())));
@@ -738,7 +734,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFrackingActivator(UObject* World
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableFrackingActivator>(FrackingActivator);
 
 	for (AFGBuildableFrackingActivator* Fracking : FrackingActivator) {
-		TSharedPtr<FJsonObject> JFrackingActivator = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JFrackingActivator = UFRM_Library::CreateBaseJsonObject(Fracking);
 		JFrackingActivator->Values.Add("Name", MakeShared<FJsonValueString>(Fracking->mDisplayName.ToString()));
 		JFrackingActivator->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Fracking)));
 		JFrackingActivator->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Fracking->GetPowerInfo())));
@@ -758,7 +754,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldCont
 
 	for (AFGBuildableSpaceElevator* SpaceElevator : SpaceElevators) {
 
-		TSharedPtr<FJsonObject> JSpaceElevator = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JSpaceElevator = UFRM_Library::CreateBaseJsonObject(SpaceElevator);
 		
 		TArray<TSharedPtr<FJsonValue>> JCurrentPhaseArray;
 		TArray<FRemainingPhaseCost> RemainingPhaseCost;
@@ -828,7 +824,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPipes(UObject* WorldContext, FRe
 
 	for (AFGBuildablePipeline* Pipe : Pipes) {
 
-		TSharedPtr<FJsonObject> JPipe = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JPipe = UFRM_Library::CreateBaseJsonObject(Pipe);
 
 		UFGPipeConnectionComponent* ConnectionZero = Pipe->GetPipeConnection0();
 		UFGPipeConnectionComponent* ConnectionOne = Pipe->GetPipeConnection1();
@@ -849,7 +845,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPipes(UObject* WorldContext, FRe
 
 	return JPipeArray;
 };
-
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSessionInfo(UObject* WorldContext, FRequestData RequestData) {
 

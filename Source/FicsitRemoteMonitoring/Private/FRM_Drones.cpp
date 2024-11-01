@@ -19,7 +19,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 	// Factory Building Production Stats
 	for (AFGBuildableDroneStation* DroneStation : DroneStations) {
 		
-		TSharedPtr<FJsonObject> JDroneStation = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JDroneStation = UFRM_Library::CreateBaseJsonObject(DroneStation);
 
 		// get fuel inventory
 		TMap<TSubclassOf<UFGItemDescriptor>, int32> FuelInventory = UFRM_Library::GetGroupedInventoryItems(DroneStation->GetFuelInventory());
@@ -128,15 +128,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDrone(UObject* WorldContext) {
 	TArray<TSharedPtr<FJsonValue>> JDroneArray;
 
 	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGDroneVehicle::StaticClass(), FoundActors);
-	int32 Index = 0;
 
 	for (AActor* FoundActor : FoundActors) {
-		Index++;
-
-		TSharedPtr<FJsonObject> JDrone = MakeShared<FJsonObject>();
-
 		AFGDroneVehicle* Drone = Cast<AFGDroneVehicle>(FoundActor);
-
+		TSharedPtr<FJsonObject> JDrone = UFRM_Library::CreateBaseJsonObject(Drone);
 		EDroneFlyingMode Form = Drone->GetDroneMovementComponent()->GetFlyingMode();
 
 		FString FormString = "Unknown";
@@ -162,7 +157,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDrone(UObject* WorldContext) {
 			PairedStation = UFRM_Drones::getDronePortName(Drone->GetHomeStation()->GetInfo()->GetPairedStation()->GetStation());
 		};
 
-		JDrone->Values.Add("ID", MakeShared<FJsonValueString>(Drone->GetName()));
 		JDrone->Values.Add("Name", MakeShared<FJsonValueString>(Drone->mDisplayName.ToString()));
 		JDrone->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Drone->GetClass())));
 		JDrone->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Drone)));

@@ -258,7 +258,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getResourceSink(UObject* WorldCo
 
 TSharedPtr<FJsonObject> UFRM_Production::getRecipe(UObject* WorldContext, TSubclassOf<UFGRecipe> Recipe) {
 	
-	TSharedPtr<FJsonObject> JRecipe = MakeShared<FJsonObject>();
+	TSharedPtr<FJsonObject> JRecipe = UFRM_Library::CreateBaseJsonObject(Recipe);
 	
 	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
 	fgcheck(ModSubsystem);
@@ -365,9 +365,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getRecipes(UObject* WorldContext
 	fgcheck(ModSubsystem);
 
 	for (TSubclassOf<UFGSchematic> Schematic : Schematics) {
-
-		TSharedPtr<FJsonObject> JSchematic = MakeShared<FJsonObject>();
-
 		TArray<TSubclassOf<UFGRecipe>> Recipes;
 
 		bool Purchased = false;
@@ -407,7 +404,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getSchematics(UObject* WorldCont
 
 	for (TSubclassOf<UFGSchematic> Schematic : Schematics) {
 
-		TSharedPtr<FJsonObject> JSchematic = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JSchematic = UFRM_Library::CreateBaseJsonObject(Schematic);
 
 		TArray<TSharedPtr<FJsonValue>> JRecipeArray;
 		TArray<TSubclassOf<UFGRecipe>> Recipes;
@@ -454,7 +451,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getSchematics(UObject* WorldCont
 		}
 
 		JSchematic->Values.Add("Name", MakeShared<FJsonValueString>(UFGSchematic::GetSchematicDisplayName(Schematic).ToString()));
-		JSchematic->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Schematic->GetClass())));
+		JSchematic->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Schematic)));
 		JSchematic->Values.Add("TechTier", MakeShared<FJsonValueNumber>(UFGSchematic::GetTechTier(Schematic)));
 		JSchematic->Values.Add("Type", MakeShared<FJsonValueString>(SchematicType));
 		JSchematic->Values.Add("Recipes", MakeShared<FJsonValueArray>(JRecipeArray));
