@@ -29,7 +29,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_World::GetResearchTrees(UObject* WorldContex
 			FIntPoint Coordinates;
 			TArray<FIntPoint> ParentCoordinates;
 			TArray<FIntPoint> UnhiddenByCoordinates;
-			TSharedPtr<FJsonObject> JResearchNode = MakeShared<FJsonObject>();
+			TSharedPtr<FJsonObject> JResearchNode = UFRM_Library::CreateBaseJsonObject(ResearchNode);
 
 			ModSubsystem->ResearchTreeNodeUnlockData_BIE(ResearchNode, ParentCoordinates, UnhiddenByCoordinates, Coordinates);
 

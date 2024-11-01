@@ -13,7 +13,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 
 	for (AFGTrain* Train : Trains) {
 
-		TSharedPtr<FJsonObject> JTrain = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JTrain = UFRM_Library::CreateBaseJsonObject(Train);
 		TArray<TSharedPtr<FJsonValue>> JTimetableArray;
 
 		AFGLocomotive* MasterTrain = Train->GetMultipleUnitMaster();
@@ -156,7 +156,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 		float InFlowRate = 0;
 		float OutFlowRate = 0;
 		
-		TSharedPtr<FJsonObject> JTrainStation = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JTrainStation = UFRM_Library::CreateBaseJsonObject(TrainStation);
 		TArray<TSharedPtr<FJsonValue>> JCargoInventory;
 		TArray<TSharedPtr<FJsonValue>> JCargoStations;
 
@@ -177,7 +177,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 		
 		while (!bCompleted) {	
 			AFGBuildableTrainPlatformCargo* TrainPlatformCargo = Cast<AFGBuildableTrainPlatformCargo>(TrainPlatform);
-			TSharedPtr<FJsonObject> JTrainPlatform = MakeShared<FJsonObject>();
+			TSharedPtr<FJsonObject> JTrainPlatform = UFRM_Library::CreateBaseJsonObject(TrainPlatform);
 			TMap<TSubclassOf<UFGItemDescriptor>, int32> TrainPlatformInventory;
 			
 			// Skips but does not stop checking for AFGBuildableTrainPlatformCargo
