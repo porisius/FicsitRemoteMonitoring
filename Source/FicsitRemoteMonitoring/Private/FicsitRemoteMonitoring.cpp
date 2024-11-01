@@ -676,7 +676,8 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGet
 	NewEndpoint.bGetAll = bGetAll;
 	NewEndpoint.bUseFirstObject = bUseFirstObject;
 	NewEndpoint.bRequireGameThread = bRequireGameThread;
-	NewEndpoint.Callback.BindUFunction(TargetObject, FunctionName);
+	NewEndpoint.TargetObject = TargetObject;
+	NewEndpoint.FunctionName = FunctionName;
 
 	APIEndpoints.Add(NewEndpoint);
 
@@ -735,64 +736,90 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
         if (EndpointInfo.APIName == InEndpoint)
         {
             try {
-            	Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
-                FAPICallback Callback = EndpointInfo.Callback;
+                Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
+                UObject* TargetObject = EndpointInfo.TargetObject;
+                FName FunctionName = EndpointInfo.FunctionName;
 
                 if (EndpointInfo.bRequireGameThread)
                 {
                     FThreadSafeBool bAllocationComplete = false;
-                    AsyncTask(ENamedThreads::GameThread, [Callback, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &bSuccess]() {
-                        // Execute callback via GameThread, check if WorldContext is valid and if Callback IsBound (valid)
-                        if (WorldContext && Callback.IsBound())
-                        {
-                            JsonArray = Callback.Execute(WorldContext, RequestData);
+                    AsyncTask(ENamedThreads::GameThread, [TargetObject, FunctionName, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &bSuccess]() {
+                        if (WorldContext && TargetObject) {
+                            UFunction* Function = TargetObject->FindFunction(FunctionName);
 
-                            bSuccess = true;
+                            if (Function) {
+                                // Structure to hold parameters matching the target function's expected signature
+                                struct FCallbackParams {
+                                    UObject* WorldContext;
+                                    FRequestData RequestData;
+                                    TArray<TSharedPtr<FJsonValue>> JsonValues;
+                                } Params;
+
+                                Params.WorldContext = WorldContext;
+                                Params.RequestData = RequestData;
+
+                                // Call the function using ProcessEvent
+                                TargetObject->ProcessEvent(Function, &Params);
+
+                                JsonArray = Params.JsonValues;
+                                bSuccess = true;
+                            }
                         }
                         bAllocationComplete = true;
                     });
 
-                    //block while not complete
-                    while (!bAllocationComplete)
-                    {
-                        //100micros sleep, this should be very quick
+                    // Block until allocation is complete
+                    while (!bAllocationComplete) {
                         FPlatformProcess::Sleep(0.0001f);
-                    };
+                    }
                 }
-                // Directly execute the callback
-                else if (WorldContext && Callback.IsBound())
-                {
-                    JsonArray = Callback.Execute(WorldContext, RequestData);
-                    bSuccess = true;
-                }
-            } catch (const std::exception& e) 
-            {
+                // Directly execute the callback if GameThread is not required
+                else if (WorldContext && TargetObject) {
+                    UFunction* Function = TargetObject->FindFunction(FunctionName);
 
+                    if (Function) {
+                        struct FCallbackParams {
+                            UObject* WorldContext;
+                            FRequestData RequestData;
+                            TArray<TSharedPtr<FJsonValue>> JsonValues;
+                        } Params;
+
+                        Params.WorldContext = WorldContext;
+                        Params.RequestData = RequestData;
+
+                        // Call the function directly
+                        TargetObject->ProcessEvent(Function, &Params);
+
+                        JsonArray = Params.JsonValues;
+                        bSuccess = true;
+                    }
+                }
+            } 
+            catch (const std::exception& e) 
+            {
                 FString err = *FString(e.what());
 
-                TSharedPtr<FJsonObject> JsonObject =  MakeShared<FJsonObject>();
-
+                TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
                 JsonObject->Values.Add("error", MakeShared<FJsonValueString>("CallEndpoint Exception: " + err));
-                JsonObject->Values.Add("recommendation", MakeShared<FJsonValueString>("Please relay this error, and logs the the Sysadmin Modding Discord for anaylsis."));
+                JsonObject->Values.Add("recommendation", MakeShared<FJsonValueString>("Please relay this error, and log to the Sysadmin Modding Discord for analysis."));
                 JsonArray.Add(MakeShared<FJsonValueObject>(JsonObject));
 
-                UE_LOGFMT(LogHttpServer, Error, "CallEndpoint Exception: %s", err);
-
-            } catch (...) {
-
+                UE_LOGFMT(LogHttpServer, Error, "CallEndpoint Exception: %s", *err);
+            } 
+            catch (...) 
+            {
                 UE_LOG(LogHttpServer, Error, TEXT("Unknown Exception in CallEndpoint"));
-                
             }
 
-            // current api point was found, so we don't need to iterate the other endpoints
+            // Found matching endpoint; break the loop
             break;
         }
     }
 
-	Response.JsonValues = JsonArray;
-	
+    Response.JsonValues = JsonArray;
+
     // Return an empty JSON object if no matching endpoint is found
-	return Response;
+    return Response;
 }
 
 FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess)
@@ -805,15 +832,14 @@ FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString I
 		return "{\"error\": \"Endpoint not found. Please consult Endpoint's documentation for more information.\"}";
 	}
 
-	if (!bUseFirstObject) return JsonArrayToString(JSONDebugMode,JsonValues);
+	if (!bUseFirstObject) return JsonArrayToString(JsonValues);
 
 	// return empty object, if JsonValues is empty
 	if (JsonValues.Num() == 0) return "{}";
 
-	TSharedPtr<FJsonObject> FirstJsonObject;
-	FirstJsonObject= JsonValues[0]->AsObject();
+	TSharedPtr<FJsonObject> FirstJsonObject = JsonValues[0]->AsObject();
 
-	return JsonObjectToString(JSONDebugMode, FirstJsonObject);
+	return JsonObjectToString(FirstJsonObject);
 }
 
 /*FFGServerErrorResponse AFicsitRemoteMonitoring::HandleCSSEndpoint(FString& out_json, FString InEndpoin)
@@ -834,40 +860,42 @@ FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString I
 }
 */
 
-FString JsonArrayToString(bool JSONDebugMode, TArray<TSharedPtr<FJsonValue>> JsonArray)
-{
-	FString Write;
+FString AFicsitRemoteMonitoring::JsonArrayToString(TArray<TSharedPtr<FJsonValue>> JsonArray) {
+	FString OutputString;
 
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> PrettyJsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	const TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> CondensedJsonWriter = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	
-	if (JSONDebugMode)
-	{
-		FJsonSerializer::Serialize(JsonArray, PrettyJsonWriter);
-	} else
-	{
-		FJsonSerializer::Serialize(JsonArray, CondensedJsonWriter);	
+	// Choose Pretty or Condensed print policy based on JSONDebugMode
+	if (JSONDebugMode) {
+		TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> Writer = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&OutputString);
+		if (FJsonSerializer::Serialize(JsonArray, Writer)) {
+			return OutputString;
+		}
+	} else {
+		TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> Writer = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&OutputString);
+		if (FJsonSerializer::Serialize(JsonArray, Writer)) {
+			return OutputString;
+		}
 	}
-
-	return Write;
+    
+	return TEXT("Error: Unable to serialize JSON array");
 }
 
-FString JsonObjectToString(bool JSONDebugMode, TSharedPtr<FJsonObject> JsonObject)
-{
-	FString Write;
+FString AFicsitRemoteMonitoring::JsonObjectToString(TSharedPtr<FJsonObject> JsonObject) {
+	FString OutputString;
 
-	const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> PrettyJsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	const TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> CondensedJsonWriter = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Write); //Our Writer Factory
-	
-	if (JSONDebugMode)
-	{
-		FJsonSerializer::Serialize(JsonObject.ToSharedRef(), PrettyJsonWriter);
-	} else
-	{
-		FJsonSerializer::Serialize(JsonObject.ToSharedRef(), CondensedJsonWriter);	
+	// Choose Pretty or Condensed print policy based on JSONDebugMode
+	if (JSONDebugMode) {
+		TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> Writer = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&OutputString);
+		if (FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer)) {
+			return OutputString;
+		}
+	} else {
+		TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> Writer = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&OutputString);
+		if (FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer)) {
+			return OutputString;
+		}
 	}
 
-	return Write;
+	return TEXT("Error: Unable to serialize JSON object");
 }
 
 TArray<TSharedPtr<FJsonValue>> AFicsitRemoteMonitoring::getAll(UObject* WorldContext, FRequestData RequestData) {

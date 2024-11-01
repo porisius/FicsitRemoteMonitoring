@@ -68,8 +68,6 @@ struct FClientInfo
 	FString SubscribedEndpoints;  // Keep track of all endpoints that have been subscribed
 	TArray<uWS::WebSocket<false, true, FWebSocketUserData>*> Client;  // Add the third template argument for USERDATA
 };
- 
-DECLARE_DELEGATE_RetVal_TwoParams(TArray<TSharedPtr<FJsonValue>>, FAPICallback, const UObject* /* WorldContext */, FRequestData /* RequestData */);
 
 USTRUCT(BlueprintType, meta = (DontUseGenericSpawnObject = "True"))
 struct FAPIEndpoint
@@ -82,7 +80,8 @@ public:
     bool bGetAll;
     bool bUseFirstObject;
     bool bRequireGameThread;
-    FAPICallback Callback;
+	UObject* TargetObject;
+    FName FunctionName;
 
 };
 
@@ -127,8 +126,8 @@ public:
 
 	//FFGServerErrorResponse HandleCSSEndpoint(FString& out_json, FString InEndpoin);
 
-	FString JsonArrayToString(bool JSONDebugMode, TArray<TSharedPtr<FJsonValue>> JsonArray);
-	FString JsonObjectToString(bool JSONDebugMode, TSharedPtr<FJsonObject> JsonObject);
+	FString JsonArrayToString(TArray<TSharedPtr<FJsonValue>> JsonArray);
+	FString JsonObjectToString(TSharedPtr<FJsonObject> JsonObject);
 	FCallEndpointResponse CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
