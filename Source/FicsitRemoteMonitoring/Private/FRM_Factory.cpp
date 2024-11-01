@@ -367,14 +367,14 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getWorldInv(UObject* WorldContext, 
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	TArray<AFGBuildable*> Buildables;
-	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableStorage")), Buildables);
+	TArray<AFGBuildableStorage*> StorageContainers;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableStorage>(StorageContainers);
 	TArray<TSharedPtr<FJsonValue>> JStorageArray;
 
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> StorageTMap;
 
-	for (AFGBuildable* Buildable : Buildables) {
-		AFGBuildableStorage* StorageContainer = Cast<AFGBuildableStorage>(Buildable);
+	for (AFGBuildableStorage* StorageContainer : StorageContainers) {
+
 		TSharedPtr<FJsonObject> JStorage = MakeShared<FJsonObject>();
 
 		// get inventory of the storage container
