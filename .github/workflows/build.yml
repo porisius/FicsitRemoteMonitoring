@@ -64,17 +64,17 @@ jobs:
       - name: Extract, Copy DLLs to Windows/WindowsServer Builds, Create new Archives
         run: |
 
-          Remove-Item .\Archive\* -Recurse -ErrorAction Ignore -Confirm:$false
-          Expand-Archive C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip .\Archive
+          Remove-Item C:\workspace\Archive\* -Recurse -ErrorAction Ignore -Confirm:$false
+          Expand-Archive C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip C:\workspace\Archive
 
-          Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" .\Archive\Windows\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
-          Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" .\Archive\WindowsServer\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
+          Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" C:\workspace\Archive\Windows\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
+          Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" C:\workspace\Archive\WindowsServer\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
 
-          Remove-Item .\Output\* -Recurse -ErrorAction Ignore -Confirm:$false
-          Compress-Archive .\Archive\* .\Output\FicsitRemoteMonitoring.zip
-          Compress-Archive .\Archive\Windows\* .\Output\FicsitRemoteMonitoring-Windows.zip
-          Compress-Archive .\Archive\WindowsServer\* .\Output\FicsitRemoteMonitoring-WindowsServer.zip
-          Compress-Archive .\Archive\LinuxServer\* .\Output\FicsitRemoteMonitoring-LinuxServer.zip
+          Remove-Item C:\workspace\Output\* -Recurse -ErrorAction Ignore -Confirm:$false
+          Compress-Archive C:\workspace\Archive\* C:\workspace\Output\FicsitRemoteMonitoring.zip
+          Compress-Archive C:\workspace\Archive\Windows\* C:\workspace\Output\FicsitRemoteMonitoring-Windows.zip
+          Compress-Archive C:\workspace\Archive\WindowsServer\* C:\workspace\Output\FicsitRemoteMonitoring-WindowsServer.zip
+          Compress-Archive C:\workspace\Archive\LinuxServer\* C:\workspace\Output\FicsitRemoteMonitoring-LinuxServer.zip
 
       - name: Prep UAT Logs for Upload
         if: failure()
@@ -92,25 +92,25 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Client Build
-          path: Output/FicsitRemoteMonitoring-Windows.zip
+          path: C:/workspace/Output/FicsitRemoteMonitoring-Windows.zip
 
       - name: Archive Windows Server Build Artifact
         if: ${{ github.event.pull_request.draft || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Windows Server Build
-          path: Output/FicsitRemoteMonitoring-WindowsServer.zip
+          path: C:/workspace/Output/FicsitRemoteMonitoring-WindowsServer.zip
 
       - name: Archive Linux Server Build Artifact
         if: ${{ github.event.pull_request.draft || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Linux Server Build
-          path: Output/FicsitRemoteMonitoring-LinuxServer.zip
+          path: C:/workspace/Output/FicsitRemoteMonitoring-LinuxServer.zip
 
       - name: Release
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v1
         with:
-          files: Output/*
+          files: C:/workspace/Output/*
           tag_name: "${{ steps.uPlugin.outputs.SemVersion }}-${{ github.run_number }}"
