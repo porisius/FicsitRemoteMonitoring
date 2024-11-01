@@ -10,16 +10,15 @@ FString UFRM_Drones::getDronePortName(AFGBuildableDroneStation* DroneStation) {
 TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContext) {
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	TArray<AFGBuildable*> Buildables;
+	TArray<AFGBuildableDroneStation*> DroneStations;
 
-	BuildableSubsystem->GetTypedBuildable(LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGBuildableDroneStation")), Buildables);
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableDroneStation>(DroneStations);
 
 	TArray<TSharedPtr<FJsonValue>> JDroneStationArray;
 
 	// Factory Building Production Stats
-	for (AFGBuildable* Buildable : Buildables) {
-
-		AFGBuildableDroneStation* DroneStation = Cast<AFGBuildableDroneStation>(Buildable);
+	for (AFGBuildableDroneStation* DroneStation : DroneStations) {
+		
 		TSharedPtr<FJsonObject> JDroneStation = MakeShared<FJsonObject>();
 
 		// get fuel inventory
