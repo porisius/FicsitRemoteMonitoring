@@ -63,11 +63,13 @@ jobs:
 
       - name: Cleanup Archive and Output Folders
         run: |
-          Remove-Item C:\workspace\Archive\* -Recurse -ErrorAction Ignore -Confirm:$false
-          Remove-Item C:\workspace\Output\* -Recurse -ErrorAction Ignore -Confirm:$false
+          cmd /c "rmdir /s /q C:\workspace\Archive\LinuxServer"
+          cmd /c "rmdir /s /q C:\workspace\Archive\WindowsServer"
+          cmd /c "rmdir /s /q C:\workspace\Archive\Windows"
+          cmd /c "del /s /q C:\workspace\Output\*"
 
-      - name: Extract Combined Archive, Create new Archives
-        run: Expand-Archive C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip C:\workspace\Archive
+      - name: Extract Combined Archive
+        run: Expand-Archive C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip C:\workspace\Archive -ErrorAction Ignore -Confirm:$false
 
       - name: Copy DLLs to Windows/WindowsServer Builds
         run: |
