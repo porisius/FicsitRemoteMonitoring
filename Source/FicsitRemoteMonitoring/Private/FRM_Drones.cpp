@@ -124,11 +124,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDrone(UObject* WorldContext) {
 
-	UClass* DroneClass = LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGDroneVehicle"));
 	TArray<AActor*> FoundActors;
 	TArray<TSharedPtr<FJsonValue>> JDroneArray;
 
-	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), DroneClass, FoundActors);
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGDroneVehicle::StaticClass(), FoundActors);
 	int32 Index = 0;
 
 	for (AActor* FoundActor : FoundActors) {
