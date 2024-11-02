@@ -69,7 +69,7 @@ jobs:
           cmd /c "del /s /q C:\workspace\Output\*"
 
       - name: Extract Combined Archive
-        run: Expand-Archive C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip C:\workspace\Archive -ErrorAction Ignore -Confirm:$false
+        run: 7z x C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip -oC:\workspace\Archive
 
       - name: Copy DLLs to Windows/WindowsServer Builds
         run: |
