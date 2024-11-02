@@ -742,18 +742,23 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
                 if (EndpointInfo.bRequireGameThread) {
                     FThreadSafeBool bAllocationComplete = false;
                     AsyncTask(ENamedThreads::GameThread, [this, &EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &bSuccess]() {
-                        (this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
-                        bSuccess = !JsonArray.IsEmpty();
-                        bAllocationComplete = true;
-                    });
+						if (SocketListener && EndpointInfo.FunctionPtr)
+						{
+							(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
+							bSuccess = true;
+						}
+						bAllocationComplete = true;
+					});
 
                     while (!bAllocationComplete) {
                         FPlatformProcess::Sleep(0.0001f);
                     }
-                } else {
-                    (this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
-                    bSuccess = !JsonArray.IsEmpty();
                 }
+				else if (SocketListener && EndpointInfo.FunctionPtr)
+				{
+					(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
+					bSuccess = true;
+				}
             } catch (const std::exception& e) {
                 FString err = FString(e.what());
                 UE_LOG(LogHttpServer, Error, TEXT("Exception in CallEndpoint for endpoint '%s': %s"), *InEndpoint, *err);
