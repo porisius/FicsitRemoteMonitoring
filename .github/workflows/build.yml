@@ -95,14 +95,14 @@ jobs:
           path: UAT_Log.7z
 
       - name: Archive Client Build Artifact
-        if: ${{ github.event.pull_request.draft || github.ref == 'refs/heads/dev' }}
+        if: ${{ github.event.pull_request || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Client Build
           path: C:/workspace/Output/FicsitRemoteMonitoring-Windows.zip
 
       - name: Archive Windows Server Build Artifact
-        if: ${{ github.event.pull_request.draft || github.ref == 'refs/heads/dev' }}
+        if: ${{ github.event.pull_request || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Windows Server Build
