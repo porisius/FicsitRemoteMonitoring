@@ -76,44 +76,41 @@ jobs:
           Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" C:\workspace\Archive\Windows\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
           Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" C:\workspace\Archive\WindowsServer\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
 
-      - name: Compress Archives
-        run: |
-          Compress-Archive C:\workspace\Archive\* C:\workspace\Output\FicsitRemoteMonitoring.zip
-          Compress-Archive C:\workspace\Archive\Windows\* C:\workspace\Output\FicsitRemoteMonitoring-Windows.zip
-          Compress-Archive C:\workspace\Archive\WindowsServer\* C:\workspace\Output\FicsitRemoteMonitoring-WindowsServer.zip
-          Compress-Archive C:\workspace\Archive\LinuxServer\* C:\workspace\Output\FicsitRemoteMonitoring-LinuxServer.zip
-
-      - name: Prep UAT Logs for Upload
-        if: failure()
-        run: 7z a UAT_Log.7z "$env:appdata/Unreal Engine/AutomationTool/Logs/C+ue/*"
-
       - name: Upload artifacts - UnrealAutomationTool Logs
         uses: actions/upload-artifact@master
         if: failure()
         with:
           name: Logs
-          path: UAT_Log.7z
+          path: "$env:appdata/Unreal Engine/AutomationTool/Logs/C+ue/*"
 
       - name: Archive Client Build Artifact
         if: ${{ github.event.pull_request || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Client Build
-          path: C:/workspace/Output/FicsitRemoteMonitoring-Windows.zip
+          path: C:/workspace/Output/Windows/*
 
       - name: Archive Windows Server Build Artifact
         if: ${{ github.event.pull_request || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Windows Server Build
-          path: C:/workspace/Output/FicsitRemoteMonitoring-WindowsServer.zip
+          path: C:/workspace/Output/WindowsServer/*
 
       - name: Archive Linux Server Build Artifact
         if: ${{ github.event.pull_request.draft || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Linux Server Build
-          path: C:/workspace/Output/FicsitRemoteMonitoring-LinuxServer.zip
+          path: C:/workspace/Output/LinuxServer/*
+
+      - name: Compress Archives for Release
+        if: github.ref == 'refs/heads/main'
+        run: |
+          7z a C:\workspace\Output\FicsitRemoteMonitoring.zip C:\workspace\Archive\*
+          7z a C:\workspace\Output\FicsitRemoteMonitoring-Windows.zip C:\workspace\Archive\Windows\*
+          7z a C:\workspace\Output\FicsitRemoteMonitoring-WindowsServer.zip C:\workspace\Archive\WindowsServer\*
+          7z a C:\workspace\Output\FicsitRemoteMonitoring-LinuxServer.zip C:\workspace\Archive\LinuxServer\*
 
       - name: Release
         if: github.ref == 'refs/heads/main'
