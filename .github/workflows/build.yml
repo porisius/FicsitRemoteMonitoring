@@ -59,7 +59,7 @@ jobs:
         run: C:\ue\Engine\\Build\\BatchFiles\\Build.bat FactoryEditor Win64 Development -project="C:\\SatisfactoryModLoader\\FactoryGame.uproject"
 
       - name: Package FicsitRemoteMonitoring Mod
-        run: C:\ue\Engine\Build\BatchFiles\RunUAT.bat -ScriptsForProject='C:\\SatisfactoryModLoader\\FactoryGame.uproject' PackagePlugin -Project="C:\\SatisfactoryModLoader\\FactoryGame.uproject" -dlcname=FicsitRemoteMonitoring -build -server -clientconfig=Shipping -serverconfig=Shipping -platform=Win64 -serverplatform=Win64+Linux -nocompileeditor -installed
+        run: C:\ue\Engine\Build\BatchFiles\RunUAT.bat -ScriptsForProject='C:\\SatisfactoryModLoader\\FactoryGame.uproject' PackagePlugin -Project="C:\\SatisfactoryModLoader\\FactoryGame.uproject" -dlcname=FicsitRemoteMonitoring -build -server -clientconfig=Shipping -serverconfig=Shipping -platform=Win64 -serverplatform=Win64+Linux -nocompileeditor -installed -merge -utf8output
 
       - name: Cleanup Archive and Output Folders
         run: |
