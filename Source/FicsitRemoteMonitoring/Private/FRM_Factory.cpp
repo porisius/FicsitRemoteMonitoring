@@ -391,11 +391,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getWorldInv(UObject* WorldContext, 
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext, FRequestData RequestData) {
 
-	UClass* DropPodClass = LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGDropPod"));
 	TArray<AActor*> FoundActors;
 	TArray<TSharedPtr<FJsonValue>> JDropPodArray;
 
-	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), DropPodClass, FoundActors);
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGDropPod::StaticClass(), FoundActors);
 
 	for (AActor* FoundActor : FoundActors) {
 
