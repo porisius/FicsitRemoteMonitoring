@@ -88,21 +88,21 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Client Build
-          path: C:/workspace/Output/Windows/*
+          path: C:/workspace/Archive/Windows/*
 
       - name: Archive Windows Server Build Artifact
         if: ${{ github.event.pull_request || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Windows Server Build
-          path: C:/workspace/Output/WindowsServer/*
+          path: C:/workspace/Archive/WindowsServer/*
 
       - name: Archive Linux Server Build Artifact
-        if: ${{ github.event.pull_request.draft || github.ref == 'refs/heads/dev' }}
+        if: ${{ github.event.pull_request || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Linux Server Build
-          path: C:/workspace/Output/LinuxServer/*
+          path: C:/workspace/Archive/LinuxServer/*
 
       - name: Compress Archives for Release
         if: github.ref == 'refs/heads/main'
