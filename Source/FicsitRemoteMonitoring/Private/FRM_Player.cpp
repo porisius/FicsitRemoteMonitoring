@@ -5,11 +5,10 @@
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Player::getPlayer(UObject* WorldContext) {
 
-	UClass* PlayerClass = LoadObject<UClass>(nullptr, TEXT("/Script/FactoryGame.FGCharacterPlayer"));
 	TArray<AActor*> FoundActors;
 	TArray<TSharedPtr<FJsonValue>> JPlayerArray;
 
-	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), PlayerClass, FoundActors);
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGCharacterPlayer::StaticClass(), FoundActors);
 	int Index = 0;
 	for (AActor* Player : FoundActors) {
 		Index++;
