@@ -75,6 +75,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getSwitches(UObject* WorldContext)
 		}
 
 		FString Name = PowerSwitch->GetBuildingTag_Implementation();
+		JSwitches->Values.Add("ID", MakeShared<FJsonValueString>(PowerSwitch->GetName()));
 		JSwitches->Values.Add("Name", MakeShared<FJsonValueString>(Name));
 		JSwitches->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(PowerSwitch->GetClass())));
 		JSwitches->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(PowerSwitch)));
