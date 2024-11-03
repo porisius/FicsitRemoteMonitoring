@@ -227,6 +227,14 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     HandleApiRequest(World, res, req, Endpoint, RequestData);
                 });
 
+            	app.options("/*", [this, World](auto* res, uWS::HttpRequest* req)
+            	{
+            		UFRM_RequestLibrary::AddResponseHeaders(res, false);
+            		res->writeHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            			->writeHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+            		res->end();
+            	});
+            	
             	app.post("/*", [this, World](auto* res, uWS::HttpRequest* req)
             	{
 		            const std::string URL(req->getUrl().begin(), req->getUrl().end());
