@@ -61,7 +61,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getSwitches(UObject* WorldContext)
 
 	for (AFGBuildableCircuitSwitch* PowerSwitch : PowerSwitches) {
 
-		TSharedPtr<FJsonObject> JSwitches = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JSwitches = UFRM_Library::CreateBaseJsonObject(PowerSwitch);
 
 		UFGCircuitConnectionComponent* ConnectionZero = PowerSwitch->GetConnection0();
 		UFGCircuitConnectionComponent* ConnectionOne = PowerSwitch->GetConnection1();
@@ -75,7 +75,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getSwitches(UObject* WorldContext)
 		}
 
 		FString Name = PowerSwitch->GetBuildingTag_Implementation();
-		JSwitches->Values.Add("ID", MakeShared<FJsonValueString>(PowerSwitch->GetName()));
 		JSwitches->Values.Add("Name", MakeShared<FJsonValueString>(Name));
 		JSwitches->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(PowerSwitch->GetClass())));
 		JSwitches->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(PowerSwitch)));
