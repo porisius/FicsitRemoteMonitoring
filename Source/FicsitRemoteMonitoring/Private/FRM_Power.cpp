@@ -224,8 +224,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 
 			FuelAmount = GeneratorFuel->GetFuelAmount();
 			FuelForm = UFGItemDescriptor::GetForm(GeneratorFuel->GetCurrentFuelClass());
+			UFGInventoryComponent* FuelInventory = GeneratorFuel->GetFuelInventory();
 			
-			TArray<TSubclassOf<UFGItemDescriptor>> FuelClasses = GeneratorFuel->GetAvailableFuelClasses(GeneratorFuel->GetFuelInventory());
+			TArray<TSubclassOf<UFGItemDescriptor>> FuelClasses = GeneratorFuel->GetAvailableFuelClasses(FuelInventory);
 			for (TSubclassOf<UFGItemDescriptor> FuelClass : FuelClasses) {
 
 				TSharedPtr<FJsonObject> JFuel = MakeShared<FJsonObject>();
