@@ -209,11 +209,16 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 		EResourceForm FuelForm;
 		FString FormString = "Geothermal";
 
+		TArray<TSharedPtr<FJsonValue>> JFuelInventory;
 		TArray<TSharedPtr<FJsonValue>> JFuelArray;
 		TSharedPtr<FJsonObject> JSupplemental = MakeShared<FJsonObject>();
 
-		if (IsValid(GeneratorFuel)) {
+		if (IsValid(GeneratorFuel) || IsValid(GeneratorNuclear))
+		{
+			JFuelInventory = UFRM_Library::GetInventoryJSON(UFRM_Library::GetGroupedInventoryItems(GeneratorFuel->GetFuelInventory()));
+		}
 
+		if (IsValid(GeneratorFuel)) {
 			TSubclassOf<UFGItemDescriptor> Supplemental = GeneratorFuel->GetSupplementalResourceClass();
 
 			JSupplemental->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Supplemental).ToString()));
@@ -227,8 +232,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 			UFGInventoryComponent* FuelInventory = GeneratorFuel->GetFuelInventory();
 			
 			TArray<TSubclassOf<UFGItemDescriptor>> FuelClasses = GeneratorFuel->GetAvailableFuelClasses(FuelInventory);
-			for (TSubclassOf<UFGItemDescriptor> FuelClass : FuelClasses) {
-
+			for (TSubclassOf<UFGItemDescriptor> FuelClass : FuelClasses)
+			{
 				TSharedPtr<FJsonObject> JFuel = MakeShared<FJsonObject>();
 
 				auto EnergyValue = UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetEnergyValue(FuelClass), UFGItemDescriptor::GetForm(FuelClass));
@@ -277,7 +282,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 		float GeoMaxPower = 0;
 
 		if (IsValid(GeneratorGeo)) {
-
 			GeoMinPower = GeneratorGeo->GetMinPowerProduction();
 			GeoMaxPower = GeneratorGeo->GetMaxPowerProduction();
 		}
@@ -314,8 +318,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 		JGenerator->Values.Add("GeoMaxPower", MakeShared<FJsonValueNumber>(GeoMaxPower));
 		JGenerator->Values.Add("AvailableFuel", MakeShared<FJsonValueArray>(JFuelArray));
 		JGenerator->Values.Add("WasteInventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(WasteInventory)));
-		JGenerator->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Generator), Generator->mDisplayName.ToString(), Generator->mDisplayName.ToString())));
+		JGenerator->Values.Add("FuelInventory", MakeShared<FJsonValueArray>(JFuelInventory));
 		JGenerator->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Generator->GetPowerInfo())));
+		JGenerator->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Generator), Generator->mDisplayName.ToString(), Generator->mDisplayName.ToString())));
 
 		JGeneratorArray.Add(MakeShared<FJsonValueObject>(JGenerator));
 	};
