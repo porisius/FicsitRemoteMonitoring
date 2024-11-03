@@ -163,6 +163,7 @@ TSharedPtr<FJsonObject> UFRM_Library::GetItemValueObject(const TSubclassOf<UFGIt
 	JItem->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Item).ToString()));
 	JItem->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Item)));
 	JItem->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
+	JItem->Values.Add("MaxAmount", MakeShared<FJsonValueNumber>(UFGItemDescriptor::GetStackSize(Item)));
 
 	return JItem;
 }
