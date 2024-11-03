@@ -141,6 +141,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::setSwitches(UObject* WorldContext, FR
 				if (JsonObject->HasField("name"))
 				{
 					PowerSwitch->SetBuildingTag_Implementation(Name);
+					PowerSwitch->SetHasBuildingTag_Implementation(Name.Len() > 0);
 					JResponse->Values.Add("Status", MakeShared<FJsonValueString>(PowerSwitch->GetBuildingTag_Implementation()));
 					bSuccess = true;
 				}
