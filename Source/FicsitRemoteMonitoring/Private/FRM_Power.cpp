@@ -103,7 +103,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::setSwitches(UObject* WorldContext, FR
 	TArray<AFGBuildableCircuitSwitch*> PowerSwitches;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableCircuitSwitch>(PowerSwitches);
 
-	for (const auto BodyObject : RequestData.Body)
+	for (const auto& BodyObject : RequestData.Body)
 	{
 		auto JsonObject = BodyObject->AsObject();
 
