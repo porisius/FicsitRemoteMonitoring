@@ -13,6 +13,7 @@
 #include "Buildables\FGBuildableGeneratorNuclear.h"
 #include "FGPowerCircuit.h"
 #include "FGCircuitSubsystem.h"
+#include "FRM_RequestData.h"
 #include "FRM_Power.generated.h"
 
 UCLASS()
@@ -23,6 +24,7 @@ class FICSITREMOTEMONITORING_API UFRM_Power : public UFGBlueprintFunctionLibrary
 public:
 	static TArray<TSharedPtr<FJsonValue>> getPower(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getSwitches(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> setSwitches(UObject* WorldContext, FRequestData RequestData);
 	static TArray<TSharedPtr<FJsonValue>> getGenerators(UObject* WorldContext, UClass* TypedBuildable);
 	static TArray<TSharedPtr<FJsonValue>> getPowerUsage(UObject* WorldContext);
 	

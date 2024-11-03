@@ -2,6 +2,11 @@
 
 #include "FRM_Power.h"
 
+#include "FGBuildablePriorityPowerSwitch.h"
+#include "FicsitRemoteMonitoring.h"
+#include "FRM_Request.h"
+#include "FRM_RequestData.h"
+
 #undef GetForm
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Power::getPower(UObject* WorldContext)
@@ -61,7 +66,16 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getSwitches(UObject* WorldContext)
 		UFGCircuitConnectionComponent* ConnectionZero = PowerSwitch->GetConnection0();
 		UFGCircuitConnectionComponent* ConnectionOne = PowerSwitch->GetConnection1();
 
-		JSwitches->Values.Add("Name", MakeShared<FJsonValueString>(PowerSwitch->mDisplayName.ToString()));
+		int32 Priority = -1;
+		FString Type = TEXT("Power Switch");
+		if (const auto* PriorityPowerSwitch = Cast<AFGBuildablePriorityPowerSwitch>(PowerSwitch) )
+		{
+			Type = TEXT("Priority Power Switch");
+			Priority = PriorityPowerSwitch->GetPriority();
+		}
+
+		FString Name = PowerSwitch->GetBuildingTag_Implementation();
+		JSwitches->Values.Add("Name", MakeShared<FJsonValueString>(Name));
 		JSwitches->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(PowerSwitch->GetClass())));
 		JSwitches->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(PowerSwitch)));
 		JSwitches->Values.Add("SwitchTag", MakeShared<FJsonValueString>(PowerSwitch->GetBuildingTag_Implementation()));
@@ -70,13 +84,104 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getSwitches(UObject* WorldContext)
 		JSwitches->Values.Add("Connected1", MakeShared<FJsonValueNumber>(ConnectionOne->IsConnected()));
 		JSwitches->Values.Add("Primary", MakeShared<FJsonValueNumber>(ConnectionZero->GetCircuitID()));
 		JSwitches->Values.Add("Secondary", MakeShared<FJsonValueNumber>(ConnectionOne->GetCircuitID()));
-		JSwitches->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(PowerSwitch), PowerSwitch->GetBuildingTag_Implementation(), TEXT("Power Switch"))));
+		JSwitches->Values.Add("Priority", MakeShared<FJsonValueNumber>(Priority));
+		JSwitches->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(PowerSwitch), Name, Type)));
 
 		JSwitchesArray.Add(MakeShared<FJsonValueObject>(JSwitches));
 
 	}
 
 	return JSwitchesArray;
+}
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Power::setSwitches(UObject* WorldContext, FRequestData RequestData)
+{
+	TArray<TSharedPtr<FJsonValue>> JResponses;
+	if (RequestData.Body.Num() == 0) return JResponses;
+
+	const AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	TArray<AFGBuildableCircuitSwitch*> PowerSwitches;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableCircuitSwitch>(PowerSwitches);
+
+	for (const auto BodyObject : RequestData.Body)
+	{
+		auto JsonObject = BodyObject->AsObject();
+
+		// get switch id from json object
+		FString SwitchID;
+		if (UFRM_RequestLibrary::TryGetStringField(JsonObject, "ID", SwitchID, JResponses)) continue;
+
+		// check if priority, status or name is present in this json object
+		if (!JsonObject->HasField("priority") && !JsonObject->HasField("status") && !JsonObject->HasField("name"))
+		{
+			const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("Missing field priority, name or status.");
+			JResponse->Values.Add("ID", MakeShared<FJsonValueString>(SwitchID));
+			JResponses.Add(MakeShared<FJsonValueObject>(JResponse));
+			continue;
+		}
+
+		// get updatable fields
+		int32 Priority = -1;
+		FString Name;
+		bool bStatus;
+		JsonObject->TryGetBoolField("status", bStatus);
+		JsonObject->TryGetNumberField("priority", Priority);
+		JsonObject->TryGetStringField("name", Name);
+
+		bool bSuccess = false;
+		for (AFGBuildableCircuitSwitch* PowerSwitch : PowerSwitches)
+		{
+			if (PowerSwitch->GetName() == SwitchID)
+			{
+				TSharedPtr<FJsonObject> JResponse = MakeShared<FJsonObject>();
+				JResponse->Values.Add("ID", MakeShared<FJsonValueString>(SwitchID));
+
+				// change name
+				if (JsonObject->HasField("name"))
+				{
+					PowerSwitch->SetBuildingTag_Implementation(Name);
+					JResponse->Values.Add("Status", MakeShared<FJsonValueString>(PowerSwitch->GetBuildingTag_Implementation()));
+					bSuccess = true;
+				}
+				
+				// toggle switch
+				if (JsonObject->HasField("status"))
+				{
+					PowerSwitch->SetSwitchOn(bStatus);
+					JResponse->Values.Add("Status", MakeShared<FJsonValueBoolean>(PowerSwitch->IsSwitchOn()));
+					bSuccess = true;
+				}
+
+				// update priority
+				if (JsonObject->HasField("priority") && Priority >= 0)
+				{
+					if (auto* PriorityPowerSwitch = Cast<AFGBuildablePriorityPowerSwitch>(PowerSwitch))
+					{
+						PriorityPowerSwitch->SetPriority(Priority);
+						JResponse->Values.Add("Priority", MakeShared<FJsonValueNumber>(PriorityPowerSwitch->GetPriority()));
+						bSuccess = true;
+					}
+					else if (!bSuccess)
+					{
+						JResponse = UFRM_RequestLibrary::GenerateError("This Switch is not a Priority Power Switch.");
+					}
+				}
+
+				if (bSuccess) JResponses.Add(MakeShared<FJsonValueObject>(JResponse));
+
+				break;
+			}
+		}
+
+		if (!bSuccess)
+		{
+			const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("Power Switch not found.");
+			JResponse->Values.Add("ID", MakeShared<FJsonValueString>(SwitchID));
+			JResponses.Add(MakeShared<FJsonValueObject>(JResponse));
+		}
+	}
+
+	return JResponses;
 }
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, UClass* TypedBuildable)

@@ -1,5 +1,6 @@
 #include "FicsitRemoteMonitoring.h"
 #include "Async/Async.h"
+#include "FRM_Request.h"
 
 us_listen_socket_t* SocketListener;
 bool SocketRunning = false;
@@ -181,7 +182,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     res->writeStatus("418 I'm a teapot");
                     res->writeHeader("Access-Control-Allow-Methods", "GET, POST");
                     res->writeHeader("Access-Control-Allow-Headers", "Content-Type");
-                    AddResponseHeaders(res, false);
+                    UFRM_RequestLibrary::AddResponseHeaders(res, false);
 
                     res->end(TCHAR_TO_UTF8(*noCoffee));
                 });
@@ -212,9 +213,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     	return;
                     }
 
-					res->writeStatus("404 Not Found");
-					AddResponseHeaders(res, false);
-					res->end();
+                	UFRM_RequestLibrary::SendErrorJson(res, "404 Not Found", "");
                 });
 
                 app.get("/api/:APIEndpoint", [this, World](auto* res, auto* req) {
@@ -224,9 +223,55 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     // Log the request URL
                     UE_LOGFMT(LogHttpServer, Log, "Request URL: {0}", Endpoint);
 
-                    HandleApiRequest(World, res, req, Endpoint);
-
+                	FRequestData RequestData;
+                    HandleApiRequest(World, res, req, Endpoint, RequestData);
                 });
+
+            	app.post("/*", [this, World](auto* res, uWS::HttpRequest* req)
+            	{
+		            const std::string URL(req->getUrl().begin(), req->getUrl().end());
+					FString RelativePath = FString(URL.c_str()).Mid(1);
+
+            		res->onData([this, res, req, World, RelativePath](const std::string_view data, bool)
+            		{
+			            try
+			            {
+				            const std::string PostData(data);
+				            const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(FString(PostData.c_str()));
+			            	TSharedPtr<FJsonValue> JsonValue;
+
+			            	if (!FJsonSerializer::Deserialize(Reader, JsonValue) || !JsonValue.IsValid())
+			            	{
+			            		return UFRM_RequestLibrary::SendErrorMessage(res, "400 Bad Request", FString("Invalid Request Body"));
+			            	}
+
+			            	FRequestData RequestData;
+			            	RequestData.Method = "POST";
+			            	
+			            	if (JsonValue->Type == EJson::Array)
+			            	{
+			            		RequestData.Body = JsonValue->AsArray();
+							}
+			            	else if (JsonValue->Type == EJson::Object)
+			            	{
+			            		RequestData.Body.Add(JsonValue);
+							}
+			            	else
+			            	{
+			            		return UFRM_RequestLibrary::SendErrorMessage(res, "400 Bad Request", FString("Invalid Request Body"));
+			            	}
+
+			            	HandleApiRequest(World, res, req, RelativePath, RequestData);
+			            }
+			            catch (const std::exception &e)
+			            {
+			            	UE_LOG(LogHttpServer, Error, TEXT("Request Exception: %s"), *e.what());
+			            	UFRM_RequestLibrary::SendErrorMessage(res, "400 Bad Request", FString("Invalid Request Body"));
+			            }
+            		});
+
+            		res->onAborted([]() {});
+            	});
 
                 app.get("/*", [UIPath, this, World](auto* res, uWS::HttpRequest* req) {
                     if (!res) return;
@@ -254,7 +299,8 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                         HandleGetRequest(res, req, FilePath);
                     }
                     else {
-                        HandleApiRequest(World, res, req, RelativePath);
+                    	FRequestData RequestData;
+                        HandleApiRequest(World, res, req, RelativePath, RequestData);
                     }
                 });
 
@@ -324,18 +370,6 @@ std::unordered_map<std::string, std::string> ParseQueryString(const std::string&
 	}
     
 	return QueryPairs;
-}
-
-void AFicsitRemoteMonitoring::AddResponseHeaders(uWS::HttpResponse<false>* res, bool bIncludeContentType)
-{
-    res
-        ->writeHeader("Access-Control-Allow-Origin", "*")
-        // uWebSockets does not automatically handle the closing of HTTP connections.
-        // Therefore, we instruct the client to close the connection by setting the "Connection" header to "close"
-        // instead of using "keep-alive" (default).
-        ->writeHeader("Connection", "close");
-
-    if (bIncludeContentType) res->writeHeader("Content-Type", "application/json");
 }
 
 void AFicsitRemoteMonitoring::OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
@@ -484,7 +518,7 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
 
             res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
             res->writeHeader("Content-Length", contentLength.c_str());
-            AddResponseHeaders(res, false);
+            UFRM_RequestLibrary::AddResponseHeaders(res, false);
             res->write(std::string_view((char*)BinaryContent.GetData(), BinaryContent.Num()));
             res->end();
         }
@@ -497,20 +531,18 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
             UE_LOG(LogHttpServer, Log, TEXT("File Found Returning: %s"), *FilePath);
 
             res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
-            AddResponseHeaders(res, false);
+            UFRM_RequestLibrary::AddResponseHeaders(res, false);
             res->end(TCHAR_TO_UTF8(*FileContent));
         }
     }
 
     if (!FileLoaded) {
         UE_LOG(LogHttpServer, Error, TEXT("Failed to load file: %s"), *FilePath);
-        res->writeStatus("500");
-        AddResponseHeaders(res, true);
-        res->end("Internal Server Error");
+    	UFRM_RequestLibrary::SendErrorMessage(res, "500 Internal Server Error", "Failed to load file.");
     }
 }
 
-void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString Endpoint)
+void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString Endpoint, FRequestData RequestData)
 {
 	// Parse all query parameters
 	const std::string QueryString(req->getQuery().begin(), req->getQuery().end());
@@ -525,7 +557,6 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 		RequestQueryParams.Add(*Key, *Value);
 	}
 
-	FRequestData RequestData;
 	RequestData.QueryParams = RequestQueryParams;
 	
     bool bSuccess = false;
@@ -533,15 +564,13 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 
     if (bSuccess) {
         UE_LOGFMT(LogHttpServer, Log, "API Found Returning: {Endpoint}", Endpoint);
-        AddResponseHeaders(res, true);
+        UFRM_RequestLibrary::AddResponseHeaders(res, true);
         res->end(TCHAR_TO_UTF8(*OutJson));
     }
     else
     {
         UE_LOGFMT(LogHttpServer, Log, "API Not Found: {Endpoint}", Endpoint);
-        res->writeStatus("404 Not Found");
-        AddResponseHeaders(res, true);
-        res->end(TCHAR_TO_UTF8(*OutJson));
+    	UFRM_RequestLibrary::SendErrorJson(res, "404 Not Found", OutJson);
     }
 
 }
@@ -616,6 +645,8 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getGenerators", true, false, &AFicsitRemoteMonitoring::getGenerators);
 	RegisterEndpoint("getVehicles", true, false, &AFicsitRemoteMonitoring::getVehicles);
 
+	// post/write endpoints
+	RegisterPostEndpoint("setSwitches", true, true, &AFicsitRemoteMonitoring::setSwitches);
 }
 
 void AFicsitRemoteMonitoring::InitOutageNotification() {
@@ -667,15 +698,26 @@ void AFicsitRemoteMonitoring::InitOutageNotification() {
 
 }
 
+void AFicsitRemoteMonitoring::RegisterPostEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FEndpointFunction FunctionPtr)
+{
+	RegisterEndpoint("POST", APIName, bGetAll, bRequireGameThread, false, FunctionPtr);
+}
+
 void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FEndpointFunction FunctionPtr)
 {
-	RegisterEndpoint(APIName, bGetAll, bRequireGameThread, false, FunctionPtr);
+	RegisterEndpoint("GET", APIName, bGetAll, bRequireGameThread, false, FunctionPtr);
 }
 
 void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, FEndpointFunction FunctionPtr)
 {
+	RegisterEndpoint("GET", APIName, bGetAll, bRequireGameThread, bUseFirstObject, FunctionPtr);
+}
+
+void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& Method, const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, FEndpointFunction FunctionPtr)
+{
 	FAPIEndpoint NewEndpoint;
 	NewEndpoint.APIName = APIName;
+	NewEndpoint.Method = Method;
 	NewEndpoint.bGetAll = bGetAll;
 	NewEndpoint.bRequireGameThread = bRequireGameThread;
 	NewEndpoint.bUseFirstObject = bUseFirstObject;
@@ -729,12 +771,19 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
         return Response;
     }
 
+	TArray<FString> AvailableMethods;
     bool bEndpointFound = false;
 
     for (FAPIEndpoint& EndpointInfo : APIEndpoints)
     {
         if (EndpointInfo.APIName == InEndpoint)
         {
+	        if (RequestData.Method != EndpointInfo.Method)
+        	{
+	        	AvailableMethods.Add(EndpointInfo.Method);
+        		continue;
+        	}
+
             bEndpointFound = true;
             Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
 
@@ -772,7 +821,14 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
         }
     }
 
-    if (!bEndpointFound) {
+	if (AvailableMethods.Num()) {
+		AddErrorJson(JsonArray, FString::Printf(
+			TEXT("The %s method is not supported for this route. Supported methods: %s."),
+			*RequestData.Method,
+			*FString::Join(AvailableMethods, TEXT(", "))
+		));
+	}
+    else if (!bEndpointFound) {
         UE_LOG(LogHttpServer, Warning, TEXT("No matching endpoint found for '%s'."), *InEndpoint);
         AddErrorJson(JsonArray, TEXT("No matching endpoint found."));
     }
@@ -795,18 +851,14 @@ FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString I
 
 	auto [JsonValues, bUseFirstObject] = this->CallEndpoint(WorldContext, InEndpoint, RequestData, bSuccess);
 
-	if (!bSuccess) {
-		return "{\"error\": \"Endpoint not found. Please consult Endpoint's documentation for more information.\"}";
-	}
-
-	if (!bUseFirstObject) return JsonArrayToString(JsonValues);
+	if (bSuccess && !bUseFirstObject) return UFRM_RequestLibrary::JsonArrayToString(JsonValues, JSONDebugMode);
 
 	// return empty object, if JsonValues is empty
 	if (JsonValues.Num() == 0) return "{}";
 
 	TSharedPtr<FJsonObject> FirstJsonObject = JsonValues[0]->AsObject();
 
-	return JsonObjectToString(FirstJsonObject);
+	return UFRM_RequestLibrary::JsonObjectToString(FirstJsonObject, JSONDebugMode);
 }
 
 /*FFGServerErrorResponse AFicsitRemoteMonitoring::HandleCSSEndpoint(FString& out_json, FString InEndpoin)
@@ -826,44 +878,6 @@ FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString I
 
 }
 */
-
-FString AFicsitRemoteMonitoring::JsonArrayToString(TArray<TSharedPtr<FJsonValue>> JsonArray) {
-	FString OutputString;
-
-	// Choose Pretty or Condensed print policy based on JSONDebugMode
-	if (JSONDebugMode) {
-		TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> Writer = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&OutputString);
-		if (FJsonSerializer::Serialize(JsonArray, Writer)) {
-			return OutputString;
-		}
-	} else {
-		TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> Writer = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&OutputString);
-		if (FJsonSerializer::Serialize(JsonArray, Writer)) {
-			return OutputString;
-		}
-	}
-    
-	return TEXT("Error: Unable to serialize JSON array");
-}
-
-FString AFicsitRemoteMonitoring::JsonObjectToString(TSharedPtr<FJsonObject> JsonObject) {
-	FString OutputString;
-
-	// Choose Pretty or Condensed print policy based on JSONDebugMode
-	if (JSONDebugMode) {
-		TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> Writer = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&OutputString);
-		if (FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer)) {
-			return OutputString;
-		}
-	} else {
-		TSharedRef<TJsonWriter<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>> Writer = TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&OutputString);
-		if (FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer)) {
-			return OutputString;
-		}
-	}
-
-	return TEXT("Error: Unable to serialize JSON object");
-}
 
 void AFicsitRemoteMonitoring::getAll(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
 {
