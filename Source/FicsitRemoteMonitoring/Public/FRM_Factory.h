@@ -75,6 +75,7 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getSpaceElevator(UObject* WorldContext, FRequestData RequestData);
 	static TArray<TSharedPtr<FJsonValue>> getCloudInv(UObject* WorldContext, FRequestData RequestData);
 	static TArray<TSharedPtr<FJsonValue>> getSessionInfo(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getCables(UObject* WorldContext, FRequestData RequestData);
 
 	friend class AFGBuildableConveyorBase;
 	friend class AFGBuildableTradingPost;
