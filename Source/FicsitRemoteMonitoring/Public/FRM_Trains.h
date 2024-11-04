@@ -29,6 +29,7 @@ class FICSITREMOTEMONITORING_API UFRM_Trains : public UBlueprintFunctionLibrary
 public:
 	static TArray<TSharedPtr<FJsonValue>> getTrains(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getTrainStation(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getTrainRails(UObject* WorldContext, FRequestData RequestData);
 
 private:
 	friend class AFGBuildableRailroadStation;

@@ -3,6 +3,8 @@
 
 #include "FRM_Trains.h"
 
+#include "FRM_RequestData.h"
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 
 	AFGRailroadSubsystem* RailroadSubsystem = AFGRailroadSubsystem::Get(WorldContext->GetWorld());
@@ -271,4 +273,36 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 	};
 
 	return JTrainStationArray;
+};
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainRails(UObject* WorldContext, FRequestData RequestData) {
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+
+	TArray<AFGBuildableRailroadTrack*> RailroadTracks;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableRailroadTrack>(RailroadTracks);
+	TArray<TSharedPtr<FJsonValue>> JRailroadTrackArray;
+
+	for (AFGBuildableRailroadTrack* RailroadTrack : RailroadTracks) {
+
+		if (!IsValid(RailroadTrack)) { continue; }
+
+		TSharedPtr<FJsonObject> JRailroadTrack = UFRM_Library::CreateBaseJsonObject(RailroadTrack);
+		
+		UFGRailroadTrackConnectionComponent* ConnectionZero = RailroadTrack->GetConnection(0);
+		UFGRailroadTrackConnectionComponent* ConnectionOne = RailroadTrack->GetConnection(1);
+
+		JRailroadTrack->Values.Add("Name", MakeShared<FJsonValueString>(RailroadTrack->mDisplayName.ToString()));
+		JRailroadTrack->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(RailroadTrack->GetClass())));
+		JRailroadTrack->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorRailCircuitCompXYZ(ConnectionZero->GetConnectorLocation())));
+		JRailroadTrack->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
+		JRailroadTrack->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorRailCircuitCompXYZ(ConnectionOne->GetConnectorLocation())));
+		JRailroadTrack->Values.Add("Connected1", MakeShared<FJsonValueBoolean>(ConnectionOne->IsConnected()));
+		JRailroadTrack->Values.Add("Length", MakeShared<FJsonValueNumber>(RailroadTrack->GetLength()));
+		JRailroadTrack->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(RailroadTrack), RailroadTrack->mDisplayName.ToString(), RailroadTrack->mDisplayName.ToString())));
+
+		JRailroadTrackArray.Add(MakeShared<FJsonValueObject>(JRailroadTrack));
+
+	};
+
+	return JRailroadTrackArray;
 };
