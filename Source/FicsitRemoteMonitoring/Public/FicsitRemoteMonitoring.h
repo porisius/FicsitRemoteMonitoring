@@ -458,6 +458,9 @@ public:
 		OutJsonArray = UFRM_Trains::getTrains(WorldContext);
 	}
 
+	void getTrainRails(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Trains::getTrainRails(WorldContext, RequestData);
+	}
 	
 	void getTrainStation(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Trains::getTrainStation(WorldContext);
