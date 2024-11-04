@@ -1,5 +1,7 @@
 
 #include "FRM_Library.h"
+
+#include "FGCircuitConnectionComponent.h"
 #include "FRM_Factory.h"
 
 TSharedPtr<FJsonObject> UFRM_Library::getActorJSON(AActor* Actor) {
@@ -33,6 +35,22 @@ TSharedPtr<FJsonObject> UFRM_Library::getActorFactoryCompXYZ(UFGFactoryConnectio
 	long double primaryX = BeltPipe->GetRelativeTransform().GetTranslation().X;
 	long double primaryY = BeltPipe->GetRelativeTransform().GetTranslation().Y;
 	long double primaryZ = BeltPipe->GetRelativeTransform().GetTranslation().Z;
+
+	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(primaryX));
+	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(primaryY));
+	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(primaryZ));
+
+	return JLibrary;
+
+};
+
+TSharedPtr<FJsonObject> UFRM_Library::getActorCircuitCompXYZ(FVector PowerWire) {
+
+	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();
+
+	long double primaryX = PowerWire.X;
+	long double primaryY = PowerWire.Y;
+	long double primaryZ = PowerWire.Z;
 
 	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(primaryX));
 	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(primaryY));

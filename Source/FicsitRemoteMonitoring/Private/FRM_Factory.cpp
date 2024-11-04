@@ -2,6 +2,8 @@
 #include "FGTimeSubsystem.h"
 #include <FicsitRemoteMonitoring.h>
 
+#include "FGBuildableWire.h"
+
 #undef GetForm
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, FRequestData RequestData) {
@@ -872,3 +874,30 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSessionInfo(UObject* WorldContex
 
 	return JSessionInfoArray;
 }
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getCables(UObject* WorldContext, FRequestData RequestData) {
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+
+	TArray<AFGBuildableWire*> PowerWires;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableWire>(PowerWires);
+	TArray<TSharedPtr<FJsonValue>> JPowerWireArray;
+
+	for (AFGBuildableWire* PowerWire : PowerWires) {
+
+		if (!IsValid(PowerWire)) { continue; }
+
+		TSharedPtr<FJsonObject> JPowerWire = UFRM_Library::CreateBaseJsonObject(PowerWire);
+
+		JPowerWire->Values.Add("Name", MakeShared<FJsonValueString>(PowerWire->mDisplayName.ToString()));
+		JPowerWire->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(PowerWire->GetClass())));
+		JPowerWire->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorCircuitCompXYZ(PowerWire->GetConnectionLocation(0))));
+		JPowerWire->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorCircuitCompXYZ(PowerWire->GetConnectionLocation(1))));
+		JPowerWire->Values.Add("Length", MakeShared<FJsonValueNumber>(PowerWire->GetLength()));
+		JPowerWire->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(PowerWire), PowerWire->mDisplayName.ToString(), PowerWire->mDisplayName.ToString())));
+
+		JPowerWireArray.Add(MakeShared<FJsonValueObject>(JPowerWire));
+
+	};
+
+	return JPowerWireArray;
+};

@@ -591,6 +591,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getBelts", true, false, &AFicsitRemoteMonitoring::getBelts);
 	RegisterEndpoint("getBiomassGenerator", false, false, &AFicsitRemoteMonitoring::getBiomassGenerator);
 	RegisterEndpoint("getBlender", false, false, &AFicsitRemoteMonitoring::getBlender);
+	RegisterEndpoint("getCables", true, false, &AFicsitRemoteMonitoring::getCables);
 	RegisterEndpoint("getCloudInv", true, false, &AFicsitRemoteMonitoring::getCloudInv);
 	RegisterEndpoint("getCoalGenerator", false, false, &AFicsitRemoteMonitoring::getCoalGenerator);
     RegisterEndpoint("getConstructor", false, false, &AFicsitRemoteMonitoring::getConstructor);
