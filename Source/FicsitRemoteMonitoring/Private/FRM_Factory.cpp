@@ -1,4 +1,5 @@
 #include "FRM_Factory.h"
+#include "FGTimeSubsystem.h"
 #include <FicsitRemoteMonitoring.h>
 
 #undef GetForm
@@ -848,10 +849,23 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPipes(UObject* WorldContext, FRe
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSessionInfo(UObject* WorldContext, FRequestData RequestData) {
 
+	const auto GameState = WorldContext->GetWorld()->GetGameState<AFGGameState>();
+	const AFGTimeOfDaySubsystem* TimeOfDaySubSystem = AFGTimeOfDaySubsystem::Get(WorldContext);
+
+	const auto PlayDuration = GameState->GetTotalPlayDuration();
+
 	TSharedPtr<FJsonObject> JSessionInfo = MakeShared<FJsonObject>();
-	auto gameState = WorldContext->GetWorld()->GetGameState<AFGGameState>();
-	FString SessionName = gameState->GetSessionName();
-	JSessionInfo->Values.Add("SessionName", MakeShared<FJsonValueString>(SessionName));
+	JSessionInfo->Values.Add("SessionName", MakeShared<FJsonValueString>(GameState->GetSessionName()));
+	JSessionInfo->Values.Add("DayLength", MakeShared<FJsonValueNumber>(TimeOfDaySubSystem->GetDayLength()));
+	JSessionInfo->Values.Add("NightLength", MakeShared<FJsonValueNumber>(TimeOfDaySubSystem->GetNightLength()));
+	JSessionInfo->Values.Add("PassedDays", MakeShared<FJsonValueNumber>(TimeOfDaySubSystem->GetPassedDays()));
+	JSessionInfo->Values.Add("NumberOfDaysSinceLastDeath", MakeShared<FJsonValueNumber>(TimeOfDaySubSystem->GetNumberOfDaysSinceLastDeath()));
+	JSessionInfo->Values.Add("Hours", MakeShared<FJsonValueNumber>(TimeOfDaySubSystem->GetHours()));
+	JSessionInfo->Values.Add("Minutes", MakeShared<FJsonValueNumber>(TimeOfDaySubSystem->GetMinutes()));
+	JSessionInfo->Values.Add("Seconds", MakeShared<FJsonValueNumber>(TimeOfDaySubSystem->GetSeconds()));
+	JSessionInfo->Values.Add("IsDay", MakeShared<FJsonValueBoolean>(TimeOfDaySubSystem->IsDay()));
+	JSessionInfo->Values.Add("TotalPlayDuration", MakeShared<FJsonValueNumber>(PlayDuration));
+	JSessionInfo->Values.Add("TotalPlayDurationText", MakeShared<FJsonValueString>(SecondsToTimeString(PlayDuration)));
 
 	TArray<TSharedPtr<FJsonValue>> JSessionInfoArray;
 	JSessionInfoArray.Add(MakeShared<FJsonValueObject>(JSessionInfo));
