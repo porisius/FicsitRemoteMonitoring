@@ -44,7 +44,7 @@ TSharedPtr<FJsonObject> UFRM_Library::getActorFactoryCompXYZ(UFGFactoryConnectio
 
 };
 
-TSharedPtr<FJsonObject> UFRM_Library::getActorCircuitCompXYZ(FVector PowerWire) {
+TSharedPtr<FJsonObject> UFRM_Library::getActorRailCircuitCompXYZ(FVector PowerWire) {
 
 	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();
 

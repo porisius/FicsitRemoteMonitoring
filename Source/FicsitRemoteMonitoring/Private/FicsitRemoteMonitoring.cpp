@@ -642,6 +642,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getSwitches", true, false, &AFicsitRemoteMonitoring::getSwitches);
 	RegisterEndpoint("getTractor", false, false, &AFicsitRemoteMonitoring::getTractor);
 	RegisterEndpoint("getTrains", true, false, &AFicsitRemoteMonitoring::getTrains);
+	RegisterEndpoint("getTrainRails", true, false, &AFicsitRemoteMonitoring::getTrainRails);
 	RegisterEndpoint("getTrainStation", true, false, &AFicsitRemoteMonitoring::getTrainStation);
 	RegisterEndpoint("getTruck", false, false, &AFicsitRemoteMonitoring::getTruck);
 	RegisterEndpoint("getTruckStation", true, false, &AFicsitRemoteMonitoring::getTruckStation);
