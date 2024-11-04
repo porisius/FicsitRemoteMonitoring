@@ -65,7 +65,13 @@ public class FicsitRemoteMonitoring : ModuleRules
 
         if (Target.Type == TargetType.Server)
         {
+            // Define WITH_DEDICATED_SERVER=1 only for server targets
             PublicDependencyModuleNames.Add("FactoryDedicatedServer");
+            PublicDefinitions.Add("WITH_DEDICATED_SERVER=1");
+        } else
+        {
+            // Explicitly set WITH_DEDICATED_SERVER=0 for non-server builds to avoid warnings
+            PublicDefinitions.Add("WITH_DEDICATED_SERVER=0");
         }
 
         PublicDefinitions.Add("UWS_STATICLIB"); // If you're using the static version of uWS

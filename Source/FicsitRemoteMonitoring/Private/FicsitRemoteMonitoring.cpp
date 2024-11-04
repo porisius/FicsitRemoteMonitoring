@@ -737,10 +737,7 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& Method, const FStr
 
     UE_LOGFMT(LogHttpServer, Log, "Registered API Endpoint: {APIName} - Current number of endpoints registered: {1}", APIName, APIEndpoints.Num());
 
-/*
-    // Store the APIName in a member variable for use in HandleCSSEndpoint
-    StoredAPIName = APIName;
-
+#if WITH_DEDICATED_SERVER
     UFGServerSubsystem* ServerSubsystem = UFGServerSubsystem::Get(GetWorld());
     if (IsValid(ServerSubsystem)) { return; }
 
@@ -748,9 +745,6 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& Method, const FStr
     if (IsValid(APIManager)) { return; }
 
     if (!IsRunningDedicatedServer()) {
-
-        // Store the APIName in a member variable for use in HandleCSSEndpoint
-        StoredAPIName = APIName;
 
         UFGServerSubsystem* ServerSubsystem = UFGServerSubsystem::Get(GetWorld());
         if (IsValid(ServerSubsystem)) { return; }
@@ -763,10 +757,10 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& Method, const FStr
         HandleRegistration.HandlerFunction = this->FindFunction(FName("HandleCSSEndpoint"));
         HandleRegistration.FunctionName = FName(*APIName);
         HandleRegistration.PrivilegeLevel = EPrivilegeLevel::None;
-        APIManager->mRegisteredHandlers.Add(FString(APIName), HandleRegistration);
+        //APIManager->mRegisteredHandlers.Add(FString(APIName), HandleRegistration);
 
     };
-*/
+#endif
 }
 
 FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess)
