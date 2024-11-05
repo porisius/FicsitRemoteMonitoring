@@ -143,128 +143,112 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 
 };
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContext) {
+// Helper function for getTrainStation()
+// Precondition: IsValid(TrainPlatConn) && IsValid(TrainPlatConn->GetPlatformOwner())
+static UFGTrainPlatformConnection* NextStation(UFGTrainPlatformConnection* TrainPlatConn)
+{
+	AFGBuildableTrainPlatform* TrainPlatform = TrainPlatConn->GetPlatformOwner();
+	if (UFGTrainPlatformConnection* TrainPlatformConnectionBuffer = TrainPlatform->GetConnectionInOppositeDirection(TrainPlatConn)) {
+		return TrainPlatformConnectionBuffer->GetConnectedTo();
+	}
+	return nullptr;
+}
 
-	AFGRailroadSubsystem* RailroadSubsystem = AFGRailroadSubsystem::Get(WorldContext->GetWorld());
+TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContext) {
 	TArray<TSharedPtr<FJsonValue>> JTrainStationArray;
+	AFGRailroadSubsystem* RailroadSubsystem = AFGRailroadSubsystem::Get(WorldContext);
+	if (!IsValid(RailroadSubsystem)) {
+		return JTrainStationArray;
+	}
+
 	TArray<AFGTrainStationIdentifier*> TrainStations;
 	RailroadSubsystem->GetAllTrainStations(TrainStations);
 	
 	for (AFGTrainStationIdentifier* TrainStation : TrainStations) {
+		if (!IsValid(TrainStation)) {
+			continue;
+		}
+
+		AFGBuildableRailroadStation* RailStation = TrainStation->GetStation();
+		if (!IsValid(RailStation)) {
+			continue;
+		}
+		
+		UFGTrainPlatformConnection* StationConnection = RailStation->GetStationOutputConnection();
+		if (!IsValid(StationConnection)) {
+			continue;
+		}
 
 		float TransferRate = 0;
 		float InFlowRate = 0;
 		float OutFlowRate = 0;
-		
-		TSharedPtr<FJsonObject> JTrainStation = UFRM_Library::CreateBaseJsonObject(TrainStation);
-		TArray<TSharedPtr<FJsonValue>> JCargoInventory;
-		TArray<TSharedPtr<FJsonValue>> JCargoStations;
 
-		AFGBuildableRailroadStation* RailStation = TrainStation->GetStation();
-		
-		UFGTrainPlatformConnection* StationConnection = RailStation->GetStationOutputConnection();
-		UFGTrainPlatformConnection* TrainPlatformConnection = StationConnection->GetConnectedTo();
-		AFGBuildableTrainPlatform* TrainPlatform = nullptr;
-		
-		if (TrainPlatformConnection)
-		{
-			 TrainPlatform = TrainPlatformConnection->GetPlatformOwner();
-		}
-				
 		TArray<TSharedPtr<FJsonValue>> JTrainPlatformArray;
 
-		bool bCompleted = false;
-		
-		while (!bCompleted) {	
-			AFGBuildableTrainPlatformCargo* TrainPlatformCargo = Cast<AFGBuildableTrainPlatformCargo>(TrainPlatform);
-			TSharedPtr<FJsonObject> JTrainPlatform = UFRM_Library::CreateBaseJsonObject(TrainPlatform);
-			TMap<TSubclassOf<UFGItemDescriptor>, int32> TrainPlatformInventory;
-			
-			// Skips but does not stop checking for AFGBuildableTrainPlatformCargo
-			if (Cast<AFGBuildableTrainPlatformEmpty>(TrainPlatform))
-			{
-				JTrainPlatform->Values.Add("Name", MakeShared<FJsonValueString>(TrainPlatform->mDisplayName.ToString()));
-				JTrainPlatform->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(TrainPlatform->GetClass())));
-				JTrainPlatform->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(TrainPlatform)));
-				JTrainPlatform->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(TrainPlatform->GetPowerInfo())));
-				JTrainPlatform->Values.Add("TransferRate", MakeShared<FJsonValueNumber>(0));
-				JTrainPlatform->Values.Add("InflowRate", MakeShared<FJsonValueNumber>(0));
-				JTrainPlatform->Values.Add("OutflowRate", MakeShared<FJsonValueNumber>(0));
-				JTrainPlatform->Values.Add("LoadingMode", MakeShared<FJsonValueString>("Empty Platform"));
-				JTrainPlatform->Values.Add("LoadingStatus", MakeShared<FJsonValueString>("Empty Platform"));
-				JTrainPlatform->Values.Add("DockingStatus", MakeShared<FJsonValueString>("Empty Platform"));
-				JTrainPlatform->Values.Add("Inventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(TrainPlatformInventory)));
-
-				JTrainPlatformArray.Add(MakeShared<FJsonValueObject>(JTrainPlatform));
-				
-				UFGTrainPlatformConnection* TrainPlatformConnectionBuffer = TrainPlatform->GetConnectionInOppositeDirection(TrainPlatformConnection);
-				TrainPlatformConnection = TrainPlatformConnectionBuffer->GetConnectedTo();
-
-				if (TrainPlatformConnection)
-				{
-					TrainPlatform = TrainPlatformConnection->GetPlatformOwner();
-				} else
-				{
-					//No valid connection, we're done here.
-					bCompleted = true;
-					break;
-				}
-				continue;
+		for (UFGTrainPlatformConnection* TrainPlatConn = StationConnection->GetConnectedTo(); IsValid(TrainPlatConn); TrainPlatConn = NextStation(TrainPlatConn)) {
+			AFGBuildableTrainPlatform* TrainPlatform = TrainPlatConn->GetPlatformOwner();
+			if (!IsValid(TrainPlatform)) {
+				// No valid platform, we're done here.
+				break;
 			}
-			
-			if (!TrainPlatformCargo) {
-				bCompleted = true;
-				continue;
-			}
-			
+
+			// Default values 
 			float CargoTransferRate = 0;
 			float CargoInFlowRate = 0;
 			float CargoOutFlowRate = 0;
 
-			CargoTransferRate = TrainPlatformCargo->GetCurrentItemTransferRate();
-			CargoInFlowRate = TrainPlatformCargo->GetInflowRate();
-			CargoOutFlowRate = TrainPlatformCargo->GetOutflowRate();
+			// Maybe change to N/A?
+			FString LoadMode = "Empty Platform";
+			FString LoadingStatus = "Empty Platform";
+			FString StatusString = "Empty Platform";
 
-			TransferRate = TransferRate + CargoTransferRate;
-			InFlowRate = InFlowRate + CargoInFlowRate;
-			OutFlowRate = OutFlowRate + CargoOutFlowRate;
+			TMap<TSubclassOf<UFGItemDescriptor>, int32> TrainPlatformInventory;
 
-			FString LoadMode = TEXT("Unloading");
-			if (TrainPlatformCargo->GetIsInLoadMode()) { LoadMode = TEXT("Loading"); }
+			if (AFGBuildableTrainPlatformCargo* TrainPlatformCargo = Cast<AFGBuildableTrainPlatformCargo>(TrainPlatform)) {
+				CargoTransferRate = TrainPlatformCargo->GetCurrentItemTransferRate();
+				CargoInFlowRate = TrainPlatformCargo->GetInflowRate();
+				CargoOutFlowRate = TrainPlatformCargo->GetOutflowRate();
+	
+				TransferRate = TransferRate + CargoTransferRate;
+				InFlowRate = InFlowRate + CargoInFlowRate;
+				OutFlowRate = OutFlowRate + CargoOutFlowRate;
+	
+				LoadMode = TrainPlatformCargo->GetIsInLoadMode() ? TEXT("Loading") : TEXT("Unloading");
+				LoadingStatus = TrainPlatformCargo->IsLoadUnloading() ? LoadMode : FString("Idle");
 
-			FString LoadingStatus = TEXT("Idle");
-			if (TrainPlatformCargo->IsLoadUnloading()) { LoadingStatus = LoadMode; }
-
-			FString StatusString = "";
-			ETrainPlatformDockingStatus DockingStatus = TrainPlatformCargo->GetDockingStatus();
-
-			switch (DockingStatus)
-			{
-				case ETrainPlatformDockingStatus::ETPDS_Complete					:	StatusString = TEXT("Complete");
-					break;
-				case ETrainPlatformDockingStatus::ETPDS_IdleWaitForTime				:	StatusString = TEXT("Idle Wait For Time");
-					break;
-				case ETrainPlatformDockingStatus::ETPDS_Loading						:	StatusString = TEXT("Loading");
-					break;
-				case ETrainPlatformDockingStatus::ETPDS_None						:	StatusString = TEXT("None");
-					break;
-				case ETrainPlatformDockingStatus::ETPDS_Unloading					:	StatusString = TEXT("Unloading");
-					break;
-				case ETrainPlatformDockingStatus::ETPDS_WaitForTransferCondition	:	StatusString = TEXT("Wait for Transfer Condition");
-					break;
-				case ETrainPlatformDockingStatus::ETPDS_WaitingForTransfer			:	StatusString = TEXT("Waiting For Transfer");
-					break;
-				case ETrainPlatformDockingStatus::ETPDS_WaitingToStart				:	StatusString = TEXT("Waiting To Start");
-					break;
+				// TODO: Refactor into helper function
+				FString StatusString;
+				switch (TrainPlatformCargo->GetDockingStatus())
+				{
+					case ETrainPlatformDockingStatus::ETPDS_Complete					:	StatusString = TEXT("Complete");
+						break;
+					case ETrainPlatformDockingStatus::ETPDS_IdleWaitForTime				:	StatusString = TEXT("Idle Wait For Time");
+						break;
+					case ETrainPlatformDockingStatus::ETPDS_Loading						:	StatusString = TEXT("Loading");
+						break;
+					case ETrainPlatformDockingStatus::ETPDS_None						:	StatusString = TEXT("None");
+						break;
+					case ETrainPlatformDockingStatus::ETPDS_Unloading					:	StatusString = TEXT("Unloading");
+						break;
+					case ETrainPlatformDockingStatus::ETPDS_WaitForTransferCondition	:	StatusString = TEXT("Wait for Transfer Condition");
+						break;
+					case ETrainPlatformDockingStatus::ETPDS_WaitingForTransfer			:	StatusString = TEXT("Waiting For Transfer");
+						break;
+					case ETrainPlatformDockingStatus::ETPDS_WaitingToStart				:	StatusString = TEXT("Waiting To Start");
+						break;
+					default:															:	StatusString = "";
+				}
+				
+				// get train platform inventory
+				TrainPlatformInventory = UFRM_Library::GetGroupedInventoryItems(TrainPlatformCargo->GetInventory());
 			}
 
-			// get train platform inventory
-			TrainPlatformInventory = UFRM_Library::GetGroupedInventoryItems(TrainPlatformCargo->GetInventory());
+			TSharedPtr<FJsonObject> JTrainPlatform = UFRM_Library::CreateBaseJsonObject(TrainPlatform);
 
-			JTrainPlatform->Values.Add("Name", MakeShared<FJsonValueString>(TrainPlatformCargo->mDisplayName.ToString()));
-			JTrainPlatform->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(TrainPlatformCargo->GetClass())));
-			JTrainPlatform->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(TrainPlatformCargo)));
-			JTrainPlatform->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(TrainPlatformCargo->GetPowerInfo())));
+			JTrainPlatform->Values.Add("Name", MakeShared<FJsonValueString>(TrainPlatform->mDisplayName.ToString()));
+			JTrainPlatform->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(TrainPlatform->GetClass())));
+			JTrainPlatform->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(TrainPlatform)));
+			JTrainPlatform->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(TrainPlatform->GetPowerInfo())));
 			JTrainPlatform->Values.Add("TransferRate", MakeShared<FJsonValueNumber>(CargoTransferRate));
 			JTrainPlatform->Values.Add("InflowRate", MakeShared<FJsonValueNumber>(CargoInFlowRate));
 			JTrainPlatform->Values.Add("OutflowRate", MakeShared<FJsonValueNumber>(CargoOutFlowRate));
@@ -274,21 +258,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 			JTrainPlatform->Values.Add("Inventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(TrainPlatformInventory)));
 
 			JTrainPlatformArray.Add(MakeShared<FJsonValueObject>(JTrainPlatform));
-
-			UFGTrainPlatformConnection* TrainPlatformConnectionBuffer = TrainPlatform->GetConnectionInOppositeDirection(TrainPlatformConnection);
-			TrainPlatformConnection = TrainPlatformConnectionBuffer->GetConnectedTo();
-
-			if (TrainPlatformConnection)
-			{
-				TrainPlatform = TrainPlatformConnection->GetPlatformOwner();
-			} else
-			{
-				//No valid connection, we're done here.
-				bCompleted = true;
-				break;
-			}
-			
 		}
+
+		TSharedPtr<FJsonObject> JTrainStation = UFRM_Library::CreateBaseJsonObject(TrainStation);
 
 		JTrainStation->Values.Add("Name", MakeShared<FJsonValueString>(TrainStation->GetStationName().ToString()));
 		JTrainStation->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(RailStation->GetClass())));
