@@ -236,7 +236,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 						break;
 					case ETrainPlatformDockingStatus::ETPDS_WaitingToStart				:	StatusString = TEXT("Waiting To Start");
 						break;
-					default:															:	StatusString = "";
+					default																:	StatusString = "";
 				}
 				
 				// get train platform inventory
