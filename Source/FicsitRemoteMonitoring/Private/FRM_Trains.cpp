@@ -154,6 +154,22 @@ static UFGTrainPlatformConnection* NextStation(UFGTrainPlatformConnection* Train
 	return nullptr;
 }
 
+static FString DockingStatusToString(const ETrainPlatformDockingStatus DockingStatus)
+{
+	using enum ETrainPlatformDockingStatus;
+	switch (DockingStatus) {
+		case ETPDS_Complete:                 return "Complete";
+		case ETPDS_IdleWaitForTime:          return "Idle Wait For Time";
+		case ETPDS_Loading:                  return "Loading";
+		case ETPDS_None:                     return "None";
+		case ETPDS_Unloading:                return "Unloading";
+		case ETPDS_WaitForTransferCondition: return "Wait for Transfer Condition";
+		case ETPDS_WaitingForTransfer:       return "Waiting For Transfer";
+		case ETPDS_WaitingToStart:           return "Waiting To Start";
+		default:                             return "";
+	}
+}
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContext) {
 	TArray<TSharedPtr<FJsonValue>> JTrainStationArray;
 	AFGRailroadSubsystem* RailroadSubsystem = AFGRailroadSubsystem::Get(WorldContext);
@@ -216,28 +232,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 				LoadMode = TrainPlatformCargo->GetIsInLoadMode() ? TEXT("Loading") : TEXT("Unloading");
 				LoadingStatus = TrainPlatformCargo->IsLoadUnloading() ? LoadMode : FString("Idle");
 
-				// TODO: Refactor into helper function
-				FString StatusString;
-				switch (TrainPlatformCargo->GetDockingStatus())
-				{
-					case ETrainPlatformDockingStatus::ETPDS_Complete					:	StatusString = TEXT("Complete");
-						break;
-					case ETrainPlatformDockingStatus::ETPDS_IdleWaitForTime				:	StatusString = TEXT("Idle Wait For Time");
-						break;
-					case ETrainPlatformDockingStatus::ETPDS_Loading						:	StatusString = TEXT("Loading");
-						break;
-					case ETrainPlatformDockingStatus::ETPDS_None						:	StatusString = TEXT("None");
-						break;
-					case ETrainPlatformDockingStatus::ETPDS_Unloading					:	StatusString = TEXT("Unloading");
-						break;
-					case ETrainPlatformDockingStatus::ETPDS_WaitForTransferCondition	:	StatusString = TEXT("Wait for Transfer Condition");
-						break;
-					case ETrainPlatformDockingStatus::ETPDS_WaitingForTransfer			:	StatusString = TEXT("Waiting For Transfer");
-						break;
-					case ETrainPlatformDockingStatus::ETPDS_WaitingToStart				:	StatusString = TEXT("Waiting To Start");
-						break;
-					default																:	StatusString = "";
-				}
+				StatusString = DockingStatusToString(TrainPlatformCargo->GetDockingStatus());
 				
 				// get train platform inventory
 				TrainPlatformInventory = UFRM_Library::GetGroupedInventoryItems(TrainPlatformCargo->GetInventory());
