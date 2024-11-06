@@ -107,6 +107,42 @@ TSharedPtr<FJsonObject> UFRM_Library::getActorFeaturesJSON(AActor* Actor, FStrin
 
 };
 
+TSharedPtr<FJsonObject> UFRM_Library::GetActorLineFeaturesJSON(FVector PointOne, FVector PointTwo, FString DisplayName, FString TypeName) {
+
+	TSharedRef<FJsonObject> JProperties = MakeShareable(new FJsonObject());
+
+	JProperties->SetStringField("name", DisplayName);
+	JProperties->SetStringField("type", TypeName);
+
+	// Coordinates array with X, Y, Z (longitude, latitude, altitude)
+	TArray<TSharedPtr<FJsonValue>> CoordinatesArray;
+	TArray<TSharedPtr<FJsonValue>> PointOneArray;
+	PointOneArray.Add(MakeShareable(new FJsonValueNumber(PointOne.X)));
+	PointOneArray.Add(MakeShareable(new FJsonValueNumber(PointOne.Y)));
+	PointOneArray.Add(MakeShareable(new FJsonValueNumber(PointOne.Z)));
+
+	TArray<TSharedPtr<FJsonValue>> PointTwoArray;
+	PointTwoArray.Add(MakeShareable(new FJsonValueNumber(PointTwo.X)));
+	PointTwoArray.Add(MakeShareable(new FJsonValueNumber(PointTwo.Y)));
+	PointTwoArray.Add(MakeShareable(new FJsonValueNumber(PointTwo.Z)));
+
+	CoordinatesArray.Add(MakeShareable(new FJsonValueArray(PointOneArray)));
+	CoordinatesArray.Add(MakeShareable(new FJsonValueArray(PointTwoArray)));
+
+	TSharedRef<FJsonObject> JGeometry = MakeShareable(new FJsonObject());
+
+	JGeometry->SetArrayField("coordinates", CoordinatesArray);
+	JGeometry->SetStringField("type", "LineString");
+
+	TSharedRef<FJsonObject> JFeatures = MakeShareable(new FJsonObject());
+
+	JFeatures->SetObjectField("properties", JProperties);
+	JFeatures->SetObjectField("geometry", JGeometry);
+
+	return JFeatures;
+
+};
+
 FString UFRM_Library::APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext) {
 
 	FString Write;
