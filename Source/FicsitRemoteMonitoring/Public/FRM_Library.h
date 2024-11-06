@@ -34,6 +34,7 @@ public:
 	static TSharedPtr<FJsonObject> CreateBaseJsonObject(const UObject* Actor);
 	static FString APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext);
 	static bool IsIntInRange(int32 Number, int32 LowerBound, int32 UpperBound);
+	static TSharedPtr<FJsonObject> GetActorLineFeaturesJSON(FVector PointOne, FVector PointTwo, FString DisplayName, FString TypeName);
 
 	static double SafeDivide_Double(double Numerator, double Denominator)
 	{
