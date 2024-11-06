@@ -45,8 +45,8 @@ public:
 	{
 		return (Denominator == 0.0f) ? 0.0f : (Numerator / Denominator);
 	}
-
+	
 	static TSharedPtr<FJsonValue> ConvertStringToFJsonValue(const FString& JsonString);
 	static TSharedPtr<FJsonObject> getPowerConsumptionJSON(UFGPowerInfoComponent* powerInfo);
-	static TSharedPtr<FJsonObject> getActorRailCircuitCompXYZ(FVector PowerWire);
+	static TSharedPtr<FJsonObject> ConvertVectorToFJsonObject(FVector JsonVector);
 };
