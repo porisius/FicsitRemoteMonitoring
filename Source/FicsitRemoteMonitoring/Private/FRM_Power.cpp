@@ -231,18 +231,19 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 			FuelForm = UFGItemDescriptor::GetForm(GeneratorFuel->GetCurrentFuelClass());
 			UFGInventoryComponent* FuelInventory = GeneratorFuel->GetFuelInventory();
 			
-			TArray<TSubclassOf<UFGItemDescriptor>> FuelClasses = GeneratorFuel->GetAvailableFuelClasses(FuelInventory);
-			for (TSubclassOf<UFGItemDescriptor> FuelClass : FuelClasses)
+			for (TSoftClassPtr<UFGItemDescriptor> SoftFuelClass : GeneratorFuel->GetDefaultFuelClasses())
 			{
-				TSharedPtr<FJsonObject> JFuel = MakeShared<FJsonObject>();
+				if (TSubclassOf<UFGItemDescriptor> FuelClass = SoftFuelClass.Get()) {
+					TSharedPtr<FJsonObject> JFuel = MakeShared<FJsonObject>();
 
-				auto EnergyValue = UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetEnergyValue(FuelClass), UFGItemDescriptor::GetForm(FuelClass));
+					auto EnergyValue = UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetEnergyValue(FuelClass), UFGItemDescriptor::GetForm(FuelClass));
 
-				JFuel->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(FuelClass).ToString()));
-				JFuel->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(FuelClass.Get())));
-				JFuel->Values.Add("Amount", MakeShared<FJsonValueNumber>(EnergyValue));
+					JFuel->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(FuelClass).ToString()));
+					JFuel->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(FuelClass.Get())));
+					JFuel->Values.Add("Amount", MakeShared<FJsonValueNumber>(EnergyValue));
 
-				JFuelArray.Add(MakeShared<FJsonValueObject>(JFuel));
+					JFuelArray.Add(MakeShared<FJsonValueObject>(JFuel));
+				}
 			}
 
 			switch (FuelForm)
