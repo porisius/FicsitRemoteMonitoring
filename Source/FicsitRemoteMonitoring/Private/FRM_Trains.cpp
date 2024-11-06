@@ -329,9 +329,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainRails(UObject* WorldContext,
 		
 		JRailroadTrack->Values.Add("Name", MakeShared<FJsonValueString>(RailroadTrack->mDisplayName.ToString()));
 		JRailroadTrack->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(RailroadTrack->GetClass())));
-		JRailroadTrack->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorRailCircuitCompXYZ(ConnectionZero->GetConnectorLocation())));
+		JRailroadTrack->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::ConvertVectorToFJsonObject(ConnectionZero->GetConnectorLocation())));
 		JRailroadTrack->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
-		JRailroadTrack->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorRailCircuitCompXYZ(ConnectionOne->GetConnectorLocation())));
+		JRailroadTrack->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::ConvertVectorToFJsonObject(ConnectionOne->GetConnectorLocation())));
 		JRailroadTrack->Values.Add("Connected1", MakeShared<FJsonValueBoolean>(ConnectionOne->IsConnected()));
 		JRailroadTrack->Values.Add("Length", MakeShared<FJsonValueNumber>(RailroadTrack->GetLength()));
 		JRailroadTrack->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::GetActorLineFeaturesJSON(PointZero, PointOne, RailroadTrack->mDisplayName.ToString(), RailroadTrack->mDisplayName.ToString())));

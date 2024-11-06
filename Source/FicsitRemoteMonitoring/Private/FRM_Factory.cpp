@@ -876,8 +876,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getCables(UObject* WorldContext, FR
 
 		JPowerWire->Values.Add("Name", MakeShared<FJsonValueString>(PowerWire->mDisplayName.ToString()));
 		JPowerWire->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(PowerWire->GetClass())));
-		JPowerWire->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorRailCircuitCompXYZ(PowerWire->GetConnectionLocation(0))));
-		JPowerWire->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorRailCircuitCompXYZ(PowerWire->GetConnectionLocation(1))));
+		JPowerWire->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::ConvertVectorToFJsonObject(PowerWire->GetConnectionLocation(0))));
+		JPowerWire->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::ConvertVectorToFJsonObject(PowerWire->GetConnectionLocation(1))));
 		JPowerWire->Values.Add("Length", MakeShared<FJsonValueNumber>(PowerWire->GetLength()));
 		JPowerWire->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::GetActorLineFeaturesJSON(PowerWire->GetConnectionLocation(0), PowerWire->GetConnectionLocation(1), PowerWire->mDisplayName.ToString(), PowerWire->mDisplayName.ToString())));
 
