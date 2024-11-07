@@ -1,7 +1,7 @@
 # Ficsit Remote Monitoring
 
 [![Official Discord Server](https://img.shields.io/badge/Official%20Discord%20Server-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800)](https://discord.gg/c6446HTHpu)
-[![Web UI's Source Code](https://img.shields.io/badge/Web%20UI's%20Source%20Code-232634?style=for-the-badge&logo=github&logoColor=232634&color=F2C800)](https://github.com/V0IDL355/FRM-s-WebUI-Source)
+[![Web UI's Source Code](https://img.shields.io/badge/Web%20UI's%20Source%20Code-232634?style=for-the-badge&logo=github&logoColor=232634&color=F2C800)](https://github.com/Bread-Ch4n/FRM-s-WebUI-Source)
 [![Documentation](https://img.shields.io/badge/Documentation-232634?style=for-the-badge&logo=readthedocs&logoColor=232634&color=F2C800)](https://docs.ficsit.app/ficsitremotemonitoring/latest/)
 
 This mod is an exciting journey into the future of remote monitoring for dedicated servers or your locally run game. If you encounter any bugs or have suggestions, don't hesitate to reach out on [Discord](https://discord.gg/c6446HTHpu).
