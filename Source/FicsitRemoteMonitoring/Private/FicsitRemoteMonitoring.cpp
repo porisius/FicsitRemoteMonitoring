@@ -1,6 +1,8 @@
 #include "FicsitRemoteMonitoring.h"
 #include "Async/Async.h"
 #include "FRM_Request.h"
+#include "HttpServerRequest.h"
+#include "IHttpRouter.h"
 
 us_listen_socket_t* SocketListener;
 bool SocketRunning = false;
@@ -738,28 +740,34 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& Method, const FStr
     UE_LOGFMT(LogHttpServer, Log, "Registered API Endpoint: {APIName} - Current number of endpoints registered: {1}", APIName, APIEndpoints.Num());
 
 #if WITH_DEDICATED_SERVER
-    UFGServerSubsystem* ServerSubsystem = UFGServerSubsystem::Get(GetWorld());
-    if (IsValid(ServerSubsystem)) { return; }
+    const UFGServerSubsystem* ServerSubsystem = UFGServerSubsystem::Get(GetWorld());
+	const UFGServerAPIManager* APIManager = ServerSubsystem->GetServerAPIManager();
+	const TSharedPtr<IHttpRouter> Router = APIManager->mHTTPRouter;
+	const FString DataPath = "/api/" + APIName;
 
-    UFGServerAPIManager* APIManager = ServerSubsystem->GetServerAPIManager();
-    if (IsValid(APIManager)) { return; }
+	EHttpServerRequestVerbs RequestVerb = EHttpServerRequestVerbs::VERB_GET;
 
-    if (!IsRunningDedicatedServer()) {
-
-        UFGServerSubsystem* ServerSubsystem = UFGServerSubsystem::Get(GetWorld());
-        if (IsValid(ServerSubsystem)) { return; }
-
-        UFGServerAPIManager* APIManager = ServerSubsystem->GetServerAPIManager();
-        if (IsValid(APIManager)) { return; }
-
-        FFGRequestHandlerRegistration HandleRegistration = FFGRequestHandlerRegistration();
-        HandleRegistration.HandlerObject = this;
-        HandleRegistration.HandlerFunction = this->FindFunction(FName("HandleCSSEndpoint"));
-        HandleRegistration.FunctionName = FName(*APIName);
-        HandleRegistration.PrivilegeLevel = EPrivilegeLevel::None;
-        //APIManager->mRegisteredHandlers.Add(FString(APIName), HandleRegistration);
-
-    };
+	if (Method == "POST")
+	{
+		RequestVerb = EHttpServerRequestVerbs::VERB_POST;
+	}
+	
+	Router->BindRoute(DataPath, RequestVerb,
+		[this, APIName](const FHttpServerRequest& Request, const FHttpResultCallback& OnComplete)
+		{
+			bool bSuccess = false;
+			FRequestData RequestData;
+			RequestData.QueryParams = Request.QueryParams;
+			TUniquePtr<FHttpServerResponse> Response = FHttpServerResponse::Create(
+					AFicsitRemoteMonitoring::HandleEndpoint(this->GetWorld(), APIName, RequestData, bSuccess),
+					"application/json");
+			OnComplete(MoveTemp(Response));
+			if (!bSuccess)
+			{
+				UE_LOGFMT(LogHttpServer, Log, "Game Port - API Endpoint Not Found: {APIName}", APIName);
+			};
+			return true;
+		});
 #endif
 }
 
