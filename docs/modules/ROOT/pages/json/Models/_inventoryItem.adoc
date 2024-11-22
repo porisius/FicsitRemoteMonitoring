@@ -1,0 +1,6 @@
+﻿| {depth}{inventory-name} | Object[] | {inventory-description}
+| {depth}  Name | String | Name of the item.
+| {depth}  ClassName | String | Class Name of the item.
+| {depth}  Amount | Integar | Amount of the item.
+
+{set:inventory-description!:}

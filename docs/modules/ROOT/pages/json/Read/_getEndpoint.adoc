@@ -1,0 +1,18 @@
+﻿= {endpoint-title}
+
+{endpoint-description}
+
+ifdef::is-get-all[]
+This endpoint is included in the xref:json/Read/getAll.adoc[getAll] endpoint.
+endif::[]
+
+== URL
+
+`GET http://localhost:8080/{endpoint}`
+
+== Response Body
+
+[cols="1,1,2"]
+|===
+|*Name*|*Type*|*Description*
+
