@@ -1,152 +1,96 @@
-= Space Elevator Information
-
+:doctype: book
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-API Endpoint: getSpaceElevator
+:endpoint: getSpaceElevator
+:endpoint-title: Get Space Elevator
+:endpoint-description: Get a list of all space elevators.
+:is-get-all: true
+:depth:
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+include::_getEndpoint.adoc[]
 
-|Name
-|Space Elevator Name
-|String
-|Output
+| ID | String | Unique ID of the Space Elevator.
+| Name | String | Name of the Space Elevator.
+| ClassName | String | ClassName of the Space Elevator.
 
-|ClassName
-|UE Class Name
-|String
-|Output
+include::../Models/_location.adoc[]
 
-|location/x
-|X Location of Space Elevator
-|Float
-|Output
+// CurrentPhase
+{set:inventory-name:CurrentPhase}
+{set:inventory-description:A list of required items for the current phase.}
+include::../Models/_inventoryItem.adoc[]
+| &nbsp;&nbsp;RemainingCost | Integer | Remaining items to complete the phase item.
+| &nbsp;&nbsp;TotalCost | Integer | Total item amount required to complete the phase item.
 
-|location/y
-|Y Location of Space Elevator
-|Float
-|Output
+// normal fields
+| FullyUpgraded | Boolean | `true` if the Space Elevator is fully upgraded.
+| UpgradeReady | Boolean | `true` if an upgrade is ready.
 
-|location/z
-|Z Location of Space Elevator
-|Float
-|Output
-
-|location/Rotation
-|Heading of Space Elevator
-|Float
-|Output
-
-|inventory/Name
-|Inventory Item Name
-|String Array
-|Output
-
-|inventory/ClassName
-|UE Class Name
-|String Array
-|Output
-
-|inventory/Amount
-|Inventory Count
-|Float Array
-|Output
-
-|PhaseCost/Name
-|Inventory Item Name for Current Phase
-|String Array
-|Output
-
-|PhaseCost/ClassName
-|UE Class Name
-|String Array
-|Output
-
-|PhaseCost/Amount
-|Items Required for Current Phase
-|Float Array
-|Output
-
-|FullyUpgraded
-|Employee of the Planet? (Requires confirmation)
-|Boolean
-|Output
-
-|UpgradeReady
-|Ready to send to Project Assembly
-|Boolean
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
+// features fields
+include::../Models/_features.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-	{
-		"Name": "Space Elevator",
-		"ClassName": "Build_SpaceElevator_C",
-		"location":
-		{
-			"x": -52637.3046875,
-			"y": 221160.65625,
-			"z": -735.436767578125,
-			"rotation": 40
-		},
-		"inventory": [],
-		"PhaseCost": [
-			{
-				"Name": "Smart Plating",
-				"ClassName": "Desc_SpaceElevatorPart_1_C",
-				"Amount": 25
-			}
-		],
-		"FullyUpgraded": false,
-		"UpgradeReady": false,
-		"features":
-		{
-			"properties":
-			{
-				"name": "Space Elevator",
-				"type": "Space Elevator"
-			},
-			"geometry":
-			{
-				"coordinates":
-				{
-					"X": -52637.3046875,
-					"Y": 221160.65625,
-					"Z": -735.436767578125
-				},
-				"type": "Point"
-			}
-		}
-	}
+  {
+    "ID": "Build_SpaceElevator_C_2147473454",
+    "Name": "Space Elevator",
+    "ClassName": "Build_SpaceElevator_C",
+    "location": {
+      "x": -64008.390625,
+      "y": 249982.640625,
+      "z": -3758.981689453125,
+      "rotation": 90
+    },
+    "CurrentPhase": [
+      {
+        "Name": "Nuclear Pasta",
+        "ClassName": "Desc_SpaceElevatorPart_9_C",
+        "Amount": 1,
+        "RemainingCost": 999,
+        "TotalCost": 1000
+      },
+      {
+        "Name": "Biochemical Sculptor",
+        "ClassName": "Desc_SpaceElevatorPart_10_C",
+        "Amount": 0,
+        "RemainingCost": 1000,
+        "TotalCost": 1000
+      },
+      {
+        "Name": "AI Expansion Server",
+        "ClassName": "Desc_SpaceElevatorPart_12_C",
+        "Amount": 0,
+        "RemainingCost": 256,
+        "TotalCost": 256
+      },
+      {
+        "Name": "Ballistic Warp Drive",
+        "ClassName": "Desc_SpaceElevatorPart_11_C",
+        "Amount": 0,
+        "RemainingCost": 200,
+        "TotalCost": 200
+      }
+    ],
+    "FullyUpgraded": false,
+    "UpgradeReady": false,
+    "features": {
+      "properties": {
+        "name": "Space Elevator",
+        "type": "Space Elevator"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -64008.390625,
+          "y": 249982.640625,
+          "z": -3758.981689453125
+        },
+        "type": "Point"
+      }
+    }
+  }
 ]
 -----------------

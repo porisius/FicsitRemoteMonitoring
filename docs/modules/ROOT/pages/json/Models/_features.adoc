@@ -1,0 +1,10 @@
+﻿| {depth}features | Object | An object with actor coordinates and name information.
+| {depth}  properties | Object | Name information about the actor.
+| {depth}    name | String | Display Name of the Actor.
+| {depth}    type | String | Type of the Object.
+| {depth}  geometry | Object | Geometry information about the Actor.
+| {depth}    coordinates | Object | The Actor coordinates.
+| {depth}      x | Float | X Location of the Actor.
+| {depth}      y | Float | Y Location of the Actor.
+| {depth}      z | Float | Z Location of the Actor.
+| {depth}    type | "Point"| It's always "Point".
