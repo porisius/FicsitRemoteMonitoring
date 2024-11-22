@@ -2,6 +2,11 @@
 
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
+[WARNING]
+====
+**CURRENTLY BEING RE-WRITTEN THIS INFORMATION IS SUBJECT TO CHANGE, INFORMATION IS LEFT FOR REFERENCE FOR RE-WRITE**
+====
+
 Requires Disc-IT to be installed and configured. This page addresses the unique features of Remote Monitoring's usage of Webhook Notifications.
 
 A standard set of JSON files is located at %SatisfactoryRootFolder%\FactoryGame\Mods\FicsitRemoteMonitoring\JSON. You have set your own custom set of JSON files placed anywhere on your system so that they are not tampered with. Please note the below variables for each notification system. More are planned, as well more data to be used in notifications.
