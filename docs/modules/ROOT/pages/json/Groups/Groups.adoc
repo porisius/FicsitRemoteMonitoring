@@ -1,3 +1,0 @@
-= JSON Table
-
-:url-repo: https://github.com/porisius/FicsitRemoteMonitoring

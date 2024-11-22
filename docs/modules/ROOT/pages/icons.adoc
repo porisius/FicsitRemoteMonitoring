@@ -2,7 +2,12 @@
 
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
-Icons are extracted from the game upon game log, assuming that the server/client is not being a dedicated server AND the Concrete icon is not present.. This happens regardless of the Web Server/Socket & Serial Systems being active.
+[WARNING]
+====
+Icons are not automatically generated on the dedicated server. Generate them with the client and copy the files to the Icons directory on your dedicated server.
+====
+
+Icons are extracted from the game upon game log, assuming that the server/client is not being a dedicated server AND the Concrete icon is not present. This happens regardless of the Web Server/Socket & Serial Systems being active.
 
 This system is only available on the Web Server function and listens on the same port as the API. The URL is <Server IP/DNS>:<Port>/Icons/<Class Name of Item>.png, so for the default settings, connecting to the localhost, and using the Train icon the URL would be: `http://localhost:8080/Icons/Desc_Locomotive_C.png`
 

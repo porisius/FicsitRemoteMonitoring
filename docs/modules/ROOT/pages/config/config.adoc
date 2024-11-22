@@ -1,3 +1,9 @@
 = Configurations
 
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
+
+Configuration for Ficsit Remote Monitoring
+
+This will show the UI option as well as the FicsitRemoteMonitoring folder option for manual/headless changes.
+
+See the Config Section for details.
