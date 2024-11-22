@@ -16,60 +16,94 @@
 
 ** xref:json/Read/Read.adoc[Read]
 
-*** xref:json/Read/getFactory.adoc[getAssembler]
-*** xref:json/Read/getBelts.adoc[getBelts]
-*** xref:json/Read/getGenerators.adoc[getBiomassGenerator]
-*** xref:json/Read/getFactory.adoc[getBlender]
-*** xref:json/Read/getStorageInv.adoc[getCloudInv]
-*** xref:json/Read/getGenerators.adoc[getCoalGenerator]
-*** xref:json/Read/getFactory.adoc[getConstructor]
-*** xref:json/Read/getFactory.adoc[getConverter]
-*** xref:json/Read/getDoggo.adoc[getDoggo]
-*** xref:json/Read/getDrone.adoc[getDrone]
-*** xref:json/Read/getDroneStation.adoc[getDroneStation]
-*** xref:json/Read/getDropPod.adoc[getDropPod]
-*** xref:json/Read/getFactory.adoc[getEncoder]
-*** xref:json/Read/getResourceSink.adoc[getExplorationSink]
-*** xref:json/Read/getVehicles.adoc[getExplorer]
-*** xref:json/Read/getExtractor.adoc[getExtractor]
-*** xref:json/Read/getVehicles.adoc[getFactoryCart]
-*** xref:json/Read/getFactory.adoc[getFoundry]
-*** xref:json/Read/getGenerators.adoc[getFuelGenerator]
-*** xref:json/Read/getGenerators.adoc[getGeothermalGenerator]
-*** xref:json/Read/getHUBTerminal.adoc[getHUBTerminal]
-*** xref:json/Read/getFactory.adoc[getManufacturer]
-*** xref:json/Read/getModList.adoc[getModList]
-*** xref:json/Read/getGenerators.adoc[getNuclearGenerator]
-*** xref:json/Read/getFactory.adoc[getPackager]
-*** xref:json/Read/getFactory.adoc[getParticle]
-*** xref:json/Read/getPaths.adoc[getPaths]
-*** xref:json/Read/getPipes.adoc[getPipes]
-*** xref:json/Read/getPower.adoc[getPower]
-*** xref:json/Read/getPlayer.adoc[getPlayer]
-*** xref:json/Read/getPowerSlug.adoc[getPowerSlug]
-*** xref:json/Read/getProdStats.adoc[getProdStats]
-*** xref:json/Read/getRadarTower.adoc[getRadarTower]
-*** xref:json/Read/getRecipes.adoc[getRecipes]
-*** xref:json/Read/getFactory.adoc[getRefinery]
-*** xref:json/Read/getResourceNode.adoc[getResourceGeyser]
-*** xref:json/Read/getResourceNode.adoc[getResourceNode]
-*** xref:json/Read/getResourceSink.adoc[getResourceSink]
-*** xref:json/Read/getResourceNode.adoc[getResourceWell]
-*** xref:json/Read/getSchematics.adoc[getSchematics]
-*** xref:json/Read/getSinkList.adoc[getSinkList]
-*** xref:json/Read/getFactory.adoc[getSmelter]
-*** xref:json/Read/getSpaceElevator.adoc[getSpaceElevator]
-*** xref:json/Read/getStorageInv.adoc[getStorageInv]
-*** xref:json/Read/getSwitches.adoc[getSwitches]
-*** xref:json/Read/getVehicles.adoc[getTractor]
-*** xref:json/Read/getTrains.adoc[getTrains]
-*** xref:json/Read/getTrainStation.adoc[getTrainStation]
-*** xref:json/Read/getVehicles.adoc[getTruck]
-*** xref:json/Read/getTruckStation.adoc[getTruckStation]
-*** xref:json/Read/getWorldInv.adoc[getWorldInv]
-*** xref:json/Read/getAll.adoc[getAll]
+*** Factory
+
+**** xref:json/Read/getFactory.adoc[getAssembler]
+**** xref:json/Read/getBelts.adoc[getBelts]
+**** xref:json/Read/getFactory.adoc[getBlender]
+**** getCables (soon)
+**** xref:json/Read/getFactory.adoc[getConstructor]
+**** xref:json/Read/getFactory.adoc[getConverter]
+**** xref:json/Read/getFactory.adoc[getEncoder]
+**** xref:json/Read/getExtractor.adoc[getExtractor]
+**** getFrackingActivator (soon)
+**** xref:json/Read/getFactory.adoc[getFoundry]
+**** xref:json/Read/getHUBTerminal.adoc[getHUBTerminal]
+**** getHypertube (soon)
+**** xref:json/Read/getFactory.adoc[getManufacturer]
+**** xref:json/Read/getFactory.adoc[getPackager]
+**** xref:json/Read/getFactory.adoc[getParticle]
+**** xref:json/Read/getPipes.adoc[getPipes]
+**** getPortal (soon)
+**** getPump (soon)
+**** xref:json/Read/getRadarTower.adoc[getRadarTower]
+**** xref:json/Read/getFactory.adoc[getRefinery]
+**** getResourceSinkBuilding (soon)
+**** xref:json/Read/getFactory.adoc[getSmelter]
+**** xref:json/Read/getSpaceElevator.adoc[getSpaceElevator]
+**** xref:json/Read/getSwitches.adoc[getSwitches]
+**** getTrainRails (soon)
+
+*** Generators
+**** xref:json/Read/getGenerators.adoc[getBiomassGenerator]
+**** xref:json/Read/getGenerators.adoc[getCoalGenerator]
+**** xref:json/Read/getGenerators.adoc[getFuelGenerator]
+**** xref:json/Read/getGenerators.adoc[getGeothermalGenerator]
+**** xref:json/Read/getGenerators.adoc[getNuclearGenerator]
+
+*** Inventory
+**** getCloudInv (soon)
+**** xref:json/Read/getStorageInv.adoc[getStorageInv]
+**** xref:json/Read/getWorldInv.adoc[getWorldInv]
+
+*** Resource Nodes
+**** xref:json/Read/getResourceNode.adoc[getResourceGeyser]
+**** xref:json/Read/getResourceNode.adoc[getResourceNode]
+**** xref:json/Read/getResourceNode.adoc[getResourceWell]
+
+*** Session
+**** xref:json/Read/getModList.adoc[getModList]
+**** xref:json/Read/getPlayer.adoc[getPlayer]
+**** getResearchTrees (soon)
+**** getSessionInfo (soon)
+
+*** Sink
+**** xref:json/Read/getResourceSink.adoc[getExplorationSink]
+**** xref:json/Read/getResourceSink.adoc[getResourceSink]
+**** xref:json/Read/getSinkList.adoc[getSinkList]
+
+*** Stations
+**** xref:json/Read/getDroneStation.adoc[getDroneStation]
+**** xref:json/Read/getTrainStation.adoc[getTrainStation]
+**** xref:json/Read/getTruckStation.adoc[getTruckStation]
+
+*** Vehicles
+**** xref:json/Read/getDrone.adoc[getDrone]
+**** xref:json/Read/getVehicles.adoc[getExplorer]
+**** xref:json/Read/getVehicles.adoc[getFactoryCart]
+**** xref:json/Read/getPaths.adoc[getPaths]
+**** xref:json/Read/getVehicles.adoc[getTractor]
+**** getTrains (soon)
+**** xref:json/Read/getVehicles.adoc[getTruck]
+
+*** World
+**** xref:json/Read/getDoggo.adoc[getDoggo]
+**** xref:json/Read/getDropPod.adoc[getDropPod]
+**** xref:json/Read/getPowerSlug.adoc[getPowerSlug]
+**** xref:json/Read/getProdStats.adoc[getProdStats]
+**** xref:json/Read/getRecipes.adoc[getRecipes]
+**** xref:json/Read/getSchematics.adoc[getSchematics]
+
+*** Power
+**** xref:json/Read/getPower.adoc[getPower]
+**** getPowerUsage
+
 *** xref:json/Read/getFactory.adoc[getFactory]
 *** xref:json/Read/getGenerators.adoc[getGenerators]
 *** xref:json/Read/getVehicles.adoc[getVehicles]
+*** xref:json/Read/getAll.adoc[getAll]
 
 ** xref:json/Write/Write.adoc[Write]
+
+*** Factory
+**** setSwitches (soon)
