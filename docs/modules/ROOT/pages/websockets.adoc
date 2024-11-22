@@ -2,8 +2,10 @@
 
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
-**CURRENTLY BEING RE-WRITTEN THIS INFORMATION IS SUBJECT TO CHANGE**
-**INFORMATION IS LEFT FOR REFERENCE FOR RE-WRITE**
+[WARNING]
+====
+**CURRENTLY BEING RE-WRITTEN THIS INFORMATION IS SUBJECT TO CHANGE, INFORMATION IS LEFT FOR REFERENCE FOR RE-WRITE**
+====
 
 FRM provides a WebSocket server that can be configured on a port of your choosing (Default: 8081). This can be modified by either modifying the HTTP_Root value in %SatisfactoryRootFolder%\FactoryGame\Configs\FicsitRemoteMonitoring\WebSockets.cfg (Config File Method), or by Satisfactory's Main Menu > Mods > FicsitRemoteMonitoring > WebSocket Port (Game UI Method).
 

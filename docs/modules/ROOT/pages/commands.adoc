@@ -11,14 +11,14 @@ Any use of `< >` denotes an option or variable. For example: `<start/stop>` mean
 == http
 
 Usage: `/frm http <start/stop>`
-Deperecated Command: `/frmweb <start/stop>`
+Deprecated Command: `/frmweb <start/stop>`
 
 Starts/stops the HTTP/WebSocket Server
 
 == serial
 
 Usage: `/frm serial <start/stop>`
-Deperecated Command: `/frmserial <start/stop>`
+Deprecated Command: `/frmserial <start/stop>`
 
 Starts/stops the Serial/RS232 Port Handler
 
@@ -30,8 +30,8 @@ Intended for getting outputs of API Endpoints to save for future information or 
 
 === info 
 
-    Info will display back to the in-game chat, this is useful for quickly checking if JSON populates
+Info will display back to the in-game chat, this is useful for quickly checking if JSON populates.
 
 === file
 
-    Info will be saved to the *host's* Debug folder located in the Remote Monitoring's Mod Folder
+Info will be saved as file to the *host's* Debug folder located in the Remote Monitoring's Mod Folder.
