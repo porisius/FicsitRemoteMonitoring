@@ -26,16 +26,16 @@ Default File: UPSPower.json
 |===
 |Variable Name |Purpose/Data:
 
-|{CircuitID}
+|\{CircuitID}
 |Circuit ID Number
 
-|{TimeEmpty}
+|\{TimeEmpty}
 |Time in HH:MM:SS until battery(ies) depletion
 
-|{BattPercent}
+|\{BattPercent}
 |% of battery charge remaining
 
-|{Flavor}
+|\{Flavor}
 |Randomized Flavor Text (Battery/Detrimental)
 
 |===
@@ -47,10 +47,10 @@ Default File: PlayerOnline.json / PlayerOffline.json
 |===
 |Variable Name |Purpose/Data:
 
-|{PlayerName}
+|\{PlayerName}
 |Username (Based on Steam/Epic Username} that connected/disconnected. Note: Non-server logouts by host are not triggered.
 
-|{Flavor}
+|\{Flavor}
 |Randomized Flavor Text (Player/Positive)
 
 |===
@@ -62,10 +62,10 @@ Default File: Outage.json
 |===
 |Variable Name |Purpose/Data:
 
-|{CircuitID}
+|\{CircuitID}
 |Circuit ID Number
 
-|{Flavor}
+|\{Flavor}
 |Randomized Flavor Text (Power/Detrimental)
 
 |===
@@ -77,13 +77,13 @@ Default File: Research.json
 |===
 |Variable Name |Purpose/Data:
 
-|{Schematic}
+|\{Schematic}
 |Milestone/M.A.M. Research Name
 
-|{Recipes}
+|\{Recipes}
 |Recipes Unlocked
 
-|{Flavor}
+|\{Flavor}
 |Randomized Flavor Text (Research/Positive)
 
 |===
@@ -95,10 +95,10 @@ Default File: Schematic.json
 |===
 |Variable Name |Purpose/Data:
 
-|{Schematic}
+|\{Schematic}
 |Available schematics found from HDD
 
-|{Flavor}
+|\{Flavor}
 |Randomized Flavor Text (Research/Positive)
 
 |===
@@ -110,16 +110,16 @@ Default File: Doggo.json
 |===
 |Variable Name |Purpose/Data:
 
-|{ItemName}
+|\{ItemName}
 |Name of Item Found
 
-|{ItemNum}
+|\{ItemNum}
 |Quantity of Item Found
 
-|{FriendName}
+|\{FriendName}
 |Lizard Doggo's owner (Future Feature)
 
-|{Flavor}
+|\{Flavor}
 |Randomized Flavor Text (Doggo/Positive)
 
 |===
@@ -131,13 +131,13 @@ Default File: Derail.json
 |===
 |Variable Name |Purpose/Data:
 
-|{TrainName}
+|\{TrainName}
 |Name of Train derailed
 
-|{TrainStation}
+|\{TrainStation}
 |Name of Train Station the Train was heading to
 
-|{Flavor}
+|\{Flavor}
 |Randomized Flavor Text (Train/Detrimental)
 
 |===
@@ -150,16 +150,16 @@ Self-Driving Error Types: TrainErrorMessage.json
 |===
 |Variable Name |Purpose/Data:
 
-|{TrainName}
+|\{TrainName}
 |Name of Train with error
 
-|{SelfDriving}
+|\{SelfDriving}
 |Self-Driving Error Type
 
-|{TrainStation}
+|\{TrainStation}
 |Name of Train Station the Train was heading to
 
-|{Flavor}
+|\{Flavor}
 |Randomized Flavor Text (Train/Detrimental)
 
 |===
@@ -171,13 +171,13 @@ Default File: TrainIdle.json
 |===
 |Variable Name |Purpose/Data:
 
-|{TrainName}
+|\{TrainName}
 |Name of Train with error
 
-|{TrainStation}
+|\{TrainStation}
 |Name of Train Station the Train was heading to
 
-|{Flavor}
+|\{Flavor}
 |Randomized Flavor Text (Train/Detrimental)
 
 |===
