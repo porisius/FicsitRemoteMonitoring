@@ -36,7 +36,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 		TArray<TSharedPtr<FJsonValue>> JPlayerArray;
 		TArray<TSharedPtr<FJsonValue>> JRailcarsArray;
 		TSharedPtr<FJsonObject> TrainLocation;
-
+		int32 StopIndex = 0;
+		
 		UFGPowerInfoComponent* PowerInfo = NULL;
 		if (IsValid(MultiUnitMaster)) {
 
@@ -48,7 +49,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 			TArray<FTimeTableStop> TrainStops;
 
 			if (IsValid(TimeTable)) {
-				int32 StopIndex = TimeTable->GetCurrentStop();
+				StopIndex = TimeTable->GetCurrentStop();
 				CurrentStop = TimeTable->GetStop(StopIndex);
 				TimeTable->GetStops(TrainStops);
 				AFGTrainStationIdentifier* CurrentStation = CurrentStop.Station;
@@ -133,6 +134,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 		JTrain->Values.Add("PendingDerail", MakeShared<FJsonValueBoolean>(Train->HasPendingCollision()));
 		JTrain->Values.Add("Status", MakeShared<FJsonValueString>(FormString));
 		JTrain->Values.Add("TimeTable", MakeShared<FJsonValueArray>(JTimetableArray));
+		JTrain->Values.Add("TimeTableIndex", MakeShared<FJsonValueNumber>(StopIndex));
 		JTrain->Values.Add("Vehicles", MakeShared<FJsonValueArray>(JRailcarsArray));
 		JTrain->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Train, Train->GetTrainName().ToString(), "Train")));
 		JTrain->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(PowerInfo)));
