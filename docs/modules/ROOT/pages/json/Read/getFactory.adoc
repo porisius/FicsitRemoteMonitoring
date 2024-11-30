@@ -32,21 +32,21 @@ include::../Models/_location.adoc[]
 
 // production
 | production | Object[] | List of produced items.
-| &#160;&#160;Name | String | Name of the item.
-| &#160;&#160;ClassName | String | ClassName of the item.
-| &#160;&#160;Amount | String | Number of items stored in Building.
-| &#160;&#160;CurrentProd | Float | Current production rate per minute (amount decreases if an ingredient is unavailable).
-| &#160;&#160;MaxProd | Float | Maximum items produced per minute.
-| &#160;&#160;ProdPercent | Float | Efficiency Percentage.
+|   Name | String | Name of the item.
+|   ClassName | String | ClassName of the item.
+|   Amount | String | Number of items stored in Building.
+|   CurrentProd | Float | Current production rate per minute (amount decreases if an ingredient is unavailable).
+|   MaxProd | Float | Maximum items produced per minute.
+|   ProdPercent | Float | Efficiency Percentage.
 
 // ingredients
 | ingredients | Object[] | List of required items.
-| &#160;&#160;Name | String | Name of the item.
-| &#160;&#160;ClassName | String | ClassName of the item.
-| &#160;&#160;Amount | String | Number of items stored in Building.
-| &#160;&#160;CurrentConsumed | Float | Current consumption rate per minute (amount decreases if an ingredient is unavailable).
-| &#160;&#160;MaxConsumed | Float | Maximum items consumed per minute.
-| &#160;&#160;ConsPercent | Float | Efficiency Percentage.
+|   Name | String | Name of the item.
+|   ClassName | String | ClassName of the item.
+|   Amount | String | Number of items stored in Building.
+|   CurrentConsumed | Float | Current consumption rate per minute (amount decreases if an ingredient is unavailable).
+|   MaxConsumed | Float | Maximum items consumed per minute.
+|   ConsPercent | Float | Efficiency Percentage.
 
 | ManuSpeed | Float | Configured speed in % (exceeds 100 if the machine is equipped with a power slug).
 | IsConfigured | Boolean | Is a recipe configured?
