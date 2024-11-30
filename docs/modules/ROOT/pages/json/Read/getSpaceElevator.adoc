@@ -1,13 +1,18 @@
 :doctype: book
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
-
-:endpoint: getSpaceElevator
-:endpoint-title: Get Space Elevator
-:endpoint-description: Get a list of all space elevators.
-:is-get-all: true
 :depth:
 
-include::_getEndpoint.adoc[]
+= Get Space Elevator
+
+include::../_isGetAll.adoc[]
+
+Get a list of all space elevators.
+
+== URL
+
+`GET http://localhost:8080/getSpaceElevator`
+
+include::../_responseBody.adoc[]
 
 | ID | String | Unique ID of the Space Elevator.
 | Name | String | Name of the Space Elevator.
