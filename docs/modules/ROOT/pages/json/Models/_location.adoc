@@ -3,4 +3,4 @@
 | {depth}  y | Float | Y Location of the Actor.
 | {depth}  z | Float | Z Location of the Actor.
 // TODO is 0 = north?
-| {depth}  rotation | Float | Rotation of the Actor (0 - 360).
+| {depth}  rotation | Float | Rotation of the Actor (0 - 359, 0 = North, 90 = East, 180 = South, 270 = West).
