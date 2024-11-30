@@ -16,6 +16,8 @@
 
 ** xref:json/Read/Read.adoc[Read]
 
+*** xref:json/Read/getAll.adoc[getAll]
+
 *** Factory
 
 **** xref:json/Read/getFactory.adoc[getAssembler]
@@ -26,6 +28,7 @@
 **** xref:json/Read/getFactory.adoc[getConverter]
 **** xref:json/Read/getFactory.adoc[getEncoder]
 **** xref:json/Read/getExtractor.adoc[getExtractor]
+**** xref:json/Read/getFactory.adoc[getFactory]
 **** getFrackingActivator (soon)
 **** xref:json/Read/getFactory.adoc[getFoundry]
 **** xref:json/Read/getHUBTerminal.adoc[getHUBTerminal]
@@ -48,6 +51,7 @@
 **** xref:json/Read/getGenerators.adoc[getBiomassGenerator]
 **** xref:json/Read/getGenerators.adoc[getCoalGenerator]
 **** xref:json/Read/getGenerators.adoc[getFuelGenerator]
+**** xref:json/Read/getGenerators.adoc[getGenerators]
 **** xref:json/Read/getGenerators.adoc[getGeothermalGenerator]
 **** xref:json/Read/getGenerators.adoc[getNuclearGenerator]
 
@@ -85,6 +89,7 @@
 **** xref:json/Read/getVehicles.adoc[getTractor]
 **** getTrains (soon)
 **** xref:json/Read/getVehicles.adoc[getTruck]
+**** xref:json/Read/getVehicles.adoc[getVehicles]
 
 *** World
 **** xref:json/Read/getDoggo.adoc[getDoggo]
@@ -97,11 +102,6 @@
 *** Power
 **** xref:json/Read/getPower.adoc[getPower]
 **** getPowerUsage
-
-*** xref:json/Read/getFactory.adoc[getFactory]
-*** xref:json/Read/getGenerators.adoc[getGenerators]
-*** xref:json/Read/getVehicles.adoc[getVehicles]
-*** xref:json/Read/getAll.adoc[getAll]
 
 ** xref:json/Write/Write.adoc[Write]
 
