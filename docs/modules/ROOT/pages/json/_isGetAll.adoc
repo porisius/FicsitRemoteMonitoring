@@ -1,0 +1,4 @@
+﻿[NOTE]
+====
+This endpoint is included in the xref:json/Read/getAll.adoc[getAll] endpoint.
+====

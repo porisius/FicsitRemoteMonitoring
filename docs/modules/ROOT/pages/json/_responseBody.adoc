@@ -1,0 +1,5 @@
+﻿== Response Body
+
+[cols="1,1,2"]
+|===
+|*Name*|*Type*|*Description*
