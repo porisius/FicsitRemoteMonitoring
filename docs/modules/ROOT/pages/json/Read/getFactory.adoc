@@ -1,228 +1,126 @@
-= Factory Building Stats
-
+:doctype: book
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getFactory +
-Factory Stats +
+= Get Factory
 
-*ADVISORY:* Due to performance, all factory calls use a caching system. Therefore, you will not always get the most up-to-date info on your factory. Please consult the Configuration page to set caching delays.
+include::../_isGetAll.adoc[]
+
+Get a list of all factory buildings.
 
 getAssembler only retrieves Assemblers +
 getBlender only retrieves Blenders +
 getConstructor only retrieves Constructors +
 getParticle only retrieves Particle Accelerators +
-etc... +
+etc. +
 
-[cols="2,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+== URL
 
-|Name
-|Name of Factory Building
-|String
-|Output
+`GET http://localhost:8080/getFactory`
 
-|ClassName
-|UE Class Name
-|String
-|Output
+include::../_responseBody.adoc[]
 
-|location/x
-|X Location of Building
-|Float
-|Output
+| ID | String | Unique ID of the Factory Building.
+| Name | String | Name of the Factory Building.
+| ClassName | String | ClassName of the Factory Building.
 
-|location/y
-|Y Location of Building
-|Float
-|Output
+// location fields
+include::../Models/_location.adoc[]
 
-|location/z
-|Z Location of Building
-|Float
-|Output
+| Recipe | String | Name of the item being produced.
+| RecipeClassName | String | ClassName of the item being produced.
 
-|location/Rotation
-|Compass Heading of Building
-|Float
-|Output
+// production
+| production | Object[] | List of produced items.
+| &#160;&#160;Name | String | Name of the item.
+| &#160;&#160;ClassName | String | ClassName of the item.
+| &#160;&#160;Amount | String | Number of items stored in Building.
+| &#160;&#160;CurrentProd | Float | Current production rate per minute (amount decreases if an ingredient is unavailable).
+| &#160;&#160;MaxProd | Float | Maximum items produced per minute.
+| &#160;&#160;ProdPercent | Float | Efficiency Percentage.
 
-|Recipe
-|Item to be Produced
-|String
-|Output
+// ingredients
+| ingredients | Object[] | List of required items.
+| &#160;&#160;Name | String | Name of the item.
+| &#160;&#160;ClassName | String | ClassName of the item.
+| &#160;&#160;Amount | String | Number of items stored in Building.
+| &#160;&#160;CurrentConsumed | Float | Current consumption rate per minute (amount decreases if an ingredient is unavailable).
+| &#160;&#160;MaxConsumed | Float | Maximum items consumed per minute.
+| &#160;&#160;ConsPercent | Float | Efficiency Percentage.
 
-|production/Name
-|Item Output
-|String Array
-|Output
+| ManuSpeed | Float | Configured speed in % (exceeds 100 if the machine is equipped with a power slug).
+| IsConfigured | Boolean | Is a recipe configured?
+| IsProducing | Boolean | Is the building producing now?
+| IsPaused | Boolean | Is paused?
 
-|production/ClassName
-|UE Class Name
-|String Array
-|Output
+// power info fields
+include::../Models/_powerInfo.adoc[]
 
-|production/Amount
-|Number of items stored in Building for item
-|Integar Array
-|Output
-
-|production/CurrentProd
-|Current Production
-|Float Array
-|Output
-
-|production/MaxProd
-|Max Production
-|Float Array
-|Output
-
-|production/ProdPercent
-|Efficentcy Percentage
-|Float Array
-|Output
-
-|ingredients/Name
-|Item Output
-|String Array
-|Output
-
-|ingredients/ClassName
-|UE Class Name
-|String Array
-|Output
-
-|ingredients/Amount
-|Number of items stored in Building for item
-|Integar Array
-|Output
-
-|ingredients/CurrentConsumed
-|Current Consumption
-|Float Array
-|Output
-
-|ingredients/MaxConsumed
-|Max Consumption
-|Float Array
-|Output
-
-|ingredients/ConsPercent
-|Efficentcy Percentage
-|Float Array
-|Output
-
-|ManuSpeed
-|Configured Speed
-|Float
-|Output
-
-|IsConfigured
-|Is a recipe configured?
-|Boolean
-|Output
-
-|IsProducing
-|Is the building producing now?
-|Boolean
-|Output
-
-|IsPaused
-|Is paused?
-|Boolean
-|Output
-
-|CircuitID
-|Circuit ID of the Building
-|Integar
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
+// features fields
+include::../Models/_features.adoc[]
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-   {
-      "Name": "Constructor",
-      "ClassName": "Build_ConstructorMk1_C",
-      "location":
+  {
+    "ID": "Build_ConstructorMk1_C_2147415548",
+    "Name": "Constructor",
+    "ClassName": "Build_ConstructorMk1_C",
+    "location": {
+      "x": -70700,
+      "y": 254500,
+      "z": -3599.984130859375,
+      "rotation": 90
+    },
+    "Recipe": "Concrete",
+    "RecipeClassName": "Recipe_Concrete_C",
+    "production": [
       {
-         "x": -101321.6640625,
-         "y": -130824.890625,
-         "z": -1410.1580810546875,
-         "rotation": 100
-      },
-      "Recipe": "Actual Snow",
-      "RecipeClassName": "",
-      "production": [
-         {
-            "Name": "Actual Snow",
-            "ClassName": "Desc_Snow_C",
-            "Amount": 0,
-            "CurrentProd": 0,
-            "MaxProd": 10,
-            "ProdPercent": 0
-         }
-      ],
-      "ingredients": [
-         {
-            "Name": "FICSMAS Gift",
-            "ClassName": "Desc_Gift_C",
-            "Amount": 0,
-            "CurrentConsumed": 0,
-            "MaxConsumed": 25,
-            "ConsPercent": 0
-         }
-      ],
-      "ManuSpeed": 1,
-      "IsConfigured": true,
-      "IsProducing": false,
-      "IsPaused": false,
-      "CircuitID": 44,
-      "features":
-      {
-         "properties":
-         {
-            "name": "Constructor",
-            "type": ""
-         },
-         "geometry":
-         {
-            "coordinates":
-            {
-               "X": -101321.6640625,
-               "Y": -130824.890625,
-               "Z": -1410.1580810546875
-            },
-            "type": "Point"
-         }
+        "Name": "Concrete",
+        "ClassName": "Desc_Cement_C",
+        "Amount": 33,
+        "CurrentProd": 0,
+        "MaxProd": 1.649999976158142,
+        "ProdPercent": 0
       }
-   }
+    ],
+    "ingredients": [
+      {
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Amount": 1,
+        "CurrentConsumed": 0,
+        "MaxConsumed": 4.949999809265137,
+        "ConsPercent": 0
+      }
+    ],
+    "Productivity": 0,
+    "ManuSpeed": 100,
+    "IsConfigured": true,
+    "IsProducing": false,
+    "IsPaused": true,
+    "PowerInfo": {
+      "CircuitGroupID": 0,
+      "CircuitID": 1,
+      "PowerConsumed": 0.10000000149011612,
+      "MaxPowerConsumed": 0.21619677543640137
+    },
+    "features": {
+      "properties": {
+        "name": "Constructor",
+        "type": "Constructor"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -70700,
+          "y": 254500,
+          "z": -3599.984130859375
+        },
+        "type": "Point"
+      }
+    }
+  }
 ]
 -----------------
