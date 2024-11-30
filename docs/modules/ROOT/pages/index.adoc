@@ -2,4 +2,10 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
+[NOTE]
+====
+If you're using this mod on a dedicated server, each client must have SML installed.
+Ficsit Remote Monitoring is not required on the client.
+====
+
 Ficsit Remote Management is a mod that is for statistical data collection and minor control via a Web Server/Socket and/or RS232/Serial Devices.
