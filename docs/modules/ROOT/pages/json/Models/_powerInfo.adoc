@@ -1,0 +1,5 @@
+﻿| {depth}PowerInfo | Object | Power Information Object.
+| {depth}  CircuitGroupID | Integar | The group this circuit belongs too. (-1 = not connected)
+| {depth}  CircuitID | Integar | This circuit's unique identifier. (-1 = not connected)
+| {depth}  PowerConsumed | Float | Current power consumption.
+| {depth}  MaxPowerConsumed | Float | Current maximum power consumption.
