@@ -1,0 +1,101 @@
+# Config for Taskfile - https://taskfile.dev/
+# See CONTRIBUTING.md
+
+version: "3"
+
+# Use a taskfile rather than a dotenv file since the latter currently makes using global variables difficult.
+# See https://github.com/go-task/task/issues/521
+includes:
+  local:
+    taskfile: taskfile.local.yaml
+    optional: true
+
+env:
+  # Defaults which are designed to be overridden in a taskfile.local.yaml.
+  # The 'default' syntax makes the correct value available in ${VAR} format.
+  SATISFACTORY_MOD_DIR: '{{ default "C:/Program Files (x86)/Steam/steamapps/common/Satisfactory/FactoryGame/Mods" .SATISFACTORY_MOD_DIR }}'
+  UE_INSTALL_ROOT: '{{ default "C:/Program Files/Unreal Engine - CSS" .UE_INSTALL_ROOT }}'
+
+  # The name of the mod
+  PROJECT_NAME: "{{ osBase .ROOT_DIR }}"
+
+  # Zip files created after using UE to package the mod
+  PACKAGE_OUTPUT_DIR: '{{ joinPath .ROOT_DIR "../../Saved/ArchivedPlugins" .PROJECT_NAME }}'
+  PACKAGE_OUT_WIN: '{{ print .PROJECT_NAME "-Windows.zip" }}'
+
+  # Path where the DLLs can be found
+  DLL_DIR: Source/ThirdParty/uWebSockets/lib
+  DLL_UV: '{{ joinPath .DLL_DIR "uv.dll" }}'
+  DLL_ZLIB: '{{ joinPath .DLL_DIR "zlib1.dll" }}'
+
+  # The Unreal Project file for SML
+  UPROJECT_FILE: '{{ joinPath .ROOT_DIR "../../FactoryGame.uproject" }}'
+
+tasks:
+  build:dev:
+    desc: Build the project in the "development editor" configuration
+    run: once
+    cmds:
+      - >-
+        '{{ joinPath .UE_INSTALL_ROOT "/Engine/Build/BatchFiles/Build.bat" }}'
+        FactoryEditor Win64 Development -project='{{ .UPROJECT_FILE }}'
+
+  install:
+    desc: Install the locally-built windows client version of the mod (requires bash)
+    run: once
+    env:
+      MOD_INSTALL_DIR: "{{ joinPath .SATISFACTORY_MOD_DIR .PROJECT_NAME }}"
+    cmds:
+      - rm -rf "${MOD_INSTALL_DIR}"
+      - unzip -q -d "${MOD_INSTALL_DIR}" '{{ joinPath .PACKAGE_OUTPUT_DIR .PACKAGE_OUT_WIN }}'
+      - >-
+        cp --no-clobber '{{ .DLL_UV }}' '{{ .DLL_ZLIB }}'
+        '{{ joinPath .SATISFACTORY_MOD_DIR .PROJECT_NAME "Binaries/Win64" }}'
+
+  package:dev:
+    desc: Create an installable Windows-client-only development version of the mod
+    run: once
+    cmds:
+      - task: uat:run
+        vars:
+          ARGS:
+            - -build
+            - -platform=Win64
+            - -nocompileeditor
+            - -installed
+
+  package:release:
+    desc: Create an release-ready installable version of the mod for both client and server
+    run: once
+    cmds:
+      - task: uat:run
+        vars:
+          ARGS:
+            - -build
+            - -platform=Win64
+            - -server
+            - -serverplatform=Win64+Linux
+            - -nocompileeditor
+            - -installed
+            - -merge
+
+  uat:run:
+    desc: Run the Unreal Automation Tool - args should be pre-shell-quoted
+    internal: true
+    run: when_changed
+    requires:
+      ARGS: []
+    cmds:
+      - >-
+        "{{ joinPath .UE_INSTALL_ROOT "/Engine/Build/BatchFiles/RunUAT.bat" }}"
+        -ScriptsForProject="{{ .UPROJECT_FILE }}" PackagePlugin -project="{{ .UPROJECT_FILE }}"
+        -clientconfig=Shipping -serverconfig=Shipping -utf8output -DLCName="{{ .PROJECT_NAME }}"
+        {{ .ARGS | join " " }}
+
+  vs:project:
+    desc: Generate Visual Studio project files
+    run: once
+    cmds:
+      - >-
+        '{{ joinPath .UE_INSTALL_ROOT "Engine/Binaries/Win64/UnrealVersionSelector.exe" }}'
+        -projectfiles '{{ .UPROJECT_FILE }}'

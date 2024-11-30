@@ -116,9 +116,58 @@ If you wish to contribute to the mod, you will need to setup the [modding enviro
 
 - Setup the modding environment as described above.
 - Download or Clone the Ficsit Remote Monitoring Dev branch to your FactoryGame.uproject's Mods folder
-- Download or Clone the ArduinoKit to your FactoryGame.uproject's Mods folder. 
+- Download or Clone [ArduinoKit](https://github.com/porisius/ArduinoKit) to your FactoryGame.uproject's Mods folder. 
   - This is required for packing/testing the mod, due to handling potential Serial/RS232 Device Communication.
 - Continue from [here](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/project_setup.html#_generate_visual_studio_files) to compile the project for opening in Unreal Engine Editor.
+
+### Automation of common tasks
+
+Optionally, you can use [Task](https://taskfile.dev/) to perform some steps via the CLI instead of the Visual Studio or Unreal Editor GUI. This is not required in order to develop FRM, and you should still become familiar with the GUI-based workflow described above.
+
+ 1. If you are on Windows and you did not do so while setting up your modding environment, install and use "Git Bash". While Task does support Windows, FRM's task definitions assume that Linux-style commands (cp, mv, unzip) are available.
+ 2. [Install Task](https://taskfile.dev/installation/) via your preferred method. On Windows, [Winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) is available by default and is likely the best choice.
+
+    ```bash
+    winget install Task.Task
+    ```
+
+ 3. Close and re-open your terminal.
+ 4. View the available tasks.
+
+    ```bash
+    task
+    ```
+
+    The tasks are defined in [taskfile.yaml](taskfile.yaml) if you want to read what a task will do before running it.
+
+As an example, these commands would build and install the development version of the mod in a similar manner to Alpakit with the "copy to game folder" function enabled.
+
+```bash
+task package:dev
+task install
+```
+
+While the taskfile will use sensible defaults for the location of your Satisfactory and Unreal Engine installations, you may need to tell it where they are. Do this by creating a `.taskfile.local.yaml` file in the root of your FicsitRemoteMonitoring checkout.
+
+```yaml
+# taskfile.local.yaml
+
+# Required
+version: '3'
+
+vars:
+  SATISFACTORY_MOD_DIR: "C:/Games/Steam/steamapps/common/Satisfactory/FactoryGame/Mods"
+  UE_INSTALL_ROOT: "C:/ue"
+```
+
+For one-off usage they can also be set via the command line. See [Task's documentation](https://taskfile.dev/usage/#variables) for more information.
+
+```bash
+task install SATISFACTORY_MOD_DIR="example/path"
+```
+
+The default values for these variables can be found near the start of the [taskfile.yaml](taskfile.yaml).
+You can use either Unix (/) or Windows (\\) style paths regardless of your operating system.
 
 ### Improving The Documentation
 
