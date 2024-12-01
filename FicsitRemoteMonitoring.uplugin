@@ -30,6 +30,6 @@
 			"Enabled": true
 		}
 	],
-	"GameVersion": ">=377620",
+	"GameVersion": ">=382498",
 	"RequiredOnRemote": false
 }
