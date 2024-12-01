@@ -58,11 +58,7 @@ tasks:
     cmds:
       - task: uat:run
         vars:
-          ARGS:
-            - -build
-            - -platform=Win64
-            - -nocompileeditor
-            - -installed
+          ARGS: [-build, -platform=Win64, -nocompileeditor, -installed]
 
   package:release:
     desc: Create an release-ready installable version of the mod for both client and server
@@ -71,13 +67,15 @@ tasks:
       - task: uat:run
         vars:
           ARGS:
-            - -build
-            - -platform=Win64
-            - -server
-            - -serverplatform=Win64+Linux
-            - -nocompileeditor
-            - -installed
-            - -merge
+            [
+              -build,
+              -platform=Win64,
+              -server,
+              -serverplatform=Win64+Linux,
+              -nocompileeditor,
+              -installed,
+              -merge,
+            ]
 
   uat:run:
     desc: Run the Unreal Automation Tool - args should be pre-shell-quoted
