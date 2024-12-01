@@ -1,3 +1,6 @@
 Binaries/*
 Intermediate/*
 Saved/*
+
+# User-defined environment variables
+taskfile.local.yaml
