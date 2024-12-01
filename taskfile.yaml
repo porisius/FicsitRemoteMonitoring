@@ -10,11 +10,10 @@ includes:
     taskfile: taskfile.local.yaml
     optional: true
 
-env:
+vars:
   # Defaults which are designed to be overridden in a taskfile.local.yaml.
-  # The 'default' syntax makes the correct value available in ${VAR} format.
-  SATISFACTORY_MOD_DIR: '{{ default "C:/Program Files (x86)/Steam/steamapps/common/Satisfactory/FactoryGame/Mods" .SATISFACTORY_MOD_DIR }}'
-  UE_INSTALL_ROOT: '{{ default "C:/Program Files/Unreal Engine - CSS" .UE_INSTALL_ROOT }}'
+  SATISFACTORY_MOD_DIR: "C:/Program Files (x86)/Steam/steamapps/common/Satisfactory/FactoryGame/Mods"
+  UE_INSTALL_ROOT: "C:/Program Files/Unreal Engine - CSS"
 
   # The name of the mod
   PROJECT_NAME: "{{ osBase .ROOT_DIR }}"
@@ -43,11 +42,11 @@ tasks:
   install:
     desc: Install the locally-built windows client version of the mod (requires bash)
     run: once
-    env:
+    vars:
       MOD_INSTALL_DIR: "{{ joinPath .SATISFACTORY_MOD_DIR .PROJECT_NAME }}"
     cmds:
-      - rm -rf "${MOD_INSTALL_DIR}"
-      - unzip -q -d "${MOD_INSTALL_DIR}" '{{ joinPath .PACKAGE_OUTPUT_DIR .PACKAGE_OUT_WIN }}'
+      - rm -rf '{{ .MOD_INSTALL_DIR }}'
+      - unzip -q -d '{{ .MOD_INSTALL_DIR }}' '{{ joinPath .PACKAGE_OUTPUT_DIR .PACKAGE_OUT_WIN }}'
       - >-
         cp --no-clobber '{{ .DLL_UV }}' '{{ .DLL_ZLIB }}'
         '{{ joinPath .SATISFACTORY_MOD_DIR .PROJECT_NAME "Binaries/Win64" }}'
