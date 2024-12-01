@@ -649,6 +649,9 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getWorldInv", true, false, &AFicsitRemoteMonitoring::getWorldInv);
 	RegisterEndpoint("getResearchTrees", true, true, &AFicsitRemoteMonitoring::getResearchTrees);
 
+	// event endpoints
+	RegisterEndpoint("getFallingGiftBundles", true, true, &AFicsitRemoteMonitoring::getFallingGiftBundles);
+
 	//FRM API Endpoint Groups
 	RegisterEndpoint("getAll", false, false, &AFicsitRemoteMonitoring::getAll);
 	RegisterEndpoint("getFactory", true, false, &AFicsitRemoteMonitoring::getFactory);
