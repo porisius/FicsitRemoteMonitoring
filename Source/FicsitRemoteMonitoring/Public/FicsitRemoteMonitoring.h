@@ -50,6 +50,7 @@
 #include "Async/Async.h"
 #include "Misc/Paths.h"
 #include "FGResearchTreeNode.h"
+#include "FRM_Events.h"
 #include "FRM_RequestData.h"
 
 THIRD_PARTY_INCLUDES_START
@@ -269,6 +270,10 @@ public:
 	
 	void getResearchTrees(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 		OutJsonArray = UFRM_World::GetResearchTrees(WorldContext);
+	}
+	
+	void getFallingGiftBundles(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+		OutJsonArray = UFRM_Events::GetFallingGiftBundles(WorldContext);
 	}
 	
 	void getDrone(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
