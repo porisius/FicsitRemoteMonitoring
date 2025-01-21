@@ -96,7 +96,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, F
 			auto ProdCycle = 60 / Manufacturer->GetProductionCycleTimeForRecipe(Manufacturer->GetCurrentRecipe());
 			auto CurrentPotential = Manufacturer->GetCurrentPotential();
 			Productivity = Manufacturer->GetProductivity();
-			auto ProductionBoost = Manufacturer->mProductionShardBoostMultiplier;
+			auto ProductionBoost = Manufacturer->mCurrentProductionBoost;
 						
 			//UE_LOGFMT(LogFRMAPI, Warning, "Loading FGRecipe {Recipe} to get data.", UKismetSystemLibrary::GetClassDisplayName(CurrentRecipe->GetClass()));
 
