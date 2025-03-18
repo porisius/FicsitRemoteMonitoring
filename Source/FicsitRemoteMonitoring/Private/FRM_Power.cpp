@@ -196,7 +196,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 
 	for (AFGBuildable* Buildable : Buildables) {
 
-		TSharedPtr<FJsonObject> JGenerator = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JGenerator = UFRM_Library::CreateBaseJsonObject(Buildable);
 
 		AFGBuildableGenerator* Generator = Cast<AFGBuildableGenerator>(Buildable);
 		AFGBuildableGeneratorFuel* GeneratorFuel = Cast<AFGBuildableGeneratorFuel>(Buildable);
@@ -331,7 +331,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Power::getPowerUsage(UObject* WorldContext)
 {
-
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 	TArray<AFGBuildableFactory*> BuildableFactories;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableFactory>(BuildableFactories);
@@ -340,10 +339,11 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getPowerUsage(UObject* WorldContext)
 
 	for (AFGBuildableFactory* BuildableFactory : BuildableFactories)
 	{
-		TSharedPtr<FJsonObject> JUsage = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JUsage = UFRM_Library::CreateBaseJsonObject(BuildableFactory);
 
 		JUsage->Values.Add("Name", MakeShared<FJsonValueString>(BuildableFactory->mDisplayName.ToString()));
 		JUsage->Values.Add("ClassName", MakeShared<FJsonValueString>(BuildableFactory->GetClass()->GetName()));
+		JUsage->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(BuildableFactory)));
 		JUsage->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(BuildableFactory->GetPowerInfo())));
 
 		JUsageArray.Add(MakeShared<FJsonValueObject>(JUsage));		
