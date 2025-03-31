@@ -525,7 +525,6 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
             UE_LOG(LogHttpServer, Log, TEXT("Binary File Found Returning: %s"), *FilePath);
 
             res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
-            res->writeHeader("Content-Length", contentLength.c_str());
             UFRM_RequestLibrary::AddResponseHeaders(res, false);
             res->write(std::string_view((char*)BinaryContent.GetData(), BinaryContent.Num()));
             res->end();
