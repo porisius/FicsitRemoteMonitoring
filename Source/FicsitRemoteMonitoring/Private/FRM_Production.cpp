@@ -22,7 +22,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldConte
 			auto ProdCycle = UKismetMathLibrary::SafeDivide(60, Manufacturer->GetProductionCycleTimeForRecipe(Manufacturer->GetCurrentRecipe()));
 			auto CurrentPotential = Manufacturer->GetCurrentPotential();
 			auto Productivity = Manufacturer->GetProductivity();
-			auto ProductionBoost = Manufacturer->mProductionShardBoostMultiplier;
+			auto ProductionBoost = Manufacturer->mCurrentProductionBoost;
 			
 			for (FItemAmount Product : CurrentRecipe.GetDefaultObject()->GetProducts()) {
 

@@ -47,4 +47,5 @@ public:
 
 	friend class AFGRecipeManager;
 	friend class AFGSchematicManager;
+	friend class AFGBuildableFactory;
 };
