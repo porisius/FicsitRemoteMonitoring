@@ -659,7 +659,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint("getVehicles", true, false, &AFicsitRemoteMonitoring::getVehicles);
 
 	// post/write endpoints
-	RegisterPostEndpoint("setSwitches", true, true, &AFicsitRemoteMonitoring::setSwitches);
+	RegisterPostEndpoint("setSwitches", false, true, &AFicsitRemoteMonitoring::setSwitches);
 }
 
 void AFicsitRemoteMonitoring::InitOutageNotification() {
