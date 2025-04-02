@@ -207,7 +207,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getSinkList(UObject* WorldContex
 		}
 
 		JSinkRow->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(SinkRow->ItemClass).ToString()));
-		JSinkRow->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(SinkRow->ItemClass->GetClass())));
+		JSinkRow->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(SinkRow->ItemClass)));
 		JSinkRow->Values.Add("Points", MakeShared<FJsonValueNumber>(SinkPoints));
 		JSinkRow->Values.Add("PointsOverride", MakeShared<FJsonValueNumber>(SinkOverridden));
 
