@@ -271,6 +271,11 @@ public:
 	void getResearchTrees(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 		OutJsonArray = UFRM_World::GetResearchTrees(WorldContext);
 	}
+
+	void SendChatMessage(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+	{
+		OutJsonArray = UFRM_World::SendChatMessage(WorldContext, RequestData);
+	}
 	
 	void getFallingGiftBundles(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 		OutJsonArray = UFRM_Events::GetFallingGiftBundles(WorldContext);

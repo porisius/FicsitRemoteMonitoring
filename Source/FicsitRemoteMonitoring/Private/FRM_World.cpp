@@ -3,6 +3,8 @@
 #include "FGSchematicCategory.h"
 #include <FicsitRemoteMonitoring.h>
 
+#include "FRM_Request.h"
+
 TArray<TSharedPtr<FJsonValue>> UFRM_World::GetResearchTrees(UObject* WorldContext)
 {
 	TArray<TSharedPtr<FJsonValue>> JResearchTrees;
@@ -96,4 +98,74 @@ TArray<TSharedPtr<FJsonValue>> UFRM_World::GetResearchTrees(UObject* WorldContex
 	}
 
 	return JResearchTrees;
+}
+
+TArray<TSharedPtr<FJsonValue>> UFRM_World::SendChatMessage(UObject* WorldContext, FRequestData RequestData)
+{
+	TArray<TSharedPtr<FJsonValue>> JResponses;
+	if (RequestData.Body.Num() == 0) return JResponses;
+
+	UWorld* World = WorldContext->GetWorld();
+	AFGChatManager* ChatManager = AFGChatManager::Get(World);
+
+	for (const auto& BodyObject : RequestData.Body)
+	{
+		auto JsonObject = BodyObject->AsObject();
+
+		if (!JsonObject->HasField("message"))
+		{
+			const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("Missing field message.");
+			JResponses.Add(MakeShared<FJsonValueObject>(JResponse));
+			continue;
+		}
+
+		FLinearColor Color = FLinearColor::White;
+		FString Message;
+		bool bIsAda;
+
+		JsonObject->TryGetStringField("message", Message);
+		JsonObject->TryGetBoolField("is_ada", bIsAda);
+
+		if (JsonObject->HasField("color"))
+		{
+			const TSharedPtr<FJsonObject>* JsonColor;
+			JsonObject->TryGetObjectField("color", JsonColor);
+			if (!JsonColor || !JsonColor->IsValid())
+			{
+				const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("Field \"color\" is invalid.");
+				JResponses.Add(MakeShared<FJsonValueObject>(JResponse));
+				continue;
+			}
+
+			float r = 1.f;
+			float g = 1.f;
+			float b = 1.f;
+			float a = 1.f;
+			JsonColor->Get()->TryGetNumberField("r", r);
+			JsonColor->Get()->TryGetNumberField("g", g);
+			JsonColor->Get()->TryGetNumberField("b", b);
+			JsonColor->Get()->TryGetNumberField("a", a);
+
+			Color = FLinearColor(r, g, b, a);
+		}
+
+		FChatMessageStruct MessageStruct;
+		MessageStruct.MessageString = Message;
+		MessageStruct.MessageType = EFGChatMessageType::CMT_SystemMessage;
+
+		if (bIsAda)
+		{
+			MessageStruct.MessageType = EFGChatMessageType::CMT_AdaMessage;
+		}
+
+		MessageStruct.ServerTimeStamp = World->TimeSeconds;
+		MessageStruct.CachedColor = Color;
+		ChatManager->Multicast_BroadcastChatMessage(MessageStruct);
+
+		TSharedPtr<FJsonObject> JResponse = MakeShared<FJsonObject>();
+		JResponse->Values.Add("Message", MakeShared<FJsonValueString>(MessageStruct.MessageString));
+		JResponses.Add(MakeShared<FJsonValueObject>(JResponse));
+	}
+
+	return JResponses;
 }

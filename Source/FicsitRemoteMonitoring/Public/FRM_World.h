@@ -4,6 +4,8 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "FRM_World.generated.h"
 
+struct FRequestData;
+
 UCLASS()
 class FICSITREMOTEMONITORING_API UFRM_World : public UBlueprintFunctionLibrary
 {
@@ -11,5 +13,5 @@ class FICSITREMOTEMONITORING_API UFRM_World : public UBlueprintFunctionLibrary
 
 public:
 	static TArray<TSharedPtr<FJsonValue>> GetResearchTrees(UObject* WorldContext);
-	
+	static TArray<TSharedPtr<FJsonValue>> SendChatMessage(UObject* WorldContext, FRequestData RequestData);
 };
