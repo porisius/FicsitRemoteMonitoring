@@ -672,6 +672,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 
 	// post/write endpoints
 	RegisterPostEndpoint("setSwitches", false, true, &AFicsitRemoteMonitoring::setSwitches);
+	RegisterPostEndpoint("sendChatMessage", false, true, &AFicsitRemoteMonitoring::SendChatMessage);
 }
 
 void AFicsitRemoteMonitoring::InitOutageNotification() {
