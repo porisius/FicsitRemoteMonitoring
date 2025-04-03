@@ -5,7 +5,7 @@
 |Resource|Endpoint|Description
 
 | Factory
-| setSwitches
+| xref:json/Write/setSwitches.adoc[setSwitches]
 | Updates settings of a power switch (Name, Status, Priority).
 
 |===

@@ -110,8 +110,7 @@
 **** xref:json/Write/sendChatMessage.adoc[sendChatMessage]
 
 *** Factory
-**** setSwitches (soon)
+**** xref:json/Write/setSwitches.adoc[setSwitches]
 
 *** World
 **** xref:json/Write/createPing.adoc[createPing]
-
