@@ -1,57 +1,22 @@
 #pragma once
 
-#include <thread>
-#include <atomic>
-
-#include "CoreMinimal.h"
-#include "Engine.h"
-#include "EngineUtils.h"
-#include "Misc/OutputDevice.h"
-#include "Misc/OutputDeviceDebug.h"
-#include "HAL/PlatformFileManager.h"
-#include "UObject/NoExportTypes.h"
-#include "Async/Async.h"
-#include "Templates/Function.h"  // Required for function pointers
-//#include "FactoryDedicatedServer/Public/FGServerSubsystem.h"
-//#include "FactoryDedicatedServer/Public/Networking/FGServerAPIManager.h"
+#include "FGBuildableGenerator.h"
+#include "FGBuildableManufacturer.h"
+#include "FGResourceNodeFrackingCore.h"
+#include "FGResourceNodeFrackingSatellite.h"
+#include "FGResourceSinkSubsystem.h"
+#include "FGWheeledVehicle.h"
 #include "FRM_Drones.h"
+#include "FRM_Events.h"
 #include "FRM_Factory.h"
 #include "FRM_Player.h"
-#include "FRM_World.h"
 #include "FRM_Power.h"
 #include "FRM_Production.h"
+#include "FRM_RequestData.h"
 #include "FRM_Trains.h"
 #include "FRM_Vehicles.h"
-#include "Misc/EnumRange.h"
-#include "JsonObjectWrapper.h"
-#include "FicsitRemoteMonitoringModule.h"
-#include "Json.h"
-#include "Misc/FileHelper.h"
-#include "Kismet/BlueprintFunctionLibrary.h"
-#include "Kismet/BlueprintAsyncActionBase.h"
-#include "ModLoading/ModLoadingLibrary.h"
-#include "Kismet/KismetStringLibrary.h"
-#include "Logging/StructuredLog.h"
-#include "Configs/Config_HTTPStruct.h"
-#include "Configs/Config_SerialStruct.h"
-#include "Configs/Config_DiscITStruct.h"
-#include "Patching/NativeHookManager.h"
-#include "FGResearchManager.h"
-#include "FGRecipeManager.h"
-#include "FGSchematicManager.h"
-#include "Resources/FGItemDescriptor.h"
-#include "FGDropPod.h"
-#include "Subsystem/SubsystemActorManager.h"
-#include "Subsystem/ModSubsystem.h"
-#include "NotificationLoader.h"
-#include "Misc/OutputDevice.h"
-#include "Misc/ScopeLock.h"
-#include "HAL/PlatformProcess.h"
-#include "Async/Async.h"
-#include "Misc/Paths.h"
-#include "FGResearchTreeNode.h"
-#include "FRM_Events.h"
-#include "FRM_RequestData.h"
+#include "FRM_World.h"
+#include "ModSubsystem.h"
 
 THIRD_PARTY_INCLUDES_START
 #include "ThirdParty/uWebSockets/App.h"
@@ -114,7 +79,7 @@ private:
 
 	TFuture<void> WebServer;
 	
-	bool JSONDebugMode;
+	bool JSONDebugMode = false;
 	
 	friend class UFGPowerCircuitGroup;
 

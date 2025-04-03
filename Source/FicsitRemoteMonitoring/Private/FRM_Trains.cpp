@@ -1,9 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "FRM_Trains.h"
 
+#include "FGBuildableRailroadStation.h"
+#include "FGBuildableTrainPlatform.h"
+#include "FGBuildableTrainPlatformCargo.h"
+#include "FGFreightWagon.h"
+#include "FGLocomotive.h"
+#include "FGRailroadSubsystem.h"
+#include "FGRailroadTimeTable.h"
+#include "FGTrain.h"
+#include "FGTrainPlatformConnection.h"
+#include "FGTrainStationIdentifier.h"
+#include "FRM_Library.h"
 #include "FRM_RequestData.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 
@@ -272,7 +283,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 		JTrainStation->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(TrainStation->GetStation()->GetPowerInfo())));
 
 		JTrainStationArray.Add(MakeShared<FJsonValueObject>(JTrainStation));
-	};
+	}
 
 	return JTrainStationArray;
 };
@@ -306,8 +317,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainRails(UObject* WorldContext,
 		JRailroadTrack->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::GetActorLineFeaturesJSON(PointZero, PointOne, RailroadTrack->mDisplayName.ToString(), RailroadTrack->mDisplayName.ToString())));
 
 		JRailroadTrackArray.Add(MakeShared<FJsonValueObject>(JRailroadTrack));
-
-	};
+	}
 
 	return JRailroadTrackArray;
 };
