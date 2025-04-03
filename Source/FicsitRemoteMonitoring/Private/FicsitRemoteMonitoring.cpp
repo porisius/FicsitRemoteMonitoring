@@ -1,13 +1,26 @@
 #include "FicsitRemoteMonitoring.h"
+
+#include "Config_DiscITStruct.h"
+#include "Config_FactoryStruct.h"
+#include "Config_HTTPStruct.h"
+#include "Config_SerialStruct.h"
+#include "EngineUtils.h"
+#include "FGPowerCircuit.h"
+#include "FicsitRemoteMonitoringModule.h"
 #include "Async/Async.h"
 #include "FRM_Request.h"
+#include "NativeHookManager.h"
+#include "NotificationLoader.h"
+#include "StructuredLog.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetStringLibrary.h"
 
 us_listen_socket_t* SocketListener;
 bool SocketRunning = false;
 
 AFicsitRemoteMonitoring* AFicsitRemoteMonitoring::Get(UWorld* WorldContext)
 {
-	for (TActorIterator<AFicsitRemoteMonitoring> It(WorldContext, AFicsitRemoteMonitoring::StaticClass(), EActorIteratorFlags::AllActors); It; ++It) {
+	for (TActorIterator<AFicsitRemoteMonitoring> It(WorldContext, StaticClass(), EActorIteratorFlags::AllActors); It; ++It) {
 		AFicsitRemoteMonitoring* CurrentActor = *It;
 		return CurrentActor;
 	};
@@ -662,11 +675,9 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 }
 
 void AFicsitRemoteMonitoring::InitOutageNotification() {
-
-	auto World = GetWorld();
-
 	#if !WITH_EDITOR
 
+	auto World = GetWorld();
 	SUBSCRIBE_UOBJECT_METHOD_AFTER(UFGPowerCircuitGroup, OnFuseSet, [World](UFGPowerCircuitGroup* PowerGroup)
 		{
 
@@ -707,7 +718,6 @@ void AFicsitRemoteMonitoring::InitOutageNotification() {
 		});
 
 	#endif
-
 }
 
 void AFicsitRemoteMonitoring::RegisterPostEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FEndpointFunction FunctionPtr)

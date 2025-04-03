@@ -2,14 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "FGBuildableSubsystem.h"
-#include "Buildables\FGBuildableDroneStation.h"
-#include "FGCircuitSubsystem.h"
-#include "FRM_Library.h"
 #include "FGDroneStationInfo.h"
-#include "FGBlueprintFunctionLibrary.h"
 #include "FRM_Drones.generated.h"
+
+class AFGBuildableDroneStation;
 
 /**
  * 

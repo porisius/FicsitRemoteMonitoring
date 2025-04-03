@@ -2,10 +2,19 @@
 
 #include "FRM_Power.h"
 
+#include "FGBuildableGenerator.h"
+#include "FGBuildableGeneratorGeoThermal.h"
+#include "FGBuildableGeneratorNuclear.h"
 #include "FGBuildablePriorityPowerSwitch.h"
+#include "FGCircuitConnectionComponent.h"
+#include "FGCircuitSubsystem.h"
+#include "FGInventoryLibrary.h"
+#include "FGPowerInfoComponent.h"
 #include "FicsitRemoteMonitoring.h"
+#include "FRM_Library.h"
 #include "FRM_Request.h"
 #include "FRM_RequestData.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 #undef GetForm
 

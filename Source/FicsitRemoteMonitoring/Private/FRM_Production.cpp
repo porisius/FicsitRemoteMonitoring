@@ -1,7 +1,18 @@
 #include "FRM_Production.h"
-#include <FicsitRemoteMonitoring.h>
 
-#include "FGPowerShardDescriptor.h"
+#include "FGBuildableGeneratorFuel.h"
+#include "FGBuildableResourceExtractor.h"
+#include "FGInventoryLibrary.h"
+#include "FGResourceSinkSettings.h"
+#include "FGResourceSinkSubsystem.h"
+#include "FGSchematicManager.h"
+#include "FicsitRemoteMonitoring.h"
+#include "FicsitRemoteMonitoringModule.h"
+#include "FRM_Library.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
+
+class AFGBuildableResourceExtractor;
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Production::getProdStats(UObject* WorldContext) {
 

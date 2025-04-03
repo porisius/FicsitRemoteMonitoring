@@ -1,20 +1,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Kismet/BlueprintFunctionLibrary.h"
-#include "Kismet/KismetSystemLibrary.h"
-#include "FicsitRemoteMonitoringModule.h"
 #include "FGBlueprintFunctionLibrary.h"
-#include <FRM_Library.h>
-#include <FGInventoryLibrary.h>
-#include "FGCircuitConnectionComponent.h"
-#include <Buildables/FGBuildableCircuitSwitch.h>
-#include "Buildables\FGBuildableGeneratorGeoThermal.h"
-#include "Buildables\FGBuildableGeneratorNuclear.h"
-#include "FGPowerCircuit.h"
-#include "FGCircuitSubsystem.h"
-#include "FRM_RequestData.h"
 #include "FRM_Power.generated.h"
+
+struct FRequestData;
 
 UCLASS()
 class FICSITREMOTEMONITORING_API UFRM_Power : public UFGBlueprintFunctionLibrary

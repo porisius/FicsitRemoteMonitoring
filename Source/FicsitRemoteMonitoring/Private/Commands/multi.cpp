@@ -1,7 +1,14 @@
 #include "Commands/multi.h"
-#include <regex>
 
-FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, class UCommandSender* Sender, TArray<FString> Arguments) {
+#include "Config_HTTPStruct.h"
+#include "Config_SerialStruct.h"
+#include "FicsitRemoteMonitoring.h"
+#include "FicsitRemoteMonitoringModule.h"
+#include "NotificationLoader.h"
+#include "StructuredLog.h"
+#include "Kismet/KismetSystemLibrary.h"
+
+FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommandSender* Sender, TArray<FString> Arguments) {
 	FChatReturn ChatReturn;
 
 	ChatReturn.Color = FLinearColor::Red;

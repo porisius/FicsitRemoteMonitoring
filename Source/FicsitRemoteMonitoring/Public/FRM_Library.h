@@ -1,17 +1,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Kismet/BlueprintFunctionLibrary.h"
-#include "Configs/Config_FactoryStruct.h"
 #include "FGBlueprintFunctionLibrary.h"
-#include "FicsitRemoteMonitoringModule.h"
-#include "FGBuildableSubsystem.h"
-#include "Buildables\FGBuildableManufacturer.h"
-#include "FGPowerInfoComponent.h"
-#include "Serialization/JsonWriter.h"
-#include "Json.h"
-#include "JsonUtilities.h"
 #include "FRM_Library.generated.h"
+
+class UFGPowerInfoComponent;
+class UFGFactoryConnectionComponent;
+class UFGPipeConnectionComponent;
+class UFGInventoryComponent;
 
 UCLASS()
 class FICSITREMOTEMONITORING_API UFRM_Library : public UFGBlueprintFunctionLibrary

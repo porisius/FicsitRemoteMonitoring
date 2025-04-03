@@ -2,6 +2,10 @@
 
 #include "FRM_Drones.h"
 
+#include "FGBuildableDroneStation.h"
+#include "FRM_Library.h"
+#include "Kismet/GameplayStatics.h"
+
 FString UFRM_Drones::getDronePortName(AFGBuildableDroneStation* DroneStation) {
 	AFGDroneStationInfo* StationInfo = DroneStation->GetInfo();
 	return StationInfo->Execute_GetBuildingTag(StationInfo);
@@ -54,8 +58,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 		};
 
 		FString PairedStation = "None";
-		if (StationInfo->GetPairedStation() != nullptr) {
-			PairedStation = UFRM_Drones::getDronePortName(StationInfo->GetPairedStation()->GetStation());
+		AFGDroneStationInfo* DroneStationInfo = StationInfo->GetPairedStation();
+		if (DroneStationInfo != nullptr) {
+			PairedStation = getDronePortName(DroneStationInfo->GetStation());
 		};
 
 		TSharedPtr<FJsonObject> JActiveFuel = MakeShared<FJsonObject>();
@@ -132,7 +137,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDrone(UObject* WorldContext) {
 	for (AActor* FoundActor : FoundActors) {
 		AFGDroneVehicle* Drone = Cast<AFGDroneVehicle>(FoundActor);
 		TSharedPtr<FJsonObject> JDrone = UFRM_Library::CreateBaseJsonObject(Drone);
-		EDroneFlyingMode Form = Drone->GetDroneMovementComponent()->GetFlyingMode();
+		const UFGDroneMovementComponent* DroneMovementComponent = Drone->GetDroneMovementComponent();
+		const EDroneFlyingMode Form = DroneMovementComponent->GetFlyingMode();
 
 		FString FormString = "Unknown";
 		if (Form == EDroneFlyingMode::DFM_Flying) {
@@ -143,28 +149,32 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDrone(UObject* WorldContext) {
 		}
 		else if (Form == EDroneFlyingMode::DFM_Travel) {
 			FormString = "Travelling";
-		};
+		}
 
 		FString Destination = "No Destination";
 		AFGBuildableDroneStation* CurrentDestination = Drone->GetCurrentDestinationStation();
 
 		if (IsValid(CurrentDestination)) {
-			Destination = UFRM_Drones::getDronePortName(CurrentDestination);
-		}; 
+			Destination = getDronePortName(CurrentDestination);
+		}
 
+		bool bHasPairedStation = false;
 		FString PairedStation = "None";
 		if (Drone->GetHomeStation()->GetInfo()->GetPairedStation() != nullptr) {
-			PairedStation = UFRM_Drones::getDronePortName(Drone->GetHomeStation()->GetInfo()->GetPairedStation()->GetStation());
-		};
+			bHasPairedStation = true;
+			PairedStation = getDronePortName(Drone->GetHomeStation()->GetInfo()->GetPairedStation()->GetStation());
+		}
 
 		JDrone->Values.Add("Name", MakeShared<FJsonValueString>(Drone->mDisplayName.ToString()));
 		JDrone->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Drone->GetClass())));
-		JDrone->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Drone)));
-		JDrone->Values.Add("HomeStation", MakeShared<FJsonValueString>(UFRM_Drones::getDronePortName(Drone->GetHomeStation())));
+		JDrone->Values.Add("HomeStation", MakeShared<FJsonValueString>(getDronePortName(Drone->GetHomeStation())));
 		JDrone->Values.Add("PairedStation", MakeShared<FJsonValueString>(PairedStation));
+		JDrone->Values.Add("HasPairedStation", MakeShared<FJsonValueBoolean>(bHasPairedStation));
 		JDrone->Values.Add("CurrentDestination", MakeShared<FJsonValueString>(Destination));
-		JDrone->Values.Add("FlyingSpeed", MakeShared<FJsonValueNumber>(Drone->GetDroneMovementComponent()->GetVelocity().Length()));
+		JDrone->Values.Add("FlyingSpeed", MakeShared<FJsonValueNumber>(DroneMovementComponent->GetVelocity().Length() * 0.036));
+		JDrone->Values.Add("MaxSpeed", MakeShared<FJsonValueNumber>(DroneMovementComponent->GetMaxSpeed() * 0.036));
 		JDrone->Values.Add("CurrentFlyingMode", MakeShared<FJsonValueString>(FormString));
+		JDrone->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Drone)));
 		JDrone->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Drone, Drone->mDisplayName.ToString(), "Drone")));
 
 		JDroneArray.Add(MakeShared<FJsonValueObject>(JDrone));

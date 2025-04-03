@@ -1,5 +1,10 @@
 #include "FRM_Vehicles.h"
 
+#include "FGBuildableDockingStation.h"
+#include "FGWheeledVehicleInfo.h"
+#include "FRM_Library.h"
+#include "Kismet/KismetSystemLibrary.h"
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getTruckStation(UObject* WorldContext) {
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
