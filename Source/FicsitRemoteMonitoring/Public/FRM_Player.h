@@ -3,10 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Kismet/BlueprintFunctionLibrary.h"
-#include "FGCharacterPlayer.h"
-#include "FGPlayerState.h"
-#include "FRM_Library.h"
 #include "FRM_Player.generated.h"
 
 /**

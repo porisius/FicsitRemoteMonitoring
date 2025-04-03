@@ -1,7 +1,9 @@
 ﻿#include "FRM_World.h"
 #include "FGResearchTree.h"
 #include "FGSchematicCategory.h"
-#include <FicsitRemoteMonitoring.h>
+#include "FGResearchManager.h"
+#include "FicsitRemoteMonitoring.h"
+#include "FRM_Library.h"
 
 TArray<TSharedPtr<FJsonValue>> UFRM_World::GetResearchTrees(UObject* WorldContext)
 {

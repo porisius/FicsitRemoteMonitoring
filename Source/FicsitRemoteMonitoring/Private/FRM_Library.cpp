@@ -1,8 +1,15 @@
-
 #include "FRM_Library.h"
 
-#include "FGCircuitConnectionComponent.h"
+#include "Config_FactoryStruct.h"
+#include "FGFactoryConnectionComponent.h"
+#include "FGPipeConnectionComponent.h"
+#include "FGPowerCircuit.h"
+#include "FGPowerInfoComponent.h"
+#include "FGResourceNode.h"
+#include "FicsitRemoteMonitoringModule.h"
 #include "FRM_Factory.h"
+#include "StructuredLog.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 TSharedPtr<FJsonObject> UFRM_Library::getActorJSON(AActor* Actor) {
 
@@ -340,9 +347,11 @@ TSharedPtr<FJsonObject> UFRM_Library::getPowerConsumptionJSON(UFGPowerInfoCompon
 			MaxPowerConsumed = PowerInfo->GetMaximumTargetConsumption();
 		}
 	}
+
 	JCircuit->Values.Add("CircuitGroupID", MakeShared<FJsonValueNumber>(CircuitGroupID));
 	JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
 	JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerConsumed));
 	JCircuit->Values.Add("MaxPowerConsumed", MakeShared<FJsonValueNumber>(MaxPowerConsumed));
+
 	return JCircuit;
 };

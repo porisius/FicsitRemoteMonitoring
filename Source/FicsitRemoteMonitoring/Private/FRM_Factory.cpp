@@ -1,10 +1,38 @@
 #include "FRM_Factory.h"
-#include "FGTimeSubsystem.h"
-#include <FicsitRemoteMonitoring.h>
 
+#include "FGBuildableConveyorBase.h"
+#include "FGBuildableFrackingActivator.h"
+#include "FGBuildableHubTerminal.h"
+#include "FGBuildableManufacturer.h"
+#include "FGBuildablePipeline.h"
+#include "FGBuildablePipelinePump.h"
+#include "FGBuildablePortal.h"
+#include "FGBuildablePortalSatellite.h"
+#include "FGBuildableRadarTower.h"
+#include "FGBuildableResourceExtractor.h"
+#include "FGBuildableResourceSink.h"
+#include "FGBuildableSpaceElevator.h"
+#include "FGBuildableStorage.h"
+#include "FGBuildableSubsystem.h"
 #include "FGBuildableWire.h"
+#include "FGCentralStorageSubsystem.h"
+#include "FGDropPod.h"
+#include "FGGameState.h"
+#include "FGInventoryLibrary.h"
+#include "FGItemPickup.h"
+#include "FGPipeConnectionComponent.h"
+#include "FGPipeHyperStart.h"
+#include "FGSchematicManager.h"
+#include "FGTimeSubsystem.h"
+#include "FRM_Library.h"
+#include "FRM_Production.h"
+#include "FRM_RequestData.h"
+#include "ModLoadingLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
-#undef GetForm
+//#undef GetForm // required?
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, FRequestData RequestData) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
@@ -406,9 +434,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext, F
 		int32 ItemAmount = -1;
 		float PowerRequired = 0;
 
-		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
-		fgcheck(ModSubsystem);
-
 		FFGDropPodUnlockCost DropPodCost = DropPod->GetUnlockCost();
 
 		FString JItemName = "No Item";
@@ -482,9 +507,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 		JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UKismetMathLibrary::SafeDivide(CurrentProd, MaxProd)))));
 
 		JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
-
-		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
-		fgcheck(ModSubsystem);
 
 		JExtractor->Values.Add("Name", MakeShared<FJsonValueString>(Extractor->mDisplayName.ToString()));
 		JExtractor->Values.Add("ClassName", MakeShared<FJsonValueString>(Extractor->GetClass()->GetName()));

@@ -4,30 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "Kismet/KismetSystemLibrary.h"
-#include "FGBuildableSubsystem.h"
-#include "Buildables\FGBuildableFactory.h"
-#include "Buildables\FGBuildableManufacturer.h"
-#include "FGInventoryLibrary.h"
-#include "FGInventoryComponent.h"
-#include "FGPowerCircuit.h"
-#include "Resources/FGItemDescriptor.h"
-#include "FGRecipe.h"
-#include "FGBlueprintFunctionLibrary.h"
-#include "FGResourceSinkSettings.h"
-#include "FGResourceSinkSubsystem.h"
-#include "FGRecipeManager.h"
-#include "Unlocks/FGUnlockRecipe.h"
-#include "FGSchematicManager.h"
-#include "FGCategory.h"
-#include "Engine/DataTable.h"
-#include "Buildables\FGBuildableResourceExtractor.h"
-#include "Buildables\FGBuildableGenerator.h"
-#include <Buildables/FGBuildableGeneratorFuel.h>
-#include <Buildables/FGBuildableGeneratorNuclear.h>
-#include "FGItemPickup.h"
-#include "FRM_Library.h"
 #include "FRM_Production.generated.h"
+
+enum class EResourceSinkTrack : uint8;
+class UFGRecipe;
 
 /**
  * 
