@@ -1,0 +1,11 @@
+﻿List of all write endpoints:
+
+[cols="1,1,2"]
+|===
+|Resource|Endpoint|Description
+
+| Factory
+| setSwitches
+| Updates settings of a power switch (Name, Status, Priority).
+
+|===

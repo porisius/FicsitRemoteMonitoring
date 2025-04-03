@@ -1,29 +1,10 @@
-= JSON Table
+= API (Write)
 
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
 [WARNING]
 ====
-These endpoints are new and not yet documented.
+Some endpoints are new and not yet documented.
 ====
 
-List of all write endpoints:
-
-[cols="1,1,2"]
-|===
-|Resource|Endpoint|Description
-
-| Chat
-| xref:json/Write/sendChatMessage.adoc[sendChatMessage]
-| Sends a chat message to all players.
-
-| Factory
-| setSwitches
-| Updates settings of a power switch (Name, Status, Priority).
-
-| World
-| xref:json/Write/createPing.adoc[createPing]
-| Creates a world ping.
-
-
-|===
+include::../_write.adoc[]

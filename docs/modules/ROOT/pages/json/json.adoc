@@ -1,3 +1,12 @@
-= JSON Table
+= API
 
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
+
+[WARNING]
+====
+Some endpoints are new and not yet documented.
+====
+
+include::_read.adoc[]
+
+include::_write.adoc[]
