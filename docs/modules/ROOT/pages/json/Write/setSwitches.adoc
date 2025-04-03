@@ -1,0 +1,61 @@
+﻿:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= setSwitches
+
+Updates a (Priority) Power Switch.
+
+== URL
+
+`GET http://localhost:8080/setSwitches`
+
+All fields are optional, but you must specify at least one field.
+
+:responseBodyText: All fields are optional, only the updated fields and the ID field are included in the response body.
+:requestBodyText: All fields are optional (except ID), but at least one field must be specified. An array of objects can be passed to update multiple (Priority) Power Switches simultaneously.
+
+include::../_requestBody.adoc[]
+
+| ID | String | Yes | ID of the (Priority) Power Switch
+| name | String | No | Switch Name
+| priority | Integar | No | Priority Group (0-8). +
+*It only works for Priority Power Switches.*
+| status | Boolean | No | Switch Status (true = Enabled, false = Disabled).
+|===
+
+include::../_responseBody.adoc[]
+
+| ID | String | ID of the (Priority) Power Switch
+| Name | String | Updated Name.
+| Priority | Integar | Updated Priority.
+| Status | Boolean | Updated Status (true = Enabled, false = Disabled).
+|===
+
+== Example Request
+
+[source,bash]
+----
+curl -X POST 'http://localhost:8080/setSwitches' \
+-H 'Content-Type: application/json' \
+--data-raw '{ \
+  "ID":"Build_PriorityPowerSwitch_C_2147423102", \
+  "name": "My Power Switch", \
+  "priority": 1, \
+  "status": true \
+}'
+----
+
+== Example Response
+
+[source,json]
+----
+[
+  {
+    "ID": "Build_PriorityPowerSwitch_C_2147423102",
+    "Name": "My Power Switch",
+    "Status": true,
+    "Priority": 1
+  }
+]
+----
