@@ -32,7 +32,7 @@ include::../_responseBody.adoc[]
 
 [source,bash]
 ----
-curl -X POST 'http://localhost:8080/setSwitches' \
+curl -X POST 'http://localhost:8080/sendChatMessage' \
 -H 'Content-Type: application/json' \
 --data-raw '{ \
   "message": "Hello World :)", \
