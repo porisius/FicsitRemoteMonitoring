@@ -1,0 +1,52 @@
+﻿:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= sendChatMessage
+
+Sends a chat message to all players.
+
+== URL
+
+`GET http://localhost:8080/sendChatMessage`
+
+include::../_requestBody.adoc[]
+
+| message | String | Yes | The message to send.
+| sender | String | No | Sender's name. Empty for System, "ada" for A.D.A messages. + 
+*Maximum 32 characters*
+| color | Object | No | Color of the chat message.
+|   r | Float | No | Red channel intensity (0-1). Default: 1
+|   g | Float | No | Green channel intensity (0-1). Default: 1
+|   b | Float | No | Blue channel intensity (0-1). Default: 1
+|   a | Float | No | Alpha channel intensity (0-1). Default: 1
+|===
+
+include::../_responseBody.adoc[]
+
+| IsSent | Boolean | If the message passed all checks and was sent.
+| Message | String | The message sent to the chat.
+|===
+
+== Example Request
+
+[source,bash]
+----
+curl -X POST 'http://localhost:8080/setSwitches' \
+-H 'Content-Type: application/json' \
+--data-raw '{ \
+  "message": "Hello World :)", \
+}'
+----
+
+== Example Response
+
+[source,json]
+----
+[
+  {
+    "IsSent": true,
+    "Message": "Hello World :)"
+  }
+]
+----

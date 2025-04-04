@@ -17,4 +17,8 @@ List of all write endpoints:
 | setSwitches
 | Updates settings of a power switch (Name, Status, Priority).
 
+| Chat
+| xref:json/Write/sendChatMessage.adoc[sendChatMessage]
+| Sends a chat message to all players.
+
 |===

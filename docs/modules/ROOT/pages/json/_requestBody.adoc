@@ -1,0 +1,9 @@
+﻿== Request Body
+
+ifdef::requestBodyText[]
+{requestBodyText}
+endif::requestBodyText[]
+
+[cols="1,1,1,2"]
+|===
+|*Name*|*Type*|*Required?*|*Description*
