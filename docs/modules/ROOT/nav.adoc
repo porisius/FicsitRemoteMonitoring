@@ -105,5 +105,8 @@
 
 ** xref:json/Write/Write.adoc[Write]
 
+*** Chat
+**** xref:json/Write/sendChatMessage.adoc[sendChatMessage]
+
 *** Factory
 **** setSwitches (soon)
