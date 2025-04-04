@@ -13,12 +13,12 @@ List of all write endpoints:
 |===
 |Resource|Endpoint|Description
 
-| Factory
-| setSwitches
-| Updates settings of a power switch (Name, Status, Priority).
-
 | Chat
 | xref:json/Write/sendChatMessage.adoc[sendChatMessage]
 | Sends a chat message to all players.
+
+| Factory
+| setSwitches
+| Updates settings of a power switch (Name, Status, Priority).
 
 |===
