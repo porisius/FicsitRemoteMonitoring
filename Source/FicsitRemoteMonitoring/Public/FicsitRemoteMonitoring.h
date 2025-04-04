@@ -12,8 +12,6 @@
 #include "UObject/NoExportTypes.h"
 #include "Async/Async.h"
 #include "Templates/Function.h"  // Required for function pointers
-//#include "FactoryDedicatedServer/Public/FGServerSubsystem.h"
-//#include "FactoryDedicatedServer/Public/Networking/FGServerAPIManager.h"
 #include "FRM_Drones.h"
 #include "FRM_Factory.h"
 #include "FRM_Player.h"
@@ -56,6 +54,14 @@
 THIRD_PARTY_INCLUDES_START
 #include "ThirdParty/uWebSockets/App.h"
 THIRD_PARTY_INCLUDES_END
+
+#if WITH_DEDICATED_SERVER
+	#include "FactoryDedicatedServer/Public/FGServerSubsystem.h"
+	#include "FactoryDedicatedServer/Public/Networking/FGServerAPIManager.h"
+	#include "JsonUtilities.h"
+	#include "HttpServerRequest.h"
+	#include "IHttpRouter.h"
+#endif
 
 #include "FicsitRemoteMonitoring.generated.h"
 
@@ -120,11 +126,13 @@ private:
 
 public:
 
-	AFicsitRemoteMonitoring();
-	virtual ~AFicsitRemoteMonitoring();
-
+#if WITH_DEDICATED_SERVER
 	friend class UFGServerSubsystem;
 	friend class UFGServerAPIManager;
+#endif
+	
+	AFicsitRemoteMonitoring();
+	virtual ~AFicsitRemoteMonitoring();
 
 	/** Get the subsystem in the current world, can be nullptr, e.g. on game ending (destroy) or game startup. */
 	static AFicsitRemoteMonitoring* Get(UWorld* world);

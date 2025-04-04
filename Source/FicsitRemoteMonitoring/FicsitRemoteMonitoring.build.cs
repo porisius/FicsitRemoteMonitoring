@@ -63,9 +63,17 @@ public class FicsitRemoteMonitoring : ModuleRules
         // Add uWebSockets
         LoaduWebSockets(Target);
 
+        PublicDependencyModuleNames.Add("FactoryDedicatedServer");
+        
         if (Target.Type == TargetType.Server)
         {
-            PublicDependencyModuleNames.Add("FactoryDedicatedServer");
+            // Define WITH_DEDICATED_SERVER=1 only for server targets
+            
+            PublicDefinitions.Add("WITH_DEDICATED_SERVER=1");
+        } else
+        {
+            // Explicitly set WITH_DEDICATED_SERVER=0 for non-server builds to avoid warnings
+            PublicDefinitions.Add("WITH_DEDICATED_SERVER=0");
         }
 
         PublicDefinitions.Add("UWS_STATICLIB"); // If you're using the static version of uWS
