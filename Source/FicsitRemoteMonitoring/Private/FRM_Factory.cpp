@@ -32,8 +32,6 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
-//#undef GetForm // required?
-
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, FRequestData RequestData) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 
