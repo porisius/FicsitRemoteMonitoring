@@ -264,6 +264,11 @@ public:
 		OutJsonArray = UFRM_World::GetResearchTrees(WorldContext);
 	}
 
+	void GetChatMessages(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+	{
+		OutJsonArray = UFRM_World::GetChatMessages(WorldContext);
+	}
+	
 	void SendChatMessage(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
 	{
 		OutJsonArray = UFRM_World::SendChatMessage(WorldContext, RequestData);

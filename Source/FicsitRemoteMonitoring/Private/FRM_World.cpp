@@ -102,6 +102,47 @@ TArray<TSharedPtr<FJsonValue>> UFRM_World::GetResearchTrees(UObject* WorldContex
 	return JResearchTrees;
 }
 
+TArray<TSharedPtr<FJsonValue>> UFRM_World::GetChatMessages(UObject* WorldContext)
+{
+	TArray<TSharedPtr<FJsonValue>> JResponse;
+	TArray<FChatMessageStruct> Messages;
+
+	AFGChatManager::Get(WorldContext->GetWorld())->GetReceivedChatMessages(Messages);
+
+	for (const FChatMessageStruct& ChatMessage : Messages)
+	{
+		TSharedPtr<FJsonObject> JChatMessage = MakeShared<FJsonObject>();
+		JChatMessage->Values.Add("ServerTimeStamp", MakeShared<FJsonValueNumber>(ChatMessage.ServerTimeStamp));
+		JChatMessage->Values.Add("Sender", MakeShared<FJsonValueString>(ChatMessage.CachedPlayerName));
+
+		switch (ChatMessage.MessageType)
+		{
+		case EFGChatMessageType::CMT_SystemMessage:
+			JChatMessage->Values.Add("Type", MakeShared<FJsonValueString>(TEXT("System")));
+			break;
+		case EFGChatMessageType::CMT_AdaMessage:
+			JChatMessage->Values.Add("Type", MakeShared<FJsonValueString>(TEXT("Ada")));
+			break;
+		case EFGChatMessageType::CMT_PlayerMessage:
+			JChatMessage->Values.Add("Type", MakeShared<FJsonValueString>(TEXT("Player")));
+			break;
+		}
+
+		JChatMessage->Values.Add("Message", MakeShared<FJsonValueString>(ChatMessage.MessageString));
+
+		TSharedPtr<FJsonObject> JColor = MakeShared<FJsonObject>();
+		JColor->Values.Add("R", MakeShared<FJsonValueNumber>(ChatMessage.CachedColor.R));
+		JColor->Values.Add("G", MakeShared<FJsonValueNumber>(ChatMessage.CachedColor.G));
+		JColor->Values.Add("B", MakeShared<FJsonValueNumber>(ChatMessage.CachedColor.B));
+		JColor->Values.Add("A", MakeShared<FJsonValueNumber>(ChatMessage.CachedColor.A));
+		JChatMessage->Values.Add("Color", MakeShared<FJsonValueObject>(JColor));
+
+		JResponse.Add(MakeShared<FJsonValueObject>(JChatMessage));
+	}
+
+	return JResponse;
+}
+
 TArray<TSharedPtr<FJsonValue>> UFRM_World::SendChatMessage(UObject* WorldContext, FRequestData RequestData)
 {
 	TArray<TSharedPtr<FJsonValue>> JResponses;

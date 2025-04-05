@@ -13,5 +13,6 @@ class FICSITREMOTEMONITORING_API UFRM_World : public UBlueprintFunctionLibrary
 
 public:
 	static TArray<TSharedPtr<FJsonValue>> GetResearchTrees(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> GetChatMessages(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> SendChatMessage(UObject* WorldContext, FRequestData RequestData);
 };
