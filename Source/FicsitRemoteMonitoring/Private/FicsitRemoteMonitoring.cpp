@@ -46,35 +46,51 @@ void AFicsitRemoteMonitoring::BeginPlay()
     // Load FRM's API Endpoints
     InitAPIRegistry();
 
-    // If true, autostart web server/socket
-    auto WSconfig = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
-    bool WSStart = WSconfig.Web_Autostart;
+    // get config structs
+    auto HttpConfig = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
+    auto SerialConfig = FConfig_SerialStruct::GetActiveConfig(GetWorld());
 
-    // If true, autostart serial device
-    auto RSconfig = FConfig_SerialStruct::GetActiveConfig(GetWorld());
-    bool RSStart = RSconfig.COM_Autostart;
+    if (HttpConfig.Web_Autostart) { StartWebSocketServer(); }
+    if (SerialConfig.COM_Autostart) { InitSerialDevice(); }
 
-    if (WSStart) { StartWebSocketServer(); }
-    if (RSStart) { InitSerialDevice(); }	
+    UWorld* World = GetWorld();
 
-    //WebSocket Timer
-    UWorld* world = GetWorld();
-    auto config = FConfig_HTTPStruct::GetActiveConfig(world);
-
+	// generate new authentication token if no token is available
+	if (HttpConfig.Authentication_Token.IsEmpty())
+	{
+		HttpConfig.Authentication_Token = GenerateAuthToken(32);
+		UE_LOG(LogHttpServer, Warning, TEXT("Authentication Token not set, generated a new token: %s"), *HttpConfig.Authentication_Token);
+		HttpConfig.Save(World);
+	}
+	
     // store JSONDebugMode into a local property to prevent crash while access to GetActiveConfig while the EndPlay process
-    const auto FactoryConfig = FConfig_FactoryStruct::GetActiveConfig(world);
+    const auto FactoryConfig = FConfig_FactoryStruct::GetActiveConfig(World);
     JSONDebugMode = FactoryConfig.JSONDebugMode;
 
-    world->GetTimerManager().SetTimer(
+    World->GetTimerManager().SetTimer(
         TimerHandle,  // The timer handle
         this,         // The instance of the class
         &AFicsitRemoteMonitoring::PushUpdatedData,  // Pointer to member function
-        config.WebSocketPushCycle,        // Time interval in seconds
+        HttpConfig.WebSocketPushCycle,        // Time interval in seconds
         true          // Whether to loop the timer (true = repeating)
     );
 
 	// Register the callback to ensure WebSocket is stopped on crash/exit
 	FCoreDelegates::OnExit.AddUObject(this, &AFicsitRemoteMonitoring::StopWebSocketServer);
+}
+
+FString AFicsitRemoteMonitoring::GenerateAuthToken(const int32 Length)
+{
+	const FString Characters = TEXT("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+	const int32 CharactersCount = Characters.Len();
+
+	FString RandomString;
+	for (int32 i = 0; i < Length; ++i)
+	{
+		RandomString.AppendChar(Characters[FMath::RandRange(0, CharactersCount - 1)]);
+	}
+
+	return RandomString;
 }
 
 void AFicsitRemoteMonitoring::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -229,7 +245,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                 	UFRM_RequestLibrary::SendErrorJson(res, "404 Not Found", "");
                 });
 
-                app.get("/api/:APIEndpoint", [this, World](auto* res, auto* req) {
+                app.get("/api/:APIEndpoint", [this, World, config](auto* res, auto* req) {
                     std::string url(req->getParameter("APIEndpoint"));
                     FString Endpoint = FString(url.c_str());
 
@@ -237,6 +253,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     UE_LOGFMT(LogHttpServer, Log, "Request URL: {0}", Endpoint);
 
                 	FRequestData RequestData;
+                	RequestData.bIsAuthorized = IsAuthorizedRequest(req, config.Authentication_Token);
                     HandleApiRequest(World, res, req, Endpoint, RequestData);
                 });
 
@@ -248,12 +265,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
             		res->end();
             	});
             	
-            	app.post("/*", [this, World](auto* res, uWS::HttpRequest* req)
+            	app.post("/*", [this, World, config](auto* res, uWS::HttpRequest* req)
             	{
 		            const std::string URL(req->getUrl().begin(), req->getUrl().end());
 					FString RelativePath = FString(URL.c_str()).Mid(1);
 
-            		res->onData([this, res, req, World, RelativePath](const std::string_view data, bool)
+            		res->onData([this, res, req, World, RelativePath, config](const std::string_view data, bool)
             		{
 			            try
 			            {
@@ -268,6 +285,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
 			            	FRequestData RequestData;
 			            	RequestData.Method = "POST";
+			            	RequestData.bIsAuthorized = IsAuthorizedRequest(req, config.Authentication_Token);
 			            	
 			            	if (JsonValue->Type == EJson::Array)
 			            	{
@@ -294,7 +312,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
             		res->onAborted([]() {});
             	});
 
-                app.get("/*", [UIPath, this, World](auto* res, uWS::HttpRequest* req) {
+                app.get("/*", [this, UIPath, World, config](auto* res, uWS::HttpRequest* req) {
                     if (!res) return;
 
                     std::string url(req->getUrl().begin(), req->getUrl().end());
@@ -304,7 +322,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     FString RelativePath = FString(url.c_str()).Mid(1);
                     FString FilePath = FPaths::Combine(UIPath, RelativePath);
                     FString FileContent;
-                    bool IsBinary = false; // to flag non-text files (e.g., images)
 
                     UE_LOG(LogHttpServer, Log, TEXT("Request RelativePath/FilePath: %s %s"), *RelativePath, *FilePath);
 
@@ -321,6 +338,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     }
                     else {
                     	FRequestData RequestData;
+                    	RequestData.bIsAuthorized = IsAuthorizedRequest(req, config.Authentication_Token);
                         HandleApiRequest(World, res, req, RelativePath, RequestData);
                     }
                 });
@@ -477,7 +495,12 @@ void AFicsitRemoteMonitoring::PushUpdatedData() {
         }
 
         bool bAllocationComplete = false;
-        FString Json = HandleEndpoint(this, Endpoint, FRequestData(), bAllocationComplete);
+    	int32 ErrorCode = 404;
+
+    	FRequestData RequestData = FRequestData();
+    	RequestData.bIsAuthorized = true;
+
+        FString Json = HandleEndpoint(this, Endpoint, RequestData, bAllocationComplete, ErrorCode);
 
         //block while not complete
         while (!bAllocationComplete)
@@ -562,6 +585,15 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
     }
 }
 
+bool AFicsitRemoteMonitoring::IsAuthorizedRequest(uWS::HttpRequest* req, FString RequiredToken)
+{
+	const std::string_view Header = req->getHeader("authorization");
+	const FString AuthorizationHeader = FString(Header.data()).Left(Header.size());
+	if (AuthorizationHeader.IsEmpty()) return false;
+
+	return AuthorizationHeader == RequiredToken;
+}
+
 void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString Endpoint, FRequestData RequestData)
 {
 	// Parse all query parameters
@@ -580,19 +612,32 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 	RequestData.QueryParams = RequestQueryParams;
 	
     bool bSuccess = false;
-    FString OutJson = this->HandleEndpoint(World, Endpoint, RequestData, bSuccess);
+	int32 ErrorCode = 404;
+    FString OutJson = this->HandleEndpoint(World, Endpoint, RequestData, bSuccess, ErrorCode);
 
     if (bSuccess) {
         UE_LOGFMT(LogHttpServer, Log, "API Found Returning: {Endpoint}", Endpoint);
         UFRM_RequestLibrary::AddResponseHeaders(res, true);
         res->end(TCHAR_TO_UTF8(*OutJson));
-    }
-    else
-    {
-        UE_LOGFMT(LogHttpServer, Log, "API Not Found: {Endpoint}", Endpoint);
-    	UFRM_RequestLibrary::SendErrorJson(res, "404 Not Found", OutJson);
+    	return;
     }
 
+    switch (ErrorCode)
+    {
+    case 401:
+	    UFRM_RequestLibrary::SendErrorJson(res, "401 Unauthorized", OutJson);
+	    break;
+    case 404:
+	    UE_LOGFMT(LogHttpServer, Log, "API Not Found: {Endpoint}", Endpoint);
+	    UFRM_RequestLibrary::SendErrorJson(res, "404 Not Found", OutJson);
+	    break;
+    case 405:
+	    UFRM_RequestLibrary::SendErrorJson(res, "405 Method Not Allowed", OutJson);
+	    break;
+    default:
+	    UE_LOGFMT(LogHttpServer, Log, "Unknown Error {Endpoint} {ErrorCode}", Endpoint, ErrorCode);
+	    UFRM_RequestLibrary::SendErrorJson(res, "500 Internal Server Error", OutJson);
+    }
 }
 
 void AFicsitRemoteMonitoring::InitAPIRegistry()
@@ -759,7 +804,7 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FAPIEndpoint& Endpoint)
 */
 }
 
-FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess)
+FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode)
 {
     FCallEndpointResponse Response;
     Response.bUseFirstObject = false;
@@ -776,52 +821,60 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
 
     for (FAPIEndpoint& EndpointInfo : APIEndpoints)
     {
-        if (EndpointInfo.APIName == InEndpoint)
+	    if (EndpointInfo.APIName != InEndpoint) continue;
+
+        if (RequestData.Method != EndpointInfo.Method)
         {
-	        if (RequestData.Method != EndpointInfo.Method)
-        	{
-	        	AvailableMethods.Add(EndpointInfo.Method);
-        		continue;
-        	}
-
-            bEndpointFound = true;
-            Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
-
-            try {
-                if (EndpointInfo.bRequireGameThread) {
-                    FThreadSafeBool bAllocationComplete = false;
-                    AsyncTask(ENamedThreads::GameThread, [this, &EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &bSuccess]() {
-						if (SocketListener && EndpointInfo.FunctionPtr)
-						{
-							(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
-							bSuccess = true;
-						}
-						bAllocationComplete = true;
-					});
-
-                    while (!bAllocationComplete) {
-                        FPlatformProcess::Sleep(0.0001f);
-                    }
-                }
-				else if (SocketListener && EndpointInfo.FunctionPtr)
-				{
-					(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
-					bSuccess = true;
-				}
-            } catch (const std::exception& e) {
-                FString err = FString(e.what());
-                UE_LOG(LogHttpServer, Error, TEXT("Exception in CallEndpoint for endpoint '%s': %s"), *InEndpoint, *err);
-                AddErrorJson(JsonArray, TEXT("Exception: ") + err);
-            } catch (...) {
-                UE_LOG(LogHttpServer, Error, TEXT("Unknown exception in CallEndpoint for endpoint '%s'."), *InEndpoint);
-                AddErrorJson(JsonArray, TEXT("Unknown exception occurred."));
-            }
-
-            break;
+	        AvailableMethods.Add(EndpointInfo.Method);
+        	continue;
         }
+
+	    if (EndpointInfo.bRequiresAuthentication && !RequestData.bIsAuthorized)
+    	{
+    		ErrorCode = 401;
+    		AddErrorJson(JsonArray, TEXT("Unauthorized"));
+    		Response.JsonValues = JsonArray;
+    		return Response;
+    	}
+
+        bEndpointFound = true;
+        Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
+
+        try {
+            if (EndpointInfo.bRequireGameThread) {
+                FThreadSafeBool bAllocationComplete = false;
+                AsyncTask(ENamedThreads::GameThread, [this, &EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &bSuccess]() {
+					if (SocketListener && EndpointInfo.FunctionPtr)
+					{
+						(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
+						bSuccess = true;
+					}
+					bAllocationComplete = true;
+				});
+
+                while (!bAllocationComplete) {
+                    FPlatformProcess::Sleep(0.0001f);
+                }
+            }
+			else if (SocketListener && EndpointInfo.FunctionPtr)
+			{
+				(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
+				bSuccess = true;
+			}
+        } catch (const std::exception& e) {
+            FString err = FString(e.what());
+            UE_LOG(LogHttpServer, Error, TEXT("Exception in CallEndpoint for endpoint '%s': %s"), *InEndpoint, *err);
+            AddErrorJson(JsonArray, TEXT("Exception: ") + err);
+        } catch (...) {
+            UE_LOG(LogHttpServer, Error, TEXT("Unknown exception in CallEndpoint for endpoint '%s'."), *InEndpoint);
+            AddErrorJson(JsonArray, TEXT("Unknown exception occurred."));
+        }
+
+        break;
     }
 
 	if (AvailableMethods.Num()) {
+		ErrorCode = 405;
 		AddErrorJson(JsonArray, FString::Printf(
 			TEXT("The %s method is not supported for this route. Supported methods: %s."),
 			*RequestData.Method,
@@ -845,11 +898,11 @@ void AFicsitRemoteMonitoring::AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonA
     JsonArray.Add(MakeShared<FJsonValueObject>(JsonObject));
 }
 
-FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess)
+FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess, int32& ErrorCode)
 {
 	bSuccess = false;
 
-	auto [JsonValues, bUseFirstObject] = this->CallEndpoint(WorldContext, InEndpoint, RequestData, bSuccess);
+	auto [JsonValues, bUseFirstObject] = this->CallEndpoint(WorldContext, InEndpoint, RequestData, bSuccess, ErrorCode);
 
 	if (bSuccess && !bUseFirstObject) return UFRM_RequestLibrary::JsonArrayToString(JsonValues, JSONDebugMode);
 
