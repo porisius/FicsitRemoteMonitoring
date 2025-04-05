@@ -21,15 +21,25 @@ public:
     UPROPERTY(BlueprintReadWrite)
     float WebSocketPushCycle{};
 
+    UPROPERTY(BlueprintReadWrite)
+    FString Authentication_Token{};
+
     /* Retrieves active configuration value and returns object of this struct containing it */
     static FConfig_HTTPStruct GetActiveConfig(UObject* WorldContext) {
         FConfig_HTTPStruct ConfigStruct{};
         FConfigId ConfigId{"FicsitRemoteMonitoring", "WebServer"};
         if (const UWorld* World = GEngine->GetWorldFromContextObject(WorldContext, EGetWorldErrorMode::ReturnNull)) {
             UConfigManager* ConfigManager = World->GetGameInstance()->GetSubsystem<UConfigManager>();
-            ConfigManager->FillConfigurationStruct(ConfigId, FDynamicStructInfo{FConfig_HTTPStruct::StaticStruct(), &ConfigStruct});
+            ConfigManager->FillConfigurationStruct(ConfigId, FDynamicStructInfo{StaticStruct(), &ConfigStruct});
         }
         return ConfigStruct;
+    }
+
+    void Save(UWorld* World)
+    {
+        FConfigId ConfigId{"FicsitRemoteMonitoring", "WebServer"};
+        UConfigManager* ConfigManager = World->GetGameInstance()->GetSubsystem<UConfigManager>();
+        ConfigManager->MarkConfigurationDirty(ConfigId);
     }
 };
 
