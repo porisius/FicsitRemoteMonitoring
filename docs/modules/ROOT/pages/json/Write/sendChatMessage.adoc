@@ -4,6 +4,8 @@
 
 = sendChatMessage
 
+include::../_requiresAuthentication.adoc[]
+
 Sends a chat message to all players.
 
 == URL
