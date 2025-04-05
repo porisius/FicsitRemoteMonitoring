@@ -654,7 +654,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getConverter", &AFicsitRemoteMonitoring::getConverter));
 	RegisterEndpoint(FAPIEndpoint("GET", "getDoggo", &AFicsitRemoteMonitoring::getDoggo).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getDrone", &AFicsitRemoteMonitoring::getDrone).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getDroneStation", &AFicsitRemoteMonitoring::getDroneStation).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getDroneStation", &AFicsitRemoteMonitoring::getDroneStation).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getDropPod", &AFicsitRemoteMonitoring::getDropPod).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getEncoder", &AFicsitRemoteMonitoring::getEncoder).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getExplorationSink", &AFicsitRemoteMonitoring::getExplorationSink).GetAll());
@@ -691,7 +691,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getResourceWell", &AFicsitRemoteMonitoring::getResourceWell).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getSessionInfo", &AFicsitRemoteMonitoring::getSessionInfo).GetAll().RequiresGameThread().UseFirstObject());
 	RegisterEndpoint(FAPIEndpoint("GET", "getSchematics", &AFicsitRemoteMonitoring::getSchematics).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getSinkList", &AFicsitRemoteMonitoring::getSinkList).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getSinkList", &AFicsitRemoteMonitoring::getSinkList).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getSmelter", &AFicsitRemoteMonitoring::getSmelter));
 	RegisterEndpoint(FAPIEndpoint("GET", "getSpaceElevator", &AFicsitRemoteMonitoring::getSpaceElevator).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getStorageInv", &AFicsitRemoteMonitoring::getStorageInv).GetAll());
