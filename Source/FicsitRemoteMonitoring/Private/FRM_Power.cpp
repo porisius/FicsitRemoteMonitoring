@@ -16,8 +16,6 @@
 #include "FRM_RequestData.h"
 #include "Kismet/KismetSystemLibrary.h"
 
-#undef GetForm
-
 TArray<TSharedPtr<FJsonValue>> UFRM_Power::getPower(UObject* WorldContext)
 {
 	AFGCircuitSubsystem* CircuitSubsystem = AFGCircuitSubsystem::Get(WorldContext->GetWorld());
