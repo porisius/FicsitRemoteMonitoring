@@ -36,6 +36,7 @@ include::../_responseBody.adoc[]
 ----
 curl -X POST 'http://localhost:8080/sendChatMessage' \
 -H 'Content-Type: application/json' \
+-H 'Authorization: <your access token>' \
 --data-raw '{ \
   "message": "Hello World :)", \
 }'

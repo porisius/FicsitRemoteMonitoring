@@ -4,6 +4,10 @@
 |===
 |Resource|Endpoint|Description
 
+| Chat
+| xref:json/Write/sendChatMessage.adoc[sendChatMessage]
+| Sends a chat message to all players.
+
 | Factory
 | xref:json/Write/setSwitches.adoc[setSwitches]
 | Updates settings of a power switch (Name, Status, Priority).
