@@ -1,0 +1,13 @@
+﻿:url-repo: https://github.com/porisius/FicsitRemoteMonitoring
+
+= Authentication
+
+An authentication token is automatically generated when the mod is loaded.
+
+The token can be found in the `Configs/FicsitRemoteMonitoring/WebServer.cfg` file under the `Authentication_Token` key. You can also set your own token in the file. +
+If left empty, a new token will be generated.
+
+== Passing the token to the API
+
+Use it to set an API request’s Authorization header.
+`Authorization: <token goes here>`

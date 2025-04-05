@@ -1,5 +1,9 @@
 ﻿== Response Body
 
+ifdef::responseBodyText[]
+{responseBodyText}
+endif::responseBodyText[]
+
 [cols="1,1,2"]
 |===
 |*Name*|*Type*|*Description*

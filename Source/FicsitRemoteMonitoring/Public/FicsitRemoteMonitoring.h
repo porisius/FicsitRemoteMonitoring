@@ -84,16 +84,44 @@ struct FAPIEndpoint {
 	FString Method = "GET";
 
 	UPROPERTY()
-	bool bGetAll;
+	bool bGetAll = false;
 
 	UPROPERTY()
-	bool bUseFirstObject;
+	bool bUseFirstObject = false;
 
 	UPROPERTY()
-	bool bRequireGameThread;
+	bool bRequireGameThread = false;
+
+	UPROPERTY()
+	bool bRequiresAuthentication = false;
 
 	// Function pointer to the endpoint handler (not a UPROPERTY because function pointers aren’t supported by UPROPERTY)
 	FEndpointFunction FunctionPtr;
+
+	FAPIEndpoint(const FString& InMethod = "GET", const FString& InAPIName = "", const FEndpointFunction InFunctionPtr = nullptr)
+		: APIName(InAPIName),
+		Method(InMethod),
+		FunctionPtr(InFunctionPtr) {}
+
+	FAPIEndpoint& RequiresAuthentication() {
+		bRequiresAuthentication = true;
+		return *this;
+	}
+
+	FAPIEndpoint& RequiresGameThread() {
+		bRequireGameThread = true;
+		return *this;
+	}
+
+	FAPIEndpoint& UseFirstObject() {
+		bUseFirstObject = true;
+		return *this;
+	}
+
+	FAPIEndpoint& GetAll() {
+		bGetAll = true;
+		return *this;
+	}
 };
 
 USTRUCT(BlueprintType)
@@ -129,17 +157,14 @@ public:
 	/** Get the subsystem in the current world, can be nullptr, e.g. on game ending (destroy) or game startup. */
 	static AFicsitRemoteMonitoring* Get(UWorld* world);
 
-	void RegisterEndpoint(const FString& Method, const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, FEndpointFunction FunctionPtr);
-	void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FEndpointFunction FunctionPtr);
-	void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, FEndpointFunction FunctionPtr);
-	void RegisterPostEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FEndpointFunction FunctionPtr);
+	void RegisterEndpoint(const FAPIEndpoint& Endpoint);
 
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
-	FString HandleEndpoint (UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess);
+	FString HandleEndpoint (UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode);
 
 	//FFGServerErrorResponse HandleCSSEndpoint(FString& out_json, FString InEndpoin);
 
-	FCallEndpointResponse CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess);
+	FCallEndpointResponse CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void GetDropPodInfo_BIE(const AFGDropPod* Droppod, TSubclassOf<UFGItemDescriptor>& ItemClass, int32& Amount, float& Power);
@@ -194,6 +219,7 @@ public:
 	void PushUpdatedData();
 
 	void HandleGetRequest(uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString FilePath);
+	bool IsAuthorizedRequest(uWS::HttpRequest* req, FString RequiredToken);
 	void AddResponseHeaders(uWS::HttpResponse<false>* res, bool bIncludeContentType);
 	void AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonArray, const FString& ErrorMessage);
 
@@ -222,6 +248,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	FString GenerateAuthToken(int32 Length);
 
 public:
 
@@ -270,6 +297,16 @@ public:
 	
 	void getResearchTrees(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 		OutJsonArray = UFRM_World::GetResearchTrees(WorldContext);
+	}
+
+	void GetChatMessages(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+	{
+		OutJsonArray = UFRM_World::GetChatMessages(WorldContext);
+	}
+	
+	void SendChatMessage(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+	{
+		OutJsonArray = UFRM_World::SendChatMessage(WorldContext, RequestData);
 	}
 	
 	void getFallingGiftBundles(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {

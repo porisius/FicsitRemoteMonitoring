@@ -10,6 +10,8 @@ struct FRequestData
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Request Data")
 	TMap<FString, FString> QueryParams;
 
+	bool bIsAuthorized = false;
+	
 	FString Method = "GET";
 
 	TArray<TSharedPtr<FJsonValue>> Body;

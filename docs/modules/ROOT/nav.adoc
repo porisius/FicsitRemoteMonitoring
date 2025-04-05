@@ -14,6 +14,7 @@
 
 * xref:json/json.adoc[API]
 
+** xref:json/authentication.adoc[Authentication]
 ** xref:json/Read/Read.adoc[Read]
 
 *** xref:json/Read/getAll.adoc[getAll]
@@ -104,6 +105,9 @@
 **** getPowerUsage
 
 ** xref:json/Write/Write.adoc[Write]
+
+*** Chat
+**** xref:json/Write/sendChatMessage.adoc[sendChatMessage]
 
 *** Factory
 **** setSwitches (soon)
