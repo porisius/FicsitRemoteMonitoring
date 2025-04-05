@@ -599,80 +599,80 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 {
 
 	//Registering Endpoints: API Name, bGetAll, bRequireGameThread, FunctionPtr
-	RegisterEndpoint("getAssembler", false, false, &AFicsitRemoteMonitoring::getAssembler);
-	RegisterEndpoint("getBelts", true, false, &AFicsitRemoteMonitoring::getBelts);
-	RegisterEndpoint("getBiomassGenerator", false, false, &AFicsitRemoteMonitoring::getBiomassGenerator);
-	RegisterEndpoint("getBlender", false, false, &AFicsitRemoteMonitoring::getBlender);
-	RegisterEndpoint("getCables", true, false, &AFicsitRemoteMonitoring::getCables);
-	RegisterEndpoint("getCloudInv", true, false, &AFicsitRemoteMonitoring::getCloudInv);
-	RegisterEndpoint("getCoalGenerator", false, false, &AFicsitRemoteMonitoring::getCoalGenerator);
-    RegisterEndpoint("getConstructor", false, false, &AFicsitRemoteMonitoring::getConstructor);
-	RegisterEndpoint("getConverter", false, false, &AFicsitRemoteMonitoring::getConverter);
-	RegisterEndpoint("getDoggo", true, true, &AFicsitRemoteMonitoring::getDoggo);
-	RegisterEndpoint("getDrone", true, true, &AFicsitRemoteMonitoring::getDrone);
-	RegisterEndpoint("getDroneStation", true, false, &AFicsitRemoteMonitoring::getDroneStation);
-	RegisterEndpoint("getDropPod", true, true, &AFicsitRemoteMonitoring::getDropPod);
-	RegisterEndpoint("getEncoder", true, false, &AFicsitRemoteMonitoring::getEncoder);
-	RegisterEndpoint("getExplorationSink", true, false, &AFicsitRemoteMonitoring::getExplorationSink);
-	RegisterEndpoint("getExplorer", false, true, &AFicsitRemoteMonitoring::getExplorer);
-	RegisterEndpoint("getExtractor", true, true, &AFicsitRemoteMonitoring::getExtractor);
-	RegisterEndpoint("getFactoryCart", false, false, &AFicsitRemoteMonitoring::getFactoryCart);
-	RegisterEndpoint("getFoundry", false, false, &AFicsitRemoteMonitoring::getFoundry);
-    RegisterEndpoint("getFrackingActivator", false, false, &AFicsitRemoteMonitoring::getFrackingActivator);
-	RegisterEndpoint("getFuelGenerator", false, false, &AFicsitRemoteMonitoring::getFuelGenerator);
-	RegisterEndpoint("getGeothermalGenerator", false, false, &AFicsitRemoteMonitoring::getGeothermalGenerator);
-	RegisterEndpoint("getHUBTerminal", true, true, &AFicsitRemoteMonitoring::getHUBTerminal);
-  RegisterEndpoint("getHypertube", true, false, &AFicsitRemoteMonitoring::getHypertube);
-	RegisterEndpoint("getManufacturer", false, false, &AFicsitRemoteMonitoring::getManufacturer);
-	RegisterEndpoint("getModList", true, false, &AFicsitRemoteMonitoring::getModList);
-	RegisterEndpoint("getNuclearGenerator", false, false, &AFicsitRemoteMonitoring::getNuclearGenerator);
-    RegisterEndpoint("getPackager", false, false, &AFicsitRemoteMonitoring::getPackager);
-	RegisterEndpoint("getParticle", false, false, &AFicsitRemoteMonitoring::getParticle);
-	RegisterEndpoint("getPaths", true, false, &AFicsitRemoteMonitoring::getPaths);
-	RegisterEndpoint("getPipes", true, false, &AFicsitRemoteMonitoring::getPipes);
-	RegisterEndpoint("getPlayer", true, true, &AFicsitRemoteMonitoring::getPlayer);
-  RegisterEndpoint("getPortal", true, false, &AFicsitRemoteMonitoring::getPortal);
-	RegisterEndpoint("getPower", true, false, &AFicsitRemoteMonitoring::getPower);
-	RegisterEndpoint("getPowerSlug", true, true, &AFicsitRemoteMonitoring::getPowerSlug);
-	RegisterEndpoint("getPowerUsage", true, false, &AFicsitRemoteMonitoring::getPowerUsage);
-	RegisterEndpoint("getProdStats", true, false, &AFicsitRemoteMonitoring::getProdStats);
-  RegisterEndpoint("getPump", true, false, &AFicsitRemoteMonitoring::getPump);
-	RegisterEndpoint("getRadarTower", true, false, &AFicsitRemoteMonitoring::getRadarTower);
-	RegisterEndpoint("getRecipes", true, true, &AFicsitRemoteMonitoring::getRecipes);
-	RegisterEndpoint("getRefinery", false, false, &AFicsitRemoteMonitoring::getRefinery);
-	RegisterEndpoint("getResourceGeyser", true, true, &AFicsitRemoteMonitoring::getResourceGeyser);
-	RegisterEndpoint("getResourceNode", true, true, &AFicsitRemoteMonitoring::getResourceNode);
-	RegisterEndpoint("getResourceSink", true, false, &AFicsitRemoteMonitoring::getResourceSink);
-    RegisterEndpoint("getResourceSinkBuilding", true, false, &AFicsitRemoteMonitoring::getResourceSinkBuilding);
-	RegisterEndpoint("getResourceWell", true, true, &AFicsitRemoteMonitoring::getResourceWell);
-    RegisterEndpoint("getSessionInfo", true, true, true, &AFicsitRemoteMonitoring::getSessionInfo);
-	RegisterEndpoint("getSchematics", true, true, &AFicsitRemoteMonitoring::getSchematics);
-	RegisterEndpoint("getSinkList", true, true, &AFicsitRemoteMonitoring::getSinkList);
-	RegisterEndpoint("getSmelter", false, false, &AFicsitRemoteMonitoring::getSmelter);
-	RegisterEndpoint("getSpaceElevator", true, false, &AFicsitRemoteMonitoring::getSpaceElevator);
-	RegisterEndpoint("getStorageInv", true, false, &AFicsitRemoteMonitoring::getStorageInv);
-	RegisterEndpoint("getSwitches", true, false, &AFicsitRemoteMonitoring::getSwitches);
-	RegisterEndpoint("getTractor", false, false, &AFicsitRemoteMonitoring::getTractor);
-	RegisterEndpoint("getTrains", true, false, &AFicsitRemoteMonitoring::getTrains);
-	RegisterEndpoint("getTrainRails", true, false, &AFicsitRemoteMonitoring::getTrainRails);
-	RegisterEndpoint("getTrainStation", true, false, &AFicsitRemoteMonitoring::getTrainStation);
-	RegisterEndpoint("getTruck", false, false, &AFicsitRemoteMonitoring::getTruck);
-	RegisterEndpoint("getTruckStation", true, false, &AFicsitRemoteMonitoring::getTruckStation);
-	RegisterEndpoint("getWorldInv", true, false, &AFicsitRemoteMonitoring::getWorldInv);
-	RegisterEndpoint("getResearchTrees", true, true, &AFicsitRemoteMonitoring::getResearchTrees);
+	RegisterEndpoint(FAPIEndpoint("GET", "getAssembler", &AFicsitRemoteMonitoring::getAssembler));
+	RegisterEndpoint(FAPIEndpoint("GET", "getBelts", &AFicsitRemoteMonitoring::getBelts).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getBiomassGenerator", &AFicsitRemoteMonitoring::getBiomassGenerator));
+	RegisterEndpoint(FAPIEndpoint("GET", "getBlender", &AFicsitRemoteMonitoring::getBlender));
+	RegisterEndpoint(FAPIEndpoint("GET", "getCables", &AFicsitRemoteMonitoring::getCables).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getCloudInv", &AFicsitRemoteMonitoring::getCloudInv).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getCoalGenerator", &AFicsitRemoteMonitoring::getCoalGenerator));
+    RegisterEndpoint(FAPIEndpoint("GET", "getConstructor", &AFicsitRemoteMonitoring::getConstructor));
+	RegisterEndpoint(FAPIEndpoint("GET", "getConverter", &AFicsitRemoteMonitoring::getConverter));
+	RegisterEndpoint(FAPIEndpoint("GET", "getDoggo", &AFicsitRemoteMonitoring::getDoggo).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getDrone", &AFicsitRemoteMonitoring::getDrone).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getDroneStation", &AFicsitRemoteMonitoring::getDroneStation).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getDropPod", &AFicsitRemoteMonitoring::getDropPod).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getEncoder", &AFicsitRemoteMonitoring::getEncoder).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getExplorationSink", &AFicsitRemoteMonitoring::getExplorationSink).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getExplorer", &AFicsitRemoteMonitoring::getExplorer).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getExtractor", &AFicsitRemoteMonitoring::getExtractor).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getFactoryCart", &AFicsitRemoteMonitoring::getFactoryCart));
+	RegisterEndpoint(FAPIEndpoint("GET", "getFoundry", &AFicsitRemoteMonitoring::getFoundry));
+    RegisterEndpoint(FAPIEndpoint("GET", "getFrackingActivator", &AFicsitRemoteMonitoring::getFrackingActivator));
+	RegisterEndpoint(FAPIEndpoint("GET", "getFuelGenerator", &AFicsitRemoteMonitoring::getFuelGenerator));
+	RegisterEndpoint(FAPIEndpoint("GET", "getGeothermalGenerator", &AFicsitRemoteMonitoring::getGeothermalGenerator));
+	RegisterEndpoint(FAPIEndpoint("GET", "getHUBTerminal", &AFicsitRemoteMonitoring::getHUBTerminal).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getHypertube", &AFicsitRemoteMonitoring::getHypertube).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getManufacturer", &AFicsitRemoteMonitoring::getManufacturer));
+	RegisterEndpoint(FAPIEndpoint("GET", "getModList", &AFicsitRemoteMonitoring::getModList).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getNuclearGenerator", &AFicsitRemoteMonitoring::getNuclearGenerator));
+    RegisterEndpoint(FAPIEndpoint("GET", "getPackager", &AFicsitRemoteMonitoring::getPackager));
+	RegisterEndpoint(FAPIEndpoint("GET", "getParticle", &AFicsitRemoteMonitoring::getParticle));
+	RegisterEndpoint(FAPIEndpoint("GET", "getPaths", &AFicsitRemoteMonitoring::getPaths).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getPipes", &AFicsitRemoteMonitoring::getPipes).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getPlayer", &AFicsitRemoteMonitoring::getPlayer).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getPortal", &AFicsitRemoteMonitoring::getPortal).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getPower", &AFicsitRemoteMonitoring::getPower).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getPowerSlug", &AFicsitRemoteMonitoring::getPowerSlug).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getPowerUsage", &AFicsitRemoteMonitoring::getPowerUsage).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getProdStats", &AFicsitRemoteMonitoring::getProdStats).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getPump", &AFicsitRemoteMonitoring::getPump).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getRadarTower", &AFicsitRemoteMonitoring::getRadarTower).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getRecipes", &AFicsitRemoteMonitoring::getRecipes).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getRefinery", &AFicsitRemoteMonitoring::getRefinery));
+	RegisterEndpoint(FAPIEndpoint("GET", "getResourceGeyser", &AFicsitRemoteMonitoring::getResourceGeyser).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getResourceNode", &AFicsitRemoteMonitoring::getResourceNode).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getResourceSink", &AFicsitRemoteMonitoring::getResourceSink).GetAll());
+    RegisterEndpoint(FAPIEndpoint("GET", "getResourceSinkBuilding", &AFicsitRemoteMonitoring::getResourceSinkBuilding).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getResourceWell", &AFicsitRemoteMonitoring::getResourceWell).GetAll().RequiresGameThread());
+    RegisterEndpoint(FAPIEndpoint("GET", "getSessionInfo", &AFicsitRemoteMonitoring::getSessionInfo).GetAll().RequiresGameThread().UseFirstObject());
+	RegisterEndpoint(FAPIEndpoint("GET", "getSchematics", &AFicsitRemoteMonitoring::getSchematics).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getSinkList", &AFicsitRemoteMonitoring::getSinkList).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getSmelter", &AFicsitRemoteMonitoring::getSmelter));
+	RegisterEndpoint(FAPIEndpoint("GET", "getSpaceElevator", &AFicsitRemoteMonitoring::getSpaceElevator).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getStorageInv", &AFicsitRemoteMonitoring::getStorageInv).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getSwitches", &AFicsitRemoteMonitoring::getSwitches).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getTractor", &AFicsitRemoteMonitoring::getTractor));
+	RegisterEndpoint(FAPIEndpoint("GET", "getTrains", &AFicsitRemoteMonitoring::getTrains).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getTrainRails", &AFicsitRemoteMonitoring::getTrainRails).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getTrainStation", &AFicsitRemoteMonitoring::getTrainStation).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getTruck", &AFicsitRemoteMonitoring::getTruck));
+	RegisterEndpoint(FAPIEndpoint("GET", "getTruckStation", &AFicsitRemoteMonitoring::getTruckStation).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getWorldInv", &AFicsitRemoteMonitoring::getWorldInv).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getResearchTrees", &AFicsitRemoteMonitoring::getResearchTrees).GetAll().RequiresGameThread());
 
 	// event endpoints
-	RegisterEndpoint("getFallingGiftBundles", true, true, &AFicsitRemoteMonitoring::getFallingGiftBundles);
+	RegisterEndpoint(FAPIEndpoint("GET", "getFallingGiftBundles", &AFicsitRemoteMonitoring::getFallingGiftBundles).GetAll().RequiresGameThread());
 
 	//FRM API Endpoint Groups
-	RegisterEndpoint("getAll", false, false, &AFicsitRemoteMonitoring::getAll);
-	RegisterEndpoint("getFactory", true, false, &AFicsitRemoteMonitoring::getFactory);
-	RegisterEndpoint("getGenerators", true, false, &AFicsitRemoteMonitoring::getGenerators);
-	RegisterEndpoint("getVehicles", true, false, &AFicsitRemoteMonitoring::getVehicles);
+	RegisterEndpoint(FAPIEndpoint("GET", "getAll", &AFicsitRemoteMonitoring::getAll));
+	RegisterEndpoint(FAPIEndpoint("GET", "getFactory", &AFicsitRemoteMonitoring::getFactory).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getGenerators", &AFicsitRemoteMonitoring::getGenerators).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getVehicles", &AFicsitRemoteMonitoring::getVehicles).GetAll());
 
 	// post/write endpoints
-	RegisterPostEndpoint("setSwitches", false, true, &AFicsitRemoteMonitoring::setSwitches);
-	RegisterPostEndpoint("sendChatMessage", false, true, &AFicsitRemoteMonitoring::SendChatMessage);
+	RegisterEndpoint(FAPIEndpoint("POST", "setSwitches", &AFicsitRemoteMonitoring::setSwitches).RequiresAuthentication().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("POST", "sendChatMessage", &AFicsitRemoteMonitoring::SendChatMessage).RequiresAuthentication().RequiresGameThread());
 }
 
 void AFicsitRemoteMonitoring::InitOutageNotification() {
@@ -721,34 +721,11 @@ void AFicsitRemoteMonitoring::InitOutageNotification() {
 	#endif
 }
 
-void AFicsitRemoteMonitoring::RegisterPostEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FEndpointFunction FunctionPtr)
+void AFicsitRemoteMonitoring::RegisterEndpoint(const FAPIEndpoint& Endpoint)
 {
-	RegisterEndpoint("POST", APIName, bGetAll, bRequireGameThread, false, FunctionPtr);
-}
+	APIEndpoints.Add(Endpoint);
 
-void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FEndpointFunction FunctionPtr)
-{
-	RegisterEndpoint("GET", APIName, bGetAll, bRequireGameThread, false, FunctionPtr);
-}
-
-void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, FEndpointFunction FunctionPtr)
-{
-	RegisterEndpoint("GET", APIName, bGetAll, bRequireGameThread, bUseFirstObject, FunctionPtr);
-}
-
-void AFicsitRemoteMonitoring::RegisterEndpoint(const FString& Method, const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, FEndpointFunction FunctionPtr)
-{
-	FAPIEndpoint NewEndpoint;
-	NewEndpoint.APIName = APIName;
-	NewEndpoint.Method = Method;
-	NewEndpoint.bGetAll = bGetAll;
-	NewEndpoint.bRequireGameThread = bRequireGameThread;
-	NewEndpoint.bUseFirstObject = bUseFirstObject;
-	NewEndpoint.FunctionPtr = FunctionPtr;
-	
-	APIEndpoints.Add(NewEndpoint);
-
-    UE_LOGFMT(LogHttpServer, Log, "Registered API Endpoint: {APIName} - Current number of endpoints registered: {1}", APIName, APIEndpoints.Num());
+	UE_LOGFMT(LogHttpServer, Log, "Registered API Endpoint: {APIName} - Current number of endpoints registered: {1}", Endpoint.APIName, APIEndpoints.Num());
 
 /*
     // Store the APIName in a member variable for use in HandleCSSEndpoint

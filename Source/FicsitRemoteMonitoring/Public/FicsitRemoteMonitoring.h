@@ -49,16 +49,44 @@ struct FAPIEndpoint {
 	FString Method = "GET";
 
 	UPROPERTY()
-	bool bGetAll;
+	bool bGetAll = false;
 
 	UPROPERTY()
-	bool bUseFirstObject;
+	bool bUseFirstObject = false;
 
 	UPROPERTY()
-	bool bRequireGameThread;
+	bool bRequireGameThread = false;
+
+	UPROPERTY()
+	bool bRequiresAuthentication = false;
 
 	// Function pointer to the endpoint handler (not a UPROPERTY because function pointers aren’t supported by UPROPERTY)
 	FEndpointFunction FunctionPtr;
+
+	FAPIEndpoint(const FString& InMethod = "GET", const FString& InAPIName = "", const FEndpointFunction InFunctionPtr = nullptr)
+		: APIName(InAPIName),
+		Method(InMethod),
+		FunctionPtr(InFunctionPtr) {}
+
+	FAPIEndpoint& RequiresAuthentication() {
+		bRequiresAuthentication = true;
+		return *this;
+	}
+
+	FAPIEndpoint& RequiresGameThread() {
+		bRequireGameThread = true;
+		return *this;
+	}
+
+	FAPIEndpoint& UseFirstObject() {
+		bUseFirstObject = true;
+		return *this;
+	}
+
+	FAPIEndpoint& GetAll() {
+		bGetAll = true;
+		return *this;
+	}
 };
 
 USTRUCT(BlueprintType)
@@ -94,10 +122,7 @@ public:
 	/** Get the subsystem in the current world, can be nullptr, e.g. on game ending (destroy) or game startup. */
 	static AFicsitRemoteMonitoring* Get(UWorld* world);
 
-	void RegisterEndpoint(const FString& Method, const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, FEndpointFunction FunctionPtr);
-	void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FEndpointFunction FunctionPtr);
-	void RegisterEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, bool bUseFirstObject, FEndpointFunction FunctionPtr);
-	void RegisterPostEndpoint(const FString& APIName, bool bGetAll, bool bRequireGameThread, FEndpointFunction FunctionPtr);
+	void RegisterEndpoint(const FAPIEndpoint& Endpoint);
 
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
 	FString HandleEndpoint (UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess);
