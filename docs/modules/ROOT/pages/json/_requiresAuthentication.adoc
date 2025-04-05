@@ -1,0 +1,4 @@
+﻿[NOTE]
+====
+This endpoint requires xref:json/authentication.adoc[Authentication].
+====
