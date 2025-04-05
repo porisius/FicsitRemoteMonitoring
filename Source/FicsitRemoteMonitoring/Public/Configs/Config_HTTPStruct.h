@@ -1,5 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
+#include "ConfigPropertyString.h"
 #include "Configuration/ConfigManager.h"
 #include "Engine/Engine.h"
 #include "Config_HTTPStruct.generated.h"
@@ -39,6 +40,13 @@ public:
     {
         FConfigId ConfigId{"FicsitRemoteMonitoring", "WebServer"};
         UConfigManager* ConfigManager = World->GetGameInstance()->GetSubsystem<UConfigManager>();
+        UConfigPropertySection* ConfigurationRootSection = ConfigManager->GetConfigurationRootSection(ConfigId);
+
+        if (ConfigurationRootSection->SectionProperties.Contains("Authentication_Token"))
+        {
+            Cast<UConfigPropertyString>(ConfigurationRootSection->SectionProperties["Authentication_Token"])->Value = Authentication_Token;
+        }
+
         ConfigManager->MarkConfigurationDirty(ConfigId);
     }
 };
