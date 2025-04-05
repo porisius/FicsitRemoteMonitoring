@@ -19,6 +19,9 @@
 
 *** xref:json/Read/getAll.adoc[getAll]
 
+*** Chat
+**** xref:json/Read/getChatMessages.adoc[getChatMessages]
+
 *** Factory
 
 **** xref:json/Read/getFactory.adoc[getAssembler]

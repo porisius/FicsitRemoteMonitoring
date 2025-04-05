@@ -4,6 +4,12 @@
 |===
 |Resource|Endpoint|Description
 
+| Chat
+| xref:json/Read/getChatMessages.adoc[getChatMessages]
+| Gets a list of recent chat messages.
+
+
+
 | Factory
 | xref:json/Read/getFactory.adoc[getFactory]
 | Gets a list of all factories (smelters, constructors, assemblers, foundries, etc.).
