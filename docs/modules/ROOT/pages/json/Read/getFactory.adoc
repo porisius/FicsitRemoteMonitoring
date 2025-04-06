@@ -25,6 +25,8 @@ include::../_responseBody.adoc[]
 | ClassName | String | ClassName of the Factory Building.
 
 // location fields
+{set:key-name:location}
+{set:key-description:Location details of the Factory Building.}
 include::../Models/_location.adoc[]
 
 | Recipe | String | Name of the item being produced.

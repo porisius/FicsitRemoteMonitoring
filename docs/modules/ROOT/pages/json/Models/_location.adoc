@@ -1,5 +1,11 @@
-﻿| {depth}location | Object | Location details of the Actor.
-| {depth}  x | Float | X Location of the Actor.
-| {depth}  y | Float | Y Location of the Actor.
-| {depth}  z | Float | Z Location of the Actor.
+﻿| {key-name} | Object | {key-description}
+| {depth}  x | Float | X Location in the World.
+| {depth}  y | Float | Y Location in the World.
+| {depth}  z | Float | Z Location in the World.
+
+// tag::rotation[]
 | {depth}  rotation | Float | Rotation of the Actor (0 - 359, 0 = North, 90 = East, 180 = South, 270 = West).
+// end::rotation[]
+
+{set:key-name!:}
+{set:key-description!:}

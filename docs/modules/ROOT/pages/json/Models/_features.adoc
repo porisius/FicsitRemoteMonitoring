@@ -7,4 +7,4 @@
 | {depth}      x | Float | X Location of the Actor.
 | {depth}      y | Float | Y Location of the Actor.
 | {depth}      z | Float | Z Location of the Actor.
-| {depth}    type | "Point"| It's always "Point".
+| {depth}    type | String | It's always "Point".

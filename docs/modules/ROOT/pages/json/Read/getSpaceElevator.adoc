@@ -18,6 +18,8 @@ include::../_responseBody.adoc[]
 | Name | String | Name of the Space Elevator.
 | ClassName | String | ClassName of the Space Elevator.
 
+{set:key-name:location}
+{set:key-description:Location details of the Space Elevator.}
 include::../Models/_location.adoc[]
 
 // CurrentPhase
