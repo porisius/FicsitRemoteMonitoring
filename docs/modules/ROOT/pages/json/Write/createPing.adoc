@@ -1,0 +1,39 @@
+﻿:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= createPing
+
+include::../_requiresAuthentication.adoc[]
+
+[NOTE]
+====
+The ping will be created by the first player.
+====
+
+Creates a world ping.
+
+== URL
+
+`GET http://localhost:8080/createPing`
+
+include::../_requestBody.adoc[]
+
+| {depth}  x | Float | Yes | X Location of the Ping.
+| {depth}  y | Float | Yes | Y Location of the Ping.
+| {depth}  z | Float | Yes | Z Location of the Ping.
+|===
+
+== Example Request
+
+[source,bash]
+----
+curl -X POST 'http://localhost:8080/createPing' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: <your access token>' \
+--data-raw '{ \
+  "x": 0, \
+  "y": 0, \
+  "z": 0 \
+}'
+----

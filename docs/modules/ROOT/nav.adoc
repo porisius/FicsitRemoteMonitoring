@@ -111,3 +111,7 @@
 
 *** Factory
 **** setSwitches (soon)
+
+*** World
+**** xref:json/Write/createPing.adoc[createPing]
+
