@@ -7,6 +7,10 @@
 Some endpoints are new and not yet documented.
 ====
 
+== Read
+
 include::_read.adoc[]
+
+== Write
 
 include::_write.adoc[]
