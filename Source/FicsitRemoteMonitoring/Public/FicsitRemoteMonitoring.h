@@ -274,6 +274,11 @@ public:
 		OutJsonArray = UFRM_World::SendChatMessage(WorldContext, RequestData);
 	}
 	
+	void CreatePing(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+	{
+		OutJsonArray = UFRM_World::CreatePing(WorldContext, RequestData);
+	}
+
 	void getFallingGiftBundles(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 		OutJsonArray = UFRM_Events::GetFallingGiftBundles(WorldContext);
 	}

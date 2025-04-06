@@ -1,10 +1,10 @@
 ﻿#include "FRM_World.h"
+
 #include "FGResearchTree.h"
 #include "FGSchematicCategory.h"
 #include "FGResearchManager.h"
 #include "FicsitRemoteMonitoring.h"
 #include "FRM_Library.h"
-
 #include "FRM_Request.h"
 
 TArray<TSharedPtr<FJsonValue>> UFRM_World::GetResearchTrees(UObject* WorldContext)
@@ -141,6 +141,51 @@ TArray<TSharedPtr<FJsonValue>> UFRM_World::GetChatMessages(UObject* WorldContext
 	}
 
 	return JResponse;
+}
+
+TArray<TSharedPtr<FJsonValue>> UFRM_World::CreatePing(UObject* WorldContext, FRequestData RequestData)
+{
+	TArray<TSharedPtr<FJsonValue>> JResponses;
+	if (RequestData.Body.Num() == 0) return JResponses;
+
+	AFGPlayerController* PlayerController = Cast<AFGPlayerController>(WorldContext->GetWorld()->GetFirstPlayerController());
+	if (!PlayerController)
+	{
+		JResponses.Add(MakeShared<FJsonValueObject>(UFRM_RequestLibrary::GenerateError("No player connected.")));
+
+		return JResponses;
+	}
+
+	for (const TSharedPtr<FJsonValue>& BodyObject : RequestData.Body)
+	{
+		TSharedPtr<FJsonObject> JsonObject = BodyObject->AsObject();
+
+		if (!JsonObject->HasField("x") || !JsonObject->HasField("y") || !JsonObject->HasField("z"))
+		{
+			JResponses.Add(MakeShared<FJsonValueObject>(UFRM_RequestLibrary::GenerateError("Missing field x, y or z.")));
+			continue;
+		}
+
+		FVector Location = FVector(0, 0, 0);
+
+		JsonObject->TryGetNumberField("x", Location.X);
+		JsonObject->TryGetNumberField("y", Location.Y);
+		JsonObject->TryGetNumberField("z", Location.Z);
+
+		FTransform Transform;
+		Transform.SetLocation(Location);
+
+		// Using PlayerController to spawn a ping actor that plays sounds.
+		// I'm not sure if the game has a limit on the number of pings a player can create.
+		// Perhaps we need to modify this and spawn the actor manually
+		PlayerController->Server_SpawnAttentionPingActor(Location, Location);
+		
+		// AFGAttentionPingActor* Actor = WorldContext->GetWorld()->SpawnActorDeferred<AFGAttentionPingActor>(AFGAttentionPingActor::StaticClass(), Transform);
+		// Actor->SetOwningPlayerState(PlayerState);
+		// UGameplayStatics::FinishSpawningActor(Actor, Transform);
+	}
+
+	return JResponses;
 }
 
 TArray<TSharedPtr<FJsonValue>> UFRM_World::SendChatMessage(UObject* WorldContext, FRequestData RequestData)

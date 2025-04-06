@@ -718,6 +718,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	// post/write endpoints
 	RegisterEndpoint(FAPIEndpoint("POST", "setSwitches", &AFicsitRemoteMonitoring::setSwitches).RequiresAuthentication().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("POST", "sendChatMessage", &AFicsitRemoteMonitoring::SendChatMessage).RequiresAuthentication().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("POST", "createPing", &AFicsitRemoteMonitoring::CreatePing).RequiresAuthentication().RequiresGameThread());
 }
 
 void AFicsitRemoteMonitoring::InitOutageNotification() {
