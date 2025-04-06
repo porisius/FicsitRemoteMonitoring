@@ -1,146 +1,76 @@
-= Belt Stats/GeoLocation
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:attribute-missing: drop
+:depth:
 
-API Endpoint: getBelts +
+= getBelts
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+include::../_isGetAll.adoc[]
 
-|Name
-|Belt Type
-|String
-|Output
+Get a list of all belts.
 
-|ClassName
-|UE Class Name
-|String
-|Output
+== URL
 
-|ItemName
-|Items on Belt (Future Function)
-|String
-|Output
+`GET http://localhost:8080/getBelts`
 
-|location0/x
-|X Location of Belt
-|Float
-|Output
+include::../_responseBody.adoc[]
 
-|location0/y
-|Y Location of Belt
-|Float
-|Output
+| ID | String | Unique ID of the Belt.
+| Name | String | Name of the Belt Type.
+| ClassName | String | Class Name of the Belt.
 
-|location0/z
-|Z Location of Belt
-|Float
-|Output
+{set:key-name:location0}
+{set:key-description:Start Location of the Belt}
+include::../Models/_location.adoc[tags=!rotation]
+| Connected0 | Boolean | Is Belt Connected at starting point?
 
-|Connected0
-|Is Belt Connected at starting point?
-|Boolean
-|Output
+{set:key-name:location1}
+{set:key-description:End Location of the Belt}
+include::../Models/_location.adoc[tags=!rotation]
+| Connected1 | Boolean | Is Belt Connected at ending point?
 
-|location1/x
-|X Location of Belt
-|Float
-|Output
+| Length | Float | Length of the Belt in centimetre (cm).
+| ItemsPerMinute | Float | Speed of the Belt.
 
-|location1/y
-|Y Location of Belt
-|Float
-|Output
-
-|location1/z
-|Z Location of Belt
-|Float
-|Output
-
-|Connected1
-|Is Belt Connected at starting point?
-|Boolean
-|Output
-
-|ItemsPerMinute
-|Belt Speed
-|Float
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
+include::../Models/_features.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
-[	
-   {
-      "Name": "Conveyor Belt Mk.1",
-      "ClassName": "Build_ConveyorBeltMk1_C_89",
-      "location0":
-      {
-         "X": -104125.7109375,
-         "Y": -133350.21875,
-         "Z": -1310.15771484375
+[
+  {
+    "ID": "Build_ConveyorBeltMk1_C_2147415070",
+    "Name": "Conveyor Belt Mk.1",
+    "ClassName": "Build_ConveyorBeltMk1_C",
+    "location0": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "Connected0": true,
+    "location1": {
+      "x": -964.5940059659988,
+      "y": -258.68724653875688,
+      "z": 27.264452340796197
+    },
+    "Connected1": true,
+    "Length": 1000.2387084960938,
+    "ItemsPerMinute": 60,
+    "features": {
+      "properties": {
+        "name": "Conveyor Belt Mk.1",
+        "type": "Conveyor Belt Mk.1"
       },
-      "Connected0": true,
-      "location1":
-      {
-         "X": -104015.5859375,
-         "Y": -132823.078125,
-         "Z": -1310.1578369140625
-      },
-      "Connected1": true,
-      "Speed": 120,
-      "features":
-      {
-         "properties":
-         {
-            "name": "Conveyor Belt Mk.1",
-            "type": "Conveyor Belt Mk.1"
-         },
-         "geometry":
-         {
-            "coordinates": [
-               {
-                  "X": -104125.7109375,
-                  "Y": -133350.21875,
-                  "Z": -1310.15771484375
-               },
-               {
-                  "X": -104015.5859375,
-                  "Y": -132823.078125,
-                  "Z": -1310.1578369140625
-               }
-            ],
-            "type": "Line"
-         }
+      "geometry": {
+        "coordinates": {
+          "x": -54853.11328125,
+          "y": 263822.28125,
+          "z": -3733.415771484375
+        },
+        "type": "Point"
       }
-   }
+    }
+  }
 ]
 -----------------
