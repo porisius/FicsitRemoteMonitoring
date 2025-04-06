@@ -1,4 +1,5 @@
 ﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
 = getChatMessages
 
@@ -19,10 +20,10 @@ include::../_responseBody.adoc[]
 - `Player`: Messages sent by a player.
 | Message | String | The content of the chat message.
 | Color | Object | Color of the chat message.
-|   R | Float | Red channel intensity (0-1).
-|   G | Float | Green channel intensity (0-1).
-|   B | Float | Blue channel intensity (0-1).
-|   A | Float | Alpha channel intensity (0-1).
+| {depth}  R | Float | Red channel intensity (0-1).
+| {depth}  G | Float | Green channel intensity (0-1).
+| {depth}  B | Float | Blue channel intensity (0-1).
+| {depth}  A | Float | Alpha channel intensity (0-1).
 
 |===
 
