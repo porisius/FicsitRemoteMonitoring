@@ -12,4 +12,8 @@
 | xref:json/Write/setSwitches.adoc[setSwitches]
 | Updates settings of a power switch (Name, Status, Priority).
 
+| World
+| xref:json/Write/createPing.adoc[createPing]
+| Creates a world ping.
+
 |===
