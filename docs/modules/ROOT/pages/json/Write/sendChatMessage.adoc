@@ -18,10 +18,10 @@ include::../_requestBody.adoc[]
 | sender | String | No | Sender's name. Empty for System, "ada" for A.D.A messages. + 
 *Maximum 32 characters*
 | color | Object | No | Color of the chat message.
-|   r | Float | No | Red channel intensity (0-1). Default: 1
-|   g | Float | No | Green channel intensity (0-1). Default: 1
-|   b | Float | No | Blue channel intensity (0-1). Default: 1
-|   a | Float | No | Alpha channel intensity (0-1). Default: 1
+| {depth}  r | Float | No | Red channel intensity (0-1). Default: 1
+| {depth}  g | Float | No | Green channel intensity (0-1). Default: 1
+| {depth}  b | Float | No | Blue channel intensity (0-1). Default: 1
+| {depth}  a | Float | No | Alpha channel intensity (0-1). Default: 1
 |===
 
 include::../_responseBody.adoc[]
