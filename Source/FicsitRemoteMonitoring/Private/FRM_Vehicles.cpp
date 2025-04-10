@@ -144,11 +144,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 				FormString = "Out of Fuel";
 			};
 
-			int32 CurrentGear = VehicleMovement->GetCurrentGear();
-			float ForwardSpeed = VehicleMovement->GetForwardSpeed();
-			float RotationSpeed = VehicleMovement->GetEngineRotationSpeed();
-			float Throttle = VehicleMovement->GetThrottleInput();
-
 			//AFGSavedWheeledVehiclePath* VehiclePath = Cast<AFGSavedWheeledVehiclePath>(Vehicle);
 			//fgcheck(VehiclePath);
 			//FString PathName = VehiclePath->mPathName;
@@ -165,6 +160,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 			JVehicle->Values.Add("Airborne", MakeShared<FJsonValueBoolean>(VehicleMovement->IsInAir()));
 			JVehicle->Values.Add("FollowingPath", MakeShared<FJsonValueBoolean>(WheeledVehicle->IsFollowingAPath()));
 			JVehicle->Values.Add("Autopilot", MakeShared<FJsonValueBoolean>(WheeledVehicle->IsSelfDriving()));
+			JVehicle->Values.Add("HasFuel", MakeShared<FJsonValueBoolean>(WheeledVehicle->HasFuel()));
+			JVehicle->Values.Add("HasFuelForRoundtrip", MakeShared<FJsonValueBoolean>(WheeledVehicle->HasFuelForRoundtrip()));
+			JVehicle->Values.Add("TotalFuelEnergy", MakeShared<FJsonValueNumber>(WheeledVehicle->GetTotalFuelEnergy()));
+			JVehicle->Values.Add("MaxFuelEnergy", MakeShared<FJsonValueNumber>(WheeledVehicle->GetMaxFuelEnergy()));
 			JVehicle->Values.Add("Inventory", MakeShared<FJsonValueArray>(Inventory));
 			JVehicle->Values.Add("FuelInventory", MakeShared<FJsonValueArray>(FuelInventory));
 			JVehicle->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Vehicle, Vehicle->mDisplayName.ToString(), Vehicle->mDisplayName.ToString())));
