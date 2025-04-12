@@ -113,7 +113,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_World::GetChatMessages(UObject* WorldContext
 	{
 		TSharedPtr<FJsonObject> JChatMessage = MakeShared<FJsonObject>();
 		JChatMessage->Values.Add("ServerTimeStamp", MakeShared<FJsonValueNumber>(ChatMessage.ServerTimeStamp));
-		JChatMessage->Values.Add("Sender", MakeShared<FJsonValueString>(ChatMessage.CachedPlayerName));
+		JChatMessage->Values.Add("Sender", MakeShared<FJsonValueString>(ChatMessage.MessageSender.ToString()));
 
 		switch (ChatMessage.MessageType)
 		{
@@ -128,13 +128,13 @@ TArray<TSharedPtr<FJsonValue>> UFRM_World::GetChatMessages(UObject* WorldContext
 			break;
 		}
 
-		JChatMessage->Values.Add("Message", MakeShared<FJsonValueString>(ChatMessage.MessageString));
+		JChatMessage->Values.Add("Message", MakeShared<FJsonValueString>(ChatMessage.MessageText.ToString()));
 
 		TSharedPtr<FJsonObject> JColor = MakeShared<FJsonObject>();
-		JColor->Values.Add("R", MakeShared<FJsonValueNumber>(ChatMessage.CachedColor.R));
-		JColor->Values.Add("G", MakeShared<FJsonValueNumber>(ChatMessage.CachedColor.G));
-		JColor->Values.Add("B", MakeShared<FJsonValueNumber>(ChatMessage.CachedColor.B));
-		JColor->Values.Add("A", MakeShared<FJsonValueNumber>(ChatMessage.CachedColor.A));
+		JColor->Values.Add("R", MakeShared<FJsonValueNumber>(ChatMessage.MessageSenderColor.R));
+		JColor->Values.Add("G", MakeShared<FJsonValueNumber>(ChatMessage.MessageSenderColor.G));
+		JColor->Values.Add("B", MakeShared<FJsonValueNumber>(ChatMessage.MessageSenderColor.B));
+		JColor->Values.Add("A", MakeShared<FJsonValueNumber>(ChatMessage.MessageSenderColor.A));
 		JChatMessage->Values.Add("Color", MakeShared<FJsonValueObject>(JColor));
 
 		JResponse.Add(MakeShared<FJsonValueObject>(JChatMessage));
@@ -258,17 +258,17 @@ TArray<TSharedPtr<FJsonValue>> UFRM_World::SendChatMessage(UObject* WorldContext
 		else if (!SenderName.IsEmpty())
 		{
 			MessageStruct.MessageType = EFGChatMessageType::CMT_PlayerMessage;
-			MessageStruct.CachedPlayerName = SenderName.Left(32);
+			MessageStruct.MessageSender = FText::FromString(SenderName.Left(32));
 		}
 
-		MessageStruct.MessageString = Message;
+		MessageStruct.MessageText = FText::FromString(Message);
 		MessageStruct.ServerTimeStamp = World->TimeSeconds;
-		MessageStruct.CachedColor = Color;
-		ChatManager->Multicast_BroadcastChatMessage(MessageStruct);
+		MessageStruct.MessageSenderColor = Color;
+		ChatManager->BroadcastChatMessage(MessageStruct, nullptr);
 
 		TSharedPtr<FJsonObject> JResponse = MakeShared<FJsonObject>();
 		JResponse->Values.Add("IsSent", MakeShared<FJsonValueBoolean>(true));
-		JResponse->Values.Add("Message", MakeShared<FJsonValueString>(MessageStruct.MessageString));
+		JResponse->Values.Add("Message", MakeShared<FJsonValueString>(MessageStruct.MessageText.ToString()));
 		JResponses.Add(MakeShared<FJsonValueObject>(JResponse));
 	}
 
