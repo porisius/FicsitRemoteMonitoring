@@ -18,7 +18,6 @@
 #include "FRM_World.h"
 #include "ModSubsystem.h"
 #include "FRM_Controller.h"
-#include "FactoryDedicatedServer/Public/Networking/FGServerAPIManager.h"
 
 THIRD_PARTY_INCLUDES_START
 #include "ThirdParty/uWebSockets/App.h"
