@@ -500,7 +500,9 @@ void AFicsitRemoteMonitoring::PushUpdatedData() {
     	FRequestData RequestData = FRequestData();
     	RequestData.bIsAuthorized = true;
 
-        FString Json = HandleEndpoint(this, Endpoint, RequestData, bAllocationComplete, ErrorCode);
+        FString Json;
+
+    	HandleEndpoint(Endpoint, RequestData, bAllocationComplete, ErrorCode, Json);
 
         //block while not complete
         while (!bAllocationComplete)
@@ -613,7 +615,9 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 	
     bool bSuccess = false;
 	int32 ErrorCode = 404;
-    FString OutJson = this->HandleEndpoint(World, Endpoint, RequestData, bSuccess, ErrorCode);
+	FString OutJson;
+    //FString OutJson = this->HandleEndpoint(World, Endpoint, RequestData, bSuccess, ErrorCode);
+	this->HandleEndpoint(Endpoint, RequestData, bSuccess, ErrorCode, OutJson);
 
     if (bSuccess) {
         UE_LOGFMT(LogHttpServer, Log, "API Found Returning: {Endpoint}", Endpoint);
@@ -817,11 +821,13 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
     bSuccess = false;
     TArray<TSharedPtr<FJsonValue>> JsonArray;
 
+	/** Unable to be used for RS232, FGServerAPIManager, or even the debug command
     if (!SocketListener) {
         UE_LOG(LogHttpServer, Warning, TEXT("SocketListener is closed. Skipping request for endpoint '%s'."), *InEndpoint);
         return Response;
     }
-
+	*/
+	
 	TArray<FString> AvailableMethods;
     bool bEndpointFound = false;
 
@@ -850,7 +856,8 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
             if (EndpointInfo.bRequireGameThread) {
                 FThreadSafeBool bAllocationComplete = false;
                 AsyncTask(ENamedThreads::GameThread, [this, &EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &bSuccess]() {
-					if (SocketListener && EndpointInfo.FunctionPtr)
+					//if (SocketListener && EndpointInfo.FunctionPtr)
+					if (EndpointInfo.FunctionPtr)
 					{
 						(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
 						bSuccess = true;
@@ -862,7 +869,8 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
                     FPlatformProcess::Sleep(0.0001f);
                 }
             }
-			else if (SocketListener && EndpointInfo.FunctionPtr)
+			//else if (SocketListener && EndpointInfo.FunctionPtr)
+			else if (EndpointInfo.FunctionPtr)
 			{
 				(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
 				bSuccess = true;
@@ -904,39 +912,28 @@ void AFicsitRemoteMonitoring::AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonA
     JsonArray.Add(MakeShared<FJsonValueObject>(JsonObject));
 }
 
-FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess, int32& ErrorCode)
+//FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess, int32& ErrorCode)
+void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, const FRequestData RequestData, bool& bSuccess, int32& ErrorCode, FString& Out_Data)
 {
 	bSuccess = false;
 
+	UObject* WorldContext = this->GetWorld();
+
 	auto [JsonValues, bUseFirstObject] = this->CallEndpoint(WorldContext, InEndpoint, RequestData, bSuccess, ErrorCode);
 
-	if (bSuccess && !bUseFirstObject) return UFRM_RequestLibrary::JsonArrayToString(JsonValues, JSONDebugMode);
-
-	// return empty object, if JsonValues is empty
-	if (JsonValues.Num() == 0) return "{}";
-
-	TSharedPtr<FJsonObject> FirstJsonObject = JsonValues[0]->AsObject();
-
-	return UFRM_RequestLibrary::JsonObjectToString(FirstJsonObject, JSONDebugMode);
+	if (bSuccess && !bUseFirstObject)
+	{
+		Out_Data = UFRM_RequestLibrary::JsonArrayToString(JsonValues, JSONDebugMode);
+	} else if (JsonValues.Num() == 0) {
+		Out_Data = "{}";
+	}
+	else
+	{
+		// return empty object, if JsonValues is empty
+		TSharedPtr<FJsonObject> FirstJsonObject = JsonValues[0]->AsObject();
+		Out_Data = UFRM_RequestLibrary::JsonObjectToString(FirstJsonObject, JSONDebugMode);
+	}
 }
-
-/*FFGServerErrorResponse AFicsitRemoteMonitoring::HandleCSSEndpoint(FString& out_json, FString InEndpoin)
-{
-    bool bSuccess = false;
-    auto World = GetWorld();
-    TArray<TSharedPtr<FJsonValue>> Json = this->CallEndpoint(World, InEndpoin, bSuccess);
-
-    if (!bSuccess) {
-        out_json = "{'error': 'Endpoint not found. Please consult Endpoint's documentation for more information.'}";
-        return FFGServerErrorResponse::Ok();
-    }
-
-    FConfig_FactoryStruct config = FConfig_FactoryStruct::GetActiveConfig(World);
-    out_json = UBlueprintJsonValue::StringifyArray(Json, config.JSONDebugMode);
-    return FFGServerErrorResponse::Ok();
-
-}
-*/
 
 void AFicsitRemoteMonitoring::getAll(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
 {

@@ -125,11 +125,14 @@ public:
 
 	void RegisterEndpoint(const FAPIEndpoint& Endpoint);
 
-	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
-	FString HandleEndpoint (UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode);
+	void RegisterEndpoint(const FAPIEndpoint& Endpoint);
 
 	//FFGServerErrorResponse HandleCSSEndpoint(FString& out_json, FString InEndpoin);
 
+	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
+	//FString HandleEndpoint (UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode);
+	void HandleEndpoint (FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode, FString& Out_Data);
+	
 	FCallEndpointResponse CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
