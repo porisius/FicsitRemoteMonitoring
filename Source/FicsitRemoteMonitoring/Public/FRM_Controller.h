@@ -1,17 +1,7 @@
 ﻿#pragma once
 
-#include "FGServerControllerBase.h"
-
-#include "FRM_Drones.h"
-#include "FRM_Events.h"
-#include "FRM_Factory.h"
-#include "FRM_Player.h"
-#include "FRM_Power.h"
-#include "FRM_Production.h"
-#include "FRM_RequestData.h"
-#include "FRM_Trains.h"
-#include "FRM_Vehicles.h"
-#include "FRM_World.h"
+#include "FGDSSharedTypes.h"
+#include "FactoryDedicatedServer/Public/Controller/FGServerControllerBase.h"
 
 #include "FRM_Controller.generated.h"
 
@@ -84,5 +74,5 @@ public:
 	AFicsitRemoteMonitoring *ModSubsystem;
 	
 	UFUNCTION( FGServerRequestHandler, FGServerRequestPrivilegeLevel = "NotAuthenticated" )
-	FFGServerErrorResponse Handler_getPower(FString &OutEndpoint);
+	FFGServerErrorResponse Handler_getPower(FFGFileResponseWrapper& OutFileResponse, const FFGRequestHandlerContextWrapper& RequestContext);
 };

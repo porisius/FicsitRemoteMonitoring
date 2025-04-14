@@ -19,7 +19,6 @@
 #include "ModSubsystem.h"
 #include "Endpoints/Factory/setEnabled.h"
 #include "FRM_Controller.h"
-#include "FactoryDedicatedServer/Public/Networking/FGServerAPIManager.h"
 
 THIRD_PARTY_INCLUDES_START
 #include "ThirdParty/uWebSockets/App.h"

@@ -1,18 +1,21 @@
-﻿#include "FRM_Controller.h"
+﻿#pragma once
 
-#include "FGDSSharedTypes.h"
-#include "../Public/FicsitRemoteMonitoring.h"
-#include "../Public/FRM_RequestData.h"
-#include "Logging/StructuredLog.h"
-#include "FicsitRemoteMonitoringModule.h"
+#include "FRM_Controller.h"
 
-FFGServerErrorResponse UFRM_Controller::Handler_getPower(FString &OutEndpoint)
+#include "FGServerAPIDataTypes.h"
+#include "FicsitRemoteMonitoring.h"
+#include "FRM_RequestData.h"
+#include "HTTPSharedDataTypes.h"
+
+FFGServerErrorResponse UFRM_Controller::Handler_getPower(FFGFileResponseWrapper& OutFileResponse, const FFGRequestHandlerContextWrapper& RequestContext)
 {
 	FRequestData RequestData;
 	bool bSuccess = false;
 	int32 ErrorCode = 404;
 	
-	ModSubsystem->HandleEndpoint("getPower", RequestData, bSuccess, ErrorCode, OutEndpoint);
+	FString HandleEndpointReturn;
+	ModSubsystem->HandleEndpoint("getPower", RequestData, bSuccess, ErrorCode, HandleEndpointReturn);
+	OutFileResponse.FileResponse = MakeShared<FFGRequestPayload>("application/json", HandleEndpointReturn);
 	
 	return FFGServerErrorResponse::Ok();
 }
