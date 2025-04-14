@@ -17,6 +17,8 @@
 #include "FRM_Vehicles.h"
 #include "FRM_World.h"
 #include "ModSubsystem.h"
+#include "FRM_Controller.h"
+#include "FactoryDedicatedServer/Public/Networking/FGServerAPIManager.h"
 
 THIRD_PARTY_INCLUDES_START
 #include "ThirdParty/uWebSockets/App.h"
@@ -122,11 +124,12 @@ public:
 	/** Get the subsystem in the current world, can be nullptr, e.g. on game ending (destroy) or game startup. */
 	static AFicsitRemoteMonitoring* Get(UWorld* world);
 
-	void RegisterEndpoint(const FAPIEndpoint& Endpoint);
+	UPROPERTY()
+	UFRM_Controller* Controller;
 
 	void RegisterEndpoint(const FAPIEndpoint& Endpoint);
 
-	//FFGServerErrorResponse HandleCSSEndpoint(FString& out_json, FString InEndpoin);
+	void InitializeFunctions();
 
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
 	//FString HandleEndpoint (UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode);

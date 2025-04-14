@@ -48,7 +48,8 @@ public class FicsitRemoteMonitoring : ModuleRules
                 "Chaos", 
                 "ChaosVehiclesCore", "ChaosVehicles", "ChaosSolverEngine",
                 "HTTP",
-                "FicsitRemoteMonitoring"
+                "FicsitRemoteMonitoring",
+                "FactoryDedicatedServer"
             }
         );
 
@@ -62,11 +63,6 @@ public class FicsitRemoteMonitoring : ModuleRules
 
         // Add uWebSockets
         LoaduWebSockets(Target);
-
-        if (Target.Type == TargetType.Server)
-        {
-            PublicDependencyModuleNames.Add("FactoryDedicatedServer");
-        }
 
         PublicDefinitions.Add("UWS_STATICLIB"); // If you're using the static version of uWS
 

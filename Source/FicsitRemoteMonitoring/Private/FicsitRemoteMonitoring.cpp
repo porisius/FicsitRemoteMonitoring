@@ -14,6 +14,8 @@
 #include "StructuredLog.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetStringLibrary.h"
+#include "FGServerAPIManager.h"
+#include "FGServerSubsystem.h"
 
 us_listen_socket_t* SocketListener;
 bool SocketRunning = false;
@@ -45,6 +47,9 @@ void AFicsitRemoteMonitoring::BeginPlay()
 
     // Load FRM's API Endpoints
     InitAPIRegistry();
+
+	// Load FRM's API Controller to FGServerAPIManager
+	InitializeFunctions();
 
     // get config structs
     auto HttpConfig = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
@@ -372,6 +377,30 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
             }
         });
 
+}
+
+void AFicsitRemoteMonitoring::InitializeFunctions() {
+	const auto World = this->GetWorld();
+	this->Controller = NewObject<UFRM_Controller>();
+	this->Controller->World = World;
+	this->Controller->ModSubsystem = this;
+	
+	if (World == nullptr)
+		return;
+	
+	const auto GameInstance = World->GetGameInstance();
+	if (GameInstance == nullptr)
+		return;
+	
+	const auto Subsystem = GameInstance->GetSubsystem<UFGServerSubsystem>();
+	if (Subsystem == nullptr)
+		return;
+	
+	const auto ServerAPIManager = Subsystem->GetServerAPIManager();
+	if (ServerAPIManager == nullptr)
+		return;
+
+	ServerAPIManager->RegisterRequestHandler(this->Controller);
 }
 
 std::string UrlDecode(const std::string &Value) {
@@ -776,37 +805,7 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FAPIEndpoint& Endpoint)
 	APIEndpoints.Add(Endpoint);
 
 	UE_LOGFMT(LogHttpServer, Log, "Registered API Endpoint: {APIName} - Current number of endpoints registered: {1}", Endpoint.APIName, APIEndpoints.Num());
-
-/*
-    // Store the APIName in a member variable for use in HandleCSSEndpoint
-    StoredAPIName = APIName;
-
-    UFGServerSubsystem* ServerSubsystem = UFGServerSubsystem::Get(GetWorld());
-    if (IsValid(ServerSubsystem)) { return; }
-
-    UFGServerAPIManager* APIManager = ServerSubsystem->GetServerAPIManager();
-    if (IsValid(APIManager)) { return; }
-
-    if (!IsRunningDedicatedServer()) {
-
-        // Store the APIName in a member variable for use in HandleCSSEndpoint
-        StoredAPIName = APIName;
-
-        UFGServerSubsystem* ServerSubsystem = UFGServerSubsystem::Get(GetWorld());
-        if (IsValid(ServerSubsystem)) { return; }
-
-        UFGServerAPIManager* APIManager = ServerSubsystem->GetServerAPIManager();
-        if (IsValid(APIManager)) { return; }
-
-        FFGRequestHandlerRegistration HandleRegistration = FFGRequestHandlerRegistration();
-        HandleRegistration.HandlerObject = this;
-        HandleRegistration.HandlerFunction = this->FindFunction(FName("HandleCSSEndpoint"));
-        HandleRegistration.FunctionName = FName(*APIName);
-        HandleRegistration.PrivilegeLevel = EPrivilegeLevel::None;
-        APIManager->mRegisteredHandlers.Add(FString(APIName), HandleRegistration);
-
-    };
-*/
+	
 }
 
 FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode)
