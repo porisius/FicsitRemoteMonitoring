@@ -90,6 +90,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getElevators(UObject* WorldContext,
 		
 		JElevator->Values.Add("Name", MakeShared<FJsonValueString>(Elevator->mDisplayName.ToString()));
 		JElevator->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Elevator->GetClass())));
+		JElevator->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Elevator))));
 		JElevator->Values.Add("NumFloorStops", MakeShared<FJsonValueNumber>(Elevator->GetNumFloorStops()));
 		JElevator->Values.Add("ActiveFloorStep", MakeShared<FJsonValueNumber>(Elevator->GetIndexOfFloorStop(Elevator->GetCurrentFloorStop())));
 		JElevator->Values.Add("FloorStops", MakeShared<FJsonValueArray>(JStops));
