@@ -1,6 +1,7 @@
 #include "FRM_Factory.h"
 
 #include "FGBuildableConveyorBase.h"
+#include "FGBuildableElevator.h"
 #include "FGBuildableFrackingActivator.h"
 #include "FGBuildableHubTerminal.h"
 #include "FGBuildableManufacturer.h"
@@ -64,6 +65,41 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, FRe
 
 	return JConveyorBeltArray;
 };
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getElevators(UObject* WorldContext, FRequestData RequestData) {
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+
+	TArray<AFGBuildableElevator*> Elevators;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableElevator>(Elevators);
+	TArray<TSharedPtr<FJsonValue>> JConveyorBeltArray;
+
+	for (AFGBuildableElevator* Elevator : Elevators) {
+
+		if (!IsValid(Elevator)) continue;
+
+		TSharedPtr<FJsonObject> JElevator = UFRM_Library::CreateBaseJsonObject(Elevator);
+		TArray<TSharedPtr<FJsonValue>> JStops;
+		for (int32 i = 0; i < Elevator->GetNumFloorStops(); i++)
+		{
+			TSharedPtr<FJsonObject> JStop = MakeShared<FJsonObject>();
+			FElevatorFloorStopInfo Test = Elevator->GetFloorStopInfoByIndex(i);
+			JStop->Values.Add("Name", MakeShared<FJsonValueString>(Test.FloorName));
+			JStop->Values.Add("Height", MakeShared<FJsonValueNumber>(Test.Height));
+			JStops.Add(MakeShared<FJsonValueObject>(JStop));
+		}
+		
+		JElevator->Values.Add("Name", MakeShared<FJsonValueString>(Elevator->mDisplayName.ToString()));
+		JElevator->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Elevator->GetClass())));
+		JElevator->Values.Add("NumFloorStops", MakeShared<FJsonValueNumber>(Elevator->GetNumFloorStops()));
+		JElevator->Values.Add("ActiveFloorStep", MakeShared<FJsonValueNumber>(Elevator->GetIndexOfFloorStop(Elevator->GetCurrentFloorStop())));
+		JElevator->Values.Add("FloorStops", MakeShared<FJsonValueArray>(JStops));
+		JElevator->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Elevator), Elevator->mDisplayName.ToString(), Elevator->mDisplayName.ToString())));
+
+		JConveyorBeltArray.Add(MakeShared<FJsonValueObject>(JElevator));
+	}
+
+	return JConveyorBeltArray;
+}
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getModList(UObject* WorldContext, FRequestData RequestData) {
 
