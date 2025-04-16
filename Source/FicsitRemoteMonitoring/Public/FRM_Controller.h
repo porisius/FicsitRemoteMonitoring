@@ -5,8 +5,10 @@
 
 #include "FRM_Controller.generated.h"
 
+struct FFGFileResponseWrapper;
 class AFicsitRemoteMonitoring;
 class UFGUserSetting;
+struct FFGRequestHandlerContextWrapper;
 struct FFGServerJoinDataResponse;
 class UFGServerSubsystem;
 
@@ -75,5 +77,6 @@ public:
 	AFicsitRemoteMonitoring *ModSubsystem;
 	
 	UFUNCTION( FGServerRequestHandler, FGServerRequestPrivilegeLevel = "NotAuthenticated" )
-	FFGServerErrorResponse Handler_getPower(FFGFileResponseWrapper& OutFileResponse, const FFGRequestHandlerContextWrapper& RequestContext);
+	FFGServerErrorResponse Handler_Frm(FFGFileResponseWrapper& OutFileResponse, const FFGRequestHandlerContextWrapper& RequestContext);
+	
 };
