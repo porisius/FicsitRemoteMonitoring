@@ -59,6 +59,7 @@ class UFGServerSubsystem;
  * 		APIToken,
  * 	};
 */
+enum class EInterfaceType : uint8;
 
 UCLASS()
 class FICSITREMOTEMONITORING_API UFRM_Controller : public UFGServerControllerBase

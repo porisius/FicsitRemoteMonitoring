@@ -4,6 +4,7 @@
 #include "Config_SerialStruct.h"
 #include "FicsitRemoteMonitoring.h"
 #include "FicsitRemoteMonitoringModule.h"
+#include "FRM_Request.h"
 #include "NotificationLoader.h"
 #include "StructuredLog.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -49,7 +50,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 		RequestData.bIsAuthorized = true;
 		FString Json;
 
-		ModSubsystem->HandleEndpoint(sEndpoint, RequestData, bSuccess, ErrorCode, Json);
+		ModSubsystem->HandleEndpoint(sEndpoint, RequestData, bSuccess, ErrorCode, Json, EInterfaceType::Command);
 
 		if (!bSuccess) {
 			ChatReturn.Chat = TEXT("Unable to find endpoint, please refer to the documentation at docs.ficsit.app or the mod creator.");
