@@ -531,7 +531,7 @@ void AFicsitRemoteMonitoring::PushUpdatedData() {
 
         FString Json;
 
-    	HandleEndpoint(Endpoint, RequestData, bAllocationComplete, ErrorCode, Json);
+    	HandleEndpoint(Endpoint, RequestData, bAllocationComplete, ErrorCode, Json, EInterfaceType::Socket);
 
         //block while not complete
         while (!bAllocationComplete)
@@ -646,7 +646,7 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 	int32 ErrorCode = 404;
 	FString OutJson;
     //FString OutJson = this->HandleEndpoint(World, Endpoint, RequestData, bSuccess, ErrorCode);
-	this->HandleEndpoint(Endpoint, RequestData, bSuccess, ErrorCode, OutJson);
+	this->HandleEndpoint(Endpoint, RequestData, bSuccess, ErrorCode, OutJson, EInterfaceType::Web);
 
     if (bSuccess) {
         UE_LOGFMT(LogHttpServer, Log, "API Found Returning: {Endpoint}", Endpoint);
@@ -808,7 +808,7 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FAPIEndpoint& Endpoint)
 	
 }
 
-FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode)
+FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode, EInterfaceType Interface)
 {
     FCallEndpointResponse Response;
     Response.bUseFirstObject = false;
@@ -847,13 +847,14 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
         Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
 
         try {
-            if (EndpointInfo.bRequireGameThread) {
+            if (EndpointInfo.bRequireGameThread && Interface != EInterfaceType::Server) {
                 FThreadSafeBool bAllocationComplete = false;
-                AsyncTask(ENamedThreads::GameThread, [this, &EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &bSuccess]() {
+                AsyncTask(ENamedThreads::GameThread, [this, &EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &ErrorCode, &bSuccess]() {
 					//if (SocketListener && EndpointInfo.FunctionPtr)
 					if (EndpointInfo.FunctionPtr)
 					{
 						(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
+						ErrorCode = 200;
 						bSuccess = true;
 					}
 					bAllocationComplete = true;
@@ -867,6 +868,7 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
 			else if (EndpointInfo.FunctionPtr)
 			{
 				(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
+				ErrorCode = 200;
 				bSuccess = true;
 			}
         } catch (const std::exception& e) {
@@ -891,6 +893,7 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
 	}
     else if (!bEndpointFound) {
         UE_LOG(LogHttpServer, Warning, TEXT("No matching endpoint found for '%s'."), *InEndpoint);
+    	ErrorCode = 404;
         AddErrorJson(JsonArray, TEXT("No matching endpoint found."));
     }
 
@@ -907,13 +910,13 @@ void AFicsitRemoteMonitoring::AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonA
 }
 
 //FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess, int32& ErrorCode)
-void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, const FRequestData RequestData, bool& bSuccess, int32& ErrorCode, FString& Out_Data)
+void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, const FRequestData RequestData, bool& bSuccess, int32& ErrorCode, FString& Out_Data, EInterfaceType Interface)
 {
 	bSuccess = false;
 
 	UObject* WorldContext = this->GetWorld();
 
-	auto [JsonValues, bUseFirstObject] = this->CallEndpoint(WorldContext, InEndpoint, RequestData, bSuccess, ErrorCode);
+	auto [JsonValues, bUseFirstObject] = this->CallEndpoint(WorldContext, InEndpoint, RequestData, bSuccess, ErrorCode, Interface);
 
 	if (bSuccess && !bUseFirstObject)
 	{

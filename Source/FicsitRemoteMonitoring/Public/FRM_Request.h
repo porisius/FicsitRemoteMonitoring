@@ -4,6 +4,16 @@
 #include "ThirdParty/uWebSockets/App.h"
 #include "FRM_Request.generated.h"
 
+UENUM( BlueprintType)
+enum class EInterfaceType : uint8
+{
+	Serial		UMETA( DisplayName = "Serial/RS232" ),
+	Web			UMETA( DisplayName = "uWebsockets HTTP" ),
+	Socket		UMETA( DisplayName = "uWebsockets WS" ),
+	Command		UMETA( DisplayName = "Chat Command" ),
+	Server		UMETA( DisplayName = "Game API" )
+};
+
 UCLASS()
 class FICSITREMOTEMONITORING_API UFRM_RequestLibrary : public UFGBlueprintFunctionLibrary
 {
