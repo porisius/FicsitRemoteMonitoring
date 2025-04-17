@@ -340,22 +340,12 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPowerSlug(UObject* WorldContext,
 		if (!ItemClass) continue;
 		
 		TSharedPtr<FJsonObject> JPowerSlug = UFRM_Library::CreateBaseJsonObject(PowerActor);
-		FString SlugName;
+		FString ItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
 
-		if (ItemClass->GetName() == "Desc_Crystal") {
-			SlugName = "Blue Slug";
-		}
-		else if (ItemClass->GetName() == "Desc_Crystal_mk2") {
-			SlugName = "Yellow Slug";
-		}
-		else if (ItemClass->GetName() == "Desc_Crystal_mk3") {
-			SlugName = "Purple Slug";
-		};
-
-		JPowerSlug->Values.Add("Name", MakeShared<FJsonValueString>(SlugName));
+		JPowerSlug->Values.Add("Name", MakeShared<FJsonValueString>(ItemName));
 		JPowerSlug->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(PowerActor->GetClass())));
 		JPowerSlug->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(PowerActor)));
-		JPowerSlug->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(PowerActor), SlugName, "Power Slug")));
+		JPowerSlug->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(PowerActor), ItemName, "Power Slug")));
 
 		JSlugArray.Add(MakeShared<FJsonValueObject>(JPowerSlug));
 	};
