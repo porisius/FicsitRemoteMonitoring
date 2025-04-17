@@ -31,6 +31,7 @@
 **** xref:json/Read/getFactory.adoc[getConstructor]
 **** xref:json/Read/getFactory.adoc[getConverter]
 **** xref:json/Read/getFactory.adoc[getEncoder]
+**** xref:json/Read/getElevators.adoc[getElevators]
 **** xref:json/Read/getExtractor.adoc[getExtractor]
 **** xref:json/Read/getFactory.adoc[getFactory]
 **** getFrackingActivator (soon)
