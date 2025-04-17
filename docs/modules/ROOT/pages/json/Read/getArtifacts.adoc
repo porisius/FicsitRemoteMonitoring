@@ -31,7 +31,6 @@ include::../Models/_features.adoc[]
 [source,json]
 -----------------
 [
-[
   {
     "ID": "BP_WAT2_C_UAID_04421A9713F0FD6301_1747414245",
     "Name": "Mercer Sphere",
