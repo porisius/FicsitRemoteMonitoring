@@ -64,14 +64,14 @@ FFGServerErrorResponse UFRM_Controller::Handler_Frm(FFGFileResponseWrapper& OutF
 	switch (ErrorCode)
 	{
 	case 401:
-		return FFGServerErrorResponse::Error("{\"error\": \"401 Unauthorized\"}");
+		return FFGServerErrorResponse::Error("unauthorized","Keycard needed.");
 	case 404:
 		UE_LOGFMT(LogFRMAPI, Log, "API Not Found: {Endpoint}", Endpoint);
-		return FFGServerErrorResponse::Error("{\"error\": \"API Endpoint not found in FRM.\"}");
+		return FFGServerErrorResponse::Error("endpoint_not_found","API Endpoint: " + Endpoint + " was not found in FRM.");
 	case 405:
-		return FFGServerErrorResponse::Error("{\"error\": \"405 Method Not Allowed\"}");
+		return FFGServerErrorResponse::Error("method_not_allowed","We can't have you do that...");
 	default:
 		UE_LOGFMT(LogFRMAPI, Log, "Unknown Error {Endpoint} {ErrorCode}", Endpoint, ErrorCode);
-		return FFGServerErrorResponse::Error("{\"error\": \"500 Internal Server Error\"}");
+		return FFGServerErrorResponse::Error("internal_server_error","Please report this to the FRM Discord for assistance. Something went wrong that shouldn't have.");
 	}
 }
