@@ -96,6 +96,7 @@
 **** xref:json/Read/getVehicles.adoc[getVehicles]
 
 *** World
+**** xref:json/Read/getArtifacts.adoc[getArtifacts]
 **** xref:json/Read/getDoggo.adoc[getDoggo]
 **** xref:json/Read/getDropPod.adoc[getDropPod]
 **** xref:json/Read/getPowerSlug.adoc[getPowerSlug]
