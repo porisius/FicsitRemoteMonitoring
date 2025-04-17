@@ -2,6 +2,7 @@
 
 #include "FRM_Controller.h"
 
+#include "Config_HTTPStruct.h"
 #include "FGServerAPIDataTypes.h"
 #include "FicsitRemoteMonitoring.h"
 #include "FicsitRemoteMonitoringModule.h"
@@ -18,9 +19,39 @@ FFGServerErrorResponse UFRM_Controller::Handler_Frm(FFGFileResponseWrapper& OutF
 	int32 ErrorCode = 200;
 
 	TSharedPtr<FJsonObject> JsonBody = RequestContext.RequestHandlerContext->RawJsonBody;
+	TMap<FString, TArray<FString>> RequestHeaders = RequestContext.RequestHandlerContext->RequestHeaders;
 
-	FString Endpoint = JsonBody->GetStringField("endpoint");
+	FString Endpoint;
+	if (!JsonBody->TryGetStringField("endpoint", Endpoint))
+	{
+		return FFGServerErrorResponse::Error("missing_parameter","Parameter \'endpoint\' was not found.");
+	}
+	
+	TSharedPtr<FJsonValue> JsonValue = JsonBody->TryGetField("data");
+	if (!JsonValue.IsValid())
+	{
+		if (JsonValue->Type == EJson::Array)
+		{
+			RequestData.Body = JsonValue->AsArray();
+		}
+		else if (JsonValue->Type == EJson::Object)
+		{
+			RequestData.Body.Add(JsonValue);
+		}
+	}
 
+	if (RequestHeaders.Contains("PlaceHolderAuthToken"))
+	{
+		auto config = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
+
+		const TArray<FString>& AuthTokens = RequestHeaders["PlaceHolderAuthToken"];
+		if (AuthTokens.Num() > 0)
+		{
+			FString AuthToken = AuthTokens[0];
+			RequestData.bIsAuthorized = (AuthToken == config.Authentication_Token);
+		}
+	}
+	
 	FString HandleEndpointReturn;
 	ModSubsystem->HandleEndpoint(Endpoint, RequestData, bSuccess, ErrorCode, HandleEndpointReturn, EInterfaceType::Server);
 	
