@@ -384,6 +384,10 @@ public:
 	void getPowerSlug(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Factory::getPowerSlug(WorldContext, RequestData);
 	}
+
+	void getArtifacts(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_World::GetArtifacts(WorldContext);
+	}
 	
 	void getPowerUsage(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Power::getPowerUsage(WorldContext);
