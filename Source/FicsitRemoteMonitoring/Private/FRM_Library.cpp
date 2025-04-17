@@ -1,6 +1,7 @@
 #include "FRM_Library.h"
 
 #include "Config_FactoryStruct.h"
+#include "FGCharacterPlayer.h"
 #include "FGFactoryConnectionComponent.h"
 #include "FGPipeConnectionComponent.h"
 #include "FGPowerCircuit.h"
@@ -355,3 +356,19 @@ TSharedPtr<FJsonObject> UFRM_Library::getPowerConsumptionJSON(UFGPowerInfoCompon
 
 	return JCircuit;
 };
+
+FString UFRM_Library::GetPlayerName(AFGCharacterPlayer* Character)
+{
+	FString CachedPlayerName = Character->GetCachedPlayerName();
+	if (!CachedPlayerName.IsEmpty())
+	{
+		return CachedPlayerName;
+	}
+
+	if (Character->mPlayerNames.Num())
+	{
+		return Character->mPlayerNames[0].PlayerName;
+	}
+
+	return "";
+}

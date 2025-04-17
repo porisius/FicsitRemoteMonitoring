@@ -2,6 +2,9 @@
 
 #include "FRM_Player.h"
 
+#include "FGCharacterPlayer.h"
+#include "FicsitRemoteMonitoring.h"
+#include "FRM_Library.h"
 #include "Kismet/GameplayStatics.h"
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Player::getPlayer(UObject* WorldContext) {
@@ -14,8 +17,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Player::getPlayer(UObject* WorldContext) {
 		TSharedPtr<FJsonObject> JPlayer = UFRM_Library::CreateBaseJsonObject(Player);
 
 		AFGCharacterPlayer* PlayerCharacter = Cast<AFGCharacterPlayer>(Player);
-		APlayerState* PlayerState = PlayerCharacter->GetPlayerState();
-		AFGPlayerState* FGPlayerState = Cast<AFGPlayerState>(PlayerState);
 
 		// get player inventory
 		TArray<FInventoryStack> InventoryStacks;
@@ -23,7 +24,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Player::getPlayer(UObject* WorldContext) {
 		TMap<TSubclassOf<UFGItemDescriptor>, int32> PlayerInventory = UFRM_Library::GetGroupedInventoryItems(InventoryStacks);
 
 		//TODO: Find way to get player's name when they are offline
-		FString PlayerName = PlayerCharacter->mCachedPlayerName;
+		FString PlayerName = UFRM_Library::GetPlayerName(PlayerCharacter);
 
 		JPlayer->Values.Add("Name", MakeShared<FJsonValueString>(PlayerName));
 		JPlayer->Values.Add("ClassName", MakeShared<FJsonValueString>(Player->GetClass()->GetName()));
@@ -32,9 +33,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Player::getPlayer(UObject* WorldContext) {
 		JPlayer->Values.Add("Online", MakeShared<FJsonValueBoolean>(PlayerCharacter->IsPlayerOnline()));
 		JPlayer->Values.Add("PlayerHP", MakeShared<FJsonValueNumber>(PlayerCharacter->GetHealthComponent()->GetCurrentHealth()));
 		JPlayer->Values.Add("Dead", MakeShared<FJsonValueBoolean>(PlayerCharacter->GetHealthComponent()->IsDead()));
-		//JPlayer->Values.Add("PingTime", MakeShared<FJsonValueNumber>(int32::FGPlayerState->GetCompressedPing()));
 		JPlayer->Values.Add("Inventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(PlayerInventory)));
-		JPlayer->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Player, PlayerCharacter->mCachedPlayerName, "Player")));
+		JPlayer->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Player, PlayerName, "Player")));
 
 		JPlayerArray.Add(MakeShared<FJsonValueObject>(JPlayer));
 	};
