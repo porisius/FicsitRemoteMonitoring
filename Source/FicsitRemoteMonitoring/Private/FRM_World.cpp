@@ -26,18 +26,18 @@ TArray<TSharedPtr<FJsonValue>> UFRM_World::GetArtifacts(UObject* WorldContext)
 	for (AActor* Actor : Pickups) {
 		const auto Pickup = Cast<AFGItemPickup>(Actor);
 		if (!Pickup) continue;
-		
-		auto PowerSlug = Pickup->GetPickupItems().Item;
-		const auto ItemClass = PowerSlug.GetItemClass();
+
+		FInventoryItem PowerSlug = Pickup->GetPickupItems().Item;
+		const TSubclassOf<UFGItemDescriptor> ItemClass = PowerSlug.GetItemClass();
 		if (!ItemClass) continue;
 		
 		TSharedPtr<FJsonObject> JPowerSlug = UFRM_Library::CreateBaseJsonObject(Actor);
-		FString SlugName;
-		JPowerSlug->Values.Add("Name", MakeShared<FJsonValueString>(SlugName));
-		JPowerSlug->Values.Add("NameTest", MakeShared<FJsonValueString>(ItemClass->GetName()));
+		FString ItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
+
+		JPowerSlug->Values.Add("Name", MakeShared<FJsonValueString>(ItemName));
 		JPowerSlug->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Actor->GetClass())));
 		JPowerSlug->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Actor)));
-		JPowerSlug->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Actor), SlugName, "Artifact")));
+		JPowerSlug->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Actor), ItemName, "Artifact")));
 
 		JSlugArray.Add(MakeShared<FJsonValueObject>(JPowerSlug));
 	};
