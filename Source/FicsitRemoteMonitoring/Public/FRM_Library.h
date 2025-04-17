@@ -32,6 +32,8 @@ public:
 	static bool IsIntInRange(int32 Number, int32 LowerBound, int32 UpperBound);
 	static TSharedPtr<FJsonObject> GetActorLineFeaturesJSON(FVector PointOne, FVector PointTwo, FString DisplayName, FString TypeName);
 
+	static FString GetPlayerName(AFGCharacterPlayer* Character);
+
 	static double SafeDivide_Double(double Numerator, double Denominator)
 	{
 		return (Denominator == 0.0) ? 0.0 : (Numerator / Denominator);
