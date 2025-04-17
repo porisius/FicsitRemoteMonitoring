@@ -678,6 +678,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getPortal", &AFicsitRemoteMonitoring::getPortal).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPower", &AFicsitRemoteMonitoring::getPower).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPowerSlug", &AFicsitRemoteMonitoring::getPowerSlug).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getArtifacts", &AFicsitRemoteMonitoring::getArtifacts).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPowerUsage", &AFicsitRemoteMonitoring::getPowerUsage).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getProdStats", &AFicsitRemoteMonitoring::getProdStats).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPump", &AFicsitRemoteMonitoring::getPump).GetAll());
