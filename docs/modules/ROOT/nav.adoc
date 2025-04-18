@@ -4,6 +4,7 @@
 * xref:webserver.adoc[Web Server]
 * xref:websockets.adoc[Web Sockets]
 * xref:webhook.adoc[Webhook Notifications]
+* xref:dedicatedserver.adoc[Dedicated Server API]
 * xref:icons.adoc[Icon System (Web Server Only)]
 
 * xref:config/config.adoc[Config]
