@@ -10,4 +10,4 @@ If left empty, a new token will be generated.
 == Passing the token to the API
 
 Use it to set an API request’s Authorization header.
-`Authorization: <token goes here>`
+`X-FRM-Authorization: <token goes here>`
