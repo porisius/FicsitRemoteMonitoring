@@ -413,38 +413,16 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext, F
 	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGDropPod::StaticClass(), FoundActors);
 
 	for (AActor* FoundActor : FoundActors) {
-
-		TSharedPtr<FJsonObject> JDropPod = UFRM_Library::CreateBaseJsonObject(FoundActor);
-
 		AFGDropPod* DropPod = Cast<AFGDropPod>(FoundActor);
-
-		TSubclassOf<UFGItemDescriptor> ItemClass;
-		int32 ItemAmount = -1;
-		float PowerRequired = 0;
-
 		FFGDropPodUnlockCost DropPodCost = DropPod->GetUnlockCost();
 
-		FString JItemName = "No Item";
-		FString JItemClass = "Desc_NoItem";
-
-		ItemAmount = DropPodCost.ItemCost.Amount;
-		ItemClass = DropPodCost.ItemCost.ItemClass;
-		PowerRequired = DropPodCost.PowerConsumption;
-
-		if (ItemAmount > 0) {
-			JItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
-			JItemClass = UKismetSystemLibrary::GetClassDisplayName(DropPodCost.ItemCost.ItemClass);
-		};
-
+		TSharedPtr<FJsonObject> JDropPod = UFRM_Library::CreateBaseJsonObject(FoundActor);
 		JDropPod->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(DropPod)));
 		JDropPod->Values.Add("Opened", MakeShared<FJsonValueBoolean>(DropPod->HasBeenOpened()));
 		JDropPod->Values.Add("Looted", MakeShared<FJsonValueBoolean>(DropPod->HasBeenLooted()));
-		JDropPod->Values.Add("RepairItem", MakeShared<FJsonValueString>(JItemName));
-		JDropPod->Values.Add("RepairItemClass", MakeShared<FJsonValueString>(JItemClass));
-		JDropPod->Values.Add("RepairAmount", MakeShared<FJsonValueNumber>(ItemAmount));
-		JDropPod->Values.Add("PowerRequired", MakeShared<FJsonValueNumber>(PowerRequired));
+		JDropPod->Values.Add("RequiredItem", MakeShared<FJsonValueObject>(UFRM_Library::GetItemValueObject(DropPodCost.ItemCost)));
+		JDropPod->Values.Add("RequiredPower", MakeShared<FJsonValueNumber>(DropPodCost.PowerConsumption));
 		JDropPod->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(DropPod, "Drop Pod", "Drop Pod")));
-
 		JDropPodArray.Add(MakeShared<FJsonValueObject>(JDropPod));
 	};
 
