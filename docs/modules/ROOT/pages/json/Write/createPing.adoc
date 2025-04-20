@@ -30,7 +30,7 @@ include::../_requestBody.adoc[]
 ----
 curl -X POST 'http://localhost:8080/createPing' \
 -H 'Content-Type: application/json' \
--H 'Authorization: <your access token>' \
+-H 'X-FRM-Authorization: <your access token>' \
 --data-raw '{ \
   "x": 0, \
   "y": 0, \
