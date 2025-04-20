@@ -10,6 +10,7 @@
 #include "HTTPSharedDataTypes.h"
 #include "FactoryDedicatedServer/Public/Controller/FGServerSaveGameController.h"
 #include "FRM_Request.h"
+#include "HttpServerConstants.h"
 #include "Logging/StructuredLog.h"
 
 FFGServerErrorResponse UFRM_Controller::Handler_Frm(FFGFileResponseWrapper& OutFileResponse, const FFGRequestHandlerContextWrapper& RequestContext)
@@ -63,14 +64,14 @@ FFGServerErrorResponse UFRM_Controller::Handler_Frm(FFGFileResponseWrapper& OutF
 	switch (ErrorCode)
 	{
 	case 401:
-		return FFGServerErrorResponse::Error("unauthorized","Keycard needed.");
+		return FFGServerErrorResponse::Error("unauthorized", "Keycard needed.", EHttpServerResponseCodes::Denied);
 	case 404:
 		UE_LOGFMT(LogFRMAPI, Log, "API Not Found: {Endpoint}", Endpoint);
-		return FFGServerErrorResponse::Error("endpoint_not_found","API Endpoint: " + Endpoint + " was not found in FRM.");
+		return FFGServerErrorResponse::Error("endpoint_not_found", "API Endpoint: " + Endpoint + " was not found in FRM.", EHttpServerResponseCodes::NotFound);
 	case 405:
-		return FFGServerErrorResponse::Error("method_not_allowed","We can't have you do that...");
+		return FFGServerErrorResponse::Error("method_not_allowed", "We can't have you do that...", EHttpServerResponseCodes::BadMethod);
 	default:
 		UE_LOGFMT(LogFRMAPI, Log, "Unknown Error {Endpoint} {ErrorCode}", Endpoint, ErrorCode);
-		return FFGServerErrorResponse::Error("internal_server_error","Please report this to the FRM Discord for assistance. Something went wrong that shouldn't have.");
+		return FFGServerErrorResponse::Error("internal_server_error", "Please report this to the FRM Discord for assistance. Something went wrong that shouldn't have.", EHttpServerResponseCodes::ServerError);
 	}
 }
