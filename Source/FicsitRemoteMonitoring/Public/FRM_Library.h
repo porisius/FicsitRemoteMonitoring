@@ -26,6 +26,8 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> GetInventoryJSON(const TMap<TSubclassOf<UFGItemDescriptor>, int32>& Items);
 	static TArray<TSharedPtr<FJsonValue>> GetInventoryJSON(const TArray<FItemAmount>& Items);
 	static TSharedPtr<FJsonObject> GetItemValueObject(const TSubclassOf<UFGItemDescriptor>& Item, const int Amount);
+	static TSharedPtr<FJsonObject> GetItemValueObject(const FItemAmount Item);
+	static TSharedPtr<FJsonObject> GetItemValueObject(const FInventoryStack& Item);
 	static TSharedPtr<FJsonObject> GetResourceNodeJSON(AActor* Actor, const bool bIncludeFeatures = false);
 	static TSharedPtr<FJsonObject> CreateBaseJsonObject(const UObject* Actor);
 	static FString APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext);

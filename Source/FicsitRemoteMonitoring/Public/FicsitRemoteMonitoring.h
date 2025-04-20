@@ -278,6 +278,11 @@ public:
 	{
 		OutJsonArray = UFRM_World::CreatePing(WorldContext, RequestData);
 	}
+	
+	void GetItemPickups(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+	{
+		OutJsonArray = UFRM_World::GetItemPickups(WorldContext);
+	}
 
 	void getFallingGiftBundles(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 		OutJsonArray = UFRM_Events::GetFallingGiftBundles(WorldContext);

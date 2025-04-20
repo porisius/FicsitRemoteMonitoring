@@ -706,6 +706,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getWorldInv", &AFicsitRemoteMonitoring::getWorldInv).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getResearchTrees", &AFicsitRemoteMonitoring::getResearchTrees).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getChatMessages", &AFicsitRemoteMonitoring::GetChatMessages).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getItemPickups", &AFicsitRemoteMonitoring::GetItemPickups).RequiresGameThread());
 
 	// event endpoints
 	RegisterEndpoint(FAPIEndpoint("GET", "getFallingGiftBundles", &AFicsitRemoteMonitoring::getFallingGiftBundles).GetAll().RequiresGameThread());

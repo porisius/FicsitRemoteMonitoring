@@ -217,6 +217,16 @@ void UFRM_Library::GetGroupedInventoryItems(const TArray<FInventoryStack>& Inven
 	}
 }
 
+TSharedPtr<FJsonObject> UFRM_Library::GetItemValueObject(const FItemAmount Item)
+{
+	return GetItemValueObject(Item.ItemClass, Item.Amount);
+}
+
+TSharedPtr<FJsonObject> UFRM_Library::GetItemValueObject(const FInventoryStack& Item)
+{
+	return GetItemValueObject(Item.Item.GetItemClass(), Item.NumItems);
+}
+
 TSharedPtr<FJsonObject> UFRM_Library::GetItemValueObject(const TSubclassOf<UFGItemDescriptor>& Item, const int Amount)
 {
 	TSharedPtr<FJsonObject> JItem = MakeShared<FJsonObject>();
