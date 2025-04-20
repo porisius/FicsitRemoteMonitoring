@@ -28,7 +28,7 @@ FFGServerErrorResponse UFRM_Controller::Handler_Frm(FFGFileResponseWrapper& OutF
 	}
 	
 	TSharedPtr<FJsonValue> JsonValue = JsonBody->TryGetField("data");
-	if (!JsonValue.IsValid())
+	if (JsonValue.IsValid())
 	{
 		if (JsonValue->Type == EJson::Array)
 		{
