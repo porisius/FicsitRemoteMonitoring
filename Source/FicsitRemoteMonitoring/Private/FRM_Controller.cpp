@@ -67,7 +67,7 @@ FFGServerErrorResponse UFRM_Controller::Handler_Frm(FFGFileResponseWrapper& OutF
 		return FFGServerErrorResponse::Error("unauthorized", "Keycard needed.", EHttpServerResponseCodes::Denied);
 	case 404:
 		UE_LOGFMT(LogFRMAPI, Log, "API Not Found: {Endpoint}", Endpoint);
-		return FFGServerErrorResponse::Error("endpoint_not_found", "API Endpoint: " + Endpoint + " was not found in FRM.", EHttpServerResponseCodes::NotFound);
+		return FFGServerErrorResponse::Error("endpoint_not_found", "API Endpoint: " + Endpoint + " was not found in FRM. You can find a list of all endpoints here: https://docs.ficsit.app/ficsitremotemonitoring/latest/json/json.html", EHttpServerResponseCodes::NotFound);
 	case 405:
 		return FFGServerErrorResponse::Error("method_not_allowed", "We can't have you do that...", EHttpServerResponseCodes::BadMethod);
 	default:
