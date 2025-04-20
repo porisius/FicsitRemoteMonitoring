@@ -384,6 +384,7 @@ void AFicsitRemoteMonitoring::InitializeFunctions() {
 	this->Controller = NewObject<UFRM_Controller>();
 	this->Controller->World = World;
 	this->Controller->ModSubsystem = this;
+	this->Controller->AuthToken = FConfig_HTTPStruct::GetActiveConfig(World).Authentication_Token;
 	
 	if (World == nullptr)
 		return;

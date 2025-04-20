@@ -75,6 +75,9 @@ public:
 
 	UPROPERTY()
 	AFicsitRemoteMonitoring *ModSubsystem;
+
+	UPROPERTY()
+	FString AuthToken;
 	
 	UFUNCTION( FGServerRequestHandler, FGServerRequestPrivilegeLevel = "NotAuthenticated" )
 	FFGServerErrorResponse Handler_Frm(FFGFileResponseWrapper& OutFileResponse, const FFGRequestHandlerContextWrapper& RequestContext);
