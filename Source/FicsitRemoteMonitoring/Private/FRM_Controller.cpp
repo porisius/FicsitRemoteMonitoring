@@ -26,7 +26,7 @@ FFGServerErrorResponse UFRM_Controller::Handler_Frm(FFGFileResponseWrapper& OutF
 	{
 		return FFGServerErrorResponse::Error("missing_parameter","Parameter \'endpoint\' was not found.");
 	}
-	
+
 	TSharedPtr<FJsonValue> JsonValue = JsonBody->TryGetField("data");
 	if (JsonValue.IsValid())
 	{
@@ -38,6 +38,8 @@ FFGServerErrorResponse UFRM_Controller::Handler_Frm(FFGFileResponseWrapper& OutF
 		{
 			RequestData.Body.Add(JsonValue);
 		}
+
+		RequestData.Method = "POST";
 	}
 
 	if (RequestHeaders.Contains("X-FRM-Authorization"))
@@ -51,12 +53,12 @@ FFGServerErrorResponse UFRM_Controller::Handler_Frm(FFGFileResponseWrapper& OutF
 			RequestData.bIsAuthorized = (AuthToken == config.Authentication_Token);
 		}
 	}
-	
+
 	FString HandleEndpointReturn;
 	ModSubsystem->HandleEndpoint(Endpoint, RequestData, bSuccess, ErrorCode, HandleEndpointReturn, EInterfaceType::Server);
-	
+
 	if (bSuccess)
-	{		
+	{
 		OutFileResponse.FileResponse = MakeShared<FFGRequestPayload>("application/json", HandleEndpointReturn);
 		return FFGServerErrorResponse::Ok();
 	}
