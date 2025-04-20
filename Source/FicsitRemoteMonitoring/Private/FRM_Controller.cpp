@@ -40,11 +40,11 @@ FFGServerErrorResponse UFRM_Controller::Handler_Frm(FFGFileResponseWrapper& OutF
 		}
 	}
 
-	if (RequestHeaders.Contains("PlaceHolderAuthToken"))
+	if (RequestHeaders.Contains("X-FRM-Authorization"))
 	{
 		auto config = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
 
-		const TArray<FString>& AuthTokens = RequestHeaders["PlaceHolderAuthToken"];
+		const TArray<FString>& AuthTokens = RequestHeaders["X-FRM-Authorization"];
 		if (AuthTokens.Num() > 0)
 		{
 			FString AuthToken = AuthTokens[0];
