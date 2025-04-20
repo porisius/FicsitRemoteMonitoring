@@ -618,7 +618,7 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
 
 bool AFicsitRemoteMonitoring::IsAuthorizedRequest(uWS::HttpRequest* req, FString RequiredToken)
 {
-	const std::string_view Header = req->getHeader("authorization");
+	const std::string_view Header = req->getHeader("x-frm-authorization");
 	const FString AuthorizationHeader = FString(Header.data()).Left(Header.size());
 	if (AuthorizationHeader.IsEmpty()) return false;
 
