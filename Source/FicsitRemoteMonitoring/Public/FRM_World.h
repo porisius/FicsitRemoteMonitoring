@@ -17,4 +17,5 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> GetChatMessages(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> SendChatMessage(UObject* WorldContext, FRequestData RequestData);
 	static TArray<TSharedPtr<FJsonValue>> CreatePing(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> GetItemPickups(UObject* WorldContext);
 };
