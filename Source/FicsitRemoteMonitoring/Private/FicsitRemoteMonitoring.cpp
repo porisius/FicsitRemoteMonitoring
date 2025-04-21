@@ -814,7 +814,7 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FAPIEndpoint& Endpoint)
 	
 }
 
-FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode, EInterfaceType Interface)
+FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode)
 {
     FCallEndpointResponse Response;
     Response.bUseFirstObject = false;
@@ -853,7 +853,7 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
         Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
 
         try {
-            if (EndpointInfo.bRequireGameThread && Interface != EInterfaceType::Server) {
+            if (EndpointInfo.bRequireGameThread && RequestData.Interface != EInterfaceType::Server) {
                 FThreadSafeBool bAllocationComplete = false;
                 AsyncTask(ENamedThreads::GameThread, [this, &EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &ErrorCode, &bSuccess]() {
 					//if (SocketListener && EndpointInfo.FunctionPtr)
@@ -916,13 +916,15 @@ void AFicsitRemoteMonitoring::AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonA
 }
 
 //FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess, int32& ErrorCode)
-void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, const FRequestData RequestData, bool& bSuccess, int32& ErrorCode, FString& Out_Data, EInterfaceType Interface)
+void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode, FString& Out_Data, EInterfaceType Interface)
 {
 	bSuccess = false;
 
 	UObject* WorldContext = this->GetWorld();
 
-	auto [JsonValues, bUseFirstObject] = this->CallEndpoint(WorldContext, InEndpoint, RequestData, bSuccess, ErrorCode, Interface);
+	RequestData.Interface = Interface;
+
+	auto [JsonValues, bUseFirstObject] = this->CallEndpoint(WorldContext, InEndpoint, RequestData, bSuccess, ErrorCode);
 
 	if (bSuccess && !bUseFirstObject)
 	{
@@ -952,7 +954,7 @@ void AFicsitRemoteMonitoring::getAll(UObject* WorldContext, FRequestData Request
         bool bSuccess = false;
         TArray<TSharedPtr<FJsonValue>> EndpointJsonValues;
 
-        if (APIEndpoint.bRequireGameThread)
+        if (APIEndpoint.bRequireGameThread && RequestData.Interface != EInterfaceType::Server)
         {
             // If the endpoint requires the GameThread, execute the call asynchronously
             FThreadSafeBool bAllocationComplete = false;
