@@ -117,6 +117,7 @@
 
 *** Factory
 **** xref:json/Write/setSwitches.adoc[setSwitches]
+**** xref:json/Write/setEnabled.adoc[setSwitches]
 
 *** World
 **** xref:json/Write/createPing.adoc[createPing]
