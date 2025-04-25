@@ -59,6 +59,7 @@ TArray<TSharedPtr<FJsonValue>> USetEnabled::setEnabled(UObject* WorldContext, FR
 		{
 			if (FactoryBuilding && FactoryBuilding->GetName() == RequestedBuildable)
 			{
+				//Inverted PowerState as preferred True = On, False = Off. AFGBuildableFactory uses IsProductionPaused, True = Off, False = On
 				FactoryBuilding->SetIsProductionPaused(!PowerState);
 				JResponse->Values.Add("ID", MakeShared<FJsonValueString>(RequestedBuildable));
 				JResponse->Values.Add("Status", MakeShared<FJsonValueBoolean>(!Manufacturer->IsProductionPaused()));
