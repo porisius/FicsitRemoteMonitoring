@@ -5,11 +5,7 @@
 #include "Buildables/FGBuildableManufacturer.h"
 #include "FRM_Request.h"
 #include "FRM_Library.h"
-#include "Buildables/FGBuildableCircuitSwitch.h"
-#include "Buildables/FGBuildableManufacturer.h"
 #include "FicsitRemoteMonitoring.h"
-#include "../../../../../../../Source/FactoryGame/Public/Buildables/FGBuildableCircuitSwitch.h"
-#include "../../../../../../../Source/FactoryGame/Public/Buildables/FGBuildableManufacturer.h"
 #include "Containers/Array.h"
 
 class FJsonValueObject;
