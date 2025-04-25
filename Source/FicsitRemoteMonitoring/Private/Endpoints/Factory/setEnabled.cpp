@@ -28,6 +28,14 @@ TArray<TSharedPtr<FJsonValue>> USetEnabled::setEnabled(UObject* WorldContext, FR
 	TArray<TSharedPtr<FJsonValue>> JResponses;
 	TSharedPtr<FJsonObject> JResponse = MakeShared<FJsonObject>();
 	if (RequestData.Body.Num() == 0) return JResponses;
+
+	TArray<AFGBuildableFactory*> FactoryBuildings;
+	TArray<AFGBuildableCircuitSwitch*> CircuitSwitches;
+	TArray<AFGBuildableGenerator*> PowerGenerators;
+
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext);
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableFactory>(FactoryBuildings);
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableCircuitSwitch>(CircuitSwitches);
 	
 	for (const auto& BodyObject : RequestData.Body)
 	{
@@ -41,30 +49,31 @@ TArray<TSharedPtr<FJsonValue>> USetEnabled::setEnabled(UObject* WorldContext, FR
 			return JResponses;;
 		}
 
+		bool foundBuildable = false;
+
 		FString RequestedBuildable = JsonObject->GetStringField("ID");
-
-		TArray<AFGBuildableManufacturer*> Manufacturers;
-		TArray<AFGBuildableCircuitSwitch*> CircuitSwitches;
-		TArray<AFGBuildableGenerator*> PowerGenerators;
-
-		AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext);
-		BuildableSubsystem->GetTypedBuildable<AFGBuildableManufacturer>(Manufacturers);
-		BuildableSubsystem->GetTypedBuildable<AFGBuildableCircuitSwitch>(CircuitSwitches);
-		BuildableSubsystem->GetTypedBuildable<AFGBuildableGenerator>(PowerGenerators);
 
 		bool PowerState = JsonObject->GetBoolField("status");
 		
-		for (AFGBuildableManufacturer* Manufacturer : Manufacturers)
+		for (AFGBuildableFactory* FactoryBuilding : FactoryBuildings)
 		{
-			if (Manufacturer && Manufacturer->GetName() == RequestedBuildable)
+			if (FactoryBuilding && FactoryBuilding->GetName() == RequestedBuildable)
 			{
-				Manufacturer->SetIsProductionPaused(!PowerState);
+				FactoryBuilding->SetIsProductionPaused(!PowerState);
 				JResponse->Values.Add("ID", MakeShared<FJsonValueString>(RequestedBuildable));
 				JResponse->Values.Add("Status", MakeShared<FJsonValueBoolean>(!Manufacturer->IsProductionPaused()));
 				JResponses.Add(MakeShared<FJsonValueObject>(JResponse));
+
+				foundBuildable = true;
 			}
+
+			// If found start on exit for
+			if (foundBuildable) { break; }
 		}
 
+		// If found start on next RequestedBuildable
+		if (foundBuildable) { continue; }
+		
 		for (AFGBuildableCircuitSwitch* CircuitSwitch : CircuitSwitches)
 		{
 			if (CircuitSwitch && CircuitSwitch->GetName() == RequestedBuildable)
@@ -73,18 +82,12 @@ TArray<TSharedPtr<FJsonValue>> USetEnabled::setEnabled(UObject* WorldContext, FR
 				JResponse->Values.Add("ID", MakeShared<FJsonValueString>(RequestedBuildable));
 				JResponse->Values.Add("Status", MakeShared<FJsonValueBoolean>(CircuitSwitch->IsSwitchOn()));
 				JResponses.Add(MakeShared<FJsonValueObject>(JResponse));
+				
+				foundBuildable = true;
 			}
-		}
 
-		for (AFGBuildableGenerator* PowerGenerator : PowerGenerators)
-		{
-			if (PowerGenerator && PowerGenerator->GetName() == RequestedBuildable)
-			{
-				PowerGenerator->SetIsProductionPaused(!PowerState);
-				JResponse->Values.Add("ID", MakeShared<FJsonValueString>(RequestedBuildable));
-				JResponse->Values.Add("Status", MakeShared<FJsonValueBoolean>(!PowerGenerator->IsProductionPaused()));
-				JResponses.Add(MakeShared<FJsonValueObject>(JResponse));
-			}
+			// If found start on exit for
+			if (foundBuildable) { break; }
 		}
 	}
 
