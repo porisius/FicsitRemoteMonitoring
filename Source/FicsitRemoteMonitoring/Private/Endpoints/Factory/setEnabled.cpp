@@ -2,7 +2,7 @@
 
 #include "FGBuildableSubsystem.h"
 #include "Buildables/FGBuildableCircuitSwitch.h"
-#include "Buildables/FGBuildableManufacturer.h"
+#include "Buildables/FGBuildableFactory.h"
 #include "FRM_Request.h"
 #include "FRM_Library.h"
 #include "FicsitRemoteMonitoring.h"
@@ -13,7 +13,7 @@ class AFGBuildableGenerator;
 class AFGBuildableCircuitSwitch;
 class FJsonObject;
 class FJsonValue;
-class AFGBuildableManufacturer;
+class AFGBuildableFactory;
 class AFGBuildable;
 class AFGBuildableSubsystem;
 class FString;
@@ -58,7 +58,7 @@ TArray<TSharedPtr<FJsonValue>> USetEnabled::setEnabled(UObject* WorldContext, FR
 				//Inverted PowerState as preferred True = On, False = Off. AFGBuildableFactory uses IsProductionPaused, True = Off, False = On
 				FactoryBuilding->SetIsProductionPaused(!PowerState);
 				JResponse->Values.Add("ID", MakeShared<FJsonValueString>(RequestedBuildable));
-				JResponse->Values.Add("Status", MakeShared<FJsonValueBoolean>(!Manufacturer->IsProductionPaused()));
+				JResponse->Values.Add("Status", MakeShared<FJsonValueBoolean>(!FactoryBuilding->IsProductionPaused()));
 				JResponses.Add(MakeShared<FJsonValueObject>(JResponse));
 
 				foundBuildable = true;
