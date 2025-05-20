@@ -22,12 +22,10 @@ TArray<TSharedPtr<FJsonValue>> USetEnabled::setEnabled(UObject* WorldContext, FR
 {
 
 	TArray<TSharedPtr<FJsonValue>> JResponses;
-	TSharedPtr<FJsonObject> JResponse = MakeShared<FJsonObject>();
 	if (RequestData.Body.Num() == 0) return JResponses;
 
 	TArray<AFGBuildableFactory*> FactoryBuildings;
 	TArray<AFGBuildableCircuitSwitch*> CircuitSwitches;
-	TArray<AFGBuildableGenerator*> PowerGenerators;
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext);
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableFactory>(FactoryBuildings);
@@ -35,19 +33,20 @@ TArray<TSharedPtr<FJsonValue>> USetEnabled::setEnabled(UObject* WorldContext, FR
 	
 	for (const auto& BodyObject : RequestData.Body)
 	{
+		FString RequestedBuildable;
 		auto JsonObject = BodyObject->AsObject();
+		if (UFRM_RequestLibrary::TryGetStringField(JsonObject, "ID", RequestedBuildable, JResponses)) continue;
 
 		// check if ID or status is present in this json object
-		if (!JsonObject->HasField("ID") && !JsonObject->HasField("status"))
+		if (!JsonObject->HasField("status"))
 		{
-			const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("Missing field ID or status.");
+			const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("Missing field status.");
+			JResponse->Values.Add("ID", MakeShared<FJsonValueString>(RequestedBuildable));
 			JResponses.Add(MakeShared<FJsonValueObject>(JResponse));
-			return JResponses;;
+			continue;
 		}
 
 		bool foundBuildable = false;
-
-		FString RequestedBuildable = JsonObject->GetStringField("ID");
 
 		bool PowerState = JsonObject->GetBoolField("status");
 		
@@ -55,6 +54,7 @@ TArray<TSharedPtr<FJsonValue>> USetEnabled::setEnabled(UObject* WorldContext, FR
 		{
 			if (FactoryBuilding && FactoryBuilding->GetName() == RequestedBuildable)
 			{
+				TSharedPtr<FJsonObject> JResponse = MakeShared<FJsonObject>();
 				//Inverted PowerState as preferred True = On, False = Off. AFGBuildableFactory uses IsProductionPaused, True = Off, False = On
 				FactoryBuilding->SetIsProductionPaused(!PowerState);
 				JResponse->Values.Add("ID", MakeShared<FJsonValueString>(RequestedBuildable));
@@ -75,6 +75,8 @@ TArray<TSharedPtr<FJsonValue>> USetEnabled::setEnabled(UObject* WorldContext, FR
 		{
 			if (CircuitSwitch && CircuitSwitch->GetName() == RequestedBuildable)
 			{
+				TSharedPtr<FJsonObject> JResponse = MakeShared<FJsonObject>();
+
 				CircuitSwitch->SetSwitchOn(PowerState);
 				JResponse->Values.Add("ID", MakeShared<FJsonValueString>(RequestedBuildable));
 				JResponse->Values.Add("Status", MakeShared<FJsonValueBoolean>(CircuitSwitch->IsSwitchOn()));
