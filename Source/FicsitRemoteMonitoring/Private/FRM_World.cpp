@@ -341,3 +341,19 @@ TArray<TSharedPtr<FJsonValue>> UFRM_World::SendChatMessage(UObject* WorldContext
 
 	return JResponses;
 }
+
+TArray<TSharedPtr<FJsonValue>> UFRM_World::GetUObjectCount()
+{
+
+	TSharedPtr<FJsonObject> JResponse = MakeShared<FJsonObject>();
+	TArray<TSharedPtr<FJsonValue>> JResponses;
+
+	int32 UObjectCount = GUObjectArray.GetObjectArrayNumMinusAvailable();
+	int32 UObjectCapacity = GUObjectArray.GetObjectArrayCapacity();
+	
+	JResponse->Values.Add("UObjectCount", MakeShared<FJsonValueNumber>(UObjectCount));
+	JResponse->Values.Add("UObjectCapacity", MakeShared<FJsonValueNumber>(UObjectCapacity));
+	JResponses.Add(MakeShared<FJsonValueObject>(JResponse));
+
+	return JResponses;
+}
