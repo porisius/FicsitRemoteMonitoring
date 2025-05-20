@@ -115,8 +115,8 @@
 **** xref:json/Write/sendChatMessage.adoc[sendChatMessage]
 
 *** Factory
+**** xref:json/Write/setEnabled.adoc[setEnabled]
 **** xref:json/Write/setSwitches.adoc[setSwitches]
-**** xref:json/Write/setEnabled.adoc[setSwitches]
 
 *** World
 **** xref:json/Write/createPing.adoc[createPing]
