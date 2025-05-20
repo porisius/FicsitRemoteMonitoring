@@ -2,7 +2,7 @@
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= setSwitches
+= setEnabled
 
 include::../_requiresAuthentication.adoc[]
 
@@ -10,7 +10,7 @@ Allows to enable or disable a Constructor, Assembler, Manufacturer, Power Genera
 
 == URL
 
-`POST http://localhost:8080/setSwitches`
+`POST http://localhost:8080/setEnabled`
 
 All fields are optional, but you must specify at least one field.
 
@@ -20,7 +20,7 @@ All fields are optional, but you must specify at least one field.
 include::../_requestBody.adoc[]
 
 | ID | String | Yes | ID of the Buildable
-| status | Boolean | No | Switch Status (true = Enabled, false = Disabled).
+| status | Boolean | No | Factory Status (true = Enabled, false = Disabled).
 |===
 
 include::../_responseBody.adoc[]
@@ -33,7 +33,7 @@ include::../_responseBody.adoc[]
 
 [source,bash]
 ----
-curl -X POST 'http://localhost:8080/setSwitches' \
+curl -X POST 'http://localhost:8080/setEnabled' \
 -H 'Content-Type: application/json' \
 -H 'Authorization: <your access token>' \
 --data-raw '{ \
