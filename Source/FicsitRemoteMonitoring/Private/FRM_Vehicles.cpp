@@ -1,8 +1,10 @@
 #include "FRM_Vehicles.h"
 
 #include "FGBuildableDockingStation.h"
+#include "FGTargetPointLinkedList.h"
 #include "FGWheeledVehicleInfo.h"
 #include "FRM_Library.h"
+#include "Components/SplineComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getTruckStation(UObject* WorldContext) {
@@ -175,3 +177,33 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 	return JVehicleArray;
 
 };
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehiclePaths(UObject* WorldContext)
+{
+	TArray<AActor*> FoundActors;
+	TArray<TSharedPtr<FJsonValue>> JVehiclePathArray;
+	
+	AFGVehicleSubsystem* VehicleSubsystem = AFGVehicleSubsystem::Get(WorldContext);
+	TArray<AFGSavedWheeledVehiclePath*> SavedPaths = VehicleSubsystem->mSavedPaths;
+
+	for (AFGSavedWheeledVehiclePath* SavedPath : SavedPaths) {
+		
+		TSharedPtr<FJsonObject> JVehiclePath = UFRM_Library::CreateBaseJsonObject(SavedPath);
+
+		AFGDrivingTargetList* DrivingTarget = SavedPath->mTargetList;
+		TSubclassOf<AFGWheeledVehicle> PathVehicleType = DrivingTarget->mVehicleType;
+		USplineComponent* VehiclePath = DrivingTarget->GetPath();
+		TArray<FSplinePointData> SplinePoints = VehiclePath->GetSplineData(ESplineCoordinateSpace::World);
+		
+		JVehiclePath->Values.Add("Name", MakeShared<FJsonValueString>(SavedPath->mPathName));
+		JVehiclePath->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(SavedPath->GetClass())));
+		JVehiclePath->Values.Add("VehicleType", MakeShared<FJsonValueString>(PathVehicleType.GetDefaultObject()->mDisplayName.ToString()));
+		JVehiclePath->Values.Add("PathTargetLength", MakeShared<FJsonValueNumber>(DrivingTarget->CountTargets()));
+		JVehiclePath->Values.Add("PathLength", MakeShared<FJsonValueNumber>(VehiclePath->GetSplineLength()));
+		JVehiclePath->Values.Add("PathPoints", UFRM_Library::GetSplineVector(SplinePoints));
+		
+		JVehiclePathArray.Add(MakeShared<FJsonValueObject>(JVehiclePath));
+	};
+
+	return JVehiclePathArray;
+}

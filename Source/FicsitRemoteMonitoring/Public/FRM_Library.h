@@ -49,4 +49,5 @@ public:
 	static TSharedPtr<FJsonValue> ConvertStringToFJsonValue(const FString& JsonString);
 	static TSharedPtr<FJsonObject> getPowerConsumptionJSON(UFGPowerInfoComponent* powerInfo);
 	static TSharedPtr<FJsonObject> ConvertVectorToFJsonObject(FVector JsonVector);
+	static TSharedPtr<FJsonValueArray> GetSplineVector(TArray<FSplinePointData>);
 };
