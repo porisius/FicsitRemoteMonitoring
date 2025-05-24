@@ -500,6 +500,9 @@ public:
 		OutJsonArray = UFRM_Vehicles::getTruckStation(WorldContext);
 	}
 
+	void getVehiclePaths(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Vehicles::getVehiclePaths(WorldContext);
+	}
 	
 	void getWorldInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Factory::getWorldInv(WorldContext, RequestData);

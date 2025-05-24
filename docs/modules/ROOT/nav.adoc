@@ -94,6 +94,7 @@
 **** xref:json/Read/getVehicles.adoc[getTractor]
 **** getTrains (soon)
 **** xref:json/Read/getVehicles.adoc[getTruck]
+**** xref:json/Read/getVehiclePaths.adoc[getVehiclePaths]
 **** xref:json/Read/getVehicles.adoc[getVehicles]
 
 *** World

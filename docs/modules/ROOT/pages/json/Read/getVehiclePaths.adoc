@@ -1,0 +1,138 @@
+= Vehicles Paths
+
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+API Endpoint: getVehiclePaths +
+
+Saved Vehicle Paths for Trucks, Explorers, and Tractors
+
+Gives length of path, and the path itself. The path is a series of points that the vehicle will follow. The path is saved in the game and can be loaded by the vehicle as allowed by type in vanilla.
+
+[cols="1,2,1,1"]
+|===
+|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+
+|ID
+|UE Asset Name
+|String
+|Output
+
+
+|Name
+|Name of vehicle type
+|String
+|Output
+
+|ClassName
+|UE Class Name
+|String
+|Output
+
+|VehicleType
+|Vehicle Type
+|String
+|Output
+
+|PathTargetLength
+|Length of path
+|Integer
+|Output
+
+|PathLength
+|Length of path
+|Float
+|Output
+
+|PathPoints
+|Path Points
+|Array of Points
+|Output
+
+|===
+
+Example:
+[source,json]
+-----------------
+[
+  {
+    "ID": "FGSavedWheeledVehiclePath_2147429285",
+    "Name": "Test Path",
+    "ClassName": "FGSavedWheeledVehiclePath",
+    "VehicleType": "Explorer",
+    "PathTargetLength": 11,
+    "PathLength": 29717.525390625,
+    "PathPoints": [
+      {
+        "x": -22766.7265625,
+        "y": 225161.953125,
+        "z": -1161.16809082031
+      },
+      {
+        "x": -22046.384765625,
+        "y": 222083.65625,
+        "z": -1117.16247558594
+      },
+      {
+        "x": -21703.625,
+        "y": 221840.28125,
+        "z": -1081.27624511719
+      },
+      {
+        "x": -21007.189453125,
+        "y": 221647.828125,
+        "z": -1011.07678222656
+      },
+      {
+        "x": -19321.4609375,
+        "y": 221569.25,
+        "z": -670.549499511719
+      },
+      {
+        "x": -17751.630859375,
+        "y": 221910.171875,
+        "z": -328.121551513672
+      },
+      {
+        "x": -16532.416015625,
+        "y": 223058.84375,
+        "z": -199.764434814453
+      },
+      {
+        "x": -16127.111328125,
+        "y": 225555.6875,
+        "z": -372.952758789063
+      },
+      {
+        "x": -17451.2890625,
+        "y": 229264.78125,
+        "z": -468.06591796875
+      },
+      {
+        "x": -20040.94921875,
+        "y": 230833.25,
+        "z": -1100.12121582031
+      },
+      {
+        "x": -21941.6953125,
+        "y": 228989.40625,
+        "z": -1157.54638671875
+      },
+      {
+        "x": -22766.7265625,
+        "y": 225161.953125,
+        "z": -1161.16809082031
+      },
+      {
+        "x": -22046.384765625,
+        "y": 222083.65625,
+        "z": -1117.16247558594
+      },
+      {
+        "x": -21703.625,
+        "y": 221840.28125,
+        "z": -1081.27624511719
+      }
+    ]
+  }
+]
+-----------------
