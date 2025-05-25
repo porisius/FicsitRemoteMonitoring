@@ -185,8 +185,8 @@ public:
 	void StartWebSocketServer();
 	void StopWebSocketServer();
 
-    void OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message);
-    void OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode);
+	void OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message);
+	void OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode);
 	void ProcessClientRequest(uWS::WebSocket<false, true, FWebSocketUserData>* ws, const TSharedPtr<FJsonObject>& JsonRequest);
 
 	void PushUpdatedData();
@@ -389,11 +389,11 @@ public:
 	}
 
 	
-    void getPortal(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+	void getPortal(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 		OutJsonArray = UFRM_Factory::getPortal(WorldContext, RequestData);
 	}
 	
-    void getPower(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+	void getPower(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Power::getPower(WorldContext);
 	}
 
@@ -473,7 +473,6 @@ public:
 	void getStorageInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Factory::getStorageInv(WorldContext, RequestData);
 	}
-
 	
 	void getSwitches(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Power::getSwitches(WorldContext);
@@ -511,30 +510,31 @@ public:
 		OutJsonArray = UFRM_Vehicles::getTruckStation(WorldContext);
 	}
 	
-	void getUObjectCount(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+	void getUObjectCount(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+	{
 		OutJsonArray = UFRM_World::GetUObjectCount();
+	}
 
 	void getVehiclePaths(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Vehicles::getVehiclePaths(WorldContext);
 	}
-	
+
 	void getWorldInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Factory::getWorldInv(WorldContext, RequestData);
 	}
-	
+
 	void getAll(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray);
-	
+
 	void getFactory(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, AFGBuildableManufacturer::StaticClass());
 	}
-	
+
 	void getGenerators(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Power::getGenerators(WorldContext, AFGBuildableGenerator::StaticClass());
 	}
-	
-	void getVehicles(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+
+	void getVehicles(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+	{
 		OutJsonArray = UFRM_Vehicles::getVehicles(WorldContext, AFGWheeledVehicle::StaticClass());
 	}
-
 };
-

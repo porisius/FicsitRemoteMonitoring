@@ -76,7 +76,7 @@ public class FicsitRemoteMonitoring : ModuleRules
 
     public void ApplySMLPatch()
     {
-        string patchPath = Path.Combine(ModuleDirectory, "..", "..", "Patches", "MakeRawJsonBodyAccessible.patch");
+        string patchPath = Path.Combine(ModuleDirectory, "..", "..", "Patches", "FGServerAPIManager-FRM-04162025.patch");
         string headerPath = Path.Combine(ModuleDirectory, "..", "..", "FactoryGame", "Source", "FactoryDedicatedServer",
             "Public", "Networking", "FGServerAPIManager.h");
 
