@@ -17,6 +17,7 @@
 #include "FRM_Vehicles.h"
 #include "FRM_World.h"
 #include "ModSubsystem.h"
+#include "FRM_Controller.h"
 #include "Endpoints/Factory/setEnabled.h"
 #include "FRM_Controller.h"
 
