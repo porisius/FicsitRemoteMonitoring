@@ -18,6 +18,8 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getTruckStation(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getVehiclePaths(UObject* WorldContext);
 
+	static FString GetPathNameForTargetList(AFGDrivingTargetList* TargetList);
+
 protected: 
 	friend class AFGVehicleSubsystem;
 	friend class AFGBuildableDockingStation;
