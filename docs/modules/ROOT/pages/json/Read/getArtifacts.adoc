@@ -1,0 +1,60 @@
+:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Artifacts
+
+include::../_isGetAll.adoc[]
+
+Get a list of all Mercer Spheres and Somersloops.
+
+== URL
+
+`GET http://localhost:8080/getArtifacts`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Artifact.
+| Name | String | Name of the Artifact.
+| ClassName | String | ClassName of the Artifact.
+
+{set:key-name:location}
+{set:key-description:Location details of the Artifact.}
+include::../Models/_location.adoc[]
+
+// features fields
+include::../Models/_features.adoc[]
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "BP_WAT2_C_UAID_04421A9713F0FD6301_1747414245",
+    "Name": "Mercer Sphere",
+    "ClassName": "BP_WAT2_C",
+    "location": {
+      "x": 188755,
+      "y": 137135,
+      "z": 12000,
+      "rotation": 90
+    },
+    "features": {
+      "properties": {
+        "name": "Mercer Sphere",
+        "type": "Artifact"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": 188755,
+          "y": 137135,
+          "z": 12000
+        },
+        "type": "Point"
+      }
+    }
+  }
+]
+-----------------

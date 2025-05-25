@@ -1,0 +1,55 @@
+﻿:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= setEnabled
+
+include::../_requiresAuthentication.adoc[]
+
+Allows to enable or disable a Constructor, Assembler, Manufacturer, Power Generators, (Priority) Power Switch.
+
+== URL
+
+`POST http://localhost:8080/setEnabled`
+
+All fields are optional, but you must specify at least one field.
+
+:responseBodyText: All fields are mandatory, the updated fields and the ID field are included in the response body.
+:requestBodyText: All fields are mandatory. An array of objects can be passed to update supported buildings simultaneously.
+
+include::../_requestBody.adoc[]
+
+| ID | String | Yes | ID of the Buildable
+| status | Boolean | No | Factory Status (true = Enabled, false = Disabled).
+|===
+
+include::../_responseBody.adoc[]
+
+| ID | String | ID of the Buildable
+| Status | Boolean | Updated Status (true = Enabled, false = Disabled).
+|===
+
+== Example Request
+
+[source,bash]
+----
+curl -X POST 'http://localhost:8080/setEnabled' \
+-H 'Content-Type: application/json' \
+-H 'Authorization: <your access token>' \
+--data-raw '{ \
+  "ID":"Build_SmelterMk1_C_2146396105", \
+  "status": true \
+}'
+----
+
+== Example Response
+
+[source,json]
+----
+[
+  {
+    "ID": "Build_SmelterMk1_C_2146396105",
+    "Status": true,
+  }
+]
+----

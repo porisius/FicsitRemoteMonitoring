@@ -1,0 +1,101 @@
+﻿:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Elevators
+
+include::../_isGetAll.adoc[]
+
+Get a list of all elevators.
+
+== URL
+
+`GET http://localhost:8080/getElevators`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Elevator.
+| ClassName | String | ClassName of the Elevator.
+| Status | String | Status of the Elevator (Available statuses: `Idle`, `Arrived`, `PauseBeforeDoorOpen`, `Waiting`, `DoorsOpening`, `DoorsClosing`, `PauseBeforeMove`, `Moving`, `NoPower`, `SafetyStopping`).
+| ReadableStatus | String | Human-readable Status of the Elevator.
+| Speed | Float | Speed of the Elevator in centimetre (cm).
+| DurationOfCurrentState | Float | Duration in Seconds that the elevator will remain in its current state (-1 indicates Completed/Idle).
+| Height | Float | Height of the Elevator in centimetre (cm).
+| CurrentFloorStep | Integer | Current Floor Stop of the Elevator Cabin.
+| NumFloorStops | Integer | Amount of Floor Stops of the Elevator.
+| NumOccupyingCharacters | Integer | Amount of Players in the Elevator Cabin.
+| HasPower | Boolean | Indicates whether the elevator has power.
+| IsOccupied | Boolean | Indicates if any player is inside the Elevator Cabin.
+
+// location fields
+{set:key-name:location}
+{set:key-description:Location details of the Elevator.}
+include::../Models/_location.adoc[]
+
+// OccupyingCharacters
+| OccupyingCharacters | Object[] | List of all players inside the Elevator Cabin.
+| {depth}  ID | String | ID of the Player.
+| {depth}  Name | String | Name of the Player.
+
+// FloorStops
+| FloorStops | Object[] | List of all the Elevator's Floor Stops.
+| {depth}  Name | String | Name of the Stop.
+| {depth}  Height | Integer | Height of the Stop relative to the floor in centimetre (cm).
+
+// features fields
+include::../Models/_features.adoc[]
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "Build_Elevator_C_2147471560",
+    "ClassName": "Build_Elevator_C",
+    "Status": "Idle",
+    "ReadableStatus": "Idle",
+    "Speed": 800,
+    "DurationOfCurrentState": -1,
+    "Height": 20000,
+    "CurrentFloorStep": 0,
+    "NumFloorStops": 1,
+    "NumOccupyingCharacters": 1,
+    "HasPower": false,
+    "IsOccupied": true,
+    "location": {
+      "x": -64499.25390625,
+      "y": 258740.546875,
+      "z": -3938.2197265625,
+      "rotation": 170.00000263622633
+    },
+    "OccupyingCharacters": [
+      {
+        "ID": "Char_Player_C_2147464253",
+        "Name": "derpierre65"
+      }
+    ],
+    "FloorStops": [
+      {
+        "Name": "0m",
+        "Height": 0
+      }
+    ],
+    "features": {
+      "properties": {
+        "name": "Personnel Elevator",
+        "type": "Personnel Elevator"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -64499.25390625,
+          "y": 258740.546875,
+          "z": -3938.2197265625
+        },
+        "type": "Point"
+      }
+    }
+  }
+]
+-----------------

@@ -1,6 +1,7 @@
 #include "FRM_Factory.h"
 
 #include "FGBuildableConveyorBase.h"
+#include "FGBuildableElevator.h"
 #include "FGBuildableFrackingActivator.h"
 #include "FGBuildableHubTerminal.h"
 #include "FGBuildableManufacturer.h"
@@ -64,6 +65,106 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, FRe
 
 	return JConveyorBeltArray;
 };
+
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getElevators(UObject* WorldContext, FRequestData RequestData) {
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+
+	TArray<AFGBuildableElevator*> Elevators;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableElevator>(Elevators);
+	TArray<TSharedPtr<FJsonValue>> JConveyorBeltArray;
+
+	for (AFGBuildableElevator* Elevator : Elevators) {
+
+		if (!IsValid(Elevator)) continue;
+
+		TSharedPtr<FJsonObject> JElevator = UFRM_Library::CreateBaseJsonObject(Elevator);
+		TArray<TSharedPtr<FJsonValue>> JStops;
+		for (int32 i = 0; i < Elevator->GetNumFloorStops(); i++)
+		{
+			TSharedPtr<FJsonObject> JStop = MakeShared<FJsonObject>();
+			FElevatorFloorStopInfo FloorStop = Elevator->GetFloorStopInfoByIndex(i);
+			JStop->Values.Add("Name", MakeShared<FJsonValueString>(FloorStop.FloorName));
+			JStop->Values.Add("Height", MakeShared<FJsonValueNumber>(FloorStop.Height));
+			JStops.Add(MakeShared<FJsonValueObject>(JStop));
+		}
+
+		TArray<TSharedPtr<FJsonValue>> JOccupyingCharacters;
+		TArray<AFGCharacterPlayer*> OccupyingCharacters = Elevator->GetOccupyingCharacters();
+		for (AFGCharacterPlayer* OccupyingCharacter : OccupyingCharacters )
+		{
+			TSharedPtr<FJsonObject> JOccupyingCharacter = UFRM_Library::CreateBaseJsonObject(OccupyingCharacter);
+			JOccupyingCharacter->Values.Add("Name", MakeShared<FJsonValueString>(UFRM_Library::GetPlayerName(OccupyingCharacter)));
+			JOccupyingCharacters.Add(MakeShared<FJsonValueObject>(JOccupyingCharacter));
+		}
+
+		FString Status;
+		FString ReadableStatus;
+		switch (Elevator->mElevatorState)
+		{
+		case EElevatorState::EES_IdleAtFloor:
+			Status = ReadableStatus = TEXT("Idle");
+			break;
+		case EElevatorState::EES_ArrivedAtFloor:
+			Status = ReadableStatus = TEXT("Arrived");
+			break;
+		case EElevatorState::EES_PauseBeforeDoorOpen:
+			Status = TEXT("PauseBeforeDoorOpen");
+			ReadableStatus = TEXT("Paused Before Opening Doors");
+			break;
+		case EElevatorState::EES_WaitingAtFloor:
+			Status = ReadableStatus = TEXT("Waiting");
+			break;
+		case EElevatorState::EES_DoorsOpening:
+			Status = TEXT("DoorsOpening");
+			ReadableStatus = TEXT("Opening Doors");
+			break;
+		case EElevatorState::EES_DoorsClosing:
+			Status = TEXT("DoorsClosing");
+			ReadableStatus = TEXT("Closing Doors");
+			break;
+		case EElevatorState::EES_PauseBeforeMove:
+			Status = TEXT("PauseBeforeMove");
+			ReadableStatus = TEXT("Pause Before Moving");
+			break;
+		case EElevatorState::EES_Moving:
+			Status = ReadableStatus = TEXT("Moving");
+			break;
+		case EElevatorState::EES_PausePowerOut:
+			Status = TEXT("NoPower");
+			ReadableStatus = TEXT("No Power");
+			break;
+		case EElevatorState::EES_SafetyStopping:
+			Status = TEXT("SafetyStopping");
+			ReadableStatus = TEXT("Stopped Due to No Power");
+			break;
+		default:
+			Status = TEXT("Unknown");
+		}
+
+		JElevator->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Elevator->GetClass())));
+		JElevator->Values.Add("Status", MakeShared<FJsonValueString>(Status));
+		JElevator->Values.Add("ReadableStatus", MakeShared<FJsonValueString>(ReadableStatus));
+		JElevator->Values.Add("Speed", MakeShared<FJsonValueNumber>(Elevator->GetElevatorElevatorSpeed()));
+		JElevator->Values.Add("DurationOfCurrentState", MakeShared<FJsonValueNumber>(Elevator->GetDurationOfCurrentElevatorState()));
+		JElevator->Values.Add("Height", MakeShared<FJsonValueNumber>(Elevator->GetElevatorHeight()));
+		JElevator->Values.Add("CurrentFloorStep", MakeShared<FJsonValueNumber>(Elevator->GetIndexOfFloorStop(Elevator->GetCurrentFloorStop())));
+		JElevator->Values.Add("NumFloorStops", MakeShared<FJsonValueNumber>(Elevator->GetNumFloorStops()));
+		JElevator->Values.Add("NumOccupyingCharacters", MakeShared<FJsonValueNumber>(OccupyingCharacters.Num()));
+		JElevator->Values.Add("HasPower", MakeShared<FJsonValueBoolean>(Elevator->HasPower()));
+		JElevator->Values.Add("IsOccupied", MakeShared<FJsonValueBoolean>(Elevator->IsElevatorOccupied()));
+		JElevator->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Elevator))));
+		JElevator->Values.Add("OccupyingCharacters", MakeShared<FJsonValueArray>(JOccupyingCharacters));
+		JElevator->Values.Add("FloorStops", MakeShared<FJsonValueArray>(JStops));
+		JElevator->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(
+			Cast<AActor>(Elevator), Elevator->mDisplayName.ToString(),
+		  Elevator->mDisplayName.ToString()
+		)));
+
+		JConveyorBeltArray.Add(MakeShared<FJsonValueObject>(JElevator));
+	}
+
+	return JConveyorBeltArray;
+}
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getModList(UObject* WorldContext, FRequestData RequestData) {
 
@@ -340,22 +441,12 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPowerSlug(UObject* WorldContext,
 		if (!ItemClass) continue;
 		
 		TSharedPtr<FJsonObject> JPowerSlug = UFRM_Library::CreateBaseJsonObject(PowerActor);
-		FString SlugName;
+		FString ItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
 
-		if (ItemClass->GetName() == "Desc_Crystal") {
-			SlugName = "Blue Slug";
-		}
-		else if (ItemClass->GetName() == "Desc_Crystal_mk2") {
-			SlugName = "Yellow Slug";
-		}
-		else if (ItemClass->GetName() == "Desc_Crystal_mk3") {
-			SlugName = "Purple Slug";
-		};
-
-		JPowerSlug->Values.Add("Name", MakeShared<FJsonValueString>(SlugName));
+		JPowerSlug->Values.Add("Name", MakeShared<FJsonValueString>(ItemName));
 		JPowerSlug->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(PowerActor->GetClass())));
 		JPowerSlug->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(PowerActor)));
-		JPowerSlug->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(PowerActor), SlugName, "Power Slug")));
+		JPowerSlug->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(PowerActor), ItemName, "Power Slug")));
 
 		JSlugArray.Add(MakeShared<FJsonValueObject>(JPowerSlug));
 	};
@@ -423,38 +514,16 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getDropPod(UObject* WorldContext, F
 	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGDropPod::StaticClass(), FoundActors);
 
 	for (AActor* FoundActor : FoundActors) {
-
-		TSharedPtr<FJsonObject> JDropPod = UFRM_Library::CreateBaseJsonObject(FoundActor);
-
 		AFGDropPod* DropPod = Cast<AFGDropPod>(FoundActor);
-
-		TSubclassOf<UFGItemDescriptor> ItemClass;
-		int32 ItemAmount = -1;
-		float PowerRequired = 0;
-
 		FFGDropPodUnlockCost DropPodCost = DropPod->GetUnlockCost();
 
-		FString JItemName = "No Item";
-		FString JItemClass = "Desc_NoItem";
-
-		ItemAmount = DropPodCost.ItemCost.Amount;
-		ItemClass = DropPodCost.ItemCost.ItemClass;
-		PowerRequired = DropPodCost.PowerConsumption;
-
-		if (ItemAmount > 0) {
-			JItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
-			JItemClass = UKismetSystemLibrary::GetClassDisplayName(DropPodCost.ItemCost.ItemClass);
-		};
-
+		TSharedPtr<FJsonObject> JDropPod = UFRM_Library::CreateBaseJsonObject(FoundActor);
 		JDropPod->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(DropPod)));
 		JDropPod->Values.Add("Opened", MakeShared<FJsonValueBoolean>(DropPod->HasBeenOpened()));
 		JDropPod->Values.Add("Looted", MakeShared<FJsonValueBoolean>(DropPod->HasBeenLooted()));
-		JDropPod->Values.Add("RepairItem", MakeShared<FJsonValueString>(JItemName));
-		JDropPod->Values.Add("RepairItemClass", MakeShared<FJsonValueString>(JItemClass));
-		JDropPod->Values.Add("RepairAmount", MakeShared<FJsonValueNumber>(ItemAmount));
-		JDropPod->Values.Add("PowerRequired", MakeShared<FJsonValueNumber>(PowerRequired));
+		JDropPod->Values.Add("RequiredItem", MakeShared<FJsonValueObject>(UFRM_Library::GetItemValueObject(DropPodCost.ItemCost)));
+		JDropPod->Values.Add("RequiredPower", MakeShared<FJsonValueNumber>(DropPodCost.PowerConsumption));
 		JDropPod->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(DropPod, "Drop Pod", "Drop Pod")));
-
 		JDropPodArray.Add(MakeShared<FJsonValueObject>(JDropPod));
 	};
 

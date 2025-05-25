@@ -32,6 +32,7 @@
 **** xref:json/Read/getFactory.adoc[getConstructor]
 **** xref:json/Read/getFactory.adoc[getConverter]
 **** xref:json/Read/getFactory.adoc[getEncoder]
+**** xref:json/Read/getElevators.adoc[getElevators]
 **** xref:json/Read/getExtractor.adoc[getExtractor]
 **** xref:json/Read/getFactory.adoc[getFactory]
 **** getFrackingActivator (soon)
@@ -94,9 +95,11 @@
 **** xref:json/Read/getVehicles.adoc[getTractor]
 **** getTrains (soon)
 **** xref:json/Read/getVehicles.adoc[getTruck]
+**** xref:json/Read/getVehiclePaths.adoc[getVehiclePaths]
 **** xref:json/Read/getVehicles.adoc[getVehicles]
 
 *** World
+**** xref:json/Read/getArtifacts.adoc[getArtifacts]
 **** xref:json/Read/getDoggo.adoc[getDoggo]
 **** xref:json/Read/getDropPod.adoc[getDropPod]
 **** xref:json/Read/getPowerSlug.adoc[getPowerSlug]
@@ -114,6 +117,7 @@
 **** xref:json/Write/sendChatMessage.adoc[sendChatMessage]
 
 *** Factory
+**** xref:json/Write/setEnabled.adoc[setEnabled]
 **** xref:json/Write/setSwitches.adoc[setSwitches]
 
 *** World

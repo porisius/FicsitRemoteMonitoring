@@ -26,11 +26,15 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> GetInventoryJSON(const TMap<TSubclassOf<UFGItemDescriptor>, int32>& Items);
 	static TArray<TSharedPtr<FJsonValue>> GetInventoryJSON(const TArray<FItemAmount>& Items);
 	static TSharedPtr<FJsonObject> GetItemValueObject(const TSubclassOf<UFGItemDescriptor>& Item, const int Amount);
+	static TSharedPtr<FJsonObject> GetItemValueObject(const FItemAmount Item);
+	static TSharedPtr<FJsonObject> GetItemValueObject(const FInventoryStack& Item);
 	static TSharedPtr<FJsonObject> GetResourceNodeJSON(AActor* Actor, const bool bIncludeFeatures = false);
 	static TSharedPtr<FJsonObject> CreateBaseJsonObject(const UObject* Actor);
 	static FString APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext);
 	static bool IsIntInRange(int32 Number, int32 LowerBound, int32 UpperBound);
 	static TSharedPtr<FJsonObject> GetActorLineFeaturesJSON(FVector PointOne, FVector PointTwo, FString DisplayName, FString TypeName);
+
+	static FString GetPlayerName(AFGCharacterPlayer* Character);
 
 	static double SafeDivide_Double(double Numerator, double Denominator)
 	{
@@ -45,4 +49,5 @@ public:
 	static TSharedPtr<FJsonValue> ConvertStringToFJsonValue(const FString& JsonString);
 	static TSharedPtr<FJsonObject> getPowerConsumptionJSON(UFGPowerInfoComponent* powerInfo);
 	static TSharedPtr<FJsonObject> ConvertVectorToFJsonObject(FVector JsonVector);
+	static TSharedPtr<FJsonValueArray> GetSplineVector(TArray<FSplinePointData>);
 };

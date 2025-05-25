@@ -1,11 +1,78 @@
 ﻿#include "FRM_World.h"
 
+#include "FGItemPickup.h"
 #include "FGResearchTree.h"
 #include "FGSchematicCategory.h"
 #include "FGResearchManager.h"
 #include "FicsitRemoteMonitoring.h"
 #include "FRM_Library.h"
 #include "FRM_Request.h"
+#include "Kismet/GameplayStatics.h"
+
+TArray<TSharedPtr<FJsonValue>> UFRM_World::GetArtifacts(UObject* WorldContext)
+{
+	UClass* SphereClass = LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Prototype/WAT/BP_WAT2.BP_WAT2_C"));
+	UClass* SloopClass = LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Prototype/WAT/BP_WAT1.BP_WAT1_C"));
+
+	TArray<AActor*> Pickups;
+	TArray<AActor*> Sloops;
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), SphereClass, Pickups);
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), SloopClass, Sloops);
+
+	TArray<TSharedPtr<FJsonValue>> JSlugArray;
+
+	Pickups.Append(Sloops);
+	
+	for (AActor* Actor : Pickups) {
+		const auto Pickup = Cast<AFGItemPickup>(Actor);
+		if (!Pickup) continue;
+
+		FInventoryItem PowerSlug = Pickup->GetPickupItems().Item;
+		const TSubclassOf<UFGItemDescriptor> ItemClass = PowerSlug.GetItemClass();
+		if (!ItemClass) continue;
+		
+		TSharedPtr<FJsonObject> JPowerSlug = UFRM_Library::CreateBaseJsonObject(Actor);
+		FString ItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
+
+		JPowerSlug->Values.Add("Name", MakeShared<FJsonValueString>(ItemName));
+		JPowerSlug->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Actor->GetClass())));
+		JPowerSlug->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Actor)));
+		JPowerSlug->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Actor), ItemName, "Artifact")));
+
+		JSlugArray.Add(MakeShared<FJsonValueObject>(JPowerSlug));
+	};
+
+	return JSlugArray;
+}
+
+TArray<TSharedPtr<FJsonValue>> UFRM_World::GetItemPickups(UObject* WorldContext)
+{
+	TArray<AActor*> FoundActors;
+	TArray<TSharedPtr<FJsonValue>> JItemArray;
+
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGItemPickup::StaticClass(), FoundActors);
+	for (AActor* FoundActor : FoundActors)
+	{
+		AFGItemPickup* ItemPickup = Cast<AFGItemPickup>(FoundActor);
+		if (!ItemPickup) continue;
+
+		FInventoryStack InventoryStack = ItemPickup->GetPickupItems();
+
+		TSharedPtr<FJsonObject> JItem = UFRM_Library::CreateBaseJsonObject(FoundActor);
+		JItem->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ItemPickup->GetClass())));
+		JItem->Values.Add("Item", MakeShared<FJsonValueObject>(UFRM_Library::GetItemValueObject(InventoryStack)));
+		JItem->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(ItemPickup)));
+		JItem->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(
+				ItemPickup,
+				UFGItemDescriptor::GetItemName(InventoryStack.Item.GetItemClass()).ToString(),
+				"Item Pickup"
+			)
+		));
+		JItemArray.Add(MakeShared<FJsonValueObject>(JItem));
+	}
+
+	return JItemArray;
+}
 
 TArray<TSharedPtr<FJsonValue>> UFRM_World::GetResearchTrees(UObject* WorldContext)
 {

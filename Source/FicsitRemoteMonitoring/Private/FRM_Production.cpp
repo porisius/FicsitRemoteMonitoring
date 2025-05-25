@@ -3,6 +3,7 @@
 #include "FGBuildableGeneratorFuel.h"
 #include "FGBuildableResourceExtractor.h"
 #include "FGInventoryLibrary.h"
+#include "FGItemCategory.h"
 #include "FGResourceSinkSettings.h"
 #include "FGResourceSinkSubsystem.h"
 #include "FGSchematicManager.h"
@@ -342,17 +343,9 @@ TSharedPtr<FJsonObject> UFRM_Production::getRecipe(UObject* WorldContext, TSubcl
 		JProducedInArray.Add(MakeShared<FJsonValueString>(UKismetSystemLibrary::GetDisplayName(Workshop)));
 	}
 
-	FString DisplayName;
-	FString ClassName;
-	FString CategoryName;
-
-	ModSubsystem->RecipeNames_BIE(Recipe, DisplayName, ClassName, CategoryName);
-
-	UE_LOG(LogFRMAPI, Warning, TEXT("Recipe: %s - Class: %s - Category Name: %s"), *FString(DisplayName), *FString(ClassName), *FString(CategoryName));
-
-	JRecipe->Values.Add("Name", MakeShared<FJsonValueString>(DisplayName));
-	JRecipe->Values.Add("ClassName", MakeShared<FJsonValueString>(ClassName));
-	JRecipe->Values.Add("Category", MakeShared<FJsonValueString>((CategoryName)));
+	JRecipe->Values.Add("Name", MakeShared<FJsonValueString>(UFGRecipe::GetRecipeName(Recipe).ToString()));
+	JRecipe->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Recipe)));
+	JRecipe->Values.Add("Category", MakeShared<FJsonValueString>(UFGItemCategory::GetCategoryName(UFGRecipe::GetCategory(Recipe)).ToString()));
 	JRecipe->Values.Add("Events", MakeShared<FJsonValueArray>(JEventsArray));
 	JRecipe->Values.Add("Ingredients", MakeShared<FJsonValueArray>(JIngredientArray));
 	JRecipe->Values.Add("Products", MakeShared<FJsonValueArray>(JProductArray));
@@ -375,6 +368,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getRecipes(UObject* WorldContext
 	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
 	fgcheck(ModSubsystem);
 
+	TArray<FString> RecipeList;
 	for (TSubclassOf<UFGSchematic> Schematic : Schematics) {
 		TArray<TSubclassOf<UFGRecipe>> Recipes;
 
@@ -389,10 +383,11 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getRecipes(UObject* WorldContext
 		ModSubsystem->SchematicToRecipes_BIE(WorldContext, Schematic, Recipes, Purchased, HasUnlocks, LockedAny, LockedTutorial, LockedDependent, LockedPhase, Tutorial);
 
 		for (TSubclassOf<UFGRecipe> Recipe : Recipes) {
+			if (RecipeList.Contains(Recipe->GetName())) continue;
 
 			TSharedPtr<FJsonObject> JRecipe = UFRM_Production::getRecipe(WorldContext, Recipe);
 			JRecipeArray.Add(MakeShared<FJsonValueObject>(JRecipe));
-
+			RecipeList.AddUnique(Recipe->GetName());
 		}
 
 	}

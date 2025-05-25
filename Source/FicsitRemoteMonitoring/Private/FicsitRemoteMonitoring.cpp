@@ -679,6 +679,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	//Registering Endpoints: API Name, bGetAll, bRequireGameThread, FunctionPtr
 	RegisterEndpoint(FAPIEndpoint("GET", "getAssembler", &AFicsitRemoteMonitoring::getAssembler));
 	RegisterEndpoint(FAPIEndpoint("GET", "getBelts", &AFicsitRemoteMonitoring::getBelts).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getElevators", &AFicsitRemoteMonitoring::getElevators).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getBiomassGenerator", &AFicsitRemoteMonitoring::getBiomassGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getBlender", &AFicsitRemoteMonitoring::getBlender));
 	RegisterEndpoint(FAPIEndpoint("GET", "getCables", &AFicsitRemoteMonitoring::getCables).GetAll());
@@ -712,6 +713,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getPortal", &AFicsitRemoteMonitoring::getPortal).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPower", &AFicsitRemoteMonitoring::getPower).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPowerSlug", &AFicsitRemoteMonitoring::getPowerSlug).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getArtifacts", &AFicsitRemoteMonitoring::getArtifacts).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPowerUsage", &AFicsitRemoteMonitoring::getPowerUsage).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getProdStats", &AFicsitRemoteMonitoring::getProdStats).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPump", &AFicsitRemoteMonitoring::getPump).GetAll());
@@ -739,6 +741,8 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getWorldInv", &AFicsitRemoteMonitoring::getWorldInv).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getResearchTrees", &AFicsitRemoteMonitoring::getResearchTrees).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getChatMessages", &AFicsitRemoteMonitoring::GetChatMessages).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getItemPickups", &AFicsitRemoteMonitoring::GetItemPickups).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getVehiclePaths", &AFicsitRemoteMonitoring::getVehiclePaths).GetAll());
 
 	// event endpoints
 	RegisterEndpoint(FAPIEndpoint("GET", "getFallingGiftBundles", &AFicsitRemoteMonitoring::getFallingGiftBundles).GetAll().RequiresGameThread());
@@ -751,6 +755,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 
 	// post/write endpoints
 	RegisterEndpoint(FAPIEndpoint("POST", "setSwitches", &AFicsitRemoteMonitoring::setSwitches).RequiresAuthentication().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("POST", "setEnabled", &AFicsitRemoteMonitoring::setEnabled).RequiresAuthentication());
 	RegisterEndpoint(FAPIEndpoint("POST", "sendChatMessage", &AFicsitRemoteMonitoring::SendChatMessage).RequiresAuthentication().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("POST", "createPing", &AFicsitRemoteMonitoring::CreatePing).RequiresAuthentication().RequiresGameThread());
 }

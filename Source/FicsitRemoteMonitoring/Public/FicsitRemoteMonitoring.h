@@ -18,6 +18,7 @@
 #include "FRM_World.h"
 #include "ModSubsystem.h"
 #include "FRM_Controller.h"
+#include "Endpoints/Factory/setEnabled.h"
 
 THIRD_PARTY_INCLUDES_START
 #include "ThirdParty/uWebSockets/App.h"
@@ -145,6 +146,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void SchematicToRecipes_BIE(UObject* WorldContext, TSubclassOf<class UFGSchematic> schematicClass, TArray<TSubclassOf< class UFGRecipe >>& out_RecipeClasses, bool& Purchased, bool& HasUnlocks, bool& LockedAny, bool& LockedTutorial, bool& LockedDependent, bool& LockedPhase, bool& Tutorial);
 
+	// TODO unused can be removed
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void RecipeNames_BIE(TSubclassOf<class UFGRecipe> recipeClass, FString& Name, FString& ClassName, FString& CategoryName);
 
@@ -232,6 +234,10 @@ public:
 	void getBelts(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Factory::getBelts(WorldContext, RequestData);
 	}
+
+	void getElevators(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getElevators(WorldContext, RequestData);
+	}
 	
 	void getBiomassGenerator(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Power::getGenerators(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/GeneratorBiomass/Build_GeneratorBiomass_Automated.Build_GeneratorBiomass_Automated_C")));
@@ -282,6 +288,11 @@ public:
 	void CreatePing(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
 	{
 		OutJsonArray = UFRM_World::CreatePing(WorldContext, RequestData);
+	}
+	
+	void GetItemPickups(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+	{
+		OutJsonArray = UFRM_World::GetItemPickups(WorldContext);
 	}
 
 	void getFallingGiftBundles(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
@@ -389,6 +400,10 @@ public:
 	void getPowerSlug(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Factory::getPowerSlug(WorldContext, RequestData);
 	}
+
+	void getArtifacts(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_World::GetArtifacts(WorldContext);
+	}
 	
 	void getPowerUsage(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Power::getPowerUsage(WorldContext);
@@ -466,6 +481,10 @@ public:
 	void setSwitches(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Power::setSwitches(WorldContext, RequestData);
 	}
+
+	void setEnabled(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = USetEnabled::setEnabled(WorldContext, RequestData);
+	}
 	
 	void getTractor(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Vehicles::getVehicles(WorldContext, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Vehicle/Tractor/BP_Tractor.BP_Tractor_C")));
@@ -491,6 +510,9 @@ public:
 		OutJsonArray = UFRM_Vehicles::getTruckStation(WorldContext);
 	}
 
+	void getVehiclePaths(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Vehicles::getVehiclePaths(WorldContext);
+	}
 	
 	void getWorldInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Factory::getWorldInv(WorldContext, RequestData);

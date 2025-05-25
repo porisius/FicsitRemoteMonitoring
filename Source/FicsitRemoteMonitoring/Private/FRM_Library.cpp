@@ -1,6 +1,7 @@
 #include "FRM_Library.h"
 
 #include "Config_FactoryStruct.h"
+#include "FGCharacterPlayer.h"
 #include "FGFactoryConnectionComponent.h"
 #include "FGPipeConnectionComponent.h"
 #include "FGPowerCircuit.h"
@@ -9,6 +10,7 @@
 #include "FicsitRemoteMonitoringModule.h"
 #include "FRM_Factory.h"
 #include "StructuredLog.h"
+#include "Components/SplineComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 TSharedPtr<FJsonObject> UFRM_Library::getActorJSON(AActor* Actor) {
@@ -217,6 +219,16 @@ void UFRM_Library::GetGroupedInventoryItems(const TArray<FInventoryStack>& Inven
 	}
 }
 
+TSharedPtr<FJsonObject> UFRM_Library::GetItemValueObject(const FItemAmount Item)
+{
+	return GetItemValueObject(Item.ItemClass, Item.Amount);
+}
+
+TSharedPtr<FJsonObject> UFRM_Library::GetItemValueObject(const FInventoryStack& Item)
+{
+	return GetItemValueObject(Item.Item.GetItemClass(), Item.NumItems);
+}
+
 TSharedPtr<FJsonObject> UFRM_Library::GetItemValueObject(const TSubclassOf<UFGItemDescriptor>& Item, const int Amount)
 {
 	TSharedPtr<FJsonObject> JItem = MakeShared<FJsonObject>();
@@ -355,3 +367,31 @@ TSharedPtr<FJsonObject> UFRM_Library::getPowerConsumptionJSON(UFGPowerInfoCompon
 
 	return JCircuit;
 };
+
+FString UFRM_Library::GetPlayerName(AFGCharacterPlayer* Character)
+{
+	FString CachedPlayerName = Character->GetCachedPlayerName();
+	if (!CachedPlayerName.IsEmpty())
+	{
+		return CachedPlayerName;
+	}
+
+	if (Character->mPlayerNames.Num())
+	{
+		return Character->mPlayerNames[0].PlayerName;
+	}
+
+	return "";
+}
+
+TSharedPtr<FJsonValueArray> UFRM_Library::GetSplineVector(TArray<FSplinePointData> SplinePointDatas)
+{
+	TArray<TSharedPtr<FJsonValue>> SplineVectors;
+
+	for (FSplinePointData SplinePointData : SplinePointDatas)
+	{
+		SplineVectors.Add(MakeShared<FJsonValueObject>(ConvertVectorToFJsonObject(SplinePointData.Location)));
+	}
+	
+	return MakeShared<FJsonValueArray>(SplineVectors);
+}
