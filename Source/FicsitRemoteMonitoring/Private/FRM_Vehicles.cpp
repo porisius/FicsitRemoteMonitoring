@@ -84,6 +84,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 	
 	AFGVehicleSubsystem* VehicleSubsystem = AFGVehicleSubsystem::Get(WorldContext);
 	TArray<AFGVehicle*> Vehicles = VehicleSubsystem->GetVehicles();
+	TArray<AFGSavedWheeledVehiclePath*> SavedPaths = VehicleSubsystem->mSavedPaths;
 	TArray<TSharedPtr<FJsonValue>> JVehicleArray;
 
 	for (AFGVehicle* Vehicle : Vehicles) {
@@ -146,14 +147,12 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 				FormString = "Out of Fuel";
 			};
 
-			//AFGSavedWheeledVehiclePath* VehiclePath = Cast<AFGSavedWheeledVehiclePath>(Vehicle);
-			//fgcheck(VehiclePath);
-			//FString PathName = VehiclePath->mPathName;
+			const FString VehiclePathName = GetPathNameForTargetList(VehicleInfo->GetTargetList());
 
 			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(Vehicle->mDisplayName.ToString()));
 			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Vehicle->GetClass())));
 			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Vehicle)));
-			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>("PathName"));
+			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>(VehiclePathName));
 			JVehicle->Values.Add("Status", MakeShared<FJsonValueString>(FormString));
 			JVehicle->Values.Add("CurrentGear", MakeShared<FJsonValueNumber>(VehicleMovement->GetCurrentGear()));
 			JVehicle->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(VehicleMovement->GetForwardSpeed() * 0.036));
@@ -206,4 +205,17 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehiclePaths(UObject* WorldCont
 	};
 
 	return JVehiclePathArray;
+}
+
+FString UFRM_Vehicles::GetPathNameForTargetList(AFGDrivingTargetList* TargetList)
+{
+	if (IsValid(TargetList)) {
+		AFGVehicleSubsystem* VehicleSubsystem = AFGVehicleSubsystem::Get(TargetList);
+		for (AFGSavedWheeledVehiclePath* SavedPath : VehicleSubsystem->mSavedPaths) {
+			if (TargetList == SavedPath->mTargetList) {
+				return SavedPath->mPathName;
+			}
+		}
+	}
+	return "No Path Found";
 }
