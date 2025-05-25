@@ -10,6 +10,7 @@
 #include "FicsitRemoteMonitoringModule.h"
 #include "FRM_Factory.h"
 #include "StructuredLog.h"
+#include "Components/SplineComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 TSharedPtr<FJsonObject> UFRM_Library::getActorJSON(AActor* Actor) {
@@ -381,4 +382,16 @@ FString UFRM_Library::GetPlayerName(AFGCharacterPlayer* Character)
 	}
 
 	return "";
+}
+
+TSharedPtr<FJsonValueArray> UFRM_Library::GetSplineVector(TArray<FSplinePointData> SplinePointDatas)
+{
+	TArray<TSharedPtr<FJsonValue>> SplineVectors;
+
+	for (FSplinePointData SplinePointData : SplinePointDatas)
+	{
+		SplineVectors.Add(MakeShared<FJsonValueObject>(ConvertVectorToFJsonObject(SplinePointData.Location)));
+	}
+	
+	return MakeShared<FJsonValueArray>(SplineVectors);
 }
