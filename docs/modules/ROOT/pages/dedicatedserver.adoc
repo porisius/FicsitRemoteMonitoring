@@ -1,0 +1,58 @@
+= Dedicated Server API
+
+:url-repo: https://github.com/porisius/FicsitRemoteMonitoring
+
+FRM can, now as of 1.1, interface with Satisfactory's Dedicated Server API Port that can be accessed, by default, at `https://<ServerIP>:7777/api/v1/` (Ex. `https://localhost:7777/api/v1/`). The Network Port will depend on the port you set for your Dedicated Server.
+
+This feature is not available for the base game, and is only available for the Dedicated Server. This is Coffee Stain Studios'design for the game, and we cannot enable this feature for the base game.
+
+For setting up your Dedicated Server, please refer to the official documentation at https://satisfactory.wiki.gg/wiki/Dedicated_servers. Also for documentation on the **Official** API, please refer to https://satisfactory.wiki.gg/wiki/Dedicated_servers/HTTPS_API.
+
+Please note that this is not the same as the FRM Web Server, and is not intended to be used in the same way. This is due to how Coffee Stain Studios designed the Satisfactory Dedicated Server API. However, if you cannot access the FRM Web Server, you can use the Game Port API as a fallback as the TCP Port is required to be accessible for normal gameplay.
+
+There are some differences between the FRM Web Server and the Game Port API, which are listed below:
+
+* Please note that **ALL OF FRM'S ENDPOINTS** will use the game's `GameThread` to execute the request.
+
+    ** All endpoints are accessible via this API as a `NotAuthenticated`,however any FRM Endpoints that require authentication will rely on FRM's Authentication Token to be passed in the request header. Please refer to the respective endpoint documentation for more information. This is a design choice by the FRM Development Team to establish a standard for all endpoints.
+
+    ** This is not the case with the FRM Web Server, which uses a separate thread to execute most requests. Please note that some requests may still use the `GameThread` to execute, such as the `getPlayer` endpoint to obtain some, if not all, of the data for the respective endpoint.
+
+    ** We cannot change this behavior, as it is how the game is designed. The FRM Development Team has tried to make all of FRM's Endpoints as efficient as possible. However, larger requests, such as `getFactory`, may still cause minor hiccups in the Dedicated Server's performance. Usage of `getAll` endpoint is not recommended, as it is the largest request and can cause all players to experience lag.
+
+    ** Smaller saves/worlds will not experience this issue as much as larger saves/worlds. This mod is routinely tested on saves with 1000+ hours of playtime and 10000+ items in the factory. However, please note that this is not a guarantee that you will not experience any issues. Special thanks to BLAndrew575 for his save for testing.
+
+* The Game Port API does not support simple GET requests for API data. You must use a POST request in the following format to get data returned. Please refer to each endpoint's documentation for the specific request body.
+
+    ** The example below is for getting the list of players on the server. Please see the respective endpoint documentation for examples of their JSON response.
+
+    ```json
+    {
+        "function": "frm",
+        "endpoint": "getPlayers",
+    }
+    ```
+
+    ** This example is for using the `sendChatMessage` endpoint to send a message to the server as well as the response.
+
+    Request:
+    ```json
+    {
+        "function": "frm",
+        "endpoint": "sendChatMessage",
+        "data":
+        {
+            "message": "Hello World :)"
+        }
+    }
+    ```
+
+    Response:
+    ```json
+    {
+        "IsSent": true,
+        "Message": "Hello World :)"
+    }
+    ```
+
+More optimizations and endpoints are planned for the future. Please refer to the official and mod documentations for more information.

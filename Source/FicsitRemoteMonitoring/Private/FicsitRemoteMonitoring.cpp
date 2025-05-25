@@ -14,6 +14,8 @@
 #include "StructuredLog.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetStringLibrary.h"
+#include "FGServerAPIManager.h"
+#include "FGServerSubsystem.h"
 
 us_listen_socket_t* SocketListener;
 bool SocketRunning = false;
@@ -45,6 +47,9 @@ void AFicsitRemoteMonitoring::BeginPlay()
 
     // Load FRM's API Endpoints
     InitAPIRegistry();
+
+	// Load FRM's API Controller to FGServerAPIManager
+	InitializeFunctions();
 
     // get config structs
     auto HttpConfig = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
@@ -374,6 +379,31 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
 }
 
+void AFicsitRemoteMonitoring::InitializeFunctions() {
+	const auto World = this->GetWorld();
+	this->Controller = NewObject<UFRM_Controller>();
+	this->Controller->World = World;
+	this->Controller->ModSubsystem = this;
+	this->Controller->AuthToken = FConfig_HTTPStruct::GetActiveConfig(World).Authentication_Token;
+	
+	if (World == nullptr)
+		return;
+	
+	const auto GameInstance = World->GetGameInstance();
+	if (GameInstance == nullptr)
+		return;
+	
+	const auto Subsystem = GameInstance->GetSubsystem<UFGServerSubsystem>();
+	if (Subsystem == nullptr)
+		return;
+	
+	const auto ServerAPIManager = Subsystem->GetServerAPIManager();
+	if (ServerAPIManager == nullptr)
+		return;
+
+	ServerAPIManager->RegisterRequestHandler(this->Controller);
+}
+
 std::string UrlDecode(const std::string &Value) {
 	std::ostringstream Decoded;
 	for (size_t i = 0; i < Value.length(); ++i) {
@@ -500,7 +530,9 @@ void AFicsitRemoteMonitoring::PushUpdatedData() {
     	FRequestData RequestData = FRequestData();
     	RequestData.bIsAuthorized = true;
 
-        FString Json = HandleEndpoint(this, Endpoint, RequestData, bAllocationComplete, ErrorCode);
+        FString Json;
+
+    	HandleEndpoint(Endpoint, RequestData, bAllocationComplete, ErrorCode, Json, EInterfaceType::Socket);
 
         //block while not complete
         while (!bAllocationComplete)
@@ -587,7 +619,7 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
 
 bool AFicsitRemoteMonitoring::IsAuthorizedRequest(uWS::HttpRequest* req, FString RequiredToken)
 {
-	const std::string_view Header = req->getHeader("authorization");
+	const std::string_view Header = req->getHeader("x-frm-authorization");
 	const FString AuthorizationHeader = FString(Header.data()).Left(Header.size());
 	if (AuthorizationHeader.IsEmpty()) return false;
 
@@ -613,7 +645,9 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 	
     bool bSuccess = false;
 	int32 ErrorCode = 404;
-    FString OutJson = this->HandleEndpoint(World, Endpoint, RequestData, bSuccess, ErrorCode);
+	FString OutJson;
+    //FString OutJson = this->HandleEndpoint(World, Endpoint, RequestData, bSuccess, ErrorCode);
+	this->HandleEndpoint(Endpoint, RequestData, bSuccess, ErrorCode, OutJson, EInterfaceType::Web);
 
     if (bSuccess) {
         UE_LOGFMT(LogHttpServer, Log, "API Found Returning: {Endpoint}", Endpoint);
@@ -788,11 +822,13 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
     bSuccess = false;
     TArray<TSharedPtr<FJsonValue>> JsonArray;
 
+	/** Unable to be used for RS232, FGServerAPIManager, or even the debug command
     if (!SocketListener) {
         UE_LOG(LogHttpServer, Warning, TEXT("SocketListener is closed. Skipping request for endpoint '%s'."), *InEndpoint);
         return Response;
     }
-
+	*/
+	
 	TArray<FString> AvailableMethods;
     bool bEndpointFound = false;
 
@@ -818,12 +854,14 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
         Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
 
         try {
-            if (EndpointInfo.bRequireGameThread) {
+            if (EndpointInfo.bRequireGameThread && RequestData.Interface != EInterfaceType::Server) {
                 FThreadSafeBool bAllocationComplete = false;
-                AsyncTask(ENamedThreads::GameThread, [this, &EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &bSuccess]() {
-					if (SocketListener && EndpointInfo.FunctionPtr)
+                AsyncTask(ENamedThreads::GameThread, [this, &EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &ErrorCode, &bSuccess]() {
+					//if (SocketListener && EndpointInfo.FunctionPtr)
+					if (EndpointInfo.FunctionPtr)
 					{
 						(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
+						ErrorCode = 200;
 						bSuccess = true;
 					}
 					bAllocationComplete = true;
@@ -833,9 +871,11 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
                     FPlatformProcess::Sleep(0.0001f);
                 }
             }
-			else if (SocketListener && EndpointInfo.FunctionPtr)
+			//else if (SocketListener && EndpointInfo.FunctionPtr)
+			else if (EndpointInfo.FunctionPtr)
 			{
 				(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
+				ErrorCode = 200;
 				bSuccess = true;
 			}
         } catch (const std::exception& e) {
@@ -860,6 +900,7 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
 	}
     else if (!bEndpointFound) {
         UE_LOG(LogHttpServer, Warning, TEXT("No matching endpoint found for '%s'."), *InEndpoint);
+    	ErrorCode = 404;
         AddErrorJson(JsonArray, TEXT("No matching endpoint found."));
     }
 
@@ -875,39 +916,30 @@ void AFicsitRemoteMonitoring::AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonA
     JsonArray.Add(MakeShared<FJsonValueObject>(JsonObject));
 }
 
-FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess, int32& ErrorCode)
+//FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess, int32& ErrorCode)
+void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode, FString& Out_Data, EInterfaceType Interface)
 {
 	bSuccess = false;
 
+	UObject* WorldContext = this->GetWorld();
+
+	RequestData.Interface = Interface;
+
 	auto [JsonValues, bUseFirstObject] = this->CallEndpoint(WorldContext, InEndpoint, RequestData, bSuccess, ErrorCode);
 
-	if (bSuccess && !bUseFirstObject) return UFRM_RequestLibrary::JsonArrayToString(JsonValues, JSONDebugMode);
-
-	// return empty object, if JsonValues is empty
-	if (JsonValues.Num() == 0) return "{}";
-
-	TSharedPtr<FJsonObject> FirstJsonObject = JsonValues[0]->AsObject();
-
-	return UFRM_RequestLibrary::JsonObjectToString(FirstJsonObject, JSONDebugMode);
+	if (bSuccess && !bUseFirstObject)
+	{
+		Out_Data = UFRM_RequestLibrary::JsonArrayToString(JsonValues, JSONDebugMode);
+	} else if (JsonValues.Num() == 0) {
+		Out_Data = "{}";
+	}
+	else
+	{
+		// return empty object, if JsonValues is empty
+		TSharedPtr<FJsonObject> FirstJsonObject = JsonValues[0]->AsObject();
+		Out_Data = UFRM_RequestLibrary::JsonObjectToString(FirstJsonObject, JSONDebugMode);
+	}
 }
-
-/*FFGServerErrorResponse AFicsitRemoteMonitoring::HandleCSSEndpoint(FString& out_json, FString InEndpoin)
-{
-    bool bSuccess = false;
-    auto World = GetWorld();
-    TArray<TSharedPtr<FJsonValue>> Json = this->CallEndpoint(World, InEndpoin, bSuccess);
-
-    if (!bSuccess) {
-        out_json = "{'error': 'Endpoint not found. Please consult Endpoint's documentation for more information.'}";
-        return FFGServerErrorResponse::Ok();
-    }
-
-    FConfig_FactoryStruct config = FConfig_FactoryStruct::GetActiveConfig(World);
-    out_json = UBlueprintJsonValue::StringifyArray(Json, config.JSONDebugMode);
-    return FFGServerErrorResponse::Ok();
-
-}
-*/
 
 void AFicsitRemoteMonitoring::getAll(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
 {
@@ -923,7 +955,7 @@ void AFicsitRemoteMonitoring::getAll(UObject* WorldContext, FRequestData Request
         bool bSuccess = false;
         TArray<TSharedPtr<FJsonValue>> EndpointJsonValues;
 
-        if (APIEndpoint.bRequireGameThread)
+        if (APIEndpoint.bRequireGameThread && RequestData.Interface != EInterfaceType::Server)
         {
             // If the endpoint requires the GameThread, execute the call asynchronously
             FThreadSafeBool bAllocationComplete = false;

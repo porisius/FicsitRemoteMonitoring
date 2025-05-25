@@ -1,0 +1,13 @@
+diff --git forkSrcPrefix/Source/FactoryDedicatedServer/Public/Networking/FGServerAPIManager.h forkDstPrefix/Source/FactoryDedicatedServer/Public/Networking/FGServerAPIManager.h
+index 6f332cb4b4cbb436ffd67a2dde49ce0de2c0d9cb..8423ec2cb5cab7a3b9a839baa07fdf8da1b5e5ec 100644
+--- forkSrcPrefix/Source/FactoryDedicatedServer/Public/Networking/FGServerAPIManager.h
++++ forkDstPrefix/Source/FactoryDedicatedServer/Public/Networking/FGServerAPIManager.h
+@@ -113,7 +113,7 @@ public:
+ protected:
+ 	// Returns a list of compression algorithms supported by the client
+ 	TArray<FString> GetSupportedCompressionAlgorithms() const;
+-private:
++public:
+ 	friend class UFGServerAPIManager;
+ 
+ 	TMap<FString, TArray<FString>> RequestHeaders;

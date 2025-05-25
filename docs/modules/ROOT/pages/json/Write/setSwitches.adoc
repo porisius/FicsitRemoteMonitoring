@@ -40,7 +40,7 @@ include::../_responseBody.adoc[]
 ----
 curl -X POST 'http://localhost:8080/setSwitches' \
 -H 'Content-Type: application/json' \
--H 'Authorization: <your access token>' \
+-H 'X-FRM-Authorization: <your access token>' \
 --data-raw '{ \
   "ID":"Build_PriorityPowerSwitch_C_2147423102", \
   "name": "My Power Switch", \
