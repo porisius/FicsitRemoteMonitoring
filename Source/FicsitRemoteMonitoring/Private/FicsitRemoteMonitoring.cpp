@@ -708,6 +708,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getResearchTrees", &AFicsitRemoteMonitoring::getResearchTrees).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getChatMessages", &AFicsitRemoteMonitoring::GetChatMessages).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getItemPickups", &AFicsitRemoteMonitoring::GetItemPickups).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getUObjectCount", &AFicsitRemoteMonitoring::getUObjectCount).GetAll().UseFirstObject());
 	RegisterEndpoint(FAPIEndpoint("GET", "getVehiclePaths", &AFicsitRemoteMonitoring::getVehiclePaths).GetAll());
 
 	// event endpoints
@@ -777,37 +778,7 @@ void AFicsitRemoteMonitoring::RegisterEndpoint(const FAPIEndpoint& Endpoint)
 	APIEndpoints.Add(Endpoint);
 
 	UE_LOGFMT(LogHttpServer, Log, "Registered API Endpoint: {APIName} - Current number of endpoints registered: {1}", Endpoint.APIName, APIEndpoints.Num());
-
-/*
-    // Store the APIName in a member variable for use in HandleCSSEndpoint
-    StoredAPIName = APIName;
-
-    UFGServerSubsystem* ServerSubsystem = UFGServerSubsystem::Get(GetWorld());
-    if (IsValid(ServerSubsystem)) { return; }
-
-    UFGServerAPIManager* APIManager = ServerSubsystem->GetServerAPIManager();
-    if (IsValid(APIManager)) { return; }
-
-    if (!IsRunningDedicatedServer()) {
-
-        // Store the APIName in a member variable for use in HandleCSSEndpoint
-        StoredAPIName = APIName;
-
-        UFGServerSubsystem* ServerSubsystem = UFGServerSubsystem::Get(GetWorld());
-        if (IsValid(ServerSubsystem)) { return; }
-
-        UFGServerAPIManager* APIManager = ServerSubsystem->GetServerAPIManager();
-        if (IsValid(APIManager)) { return; }
-
-        FFGRequestHandlerRegistration HandleRegistration = FFGRequestHandlerRegistration();
-        HandleRegistration.HandlerObject = this;
-        HandleRegistration.HandlerFunction = this->FindFunction(FName("HandleCSSEndpoint"));
-        HandleRegistration.FunctionName = FName(*APIName);
-        HandleRegistration.PrivilegeLevel = EPrivilegeLevel::None;
-        APIManager->mRegisteredHandlers.Add(FString(APIName), HandleRegistration);
-
-    };
-*/
+	
 }
 
 FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode)
