@@ -21,6 +21,15 @@
 			"Name": "FicsitRemoteMonitoring",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "FicsitRemoteMonitoringServer",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"TargetAllowList": [
+				"Editor",
+				"Server"
+			]
 		}
 	],
 	"Plugins": [

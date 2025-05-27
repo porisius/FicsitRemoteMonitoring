@@ -5,6 +5,7 @@
 
 #include "FRM_Controller.generated.h"
 
+class UWorld;
 struct FFGFileResponseWrapper;
 class AFicsitRemoteMonitoring;
 class UFGUserSetting;
@@ -64,17 +65,17 @@ class UFGServerSubsystem;
 enum class EInterfaceType : uint8;
 
 UCLASS()
-class FICSITREMOTEMONITORING_API UFRM_Controller : public UFGServerControllerBase
+class FICSITREMOTEMONITORINGSERVER_API UFRM_Controller : public UFGServerControllerBase
 {
 	GENERATED_BODY()
 
 public:
 
 	UPROPERTY()
-	UWorld *World;
-
+	UWorld* World;
+	
 	UPROPERTY()
-	AFicsitRemoteMonitoring *ModSubsystem;
+	AFicsitRemoteMonitoring* ModSubsystem;
 
 	UPROPERTY()
 	FString AuthToken;

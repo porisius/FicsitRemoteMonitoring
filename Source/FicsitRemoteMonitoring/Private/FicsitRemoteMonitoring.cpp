@@ -14,8 +14,6 @@
 #include "StructuredLog.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetStringLibrary.h"
-#include "FGServerAPIManager.h"
-#include "FGServerSubsystem.h"
 
 us_listen_socket_t* SocketListener;
 bool SocketRunning = false;
@@ -47,9 +45,6 @@ void AFicsitRemoteMonitoring::BeginPlay()
 
     // Load FRM's API Endpoints
     InitAPIRegistry();
-
-	// Load FRM's API Controller to FGServerAPIManager
-	InitializeFunctions();
 
     // get config structs
     auto HttpConfig = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
@@ -377,31 +372,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
             }
         });
 
-}
-
-void AFicsitRemoteMonitoring::InitializeFunctions() {
-	const auto World = this->GetWorld();
-	this->Controller = NewObject<UFRM_Controller>();
-	this->Controller->World = World;
-	this->Controller->ModSubsystem = this;
-	this->Controller->AuthToken = FConfig_HTTPStruct::GetActiveConfig(World).Authentication_Token;
-	
-	if (World == nullptr)
-		return;
-	
-	const auto GameInstance = World->GetGameInstance();
-	if (GameInstance == nullptr)
-		return;
-	
-	const auto Subsystem = GameInstance->GetSubsystem<UFGServerSubsystem>();
-	if (Subsystem == nullptr)
-		return;
-	
-	const auto ServerAPIManager = Subsystem->GetServerAPIManager();
-	if (ServerAPIManager == nullptr)
-		return;
-
-	ServerAPIManager->RegisterRequestHandler(this->Controller);
 }
 
 std::string UrlDecode(const std::string &Value) {
