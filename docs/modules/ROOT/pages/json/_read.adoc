@@ -10,7 +10,7 @@
 | Factory | xref:json/Read/getFactory.adoc[getBlender] | Gets a list of all blenders.
 | Factory | xref:json/Read/getFactory.adoc[getConstructor] | Gets a list of all constructors.
 | Factory | xref:json/Read/getFactory.adoc[getConverter] | Gets a list of all converters.
-| Factory | xref:json/Read/getFactory.adoc[getElevator] | Gets a list of all elevators.
+| Factory | xref:json/Read/getElevators.adoc[getElevators] | Gets a list of all elevators.
 | Factory | xref:json/Read/getFactory.adoc[getEncoder] | Gets a list of all encoders.
 | Factory | xref:json/Read/getFactory.adoc[getFactory] | Gets a list of all factories (smelters, constructors, assemblers, foundries, etc.).
 | Factory | xref:json/Read/getFactory.adoc[getSmelter] | Gets a list of all smelters.
@@ -20,16 +20,16 @@
 | Factory | xref:json/Read/getFactory.adoc[getParticle] | Gets a list of all particle accelerators.
 | Factory | xref:json/Read/getFactory.adoc[getFoundry] | Gets a list of all foundries.
 | Factory | xref:json/Read/getBelts.adoc[getBelts] | Gets a list of all belts.
-| Factory | getCables | Gets a list of all cables.
-| Factory | getHypertube | Gets a list of all hypertubes.
+| Factory | xref:json/Read/getCables.adoc[getCables] | Gets a list of all cables.
+| Factory | xref:json/Read/getHypertube.adoc[getHypertube] | Gets a list of all hypertubes.
 | Factory | xref:json/Read/getPipes.adoc[getPipes] | Gets a list of all pipes.
-| Factory | getPump | Gets a list of all pumps.
-| Factory | getTrainRails | Gets a list of all railways.
+| Factory | xref:json/Read/getPump.adoc[getPump] | Gets a list of all pumps.
+| Factory | xref:json/Read/getTrainRails.adoc[getTrainRails] | Gets a list of all railways.
 | Factory | xref:json/Read/getExtractor.adoc[getExtractor] | Gets a list of all miners.
-| Factory | getFrackingActivator | Gets a list of all fracking activators.
-| Factory | getPortal | Gets a list of all portals.
+| Factory | xref:json/Read/getExtractor.adoc[getFrackingActivator] | Gets a list of all fracking activators.
+| Factory | xref:json/Read/getPortal.adoc[getPortal] | Gets a list of all portals.
 | Factory | xref:json/Read/getRadarTower.adoc[getRadarTower] | Gets a list of all radar towers.
-| Factory | getResourceSinkBuilding | Gets a list of all resource sinks.
+| Factory | xref:json/Read/getResourceSinkBuilding.adoc[getResourceSinkBuilding] | Gets a list of all resource sinks.
 | Factory | xref:json/Read/getSpaceElevator.adoc[getSpaceElevator] | Gets a list of all space elevators.
 | Factory | xref:json/Read/getHUBTerminal.adoc[getHUBTerminal] | Gets a list of the HUB Terminals.
 | Factory | xref:json/Read/getSwitches.adoc[getSwitches] | Gets a list of all switches (priority power switches and power switches).
@@ -41,7 +41,7 @@
 | Generators | xref:json/Read/getGenerators.adoc[getFuelGenerator] | Gets a list of all fuel generators.
 | Generators | xref:json/Read/getGenerators.adoc[getGeothermalGenerator] | Gets a list of all geothermal generators.
 
-| Inventory | getCloudInv | Gets a list of the cloud inventory.
+| Inventory | xref:json/Read/getWorldInv.adoc[getCloudInv] | Gets a list of the cloud inventory.
 | Inventory | xref:json/Read/getWorldInv.adoc[getWorldInv] | Gets a list of the world inventory.
 | Inventory | xref:json/Read/getStorageInv.adoc[getStorageInv] | Gets a list of all storage inventories.
 
@@ -49,8 +49,8 @@
 | Resource Nodes | xref:json/Read/getResourceNode.adoc[getResourceGeyser] | Gets a list of all geysers.
 | Resource Nodes | xref:json/Read/getResourceNode.adoc[getResourceWell] | Gets a list of all resource ore nodes, geysers and fracking satellites,
 
-| Session | getSessionInfo | Gets statistics about the current session.
-| Session | getResearchTrees | Gets a list of all MAM research trees.
+| Session | xref:json/Read/getSessionInfo.adoc[getSessionInfo] | Gets statistics about the current session.
+| Session | xref:json/Read/getSessionInfo.adoc[getResearchTrees] | Gets a list of all MAM research trees.
 | Session | xref:json/Read/getPlayer.adoc[getPlayer] | Gets a list of all players.
 | Session | xref:json/Read/getModList.adoc[getModList] | Gets a list of all installed mods.
 
@@ -64,11 +64,11 @@
 
 | Vehicles | xref:json/Read/getVehicles.adoc[getVehicles] | Gets a list of all vehicles (tractors, trucks, trains, factory carts, etc.).
 | Vehicles | xref:json/Read/getDrone.adoc[getDrone] | Gets a list of all drones.
-| Vehicles | getExplorer | Gets a list of all explorers.
-| Vehicles | getFactoryCart | Gets a list of all factory carts.
-| Vehicles | getTractor | Gets a list of all tractors.
+| Vehicles | xref:json/Read/getVehicles.adoc[getExplorer] | Gets a list of all explorers.
+| Vehicles | xref:json/Read/getVehicles.adoc[getFactoryCart] | Gets a list of all factory carts.
+| Vehicles | xref:json/Read/getVehicles.adoc[getTractor] | Gets a list of all tractors.
 | Vehicles | xref:json/Read/getTrains.adoc[getTrains] | Gets a list of all trains.
-| Vehicles | getTruck | Gets a list of all trucks.
+| Vehicles | xref:json/Read/getVehicles.adoc[getTruck] | Gets a list of all trucks.
 | Vehicles | xref:json/Read/getPaths.adoc[getPaths] | Gets a list of all vehicle paths.
 
 | World | xref:json/Read/getDropPod.adoc[getDropPod] | Gets a list of all drop pods.
@@ -77,6 +77,7 @@
 | World | xref:json/Read/getRecipes.adoc[getRecipes] | Gets a list of all recipes.
 | World | xref:json/Read/getDoggo.adoc[getDoggo] | Gets a list of all tamed doggos.
 | World | xref:json/Read/getProdStats.adoc[getProdStats] | Gets a list of the link:https://ficsit.app/mod/3tsvcG3A6gqKX1[Production Stats] Mod by Andre Aquila.
+| World | xref:json/Read/getUObjectCount.adoc[getUObjectCount] | Get the current UObject count and capacity.
 
 | Power | xref:json/Read/getPower.adoc[getPower] | Gets a list of all power circuits.
 | Power | getPowerUsage | Gets a list of buildings with power usage.

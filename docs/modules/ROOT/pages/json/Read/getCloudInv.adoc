@@ -1,24 +1,23 @@
-:doctype: book
+﻿:doctype: book
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= Get World Inv
+= Get Cloud Inv
 
-This is inventory of the world regardless of location.
-This does not include pipes/belts/factory buildings, only buildings whom purpose is to provide storage except Fluid Buffers.
+This is inventory of the dimensional depot.
 
 == Similar
 
 [cols="1,1,2"]
 |===
 |Resource|Endpoint|Description
-| Inventory | xref:json/Read/getCloudInv.adoc[getCloudInv] | Gets a list of the cloud inventory.
 | Inventory | xref:json/Read/getStorageInv.adoc[getStorageInv] | Gets a list of all storage inventories.
+| Inventory | xref:json/Read/getWorldInv.adoc[getWorldInv] | Gets a list of the world inventory.
 |===
 
 == URL
 
-`GET http://localhost:8080/getWorldInv`
+`GET http://localhost:8080/getCloudInv`
 
 include::../_responseBody.adoc[]
 
