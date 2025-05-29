@@ -118,8 +118,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 		JDroneStation->Values.Add("MedianTripOutAmt", MakeShared<FJsonValueNumber>(StationInfo->GetMedianTripOutgoingItemAmount()));
 		JDroneStation->Values.Add("ActiveFuel", MakeShared<FJsonValueObject>(JActiveFuel));
 		JDroneStation->Values.Add("FuelInfo", MakeShared<FJsonValueArray>(JFuelInfoArray));
-		JDroneStation->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(DroneStation, DroneStation->mDisplayName.ToString(), "Drone Station")));
 		JDroneStation->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(DroneStation->GetPowerInfo())));
+		JDroneStation->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(DroneStation, DroneStation->mDisplayName.ToString(), "Drone Station")));
 
 		JDroneStationArray.Add(MakeShared<FJsonValueObject>(JDroneStation));
 	};

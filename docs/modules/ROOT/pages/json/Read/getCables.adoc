@@ -1,11 +1,78 @@
 ﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= getCables
+= Get Cables
 
 include::../_isGetAll.adoc[]
 
-[WARNING]
-====
-This endpoint is new and not yet documented.
-====
+Get a list of all cables.
+
+== URL
+
+`GET http://localhost:8080/getCables`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Cable.
+| Name | String | Name of the Cable.
+| ClassName | String | Class Name of the Cable.
+
+{set:key-name:location0}
+{set:key-description:Start Location of the Cable}
+include::../Models/_location.adoc[tags=!rotation]
+| Connected0 | Boolean | Is Belt Connected at starting point?
+
+{set:key-name:location1}
+{set:key-description:End Location of the Cable}
+include::../Models/_location.adoc[tags=!rotation]
+| Connected1 | Boolean | Is Belt Connected at ending point?
+
+| Length | Float | Length of the Cable in centimetre (cm).
+
+include::../Models/_features.adoc[]
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "Build_PowerLine_C_2147471908",
+    "Name": "Power Line",
+    "ClassName": "Build_PowerLine_C",
+    "location0": {
+      "x": -68843.069974126644,
+      "y": 253515.77800282693,
+      "z": -2959.982177734375
+    },
+    "location1": {
+      "x": -70489.995483398438,
+      "y": 254030,
+      "z": -2912.8187255859375
+    },
+    "Length": 1725.9815673828125,
+    "features": {
+      "properties": {
+        "name": "Power Line",
+        "type": "Power Line"
+      },
+      "geometry": {
+        "coordinates": [
+          [
+            -68843.069974126644,
+            253515.77800282693,
+            -2959.982177734375
+          ],
+          [
+            -70489.995483398438,
+            254030,
+            -2912.8187255859375
+          ]
+        ],
+        "type": "LineString"
+      }
+    }
+  }
+]
+-----------------

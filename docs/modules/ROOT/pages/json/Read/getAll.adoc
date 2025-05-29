@@ -1,7 +1,7 @@
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= getAll
+= Get All
 
 Gets the result of almost all endpoints.
 

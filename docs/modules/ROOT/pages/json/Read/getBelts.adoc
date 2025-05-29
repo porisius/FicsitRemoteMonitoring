@@ -1,8 +1,7 @@
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
-:attribute-missing: drop
 :depth:
 
-= getBelts
+= Get Belts
 
 include::../_isGetAll.adoc[]
 

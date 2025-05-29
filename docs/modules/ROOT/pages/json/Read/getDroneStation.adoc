@@ -1,278 +1,236 @@
-= Drone Stats
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getDroneStation +
+= Get Drone Station
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+include::../_isGetAll.adoc[]
 
-|Name
-|Drone Station
-|String
-|Output
+Gets a list of all drone stations.
 
-|ClassName
-|UE Class Name
-|String
-|Output
+== URL
 
-|location/x
-|X Location of Drone Station
-|Float
-|Output
+`GET http://localhost:8080/getDroneStation`
 
-|location/y
-|Y Location of Drone Station
-|Float
-|Output
+include::../_responseBody.adoc[]
 
-|location/z
-|Z Location of Drone Station
-|Float
-|Output
+| ID | String | Unique ID of the Drone Station.
+| Name | String | Name of the Drone Station.
+| ClassName | String | ClassName of the Drone Station.
 
-|location/Rotation
-|Compass Heading of Drone Station
-|Float
-|Output
+{set:key-name:location}
+{set:key-description:Location details of the Drone.}
+include::../Models/_location.adoc[]
 
-|Paired Station
-|Drone Station paired to Home Station
-|String
-|Output
+{set:inventory-name:InputInventory}
+{set:inventory-description:List of items in the input inventory.}
+include::../Models/_inventoryItem.adoc[]
 
-|ConnectedStations
-|Connected Drone Stations
-|String
-|Output
+{set:inventory-name:OutputInventory}
+{set:inventory-description:List of items in the output inventory.}
+include::../Models/_inventoryItem.adoc[]
 
-|Drone Status
-|Drone flight status (Taking off, loading/unloading, En route, etc) Note that any drones that are queued to land are described as En Route.
-|String
-|Output
+{set:inventory-name:FuelInventory}
+{set:inventory-description:List of items in the fuel inventory.}
+include::../Models/_inventoryItem.adoc[]
 
-|AvgIncRate
-|Average Incoming Rate
-|Float
-|Output
+| PairedStation | String | Station name of the paired Station (None if not set).
+| DroneStatus | String | TODO + 
+`Unknown`: Status is unknown. +
+`Cannot Unload`: Unable to unload the drone. +
+`Docked`: Drone is docked. +
+`Docking`: Drone is in the process of docking. +
+`En Route`: Drone is on its way. +
+`Loading`: Items are being loaded into the drone. +
+`Not Enough Fuel`: Insufficient fuel at the drone station. +
+`No Drone`: Drone station is missing a drone. +
+`Taking Off`: Drone is taking off. +
+`Unloading`: Items are being unloaded from the drone.
 
-|AvgIncStack
-|Average Incoming Stack Rate
-|Float
-|Output
+| AvgIncRate | Float | The average amount of incoming items transferred per minute based on previous trips.
+| AvgIncStack | Float | The average amount of incoming item stacks transferred per minute based on previous trips.
+| AvgOutRate | Float | The average amount of outgoing items transferred per minute based on previous trips.
+| AvgOutStack | Float | The average number of item stacks this station sends away per minute, including connected stations.
+| AvgRndTrip | String | The average round-trip time of the drone attached to this station based on the last few trips. Format: Hours:Minutes:Seconds
+| AvgTotalIncRate | Float | The average number of items this station receives per minute, including connected stations.
+| AvgTotalIncStack | Float | The average number of item stacks this station receives per minute, including connected stations.
+| AvgTotalOutRate | Float | The average number of items this station sends away per minute, including connected stations.
+| AvgTotalOutStack | Float | The average number of item stacks this station sends away per minute, including connected stations.
+| AvgTripIncAmt | Float | The average trip incoming item amount of the drone attached to this station.
+| AvgTripOutAmt | Float | The average trip outgoing item amount of the drone attached to this station.
+| EstTotalTransRate | Float | The estimated number of stacks this station can send away / receive per minute, including drones from connected stations.
+| EstLatestTotalIncStack | Float | The number of stacks this station receives per minute, including connected stations, using the most recent trip for each station if available, otherwise uses estimate.
+| EstLatestTotalOutStack | Float | The number of stacks this station sends away per minute, including connected stations, using the most recent trip for each station if available, otherwise uses estimate.
+| LatestIncStack | Float | The latest trip's amount of incoming item stacks transferred per minute.
+| LatestOutStack | Float | The latest trip's amount of outgoing item stacks transferred per minute.
+| LatestRndTrip | Float | The latest round-trip time of the drone attached to this station.
+| LatestTripIncAmt | Integer | The latest trip incoming item amount of the drone attached to this station.
+| LatestTripOutAmt | Integer | The latest trip outgoing item amount of the drone attached to this station.
+| MedianRndTrip | String | Median time for a round trip. Format: Hours:Minutes:Seconds
+| MedianTripIncAmt | Float | The median trip incoming item amount of the drone attached to this station.
+| MedianTripOutAmt | Float | The median trip outgoing item amount of the drone attached to this station.
 
-|AvgOutRate
-|Average Outgoing Rate
-|Float
-|Output
+| ActiveFuel | Object | Current Fuel Information
+| {depth}  FuelName | Integer | Name of the Fuel.
+| {depth}  SingleTripFuelCost | Float | Required fuel for a single round trip
+| {depth}  EstimatedTransportRate | Float | Roughly how many items per minute can be delivered with this fuel type.
+| {depth}  EstimatedRoundTripTime | Float | Roughly how long time a single trip will take in seconds.
+| {depth}  EstimatedFuelCostRate | Float | Roughly how many items need to be supplied per minute in order for the drone to not have to ever wait for fuel. The actual cost will be lower than this.
 
-|AvgOutStack
-|Average Outgoing Stack Rate
-|Float
-|Output
+| FuelInfo | Object[] | Possible fuel information
+| {depth}  FuelName | Integer | Name of the Fuel.
+| {depth}  SingleTripFuelCost | Float | Required fuel for a single round trip
+| {depth}  EstimatedTransportRate | Float | Roughly how many items per minute can be delivered with this fuel type.
+| {depth}  EstimatedRoundTripTime | Float | Roughly how long time a single trip will take in seconds.
+| {depth}  EstimatedFuelCostRate | Float | Roughly how many items need to be supplied per minute in order for the drone to not have to ever wait for fuel. The actual cost will be lower than this.
 
-|AvgRngTrip
-|Average Round Trip Time
-|String
-|Output
+// power info fields
+include::../Models/_powerInfo.adoc[]
 
-|AvgTotalIncRate
-|Average Total Incoming Rate
-|Float
-|Output
-
-|AvgTotalIncStack
-|Average Total Incoming Stack
-|Float
-|Output
-
-|AvgTotalOutRate
-|Average Total Outgoing Rate
-|Float
-|Output
-
-|AvgTotalOutStack
-|Average Total Outgoing Stack
-|Float
-|Output
-
-|AvgTripIncAmt
-|Average Trip Incoming Amount
-|Float
-|Output
-
-|EstTotalTransRate
-|Estimated Total Transfer Rate
-|Float
-|Output
-
-|EstLatestTotalIncStack
-|Estimated Latest Total Incoming Stack Rate
-|Float
-|Output
-
-|EstLatestTotalOutStack
-|Estimated Latest Total Outgoing Stack Rate
-|Float
-|Output
-
-|LatestIncStack
-|Latest Incoming Item Stack Rate
-|Float
-|Output
-
-|LatestOutStack
-|Latest Outgoing Item Stack Rate
-|Float
-|Output
-
-|LatestRndTrip
-|Latest Round Trip Time
-|String
-|Output
-
-|LatestTripIncAmt
-|Latest Trip Incoming Item Amount
-|Integer
-|Output
-
-|LatestTripOutAmt
-|Latest Trip Outgoing Item Amount
-|Integer
-|Output
-
-|MedianRndTrip
-|Median Round Trip Time
-|String
-|Output
-
-|MedianTripIncAmt
-|Median Trip Incoming Item Amount
-|Float
-|Output
-
-|MedianTripOutAmt
-|Median Trip Outgoing Item Amount
-|Float
-|Output
+// features
+include::../Models/_features.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-	{
-		"ID": 0,
-		"Name": "Drone Port",
-		"ClassName": "Build_DroneStation_C_2147259439",
-		"location":
-		{
-			"x": -102771.0859375,
-			"y": -85182.8671875,
-			"z": 2589.84228515625,
-			"rotation": 10
-		},
-		"PairedStation": "Storage Import 2",
-		"DroneStatus": 3,
-		"AvgIncRate": 0,
-		"AvgIncStack": 0,
-		"AvgOutRate": 73.087936401367188,
-		"AvgOutStack": 0.47748488187789917,
-		"AvgRndTrip": "00:02:54",
-		"AvgTotalIncRate": 0,
-		"AvgTotalIncStack": 0,
-		"AvgTotalOutRate": 73.087936401367188,
-		"AvgTotalOutStack": 0.47748488187789917,
-		"AvgTripIncAmt": 0,
-		"EstTotalTransRate": 4.1415610313415527,
-		"EstTransRate": 4.1415610313415527,
-		"EstLatestTotalIncStack": 0,
-		"EstLatestTotalOutStack": 0.47748488187789917,
-		"LatestIncStack": 0,
-		"LatestOutStack": 0.47748488187789917,
-		"LatestRndTrip": "00:02:54",
-		"LatestTripIncAmt": 0,
-		"LatestTripOutAmt": 212,
-		"MedianRndTrip": "00:02:54",
-		"MedianTripIncAmt": 0,
-		"MedianTripOutAmt": 212,
-		"features":
-		{
-			"properties":
-			{
-				"name": "Drone Port",
-				"type": "Drone Station"
-			},
-			"geometry":
-			{
-				"coordinates":
-				{
-					"X": -102771.0859375,
-					"Y": -85182.8671875,
-					"Z": 2589.84228515625
-				},
-				"type": "Point"
-			}
-		}
-	},
-	{
-		"ID": 1,
-		"Name": "Drone Port",
-		"ClassName": "Build_DroneStation_C_2147256765",
-		"location":
-		{
-			"x": -105134.5859375,
-			"y": -85599.7734375,
-			"z": 2589.84228515625,
-			"rotation": 10
-		},
-		"PairedStation": "Battery Import",
-		"DroneStatus": 4,
-		"AvgIncRate": 0,
-		"AvgIncStack": 0,
-		"AvgOutRate": 33.709449768066406,
-		"AvgOutStack": 0.16854724287986755,
-		"AvgRndTrip": "00:02:52",
-		"AvgTotalIncRate": 0,
-		"AvgTotalIncStack": 0,
-		"AvgTotalOutRate": 33.709449768066406,
-		"AvgTotalOutStack": 0.16854724287986755,
-		"AvgTripIncAmt": 0,
-		"EstRndTrip": "00:02:10",
-		"EstTotalTransRate": 4.1497898101806641,
-		"EstTransRate": 4.1497898101806641,
-		"EstLatestTotalIncStack": 0,
-		"EstLatestTotalOutStack": 0.16854724287986755,
-		"LatestIncStack": 0,
-		"LatestOutStack": 0.16854724287986755,
-		"LatestRndTrip": "00:02:52",
-		"LatestTripIncAmt": 0,
-		"LatestTripOutAmt": 97,
-		"MedianRndTrip": "00:02:52",
-		"MedianTripIncAmt": 0,
-		"MedianTripOutAmt": 97,
-		"EstBatteryRate": 2.766526460647583,
-		"features":
-		{
-			"properties":
-			{
-				"name": "Drone Port",
-				"type": "Drone Station"
-			},
-			"geometry":
-			{
-				"coordinates":
-				{
-					"X": -105134.5859375,
-					"Y": -85599.7734375,
-					"Z": 2589.84228515625
-				},
-				"type": "Point"
-			}
-		}
-	}
+  {
+    "ID": "Build_DroneStation_C_2147447255",
+    "Name": "Arlanda",
+    "ClassName": "Build_DroneStation_C",
+    "location": {
+      "x": -48777.9609375,
+      "y": 252677.703125,
+      "z": -3760.923583984375,
+      "rotation": 90
+    },
+    "InputInventory": [
+      {
+        "Name": "Steel Beam",
+        "ClassName": "Desc_SteelPlate_C",
+        "Amount": 1000,
+        "MaxAmount": 200
+      }
+    ],
+    "OutputInventory": [
+      {
+        "Name": "Steel Beam",
+        "ClassName": "Desc_SteelPlate_C",
+        "Amount": 200,
+        "MaxAmount": 200
+      }
+    ],
+    "FuelInventory": [
+      {
+        "Name": "Packaged Rocket Fuel",
+        "ClassName": "Desc_PackagedRocketFuel_C",
+        "Amount": 41,
+        "MaxAmount": 100
+      }
+    ],
+    "PairedStation": "Viared",
+    "DroneStatus": "Taking Off",
+    "AvgIncRate": 0,
+    "AvgIncStack": 0,
+    "AvgOutRate": 0,
+    "AvgOutStack": 0,
+    "AvgRndTrip": "00:02:08",
+    "AvgTotalIncRate": 0,
+    "AvgTotalIncStack": 0,
+    "AvgTotalOutRate": 0,
+    "AvgTotalOutStack": 0,
+    "AvgTripIncAmt": 0,
+    "AvgTripOutAmt": 0,
+    "EstTotalTransRate": 4.6048984527587891,
+    "EstLatestTotalIncStack": 0,
+    "EstLatestTotalOutStack": 0,
+    "LatestIncStack": 0,
+    "LatestOutStack": 0,
+    "LatestRndTrip": 128.78955078125,
+    "LatestTripIncAmt": 0,
+    "LatestTripOutAmt": 0,
+    "MedianRndTrip": "00:02:08",
+    "MedianTripIncAmt": 0,
+    "MedianTripOutAmt": 0,
+    "ActiveFuel": {
+      "FuelName": "Packaged Rocket Fuel",
+      "SingleTripFuelCost": 3.5450289249420166,
+      "EstimatedTransportRate": 4.6048984527587891,
+      "EstimatedRoundTripTime": 117.26643371582031,
+      "EstimatedFuelCostRate": 1.8138331174850464
+    },
+    "FuelInfo": [
+      {
+        "FuelName": "Battery",
+        "SingleTripFuelCost": 4.2540349960327148,
+        "EstimatedTransportRate": 4.7606377601623535,
+        "EstimatedRoundTripTime": 113.43017578125,
+        "EstimatedFuelCostRate": 2.2502133846282959
+      },
+      {
+        "FuelName": "Packaged Fuel",
+        "SingleTripFuelCost": 34.032279968261719,
+        "EstimatedTransportRate": 4.5322823524475098,
+        "EstimatedRoundTripTime": 119.145263671875,
+        "EstimatedFuelCostRate": 17.138212203979492
+      },
+      {
+        "FuelName": "Packaged Turbofuel",
+        "SingleTripFuelCost": 12.762104034423828,
+        "EstimatedTransportRate": 4.5683021545410156,
+        "EstimatedRoundTripTime": 118.20584869384766,
+        "EstimatedFuelCostRate": 6.4779047966003418
+      },
+      {
+        "FuelName": "Packaged Rocket Fuel",
+        "SingleTripFuelCost": 3.5450289249420166,
+        "EstimatedTransportRate": 4.6048984527587891,
+        "EstimatedRoundTripTime": 117.26643371582031,
+        "EstimatedFuelCostRate": 1.8138331174850464
+      },
+      {
+        "FuelName": "Packaged Ionized Fuel",
+        "SingleTripFuelCost": 2.5524208545684814,
+        "EstimatedTransportRate": 4.6420855522155762,
+        "EstimatedRoundTripTime": 116.3270263671875,
+        "EstimatedFuelCostRate": 1.3165062665939331
+      },
+      {
+        "FuelName": "Uranium Fuel Rod",
+        "SingleTripFuelCost": 0.034032277762889862,
+        "EstimatedTransportRate": 4.6296229362487793,
+        "EstimatedRoundTripTime": 116.64016723632812,
+        "EstimatedFuelCostRate": 0.017506290227174759
+      },
+      {
+        "FuelName": "Plutonium Fuel Rod",
+        "SingleTripFuelCost": 0.017016138881444931,
+        "EstimatedTransportRate": 4.6420855522155762,
+        "EstimatedRoundTripTime": 116.3270263671875,
+        "EstimatedFuelCostRate": 0.0087767085060477257
+      }
+    ],
+    "features": {
+      "properties": {
+        "name": "Drone Port",
+        "type": "Drone Station"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -48777.9609375,
+          "y": 252677.703125,
+          "z": -3760.923583984375
+        },
+        "type": "Point"
+      }
+    },
+    "PowerInfo": {
+      "CircuitGroupID": 5,
+      "CircuitID": 7,
+      "PowerConsumed": 100,
+      "MaxPowerConsumed": 100
+    }
+  }
 ]
 -----------------

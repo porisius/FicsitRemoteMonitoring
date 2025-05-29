@@ -1,10 +1,9 @@
 ﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= getChatMessages
+= Get Chat Messages
 
 Gets a list of recent chat messages.
-
 
 == URL
 
