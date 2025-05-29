@@ -369,10 +369,6 @@ public:
 		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/HadronCollider/Build_HadronCollider.Build_HadronCollider_C")));
 	}
 	
-	void getPaths(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
-		OutJsonArray = UFRM_Factory::getPipes(WorldContext, RequestData);
-	}
-	
 	void getPipes(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Factory::getPipes(WorldContext, RequestData);
 	}

@@ -679,7 +679,6 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getNuclearGenerator", &AFicsitRemoteMonitoring::getNuclearGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getPackager", &AFicsitRemoteMonitoring::getPackager));
 	RegisterEndpoint(FAPIEndpoint("GET", "getParticle", &AFicsitRemoteMonitoring::getParticle));
-	RegisterEndpoint(FAPIEndpoint("GET", "getPaths", &AFicsitRemoteMonitoring::getPaths).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPipes", &AFicsitRemoteMonitoring::getPipes).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPlayer", &AFicsitRemoteMonitoring::getPlayer).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPortal", &AFicsitRemoteMonitoring::getPortal).GetAll());
