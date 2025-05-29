@@ -20,7 +20,7 @@ List of included endpoints:
 | Factory | xref:json/Read/getPipes.adoc[getPipes] | Gets a list of all pipes.
 | Factory | xref:json/Read/getPump.adoc[getPump] | Gets a list of all pumps.
 | Factory | xref:json/Read/getTrainRails.adoc[getTrainRails] | Gets a list of all railways.
-| Factory | xref:json/Read/getExtractor.adoc[getExtractor] | Gets a list of all miners.
+| Factory | xref:json/Read/getExtractor.adoc[getExtractor] | Gets a list of all extractors/miners.
 | Factory | xref:json/Read/getPortal.adoc[getPortal] | Gets a list of all portals.
 | Factory | xref:json/Read/getRadarTower.adoc[getRadarTower] | Gets a list of all radar towers.
 | Factory | xref:json/Read/getResourceSinkBuilding.adoc[getResourceSinkBuilding] | Gets a list of all resource sinks.
