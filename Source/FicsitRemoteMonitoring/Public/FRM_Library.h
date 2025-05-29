@@ -16,8 +16,8 @@ class FICSITREMOTEMONITORING_API UFRM_Library : public UFGBlueprintFunctionLibra
 
 public:
 	static TSharedPtr<FJsonObject> getActorJSON(AActor* Actor);
-	static TSharedPtr<FJsonObject> getActorFactoryCompXYZ(UFGFactoryConnectionComponent* BeltPipe);
-	static TSharedPtr<FJsonObject> getActorPipeXYZ(UFGPipeConnectionComponent* BeltPipe);
+	static TSharedPtr<FJsonObject> getActorFactoryCompXYZ(AFGBuildable* BeltPipe, UFGFactoryConnectionComponent* ConnectionComponent);
+	static TSharedPtr<FJsonObject> getActorPipeXYZ(AFGBuildable* BeltPipe, UFGPipeConnectionComponent* ConnectionComponent);
 	static TSharedPtr<FJsonObject> getActorFeaturesJSON(AActor* Actor, FString DisplayName, FString TypeName);
 	static TMap<TSubclassOf<UFGItemDescriptor>, int32> GetGroupedInventoryItems(const UFGInventoryComponent* Inventory);
 	static TMap<TSubclassOf<UFGItemDescriptor>, int32> GetGroupedInventoryItems(const TArray<FInventoryStack>& InventoryStacks);

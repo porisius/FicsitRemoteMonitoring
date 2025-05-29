@@ -37,17 +37,21 @@ TSharedPtr<FJsonObject> UFRM_Library::getActorJSON(AActor* Actor) {
 
 };
 
-TSharedPtr<FJsonObject> UFRM_Library::getActorFactoryCompXYZ(UFGFactoryConnectionComponent* BeltPipe) {
+TSharedPtr<FJsonObject> UFRM_Library::getActorFactoryCompXYZ(AFGBuildable* BeltPipe, UFGFactoryConnectionComponent* ConnectionComponent) {
 
 	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();
 
-	long double primaryX = BeltPipe->GetRelativeTransform().GetTranslation().X;
-	long double primaryY = BeltPipe->GetRelativeTransform().GetTranslation().Y;
-	long double primaryZ = BeltPipe->GetRelativeTransform().GetTranslation().Z;
+	const long double actorX = BeltPipe->GetActorLocation().X;
+	const long double actorY = BeltPipe->GetActorLocation().Y;
+	const long double actorZ = BeltPipe->GetActorLocation().Z;
+	
+	const long double connectionX = ConnectionComponent->GetRelativeTransform().GetTranslation().X;
+	const long double connectionY = ConnectionComponent->GetRelativeTransform().GetTranslation().Y;
+	const long double connectionZ = ConnectionComponent->GetRelativeTransform().GetTranslation().Z;
 
-	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(primaryX));
-	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(primaryY));
-	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(primaryZ));
+	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(actorX + connectionX));
+	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(actorY + connectionY));
+	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(actorZ + connectionZ));
 
 	return JLibrary;
 
@@ -69,17 +73,21 @@ TSharedPtr<FJsonObject> UFRM_Library::ConvertVectorToFJsonObject(FVector PowerWi
 
 };
 
-TSharedPtr<FJsonObject> UFRM_Library::getActorPipeXYZ(UFGPipeConnectionComponent* BeltPipe) {
+TSharedPtr<FJsonObject> UFRM_Library::getActorPipeXYZ(AFGBuildable* BeltPipe, UFGPipeConnectionComponent* ConnectionComponent) {
 
 	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();
 
-	long double primaryX = BeltPipe->GetRelativeTransform().GetTranslation().X;
-	long double primaryY = BeltPipe->GetRelativeTransform().GetTranslation().Y;
-	long double primaryZ = BeltPipe->GetRelativeTransform().GetTranslation().Z;
+	const long double actorX = BeltPipe->GetActorLocation().X;
+	const long double actorY = BeltPipe->GetActorLocation().Y;
+	const long double actorZ = BeltPipe->GetActorLocation().Z;
+	
+	const long double connectionX = ConnectionComponent->GetRelativeTransform().GetTranslation().X;
+	const long double connectionY = ConnectionComponent->GetRelativeTransform().GetTranslation().Y;
+	const long double connectionZ = ConnectionComponent->GetRelativeTransform().GetTranslation().Z;
 
-	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(primaryX));
-	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(primaryY));
-	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(primaryZ));
+	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(actorX + connectionX));
+	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(actorY + connectionY));
+	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(actorZ + connectionZ));
 
 	return JLibrary;
 
