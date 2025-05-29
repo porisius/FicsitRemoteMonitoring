@@ -1,78 +1,47 @@
-= World Inventory
-
+:doctype: book
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getWorldInv +
+= Get World Inv
 
-This is inventory of the world regardless of location. This does not include pipes/belts/factory buildings, only buildings whom purpose is to provide storage except Fluid Buffers.
+This is inventory of the world regardless of location.
+This does not include pipes/belts/factory buildings, only buildings whom purpose is to provide storage except Fluid Buffers.
 
-getCloudInv = Dimensional Storage that is uploaded to "the cloud", does not include the Storage Containers
-getWorldInv = Combines Dimensional Storage and Storage Containers
+== Similar
 
-[cols="1,2,1,1"]
+[cols="1,1,2"]
 |===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
-
-|Name
-|Name of item type
-|String
-|Output
-
-|ClassName
-|UE Class Name
-|String
-|Output
-
-|Count
-|Count of items of item type
-|Integar
-|Output
-
+|Resource|Endpoint|Description
+| Inventory | xref:json/Read/getCloudInv.adoc[getCloudInv] | Gets a list of the cloud inventory.
+| Inventory | xref:json/Read/getStorageInv.adoc[getStorageInv] | Gets a list of all storage inventories.
 |===
 
-Example:
+== URL
+
+`GET http://localhost:8080/getWorldInv`
+
+include::../_responseBody.adoc[]
+
+{set:inventory-name:}
+{set:inventory-description:A list of items.}
+include::../Models/_inventoryItem.adoc[]
+|===
+
+== Example Response
 [source,json]
 -----------------
 [
-   {
-		"Name": "Snowball",
-		"ClassName": "Desc_SnowballProjectile_C",
-		"Amount": 360000
-	},
-	{
-		"Name": "Iron Plate",
-		"ClassName": "Desc_IronPlate_C",
-		"Amount": 24000
-	},
-	{
-		"Name": "Iron Rod",
-		"ClassName": "Desc_IronRod_C",
-		"Amount": 24000
-	},
-	{
-		"Name": "Reinforced Iron Plate",
-		"ClassName": "Desc_IronPlateReinforced_C",
-		"Amount": 12000
-	},
-	{
-		"Name": "Screw",
-		"ClassName": "Desc_IronScrew_C",
-		"Amount": 60000
-	},
-	{
-		"Name": "Modular Frame",
-		"ClassName": "Desc_ModularFrame_C",
-		"Amount": 3600
-	},
-	{
-		"Name": "Stator",
-		"ClassName": "Desc_Stator_C",
-		"Amount": 7200
-	},
-	{
-		"Name": "Rotor",
-		"ClassName": "Desc_Rotor_C",
-		"Amount": 7200
-	}
+  {
+    "Name": "Iron Plate",
+    "ClassName": "Desc_IronPlate_C",
+    "Amount": 164,
+    "MaxAmount": 200
+  },
+  {
+    "Name": "Copper Sheet",
+    "ClassName": "Desc_CopperSheet_C",
+    "Amount": 200,
+    "MaxAmount": 200
+  }
 ]
 -----------------

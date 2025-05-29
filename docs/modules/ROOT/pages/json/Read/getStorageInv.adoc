@@ -1,164 +1,78 @@
-= Inventory of Storage Containers
-
+:doctype: book
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getStorageInv +
+= Get Storage Inv
 
-This is inventory of the world broken up by their storage containers. This does not include pipes/belts/factory buildings, only buildings whom purpose is to provide storage except Fluid Buffers.
+This is inventory of the world broken up by their storage containers.
+This does not include pipes/belts/factory buildings, only buildings whom purpose is to provide storage except Fluid Buffers.
 
-getStorageInv = Inventory of each Storage Container, including the Dimensional Storage containers' inventory not yet uploaded.
+== Similar
 
-[cols="1,2,1,1"]
+[cols="1,1,2"]
 |===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
-
-|Name
-|Name of Storage Container type
-|String
-|Output
-
-|ClassName
-|UE Class Name
-|String
-|Output
-
-|location/x
-|X Location of Storage Container
-|Float
-|Output
-
-|location/y
-|Y Location of Storage Container
-|Float
-|Output
-
-|location/z
-|Z Location of Storage Container
-|Float
-|Output
-
-|location/Rotation
-|Compass Heading of Storage Container
-|Float
-|Output
-
-|inventory/Name
-|Name of item type
-|String
-|Output
-
-|inventory/ClassName
-|Class Name of item type
-|String
-|Output
-
-|inventory/Amount
-|Amount of items of item type
-|Integar
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
+|Resource|Endpoint|Description
+| Inventory | xref:json/Read/getCloudInv.adoc[getCloudInv] | Gets a list of the cloud inventory.
+| Inventory | xref:json/Read/getWorldInv.adoc[getWorldInv] | Gets a list of the world inventory.
 |===
 
-Example:
+== URL
+
+`GET http://localhost:8080/getStorageInv`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Storage Container.
+| Name | String | Name of the Storage Container.
+| ClassName | String | Class Name of the Storage Container.
+
+{set:key-name:location}
+{set:key-description:Location details of the Storage Container.}
+include::../Models/_location.adoc[]
+
+{set:inventory-name:Inventory}
+{set:inventory-description:A list of items.}
+include::../Models/_inventoryItem.adoc[]
+
+include::../Models/_features.adoc[]
+|===
+
+== Example Response
 [source,json]
 -----------------
 [
-   {
-      "Name": "Storage Container",
-      "ClassName": "Build_StorageContainerMk1_C_49",
-      "location":
+  {
+    "ID": "Build_StorageContainerMk1_C_2147395408",
+    "Name": "Storage Container",
+    "ClassName": "Build_StorageContainerMk1_C",
+    "location": {
+      "x": -63207.6484375,
+      "y": 262781.53125,
+      "z": -3207.024658203125,
+      "rotation": 150.00000089058409
+    },
+    "Inventory": [
       {
-         "x": -105405.53125,
-         "y": -130123.4453125,
-         "z": 189.8421630859375,
-         "rotation": 100
-      },
-      "inventory": [
-         {
-            "Name": "Snowball",
-            "ClassName": "Desc_SnowballProjectile_C",
-            "Amount": 500
-         }
-      ],
-      "features":
-      {
-         "properties":
-         {
-            "name": "Storage Container",
-            "type": "Storage Container"
-         },
-         "geometry":
-         {
-            "coordinates":
-            {
-               "X": -105405.53125,
-               "Y": -130123.4453125,
-               "Z": 189.8421630859375
-            },
-            "type": "Point"
-         }
+        "Name": "Iron Plate",
+        "ClassName": "Desc_IronPlate_C",
+        "Amount": 164,
+        "MaxAmount": 200
       }
-   },
-   {
-      "Name": "Storage Container",
-      "ClassName": "Build_StorageContainerMk1_C_51",
-      "location":
-      {
-         "x": -104420.7265625,
-         "y": -129949.7890625,
-         "z": 189.84228515625,
-         "rotation": 100
+    ],
+    "features": {
+      "properties": {
+        "name": "Storage Container",
+        "type": "Storage Container"
       },
-      "inventory": [
-         {
-            "Name": "Snowball",
-            "ClassName": "Desc_SnowballProjectile_C",
-            "Amount": 500
-         }
-      ],
-      "features":
-      {
-         "properties":
-         {
-            "name": "Storage Container",
-            "type": "Storage Container"
-         },
-         "geometry":
-         {
-            "coordinates":
-            {
-               "X": -104420.7265625,
-               "Y": -129949.7890625,
-               "Z": 189.84228515625
-            },
-            "type": "Point"
-         }
+      "geometry": {
+        "coordinates": {
+          "x": -63207.6484375,
+          "y": 262781.53125,
+          "z": -3207.024658203125
+        },
+        "type": "Point"
       }
-   }
+    }
+  }
 ]
 -----------------
