@@ -51,10 +51,10 @@ List of included endpoints:
 | Stations | xref:json/Read/getTrainStation.adoc[getTrainStation] | Gets a list of all train stations.
 | Stations | xref:json/Read/getTruckStation.adoc[getTruckStation] | Gets a list of all truck stations.
 
-| Vehicles | xref:json/Read/getVehicles.adoc[getVehicles] | Gets a list of all vehicles (tractors, trucks, trains, factory carts, etc.).
 | Vehicles | xref:json/Read/getDrone.adoc[getDrone] | Gets a list of all drones.
 | Vehicles | xref:json/Read/getTrains.adoc[getTrains] | Gets a list of all trains.
-| Vehicles | xref:json/Read/getPaths.adoc[getPaths] | Gets a list of all vehicle paths.
+| Vehicles | xref:json/Read/getVehiclePaths.adoc[getVehiclePaths] | Gets a list of all vehicle paths.
+| Vehicles | xref:json/Read/getVehicles.adoc[getVehicles] | Gets a list of all vehicles (tractors, trucks, trains, factory carts, etc.).
 
 | World | xref:json/Read/getDropPod.adoc[getDropPod] | Gets a list of all drop pods.
 | World | xref:json/Read/getPowerSlug.adoc[getPowerSlug] | Gets a list of all streamed power slugs.

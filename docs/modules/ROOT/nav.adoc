@@ -92,7 +92,6 @@
 **** xref:json/Read/getDrone.adoc[getDrone]
 **** xref:json/Read/getVehicles.adoc[getExplorer]
 **** xref:json/Read/getVehicles.adoc[getFactoryCart]
-**** xref:json/Read/getPaths.adoc[getPaths]
 **** xref:json/Read/getVehicles.adoc[getTractor]
 **** xref:json/Read/getTrains.adoc[getTrains]
 **** xref:json/Read/getVehicles.adoc[getTruck]
