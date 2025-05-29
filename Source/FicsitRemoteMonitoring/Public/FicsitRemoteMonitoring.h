@@ -428,7 +428,7 @@ public:
 	}
 	
 	void getResourceNode(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
-		OutJsonArray = UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNodeFrackingSatellite::StaticClass());
+		OutJsonArray = UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNode::StaticClass());
 	}
 	
 	void getResourceSink(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
@@ -440,7 +440,7 @@ public:
 	}
 	
 	void getResourceWell(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
-		OutJsonArray = UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNode::StaticClass());
+		OutJsonArray = UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNodeFrackingSatellite::StaticClass());
 	}
 	
 	void getSchematics(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
