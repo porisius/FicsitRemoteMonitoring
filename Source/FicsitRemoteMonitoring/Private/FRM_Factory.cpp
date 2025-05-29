@@ -23,6 +23,7 @@
 #include "FGItemPickup.h"
 #include "FGPipeConnectionComponent.h"
 #include "FGPipeHyperStart.h"
+#include "FGResourceDeposit.h"
 #include "FGSchematicManager.h"
 #include "FGTimeSubsystem.h"
 #include "FRM_Library.h"
@@ -602,8 +603,13 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceNode(UObject* WorldConte
 	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), ResourceActor, FoundActors);
 
 	for (AActor* FoundActor : FoundActors) {
+
+		if (Cast<AFGResourceDeposit>(FoundActor) and !(ResourceActor == AFGResourceDeposit::StaticClass())) {
+			continue;
+		}
+		
 		TSharedPtr<FJsonObject> JResourceNode = UFRM_Library::GetResourceNodeJSON(FoundActor, true);
-		if (!JResourceNode) {
+		if (!JResourceNode or (JResourceNode->GetStringField("ClassName") == "")) {
 			continue;
 		}
 

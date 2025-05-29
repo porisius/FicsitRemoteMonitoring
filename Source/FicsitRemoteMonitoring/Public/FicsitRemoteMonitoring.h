@@ -2,6 +2,7 @@
 
 #include "FGBuildableGenerator.h"
 #include "FGBuildableManufacturer.h"
+#include "FGResourceDeposit.h"
 #include "FGResourceNodeFrackingCore.h"
 #include "FGResourceNodeFrackingSatellite.h"
 #include "FGResourceSinkSubsystem.h"
@@ -425,6 +426,10 @@ public:
 	
 	void getResourceNode(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceNode::StaticClass());
+	}
+
+	void getResourceDeposit(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getResourceNode(WorldContext, RequestData, AFGResourceDeposit::StaticClass());
 	}
 	
 	void getResourceSink(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		

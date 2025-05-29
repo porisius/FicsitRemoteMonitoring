@@ -3,6 +3,7 @@
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
 API Endpoint: +
+getResourceDeposit - Minable deposits found on the map  +
 getResourceNode - Mining/Oil +
 getResourceGeyser - Geothermal Geyser +
 getResourceWell - Fracking/Resource Well +

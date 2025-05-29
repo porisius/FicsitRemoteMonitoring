@@ -67,6 +67,7 @@
 **** xref:json/Read/getWorldInv.adoc[getWorldInv]
 
 *** Resource Nodes
+**** xref:json/Read/getResourceNode.adoc[getResourceDeposit]
 **** xref:json/Read/getResourceNode.adoc[getResourceGeyser]
 **** xref:json/Read/getResourceNode.adoc[getResourceNode]
 **** xref:json/Read/getResourceNode.adoc[getResourceWell]

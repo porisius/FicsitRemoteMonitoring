@@ -692,6 +692,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getRecipes", &AFicsitRemoteMonitoring::getRecipes).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getRefinery", &AFicsitRemoteMonitoring::getRefinery));
 	RegisterEndpoint(FAPIEndpoint("GET", "getResourceGeyser", &AFicsitRemoteMonitoring::getResourceGeyser).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getResourceDeposit", &AFicsitRemoteMonitoring::getResourceDeposit).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getResourceNode", &AFicsitRemoteMonitoring::getResourceNode).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getResourceSink", &AFicsitRemoteMonitoring::getResourceSink).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getResourceSinkBuilding", &AFicsitRemoteMonitoring::getResourceSinkBuilding).GetAll());
