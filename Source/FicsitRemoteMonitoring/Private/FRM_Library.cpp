@@ -73,6 +73,29 @@ TSharedPtr<FJsonObject> UFRM_Library::ConvertVectorToFJsonObject(FVector PowerWi
 
 };
 
+TSharedPtr<FJsonObject> UFRM_Library::FBoxToJson(AFGBuildable* Buildable, const FBox& Box)
+{
+	TSharedPtr<FJsonObject> Json = MakeShared<FJsonObject>();
+
+	const long double actorX = Buildable->GetActorLocation().X;
+	const long double actorY = Buildable->GetActorLocation().Y;
+	const long double actorZ = Buildable->GetActorLocation().Z;
+	
+	TSharedPtr<FJsonObject> MinObj = MakeShared<FJsonObject>();
+	MinObj->SetNumberField("x", actorX + Box.Min.X);
+	MinObj->SetNumberField("y", actorY + Box.Min.Y);
+	MinObj->SetNumberField("z", actorZ + Box.Min.Z);
+	Json->SetObjectField("min", MinObj);
+
+	TSharedPtr<FJsonObject> MaxObj = MakeShared<FJsonObject>();
+	MaxObj->SetNumberField("x", actorX + Box.Max.X);
+	MaxObj->SetNumberField("y", actorY + Box.Max.Y);
+	MaxObj->SetNumberField("z", actorZ + Box.Max.Z);
+	Json->SetObjectField("max", MaxObj);
+
+	return Json;
+}
+
 TSharedPtr<FJsonObject> UFRM_Library::getActorPipeXYZ(AFGBuildable* BeltPipe, UFGPipeConnectionComponent* ConnectionComponent) {
 
 	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();

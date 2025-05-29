@@ -290,6 +290,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, F
 		JFactory->Values.Add("Name", MakeShared<FJsonValueString>(Manufacturer->mDisplayName.ToString()));
 		JFactory->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetClass())));
 		JFactory->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Manufacturer))));
+		JFactory->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Buildable, Buildable->GetCombinedClearanceBox())));
 		JFactory->Values.Add("Recipe", MakeShared<FJsonValueString>(UFGRecipe::GetRecipeName(Manufacturer->GetCurrentRecipe()).ToString()));
 		JFactory->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetCurrentRecipe())));
 		JFactory->Values.Add("production", MakeShared<FJsonValueArray>(JProductArray));
@@ -412,6 +413,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 		JHubTerminal->Values.Add("Name", MakeShared<FJsonValueString>(HubTerminal->mDisplayName.ToString()));
 		JHubTerminal->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(HubTerminal->GetClass())));
 		JHubTerminal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(HubTerminal))));
+		JHubTerminal->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(HubTerminal, HubTerminal->GetCombinedClearanceBox())));
 		//JHubTerminal->Values.Add("HUBLevel", MakeShared<FJsonValueNumber>(TradingPost->GetTradingPostLevel()));
 		JHubTerminal->Values.Add("ActiveMilestone", MakeShared<FJsonValueObject>(JSchematic));
 		JHubTerminal->Values.Add("ShipDock", MakeShared<FJsonValueBoolean>(SchematicManager->IsShipAtTradingPost()));
@@ -726,6 +728,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 		JRadarTower->Values.Add("Name", MakeShared<FJsonValueString>(RadarTower->mDisplayName.ToString()));
 		JRadarTower->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(RadarTower->GetClass())));
 		JRadarTower->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(RadarTower))));
+		JRadarTower->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(RadarTower, RadarTower->GetCombinedClearanceBox())));
 		JRadarTower->Values.Add("RevealRadius", MakeShared<FJsonValueNumber>(RadarData->GetFogOfWarRevealRadius()));
 		JRadarTower->Values.Add("RevealType", MakeShared<FJsonValueString>(UEnum::GetDisplayValueAsText(RadarData->GetFogOfWarRevealType()).ToString()));
 		JRadarTower->Values.Add("ScannedResourceNodes", MakeShared<FJsonValueArray>(JScannedResourceNodes));
@@ -751,6 +754,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceSinkBuilding(UObject* Wo
 	for (AFGBuildableResourceSink* Sink : Buildables) {
 		TSharedPtr<FJsonObject> JSinkBuilding = UFRM_Library::CreateBaseJsonObject(Sink);
 		JSinkBuilding->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Sink)));
+		JSinkBuilding->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Sink, Sink->GetCombinedClearanceBox())));
 		JSinkBuilding->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Sink->GetPowerInfo())));
 		JResourceSinkBuildingArray.Add(MakeShared<FJsonValueObject>(JSinkBuilding));
 	}
@@ -769,6 +773,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPump(UObject* WorldContext, FReq
 		TSharedPtr<FJsonObject> JPump = UFRM_Library::CreateBaseJsonObject(Pump);
 		JPump->Values.Add("Name", MakeShared<FJsonValueString>(Pump->mDisplayName.ToString()));
 		JPump->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Pump)));
+		JPump->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Pump, Pump->GetCombinedClearanceBox())));
 		JPump->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Pump->GetPowerInfo())));
 		JPumpArray.Add(MakeShared<FJsonValueObject>(JPump));
 	}
@@ -787,6 +792,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPortal(UObject* WorldContext, FR
 		TSharedPtr<FJsonObject> JPortal = UFRM_Library::CreateBaseJsonObject(Portal);
 		JPortal->Values.Add("Name", MakeShared<FJsonValueString>(Portal->mDisplayName.ToString()));
 		JPortal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Portal)));
+		JPortal->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Portal, Portal->GetCombinedClearanceBox())));
 		JPortal->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Portal->GetPowerInfo())));
 		JPortalArray.Add(MakeShared<FJsonValueObject>(JPortal));
 	}
@@ -798,6 +804,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPortal(UObject* WorldContext, FR
 		TSharedPtr<FJsonObject> JPortal = UFRM_Library::CreateBaseJsonObject(Portal);
 		JPortal->Values.Add("Name", MakeShared<FJsonValueString>(Portal->mDisplayName.ToString()));
 		JPortal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Portal)));
+		JPortal->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Portal, Portal->GetCombinedClearanceBox())));
 		JPortal->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Portal->GetPowerInfo())));
 		JPortalArray.Add(MakeShared<FJsonValueObject>(JPortal));
 	}
@@ -877,6 +884,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldCont
 		JSpaceElevator->Values.Add("Name", MakeShared<FJsonValueString>(SpaceElevator->mDisplayName.ToString()));
 		JSpaceElevator->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(SpaceElevator->GetClass())));
 		JSpaceElevator->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(SpaceElevator)));
+		JSpaceElevator->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(SpaceElevator, SpaceElevator->GetCombinedClearanceBox())));
 		JSpaceElevator->Values.Add("CurrentPhase", MakeShared<FJsonValueArray>(JCurrentPhaseArray));
 		JSpaceElevator->Values.Add("FullyUpgraded", MakeShared<FJsonValueBoolean>(SpaceElevator->IsFullyUpgraded()));
 		JSpaceElevator->Values.Add("UpgradeReady", MakeShared<FJsonValueBoolean>(SpaceElevator->IsReadyToUpgrade()));

@@ -306,6 +306,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 		JGenerator->Values.Add("Name", MakeShared<FJsonValueString>(Generator->mDisplayName.ToString()));
 		JGenerator->Values.Add("ClassName", MakeShared<FJsonValueString>(Generator->GetClass()->GetName()));
 		JGenerator->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Generator))));
+		JGenerator->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Generator, Generator->GetCombinedClearanceBox())));
 		JGenerator->Values.Add("BaseProd", MakeShared<FJsonValueNumber>(Generator->GetPowerProductionCapacity()));
 		JGenerator->Values.Add("DynamicProdCapacity", MakeShared<FJsonValueNumber>(DynProductionCapacity));
 		JGenerator->Values.Add("DynamicProdDemandFactor", MakeShared<FJsonValueNumber>(DynProductionDemand));
