@@ -229,8 +229,8 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     FString RelativePath = FString(url.c_str()).Mid(7);
                     FString FilePath = FPaths::Combine(IconsPath, RelativePath);
 
-                    UE_LOG(LogHttpServer, Log, TEXT("Request RelativePath: %s"), *RelativePath);
-                    UE_LOG(LogHttpServer, Log, TEXT("Request FilePath: %s"), *FilePath);
+                    //UE_LOG(LogHttpServer, Log, TEXT("Request RelativePath: %s"), *RelativePath);
+                    //UE_LOG(LogHttpServer, Log, TEXT("Request FilePath: %s"), *FilePath);
 
                     if (!res || !req) {
                         UE_LOG(LogHttpServer, Error, TEXT("Invalid request or response pointer!"));
@@ -250,7 +250,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     FString Endpoint = FString(url.c_str());
 
                     // Log the request URL
-                    UE_LOGFMT(LogHttpServer, Log, "Request URL: {0}", Endpoint);
+                    //UE_LOGFMT(LogHttpServer, Log, "Request URL: {0}", Endpoint);
 
                 	FRequestData RequestData;
                 	RequestData.bIsAuthorized = IsAuthorizedRequest(req, config.Authentication_Token);
@@ -323,8 +323,10 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                     FString FilePath = FPaths::Combine(UIPath, RelativePath);
                     FString FileContent;
 
+                	/* Retaining until log levels are created or debugging required
                     UE_LOG(LogHttpServer, Log, TEXT("Request RelativePath/FilePath: %s %s"), *RelativePath, *FilePath);
-
+					*/
+                	
                     if (FPaths::FileExists(FilePath)) {
                         bFileExists = true;
                     }
@@ -560,7 +562,7 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
         if (FileLoaded) {
             std::string contentLength = std::to_string(BinaryContent.Num());
 
-            UE_LOG(LogHttpServer, Log, TEXT("Binary File Found Returning: %s"), *FilePath);
+            //UE_LOG(LogHttpServer, Log, TEXT("Binary File Found Returning: %s"), *FilePath);
 
             res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
             UFRM_RequestLibrary::AddResponseHeaders(res, false);
@@ -573,7 +575,7 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
         // Text-based files like HTML, CSS, JS
         FileLoaded = FFileHelper::LoadFileToString(FileContent, *FilePath);
         if (FileLoaded) {
-            UE_LOG(LogHttpServer, Log, TEXT("File Found Returning: %s"), *FilePath);
+            //UE_LOG(LogHttpServer, Log, TEXT("File Found Returning: %s"), *FilePath);
 
             res->writeHeader("Content-Type", TCHAR_TO_UTF8(*ContentType));
             UFRM_RequestLibrary::AddResponseHeaders(res, false);
@@ -620,7 +622,7 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 	this->HandleEndpoint(Endpoint, RequestData, bSuccess, ErrorCode, OutJson, EInterfaceType::Web);
 
     if (bSuccess) {
-        UE_LOGFMT(LogHttpServer, Log, "API Found Returning: {Endpoint}", Endpoint);
+        //UE_LOGFMT(LogHttpServer, Log, "API Found Returning: {Endpoint}", Endpoint);
         UFRM_RequestLibrary::AddResponseHeaders(res, true);
         res->end(TCHAR_TO_UTF8(*OutJson));
     	return;
