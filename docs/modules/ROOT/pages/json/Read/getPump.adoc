@@ -1,0 +1,11 @@
+﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= getPump
+
+include::../_isGetAll.adoc[]
+
+[WARNING]
+====
+This endpoint is new and not yet documented.
+====
