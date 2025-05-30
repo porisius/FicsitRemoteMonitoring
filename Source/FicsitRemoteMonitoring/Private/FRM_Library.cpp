@@ -3,6 +3,7 @@
 #include "Config_FactoryStruct.h"
 #include "FGCharacterPlayer.h"
 #include "FGFactoryConnectionComponent.h"
+#include "FGInventoryLibrary.h"
 #include "FGPipeConnectionComponent.h"
 #include "FGPowerCircuit.h"
 #include "FGPowerInfoComponent.h"
@@ -266,8 +267,12 @@ TSharedPtr<FJsonObject> UFRM_Library::GetItemValueObject(const TSubclassOf<UFGIt
 
 	JItem->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Item).ToString()));
 	JItem->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Item)));
-	JItem->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
-	JItem->Values.Add("MaxAmount", MakeShared<FJsonValueNumber>(UFGItemDescriptor::GetStackSize(Item)));
+	JItem->Values.Add("Amount", MakeShared<FJsonValueNumber>(
+		UFGInventoryLibrary::GetAmountConvertedByForm(Amount, UFGItemDescriptor::GetForm(Item))
+	));
+	JItem->Values.Add("MaxAmount", MakeShared<FJsonValueNumber>(
+		UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetStackSize(Item), UFGItemDescriptor::GetForm(Item))
+	));
 
 	return JItem;
 }
