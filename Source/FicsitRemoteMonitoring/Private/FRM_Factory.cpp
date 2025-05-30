@@ -319,7 +319,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 		TArray<TSharedPtr<FJsonValue>> JRecipeArray;
 		TSharedPtr<FJsonObject> JSchematic;
 
-		if (IsValid(ActiveSchematic)) {
+		bool bHasActiveMilestone = IsValid(ActiveSchematic);
+
+		if (bHasActiveMilestone) {
 			JSchematic = UFRM_Library::CreateBaseJsonObject(ActiveSchematic);
 			TArray<TSharedPtr<FJsonValue>> JCosts;
 			TArray<TSubclassOf<UFGRecipe>> Recipes;
@@ -407,6 +409,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 		JHubTerminal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(HubTerminal))));
 		JHubTerminal->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(HubTerminal, HubTerminal->GetCombinedClearanceBox())));
 		//JHubTerminal->Values.Add("HUBLevel", MakeShared<FJsonValueNumber>(TradingPost->GetTradingPostLevel()));
+		JHubTerminal->Values.Add("HasActiveMilestone", MakeShared<FJsonValueBoolean>(bHasActiveMilestone));
 		JHubTerminal->Values.Add("ActiveMilestone", MakeShared<FJsonValueObject>(JSchematic));
 		JHubTerminal->Values.Add("ShipDock", MakeShared<FJsonValueBoolean>(SchematicManager->IsShipAtTradingPost()));
 		JHubTerminal->Values.Add("SchName", MakeShared<FJsonValueString>(SchematicName));
