@@ -904,7 +904,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPipes(UObject* WorldContext, FRe
 		UFGPipeConnectionComponent* ConnectionZero = Pipe->GetPipeConnection0();
 		UFGPipeConnectionComponent* ConnectionOne = Pipe->GetPipeConnection1();
 
-		JPipe->Values.Add("Name", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetDisplayName(Pipe)));
+		JPipe->Values.Add("Name", MakeShared<FJsonValueString>(Pipe->mDisplayName.ToString()));
 		JPipe->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Pipe->GetClass())));
 		JPipe->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorPipeXYZ(Pipe, ConnectionZero)));
 		JPipe->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
