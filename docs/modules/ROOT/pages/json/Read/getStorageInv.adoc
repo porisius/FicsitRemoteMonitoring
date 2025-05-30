@@ -4,6 +4,8 @@
 
 = Get Storage Inv
 
+include::../_isGetAll.adoc[]
+
 This is inventory of the world broken up by their storage containers.
 This does not include pipes/belts/factory buildings, only buildings whom purpose is to provide storage except Fluid Buffers.
 
@@ -33,6 +35,10 @@ include::../Models/_location.adoc[]
 // inventory items
 | Inventory | Object[] | List of items in the Storage Container.
 include::../Models/_inventoryItem.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
 
 // features
 include::../Models/_features.adoc[]

@@ -32,6 +32,10 @@ include::../Models/_inventoryItem.adoc[]
 | FullyUpgraded | Boolean | `true` if the Space Elevator is fully upgraded.
 | UpgradeReady | Boolean | `true` if an upgrade is ready.
 
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
 // features fields
 include::../Models/_features.adoc[]
 

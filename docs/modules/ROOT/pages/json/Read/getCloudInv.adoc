@@ -4,6 +4,8 @@
 
 = Get Cloud Inv
 
+include::../_isGetAll.adoc[]
+
 This is inventory of the dimensional depot.
 
 == Similar
