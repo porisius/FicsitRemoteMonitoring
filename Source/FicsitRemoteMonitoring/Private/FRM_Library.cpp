@@ -8,6 +8,8 @@
 #include "FGPowerCircuit.h"
 #include "FGPowerInfoComponent.h"
 #include "FGResourceNode.h"
+#include "FGSchematicManager.h"
+#include "FicsitRemoteMonitoring.h"
 #include "FicsitRemoteMonitoringModule.h"
 #include "FRM_Factory.h"
 #include "StructuredLog.h"
@@ -287,6 +289,94 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Library::GetInventoryJSON(const TArray<FItem
 
 	return JInventoryArray;
 }
+
+TSharedPtr<FJsonObject> UFRM_Library::GetSchematicJson(AFicsitRemoteMonitoring* ModSubsystem, UObject* WorldContext, TSubclassOf<UFGSchematic> Schematic)
+{
+	TSharedPtr<FJsonObject> JSchematic = CreateBaseJsonObject(Schematic);
+	TArray<TSharedPtr<FJsonValue>> JRecipeArray;
+	TArray<TSubclassOf<UFGRecipe>> Recipes;
+
+	bool Purchased = false;
+	bool HasUnlocks = false;
+	bool LockedAny = false;
+	bool LockedTutorial = false;
+	bool LockedDependent = false;
+	bool LockedPhase = false;
+	bool Tutorial = false;
+			
+	ModSubsystem->SchematicToRecipes_BIE(WorldContext, Schematic, Recipes, Purchased, HasUnlocks, LockedAny, LockedTutorial, LockedDependent, LockedPhase, Tutorial);
+
+	for (const TSubclassOf<UFGRecipe> Recipe : Recipes) {
+		TSharedPtr<FJsonObject> JRecipe = UFRM_Production::getRecipe(WorldContext, Recipe);
+		JRecipeArray.Add(MakeShared<FJsonValueObject>(JRecipe));
+	}
+
+	FString SchematicType;
+	switch (UFGSchematic::GetType(Schematic)) {
+		case ESchematicType::EST_Alternate: SchematicType = TEXT("Alternate");
+			break;
+		case ESchematicType::EST_Cheat: SchematicType = TEXT("Cheat");
+			break;
+		case ESchematicType::EST_Custom: SchematicType = TEXT("Custom");
+			break;
+		case ESchematicType::EST_HardDrive: SchematicType = TEXT("Hard Drive");
+			break;
+		case ESchematicType::EST_MAM: SchematicType = TEXT("M.A.M.");
+			break;
+		case ESchematicType::EST_Milestone: SchematicType = TEXT("Milestone");
+			break;
+		case ESchematicType::EST_Prototype: SchematicType = TEXT("Prototype");
+			break;
+		case ESchematicType::EST_ResourceSink: SchematicType = TEXT("Resource Sink");
+			break;
+		case ESchematicType::EST_Story: SchematicType = TEXT("Story");
+			break;
+		case ESchematicType::EST_Tutorial: SchematicType = TEXT("Tutorial");
+	}
+
+	JSchematic->Values.Add("Name", MakeShared<FJsonValueString>(UFGSchematic::GetSchematicDisplayName(Schematic).ToString()));
+	JSchematic->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Schematic)));
+	JSchematic->Values.Add("TechTier", MakeShared<FJsonValueNumber>(UFGSchematic::GetTechTier(Schematic)));
+	JSchematic->Values.Add("Type", MakeShared<FJsonValueString>(SchematicType));
+	JSchematic->Values.Add("Recipes", MakeShared<FJsonValueArray>(JRecipeArray));
+	JSchematic->Values.Add("HasUnlocks", MakeShared<FJsonValueBoolean>(HasUnlocks));
+	JSchematic->Values.Add("Locked", MakeShared<FJsonValueBoolean>(LockedAny));
+	JSchematic->Values.Add("Purchased", MakeShared<FJsonValueBoolean>(Purchased));
+	JSchematic->Values.Add("DepLocked", MakeShared<FJsonValueBoolean>(LockedDependent));
+	JSchematic->Values.Add("LockedTutorial", MakeShared<FJsonValueBoolean>(LockedTutorial));
+	JSchematic->Values.Add("LockedPhase", MakeShared<FJsonValueBoolean>(LockedPhase));
+	JSchematic->Values.Add("Tutorial", MakeShared<FJsonValueBoolean>(Tutorial));
+
+	TArray<TSharedPtr<FJsonValue>> JCosts;
+	TArray<FItemAmount> ItemsPaid = AFGSchematicManager::Get(WorldContext)->GetPaidOffCostFor(Schematic);
+	TArray<FItemAmount> ItemsCost = UFGSchematic::GetCost(Schematic);
+
+	for (FItemAmount ItemCost : ItemsCost)
+	{
+		TSharedPtr<FJsonObject> JCost = GetItemValueObject(ItemCost.ItemClass, ItemCost.Amount);
+	
+		// Probably an easier way of doing this...
+		int32 MilestonePaid = 0;
+		for (FItemAmount ItemPaid : ItemsPaid)
+		{
+			if (ItemCost.ItemClass == ItemPaid.ItemClass)
+			{
+				MilestonePaid = ItemPaid.Amount;
+				break;
+			}
+		}
+		
+		JCost->Values.Add("RemainingCost", MakeShared<FJsonValueNumber>(ItemCost.Amount - MilestonePaid));
+		JCost->Values.Add("TotalCost", MakeShared<FJsonValueNumber>(ItemCost.Amount));
+	
+		JCosts.Add(MakeShared<FJsonValueObject>(JCost));
+	}
+
+	JSchematic->Values.Add("Cost", MakeShared<FJsonValueArray>(JCosts));
+
+	return JSchematic;
+}
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Library::GetInventoryJSON(const TMap<TSubclassOf<UFGItemDescriptor>, int32>& Items)
 {
 	TArray<TSharedPtr<FJsonValue>> JInventoryArray;

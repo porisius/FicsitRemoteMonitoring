@@ -26,6 +26,7 @@
 #include "FGResourceDeposit.h"
 #include "FGSchematicManager.h"
 #include "FGTimeSubsystem.h"
+#include "FicsitRemoteMonitoring.h"
 #include "FRM_Library.h"
 #include "FRM_Production.h"
 #include "FRM_RequestData.h"
@@ -309,6 +310,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableHubTerminal>(Buildables);
 	TArray<TSharedPtr<FJsonValue>> JHubTerminalArray;
 
+	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
+
 	for (AFGBuildableHubTerminal* HubTerminal : Buildables) {
 
 		TSharedPtr<FJsonObject> JHubTerminal = UFRM_Library::CreateBaseJsonObject(HubTerminal);
@@ -322,73 +325,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 		bool bHasActiveMilestone = IsValid(ActiveSchematic);
 
 		if (bHasActiveMilestone) {
-			JSchematic = UFRM_Library::CreateBaseJsonObject(ActiveSchematic);
-			TArray<TSharedPtr<FJsonValue>> JCosts;
-			TArray<TSubclassOf<UFGRecipe>> Recipes;
-
-			for (TSubclassOf<UFGRecipe> Recipe : Recipes) {
-
-				TSharedPtr<FJsonObject> JRecipe = UFRM_Production::getRecipe(WorldContext, Recipe);
-				JRecipeArray.Add(MakeShared<FJsonValueObject>(JRecipe));
-
-			}
-
-			FString SchematicType;
-
-			switch (UFGSchematic::GetType(ActiveSchematic)) {
-			case ESchematicType::EST_Alternate: SchematicType = TEXT("Alternate");
-				break;
-			case ESchematicType::EST_Cheat: SchematicType = TEXT("Cheat");
-				break;
-			case ESchematicType::EST_Custom: SchematicType = TEXT("Custom");
-				break;
-			case ESchematicType::EST_HardDrive: SchematicType = TEXT("Hard Drive");
-				break;
-			case ESchematicType::EST_MAM: SchematicType = TEXT("M.A.M.");
-				break;
-			case ESchematicType::EST_Milestone: SchematicType = TEXT("Milestone");
-				break;
-			case ESchematicType::EST_Prototype: SchematicType = TEXT("Prototype");
-				break;
-			case ESchematicType::EST_ResourceSink: SchematicType = TEXT("Resource Sink");
-				break;
-			case ESchematicType::EST_Story: SchematicType = TEXT("Story");
-				break;
-			case ESchematicType::EST_Tutorial: SchematicType = TEXT("Tutorial");
-				break;
-			default : SchematicType = TEXT("Unknown");
-			}
-
-			TArray<FItemAmount> ItemsPaid = SchematicManager->GetPaidOffCostFor(ActiveSchematic);
-			TArray<FItemAmount> ItemsCost = UFGSchematic::GetCost(ActiveSchematic);
-			
-			for (FItemAmount ItemCost :ItemsCost) {
-
-				TSharedPtr<FJsonObject> JCost = UFRM_Library::GetItemValueObject(ItemCost.ItemClass, ItemCost.Amount);
-
-				//Probably an easier way of doing this...
-				int32 MilestonePaid = 0;
-				for (FItemAmount ItemPaid : ItemsPaid)
-				{
-					if (ItemCost.ItemClass == ItemPaid.ItemClass)
-					{
-						MilestonePaid = ItemPaid.Amount;
-						break;
-					}
-				}
-				
-				JCost->Values.Add("RemainingCost", MakeShared<FJsonValueNumber>(ItemCost.Amount - MilestonePaid));
-				JCost->Values.Add("TotalCost", MakeShared<FJsonValueNumber>(ItemCost.Amount));
-
-				JCosts.Add(MakeShared<FJsonValueObject>(JCost));
-			}
-
-			JSchematic->Values.Add("Name", MakeShared<FJsonValueString>(UFGSchematic::GetSchematicDisplayName(ActiveSchematic).ToString()));
-			JSchematic->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ActiveSchematic->GetClass())));
-			JSchematic->Values.Add("TechTier", MakeShared<FJsonValueNumber>(UFGSchematic::GetTechTier(ActiveSchematic)));
-			JSchematic->Values.Add("Type", MakeShared<FJsonValueString>(SchematicType));
-			JSchematic->Values.Add("Recipes", MakeShared<FJsonValueArray>(JRecipeArray));
-			JSchematic->Values.Add("Cost", MakeShared<FJsonValueArray>(JCosts));
+			JSchematic = UFRM_Library::GetSchematicJson(ModSubsystem, WorldContext, ActiveSchematic);
 		}
 		else {
 			JSchematic = MakeShared<FJsonObject>();

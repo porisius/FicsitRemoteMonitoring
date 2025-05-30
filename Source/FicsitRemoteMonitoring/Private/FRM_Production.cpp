@@ -399,67 +399,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Production::getSchematics(UObject* WorldCont
 	fgcheck(ModSubsystem);
 
 	for (TSubclassOf<UFGSchematic> Schematic : Schematics) {
-
-		TSharedPtr<FJsonObject> JSchematic = UFRM_Library::CreateBaseJsonObject(Schematic);
-
-		TArray<TSharedPtr<FJsonValue>> JRecipeArray;
-		TArray<TSubclassOf<UFGRecipe>> Recipes;
-
-		bool Purchased = false;
-		bool HasUnlocks = false;
-		bool LockedAny = false;
-		bool LockedTutorial = false;
-		bool LockedDependent = false;
-		bool LockedPhase = false;
-		bool Tutorial = false;
-				
-		ModSubsystem->SchematicToRecipes_BIE(WorldContext, Schematic, Recipes, Purchased, HasUnlocks, LockedAny, LockedTutorial, LockedDependent, LockedPhase, Tutorial);
-
-		for (TSubclassOf<UFGRecipe> Recipe : Recipes) {
-
-			TSharedPtr<FJsonObject> JRecipe = UFRM_Production::getRecipe(WorldContext, Recipe);
-			JRecipeArray.Add(MakeShared<FJsonValueObject>(JRecipe));
-
-		}
-
-		FString SchematicType;
-
-		switch (UFGSchematic::GetType(Schematic)) {
-			case ESchematicType::EST_Alternate: SchematicType = TEXT("Alternate");
-				break;
-			case ESchematicType::EST_Cheat: SchematicType = TEXT("Cheat");
-				break;
-			case ESchematicType::EST_Custom: SchematicType = TEXT("Custom");
-				break;
-			case ESchematicType::EST_HardDrive: SchematicType = TEXT("Hard Drive");
-				break;
-			case ESchematicType::EST_MAM: SchematicType = TEXT("M.A.M.");
-				break;
-			case ESchematicType::EST_Milestone: SchematicType = TEXT("Milestone");
-				break;
-			case ESchematicType::EST_Prototype: SchematicType = TEXT("Prototype");
-				break;
-			case ESchematicType::EST_ResourceSink: SchematicType = TEXT("Resource Sink");
-				break;
-			case ESchematicType::EST_Story: SchematicType = TEXT("Story");
-				break;
-			case ESchematicType::EST_Tutorial: SchematicType = TEXT("Tutorial");
-		}
-
-		JSchematic->Values.Add("Name", MakeShared<FJsonValueString>(UFGSchematic::GetSchematicDisplayName(Schematic).ToString()));
-		JSchematic->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Schematic)));
-		JSchematic->Values.Add("TechTier", MakeShared<FJsonValueNumber>(UFGSchematic::GetTechTier(Schematic)));
-		JSchematic->Values.Add("Type", MakeShared<FJsonValueString>(SchematicType));
-		JSchematic->Values.Add("Recipes", MakeShared<FJsonValueArray>(JRecipeArray));
-		JSchematic->Values.Add("HasUnlocks", MakeShared<FJsonValueBoolean>(HasUnlocks));
-		JSchematic->Values.Add("Locked", MakeShared<FJsonValueBoolean>(LockedAny));
-		JSchematic->Values.Add("Purchased", MakeShared<FJsonValueBoolean>(Purchased));
-		JSchematic->Values.Add("DepLocked", MakeShared<FJsonValueBoolean>(LockedDependent));
-		JSchematic->Values.Add("LockedTutorial", MakeShared<FJsonValueBoolean>(LockedTutorial));
-		JSchematic->Values.Add("LockedPhase", MakeShared<FJsonValueBoolean>(LockedPhase));
-		JSchematic->Values.Add("Tutorial", MakeShared<FJsonValueBoolean>(Tutorial));
-
-		JSchematicsArray.Add(MakeShared<FJsonValueObject>(JSchematic));
+		JSchematicsArray.Add(MakeShared<FJsonValueObject>(UFRM_Library::GetSchematicJson(ModSubsystem, WorldContext, Schematic)));
 	}
 
 	return JSchematicsArray;

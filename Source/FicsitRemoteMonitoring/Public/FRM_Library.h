@@ -4,6 +4,7 @@
 #include "FGBlueprintFunctionLibrary.h"
 #include "FRM_Library.generated.h"
 
+class AFicsitRemoteMonitoring;
 class UFGPowerInfoComponent;
 class UFGFactoryConnectionComponent;
 class UFGPipeConnectionComponent;
@@ -25,6 +26,7 @@ public:
 	static void GetGroupedInventoryItems(const UFGInventoryComponent* Inventory, TMap<TSubclassOf<UFGItemDescriptor>, int32>& InventoryItems);
 	static TArray<TSharedPtr<FJsonValue>> GetInventoryJSON(const TMap<TSubclassOf<UFGItemDescriptor>, int32>& Items);
 	static TArray<TSharedPtr<FJsonValue>> GetInventoryJSON(const TArray<FItemAmount>& Items);
+	static TSharedPtr<FJsonObject> GetSchematicJson(AFicsitRemoteMonitoring* ModSubsystem, UObject* WorldContext, TSubclassOf<UFGSchematic> Schematic);
 	static TSharedPtr<FJsonObject> GetItemValueObject(const TSubclassOf<UFGItemDescriptor>& Item, const int Amount);
 	static TSharedPtr<FJsonObject> GetItemValueObject(const FItemAmount Item);
 	static TSharedPtr<FJsonObject> GetItemValueObject(const FInventoryStack& Item);
