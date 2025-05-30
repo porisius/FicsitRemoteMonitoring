@@ -304,17 +304,12 @@ TSharedPtr<FJsonObject> UFRM_Production::getRecipe(UObject* WorldContext, TSubcl
 	TArray<TSharedPtr<FJsonValue>> JIngredientArray;
 
 	for (FItemAmount Ingredient : UFGRecipe::GetIngredients(Recipe)) {
-		TSharedPtr<FJsonObject> JIngredient = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JIngredient = UFRM_Library::GetItemValueObject(Ingredient);
 
-		auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Ingredient.Amount, UFGItemDescriptor::GetForm(Ingredient.ItemClass));
-		auto ManualRate = (UKismetMathLibrary::SafeDivide(60, ManualDuration)) * RecipeAmount;
-		auto FactoryRate = (UKismetMathLibrary::SafeDivide(60, FactoryDuration)) * RecipeAmount;
+		const float RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Ingredient.Amount, UFGItemDescriptor::GetForm(Ingredient.ItemClass));
 
-		JIngredient->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Ingredient.ItemClass).ToString()));
-		JIngredient->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Ingredient.ItemClass)));
-		JIngredient->Values.Add("Amount", MakeShared<FJsonValueNumber>(RecipeAmount));
-		JIngredient->Values.Add("ManualRate", MakeShared<FJsonValueNumber>(ManualRate));
-		JIngredient->Values.Add("FactoryRate", MakeShared<FJsonValueNumber>(FactoryRate));
+		JIngredient->Values.Add("ManualRate", MakeShared<FJsonValueNumber>(UKismetMathLibrary::SafeDivide(60, ManualDuration) * RecipeAmount));
+		JIngredient->Values.Add("FactoryRate", MakeShared<FJsonValueNumber>(UKismetMathLibrary::SafeDivide(60, FactoryDuration) * RecipeAmount));
 
 		JIngredientArray.Add(MakeShared<FJsonValueObject>(JIngredient));
 	};
@@ -322,17 +317,12 @@ TSharedPtr<FJsonObject> UFRM_Production::getRecipe(UObject* WorldContext, TSubcl
 	TArray<TSharedPtr<FJsonValue>> JProductArray;
 
 	for (FItemAmount Product : UFGRecipe::GetProducts(Recipe)) {
-		TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
+		TSharedPtr<FJsonObject> JProduct = UFRM_Library::GetItemValueObject(Product);
 
-		float RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Product.Amount, UFGItemDescriptor::GetForm(Product.ItemClass));
-		double ManualRate = (UKismetMathLibrary::SafeDivide(60, ManualDuration)) * RecipeAmount;
-		double FactoryRate = (UKismetMathLibrary::SafeDivide(60, FactoryDuration)) * RecipeAmount;
+		const float RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Product.Amount, UFGItemDescriptor::GetForm(Product.ItemClass));
 
-		JProduct->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Product.ItemClass).ToString()));
-		JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Product.ItemClass)));
-		JProduct->Values.Add("Amount", MakeShared<FJsonValueNumber>(RecipeAmount));
-		JProduct->Values.Add("ManualRate", MakeShared<FJsonValueNumber>(ManualRate));
-		JProduct->Values.Add("FactoryRate", MakeShared<FJsonValueNumber>(FactoryRate));
+		JProduct->Values.Add("ManualRate", MakeShared<FJsonValueNumber>(UKismetMathLibrary::SafeDivide(60, ManualDuration) * RecipeAmount));
+		JProduct->Values.Add("FactoryRate", MakeShared<FJsonValueNumber>(UKismetMathLibrary::SafeDivide(60, FactoryDuration) * RecipeAmount));
 
 		JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
 	};

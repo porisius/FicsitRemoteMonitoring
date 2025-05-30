@@ -229,37 +229,29 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, F
 			//UE_LOGFMT(LogFRMAPI, Warning, "Loading FGRecipe {Recipe} to get data.", UKismetSystemLibrary::GetClassDisplayName(CurrentRecipe->GetClass()));
 
 			for (FItemAmount Product : CurrentRecipe.GetDefaultObject()->GetProducts()) {
-				TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
+				TSharedPtr<FJsonObject> JProduct = UFRM_Library::GetItemValueObject(Product);
 				
-				auto Amount = UFGInventoryLibrary::GetAmountConvertedByForm(Manufacturer->GetOutputInventory()->GetNumItems(Product.ItemClass), UFGItemDescriptor::GetForm(Product.ItemClass));
 				auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Product.Amount, UFGItemDescriptor::GetForm(Product.ItemClass));
 				auto CurrentProd = RecipeAmount * ProdCycle * Productivity * CurrentPotential * ProductionBoost;
 				auto MaxProd = RecipeAmount * ProdCycle * CurrentPotential * ProductionBoost;
 
-				JProduct->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Product.ItemClass).ToString()));
-				JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Product.ItemClass)));
-				JProduct->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
 				JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
 				JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
-				JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UKismetMathLibrary::SafeDivide(CurrentProd, MaxProd)))));
+				JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>(100 * UKismetMathLibrary::SafeDivide(CurrentProd, MaxProd)));
 
 				JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
 			};
 
-			for (FItemAmount Ingredients : CurrentRecipe.GetDefaultObject()->GetIngredients()) {
-				TSharedPtr<FJsonObject> JIngredients = MakeShared<FJsonObject>();
+			for (FItemAmount Ingredient : CurrentRecipe.GetDefaultObject()->GetIngredients()) {
+				TSharedPtr<FJsonObject> JIngredients = UFRM_Library::GetItemValueObject(Ingredient);
 
-				auto Amount = UFGInventoryLibrary::GetAmountConvertedByForm(Manufacturer->GetInputInventory()->GetNumItems(Ingredients.ItemClass), UFGItemDescriptor::GetForm(Ingredients.ItemClass));
-				auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Ingredients.Amount, UFGItemDescriptor::GetForm(Ingredients.ItemClass));
+				auto RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Ingredient.Amount, UFGItemDescriptor::GetForm(Ingredient.ItemClass));
 				auto CurrentConsumed = RecipeAmount * ProdCycle * Productivity * CurrentPotential;
 				auto MaxConsumed = RecipeAmount * ProdCycle * CurrentPotential;
 
-				JIngredients->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Ingredients.ItemClass).ToString()));
-				JIngredients->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Ingredients.ItemClass)));
-				JIngredients->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
 				JIngredients->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(CurrentConsumed));
 				JIngredients->Values.Add("MaxConsumed", MakeShared<FJsonValueNumber>(MaxConsumed));
-				JIngredients->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>((100 * (UKismetMathLibrary::SafeDivide(CurrentConsumed, MaxConsumed)))));
+				JIngredients->Values.Add("ConsPercent", MakeShared<FJsonValueNumber>(100 * UKismetMathLibrary::SafeDivide(CurrentConsumed, MaxConsumed)));
 
 				JIngredientsArray.Add(MakeShared<FJsonValueObject>(JIngredients));
 			};
@@ -499,9 +491,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getWorldInv(UObject* WorldContext, 
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> StorageTMap;
 
 	for (AFGBuildableStorage* StorageContainer : StorageContainers) {
-
-		TSharedPtr<FJsonObject> JStorage = MakeShared<FJsonObject>();
-
 		// get inventory of the storage container
 		UFRM_Library::GetGroupedInventoryItems(StorageContainer->GetStorageInventory(), StorageTMap);
 	}
@@ -550,33 +539,24 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 
 		FString ItemName = TEXT("Desc_Null");
 		FString ItemClassName = TEXT("Desc_Null");
-		float CurrentProd = 0;
-		float MaxProd = 0;
-		int32 Amount = 0;
 
 		TScriptInterface<IFGExtractableResourceInterface> ResourceClass = Extractor->GetExtractableResource();
 		if (ResourceClass != nullptr) {
 			TSubclassOf<UFGResourceDescriptor> ItemClass = ResourceClass->GetResourceClass();
 			ItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
 			ItemClassName = UKismetSystemLibrary::GetClassDisplayName(ItemClass);
-			const float ProdCycle = Extractor->GetExtractionPerMinute();
+			const float MaxProd = Extractor->GetExtractionPerMinute();
 			const float Productivity = Extractor->GetProductivity();
 			const UFGInventoryComponent* ExtractorInventory = Extractor->GetOutputInventory();
 
-			Amount = ExtractorInventory->GetNumItems(ItemClass);
-			CurrentProd = Productivity * ProdCycle;
-			MaxProd = ProdCycle;
+			float CurrentProd = Productivity * MaxProd;
+
+			TSharedPtr<FJsonObject> JProduct = UFRM_Library::GetItemValueObject(ResourceClass->GetResourceClass(), ExtractorInventory->GetNumItems(ItemClass));
+			JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
+			JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
+			JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>(100 * UKismetMathLibrary::SafeDivide(CurrentProd, MaxProd)));
+			JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
 		}
-
-		TSharedPtr<FJsonObject> JProduct = MakeShared<FJsonObject>();
-		JProduct->Values.Add("Name", MakeShared<FJsonValueString>(ItemName));
-		JProduct->Values.Add("ClassName", MakeShared<FJsonValueString>(ItemClassName));
-		JProduct->Values.Add("Amount", MakeShared<FJsonValueNumber>(Amount));
-		JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
-		JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
-		JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>((100 * (UKismetMathLibrary::SafeDivide(CurrentProd, MaxProd)))));
-
-		JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
 
 		JExtractor->Values.Add("Name", MakeShared<FJsonValueString>(Extractor->mDisplayName.ToString()));
 		JExtractor->Values.Add("ClassName", MakeShared<FJsonValueString>(Extractor->GetClass()->GetName()));
@@ -869,17 +849,13 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldCont
 
 		for (FRemainingPhaseCost CurrentPhase : RemainingPhaseCost) {
 
-			TSharedPtr<FJsonObject> JCurrentPhase = MakeShared<FJsonObject>();
+			TSharedPtr<FJsonObject> JCurrentPhase = UFRM_Library::GetItemValueObject(CurrentPhase.ItemClass, CurrentPhase.TotalCost - CurrentPhase.RemainingCost);
 
-			JCurrentPhase->Values.Add("Name", MakeShared<FJsonValueString>((CurrentPhase.ItemClass.GetDefaultObject()->mDisplayName.ToString())));
-			JCurrentPhase->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(CurrentPhase.ItemClass)));
-			JCurrentPhase->Values.Add("Amount", MakeShared<FJsonValueNumber>(CurrentPhase.TotalCost - CurrentPhase.RemainingCost));
 			JCurrentPhase->Values.Add("RemainingCost", MakeShared<FJsonValueNumber>(CurrentPhase.RemainingCost));
 			JCurrentPhase->Values.Add("TotalCost", MakeShared<FJsonValueNumber>(CurrentPhase.TotalCost));
 
 			JCurrentPhaseArray.Add(MakeShared<FJsonValueObject>(JCurrentPhase));
-
-		};
+		}
 
 		JSpaceElevator->Values.Add("Name", MakeShared<FJsonValueString>(SpaceElevator->mDisplayName.ToString()));
 		JSpaceElevator->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(SpaceElevator->GetClass())));
@@ -907,16 +883,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getCloudInv(UObject* WorldContext, 
 	CloudSubsystem->GetAllItemsFromCentralStorage(CloudInventory);
 
 	for (FItemAmount Storage : CloudInventory) {
-
-		TSharedPtr<FJsonObject> JCloud = MakeShared<FJsonObject>();
-
-		JCloud->Values.Add("Name", MakeShared<FJsonValueString>((Storage.ItemClass.GetDefaultObject()->mDisplayName).ToString()));
-		JCloud->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Storage.ItemClass.GetDefaultObject()->GetClass())));
-		JCloud->Values.Add("Amount", MakeShared<FJsonValueNumber>(Storage.Amount));
-
-		JCloudArray.Add(MakeShared<FJsonValueObject>(JCloud));
-
-	};
+		JCloudArray.Add(MakeShared<FJsonValueObject>(UFRM_Library::GetItemValueObject(Storage)));
+	}
 
 	return JCloudArray;
 }
