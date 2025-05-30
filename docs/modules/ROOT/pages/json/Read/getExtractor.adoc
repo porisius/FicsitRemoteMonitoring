@@ -22,8 +22,7 @@ include::../_responseBody.adoc[]
 | RecipeClassName | String | ClassName of the Recipe.
 
 // production
-{set:inventory-name:production}
-{set:inventory-description:Items that are produced.}
+| production | Object[] | Items that are produced.
 include::../Models/_inventoryItem.adoc[]
 | {depth}  CurrentProd | Float | Current produced items per minute.
 | {depth}  MaxProd | Float | Maximum produced items per minutes.

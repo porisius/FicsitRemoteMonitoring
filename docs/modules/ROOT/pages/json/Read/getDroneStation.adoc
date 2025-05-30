@@ -21,16 +21,13 @@ include::../_responseBody.adoc[]
 {set:key-description:Location details of the Drone.}
 include::../Models/_location.adoc[]
 
-{set:inventory-name:InputInventory}
-{set:inventory-description:List of items in the input inventory.}
+| InputInventory | Object[] | List of items in the input inventory.
 include::../Models/_inventoryItem.adoc[]
 
-{set:inventory-name:OutputInventory}
-{set:inventory-description:List of items in the output inventory.}
+| OutputInventory | Object[] | List of items in the output inventory.
 include::../Models/_inventoryItem.adoc[]
 
-{set:inventory-name:FuelInventory}
-{set:inventory-description:List of items in the fuel inventory.}
+| FuelInventory | Object[] | List of items in the fuel inventory.
 include::../Models/_inventoryItem.adoc[]
 
 | PairedStation | String | Station name of the paired Station (None if not set).

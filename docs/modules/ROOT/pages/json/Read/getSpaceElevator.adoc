@@ -23,8 +23,7 @@ include::../_responseBody.adoc[]
 include::../Models/_location.adoc[]
 
 // CurrentPhase
-{set:inventory-name:CurrentPhase}
-{set:inventory-description:A list of required items for the current phase.}
+| CurrentPhase | Object[] | A list of required items for the current phase.
 include::../Models/_inventoryItem.adoc[]
 | &nbsp;&nbsp;RemainingCost | Integer | Remaining items to complete the phase item.
 | &nbsp;&nbsp;TotalCost | Integer | Total item amount required to complete the phase item.

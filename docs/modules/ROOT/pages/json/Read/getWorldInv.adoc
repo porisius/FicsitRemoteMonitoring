@@ -22,8 +22,7 @@ This does not include pipes/belts/factory buildings, only buildings whom purpose
 
 include::../_responseBody.adoc[]
 
-{set:inventory-name:}
-{set:inventory-description:A list of items.}
+| | Object[] | A list of items.
 include::../Models/_inventoryItem.adoc[]
 |===
 

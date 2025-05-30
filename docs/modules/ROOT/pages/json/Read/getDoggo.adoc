@@ -1,7 +1,7 @@
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= getDoggo
+= Get Doggo
 
 include::../_isGetAll.adoc[]
 
@@ -21,10 +21,11 @@ include::../_responseBody.adoc[]
 {set:key-description:Location details of the Doggo.}
 include::../Models/_location.adoc[]
 
-{set:inventory-name:Inventory}
-{set:inventory-description:List of items being carried by the doggo.}
+// inventory items
+| Inventory | Object[] | List of items being carried by the doggo.
 include::../Models/_inventoryItem.adoc[]
 
+// features
 include::../Models/_features.adoc[]
 
 |===

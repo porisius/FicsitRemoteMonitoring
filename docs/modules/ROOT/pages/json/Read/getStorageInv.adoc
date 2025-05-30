@@ -30,10 +30,11 @@ include::../_responseBody.adoc[]
 {set:key-description:Location details of the Storage Container.}
 include::../Models/_location.adoc[]
 
-{set:inventory-name:Inventory}
-{set:inventory-description:A list of items.}
+// inventory items
+| Inventory | Object[] | List of items in the Storage Container.
 include::../Models/_inventoryItem.adoc[]
 
+// features
 include::../Models/_features.adoc[]
 |===
 

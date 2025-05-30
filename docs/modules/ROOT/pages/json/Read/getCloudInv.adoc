@@ -21,8 +21,7 @@ This is inventory of the dimensional depot.
 
 include::../_responseBody.adoc[]
 
-{set:inventory-name:}
-{set:inventory-description:A list of items.}
+| | Object[] | A list of items.
 include::../Models/_inventoryItem.adoc[]
 |===
 
