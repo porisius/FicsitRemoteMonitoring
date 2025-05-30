@@ -733,6 +733,96 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("POST", "createPing", &AFicsitRemoteMonitoring::CreatePing).RequiresAuthentication().RequiresGameThread());
 }
 
+FString AFicsitRemoteMonitoring::FlavorTextRandomizer(EFlavorType FlavorType) {
+
+	auto World = GetWorld();	
+
+	FString DefaultPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/JSON/Outage.json";
+	FString JsonPath;
+	FString WebhookJson;
+	TSharedPtr<FJsonObject> FlavorJson;
+	TArray<FString> FlavorArray;
+	TArray<FString> BufferArray;
+	TArray<FString> DetrimentalArray;
+	TArray<FString> PositiveArray;
+				
+	auto config = FConfig_DiscITStruct::GetActiveConfig(World);
+
+
+	JsonPath = config.OutageJSON;
+
+	if (config.OutageJSON.IsEmpty()) { 
+		JsonPath = DefaultPath; 
+	}
+
+	UNotificationLoader::FileLoadString(JsonPath, WebhookJson);
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(WebhookJson);
+	FJsonSerializer::Deserialize(Reader, FlavorJson);
+
+	FlavorJson->TryGetStringArrayField("Any", FlavorArray);
+	FlavorJson->TryGetStringArrayField("Detrimental", DetrimentalArray);
+	FlavorJson->TryGetStringArrayField("Positive", PositiveArray);
+
+	switch (FlavorType)
+	{
+		case EFlavorType::Battery:
+			if (FlavorJson->TryGetStringArrayField("Battery", BufferArray))
+			{
+				FlavorArray.Append(BufferArray);
+				FlavorArray.Append(DetrimentalArray);
+			};
+			break;
+		
+		case EFlavorType::Power:
+			if (FlavorJson->TryGetStringArrayField("Power", BufferArray))
+			{
+				FlavorArray.Append(BufferArray);
+				FlavorArray.Append(DetrimentalArray);
+			};
+			break;
+		
+		case EFlavorType::Train:
+			if (FlavorJson->TryGetStringArrayField("Train", BufferArray))
+			{
+				FlavorArray.Append(BufferArray);
+				FlavorArray.Append(DetrimentalArray);
+			};
+			break;
+		
+		case EFlavorType::Doggo:
+			if (FlavorJson->TryGetStringArrayField("Doggo", BufferArray))
+			{
+				FlavorArray.Append(BufferArray);
+				FlavorArray.Append(PositiveArray);
+			};
+			break;
+		
+		case EFlavorType::Player:
+			if (FlavorJson->TryGetStringArrayField("Player", BufferArray))
+			{
+				FlavorArray.Append(BufferArray);
+				FlavorArray.Append(PositiveArray);
+			};
+			break;
+		
+		case EFlavorType::Research:
+			if (FlavorJson->TryGetStringArrayField("Research", BufferArray))
+			{
+				FlavorArray.Append(BufferArray);
+				FlavorArray.Append(PositiveArray);
+			};
+			break;
+	}
+	
+	
+	
+	int32 len = FlavorArray.Num();
+	int32 rng = UKismetMathLibrary::RandomIntegerInRange(0, len);
+
+	return FlavorArray[rng];
+
+}
+
 void AFicsitRemoteMonitoring::InitOutageNotification() {
 	#if !WITH_EDITOR
 

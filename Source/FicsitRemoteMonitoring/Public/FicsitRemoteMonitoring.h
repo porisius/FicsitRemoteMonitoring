@@ -38,6 +38,17 @@ struct FClientInfo
 	TArray<uWS::WebSocket<false, true, FWebSocketUserData>*> Client;  // Add the third template argument for USERDATA
 };
 
+UENUM( BlueprintType )
+enum class EFlavorType : uint8
+{
+	Battery,
+	Doggo,
+	Player,
+	Power,
+	Research,
+	Train
+};
+
 typedef void (AFicsitRemoteMonitoring::*FEndpointFunction)(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray);
 
 USTRUCT()
@@ -132,6 +143,9 @@ public:
 	
 	FCallEndpointResponse CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode);
 
+	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
+	FString FlavorTextRandomizer(EFlavorType FlavorType);
+	
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void GetDropPodInfo_BIE(const AFGDropPod* Droppod, TSubclassOf<UFGItemDescriptor>& ItemClass, int32& Amount, float& Power);
 
