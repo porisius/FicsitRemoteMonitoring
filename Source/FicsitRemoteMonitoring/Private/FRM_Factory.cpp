@@ -73,7 +73,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getElevators(UObject* WorldContext,
 
 	TArray<AFGBuildableElevator*> Elevators;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableElevator>(Elevators);
-	TArray<TSharedPtr<FJsonValue>> JConveyorBeltArray;
+	TArray<TSharedPtr<FJsonValue>> JElevatorArray;
 
 	for (AFGBuildableElevator* Elevator : Elevators) {
 
@@ -162,10 +162,10 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getElevators(UObject* WorldContext,
 		  Elevator->mDisplayName.ToString()
 		)));
 
-		JConveyorBeltArray.Add(MakeShared<FJsonValueObject>(JElevator));
+		JElevatorArray.Add(MakeShared<FJsonValueObject>(JElevator));
 	}
 
-	return JConveyorBeltArray;
+	return JElevatorArray;
 }
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getModList(UObject* WorldContext, FRequestData RequestData) {
