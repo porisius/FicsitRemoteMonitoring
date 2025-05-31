@@ -53,6 +53,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, FRe
 
 		JConveyorBelt->Values.Add("Name", MakeShared<FJsonValueString>(ConveyorBelt->mDisplayName.ToString()));
 		JConveyorBelt->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ConveyorBelt->GetClass())));
+		JConveyorBelt->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, ConveyorBelt->mColorSlot)));
 		JConveyorBelt->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorFactoryCompXYZ(ConveyorBelt, ConnectionZero)));
 		JConveyorBelt->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
 		JConveyorBelt->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorFactoryCompXYZ(ConveyorBelt, ConnectionOne)));
@@ -144,6 +145,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getElevators(UObject* WorldContext,
 		}
 
 		JElevator->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Elevator->GetClass())));
+		JElevator->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, Elevator->mColorSlot)));
 		JElevator->Values.Add("Status", MakeShared<FJsonValueString>(Status));
 		JElevator->Values.Add("ReadableStatus", MakeShared<FJsonValueString>(ReadableStatus));
 		JElevator->Values.Add("Speed", MakeShared<FJsonValueNumber>(Elevator->GetElevatorElevatorSpeed()));
@@ -284,6 +286,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, F
 		JFactory->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetClass())));
 		JFactory->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Manufacturer))));
 		JFactory->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Buildable, Buildable->GetCombinedClearanceBox())));
+		JFactory->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, Buildable->mColorSlot)));
 		JFactory->Values.Add("Recipe", MakeShared<FJsonValueString>(UFGRecipe::GetRecipeName(Manufacturer->GetCurrentRecipe()).ToString()));
 		JFactory->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetCurrentRecipe())));
 		JFactory->Values.Add("production", MakeShared<FJsonValueArray>(JProductArray));
@@ -345,6 +348,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHubTerminal(UObject* WorldContex
 		JHubTerminal->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(HubTerminal->GetClass())));
 		JHubTerminal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(HubTerminal))));
 		JHubTerminal->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(HubTerminal, HubTerminal->GetCombinedClearanceBox())));
+		JHubTerminal->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, HubTerminal->mColorSlot)));
 		//JHubTerminal->Values.Add("HUBLevel", MakeShared<FJsonValueNumber>(TradingPost->GetTradingPostLevel()));
 		JHubTerminal->Values.Add("HasActiveMilestone", MakeShared<FJsonValueBoolean>(bHasActiveMilestone));
 		JHubTerminal->Values.Add("ActiveMilestone", MakeShared<FJsonValueObject>(JSchematic));
@@ -409,6 +413,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getStorageInv(UObject* WorldContext
 		JStorage->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(StorageContainer->GetClass())));
 		JStorage->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(StorageContainer)));
 		JStorage->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(StorageContainer, StorageContainer->GetCombinedClearanceBox())));
+		JStorage->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, StorageContainer->mColorSlot)));
 		JStorage->Values.Add("Inventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(StorageInventory)));
 		JStorage->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(StorageContainer, StorageContainer->mDisplayName.ToString(), TEXT("Storage Container"))));
 
@@ -502,6 +507,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceExtractor(UObject* World
 		JExtractor->Values.Add("Name", MakeShared<FJsonValueString>(Extractor->mDisplayName.ToString()));
 		JExtractor->Values.Add("ClassName", MakeShared<FJsonValueString>(Extractor->GetClass()->GetName()));
 		JExtractor->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Extractor))));
+		JExtractor->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Extractor, Extractor->GetCombinedClearanceBox())));
+		JExtractor->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, Extractor->mColorSlot)));
 		JExtractor->Values.Add("Recipe", MakeShared<FJsonValueString>(ItemName));
 		JExtractor->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(ItemClassName));
 		JExtractor->Values.Add("production", MakeShared<FJsonValueArray>(JProductArray));
@@ -650,6 +657,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getRadarTower(UObject* WorldContext
 		JRadarTower->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(RadarTower->GetClass())));
 		JRadarTower->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(RadarTower))));
 		JRadarTower->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(RadarTower, RadarTower->GetCombinedClearanceBox())));
+		JRadarTower->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, RadarTower->mColorSlot)));
 		JRadarTower->Values.Add("RevealRadius", MakeShared<FJsonValueNumber>(RadarData->GetFogOfWarRevealRadius()));
 		JRadarTower->Values.Add("RevealType", MakeShared<FJsonValueString>(UEnum::GetDisplayValueAsText(RadarData->GetFogOfWarRevealType()).ToString()));
 		JRadarTower->Values.Add("ScannedResourceNodes", MakeShared<FJsonValueArray>(JScannedResourceNodes));
@@ -676,6 +684,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getResourceSinkBuilding(UObject* Wo
 		TSharedPtr<FJsonObject> JSinkBuilding = UFRM_Library::CreateBaseJsonObject(Sink);
 		JSinkBuilding->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Sink)));
 		JSinkBuilding->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Sink, Sink->GetCombinedClearanceBox())));
+		JSinkBuilding->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, Sink->mColorSlot)));
 		JSinkBuilding->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Sink->GetPowerInfo())));
 		JResourceSinkBuildingArray.Add(MakeShared<FJsonValueObject>(JSinkBuilding));
 	}
@@ -695,6 +704,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPump(UObject* WorldContext, FReq
 		JPump->Values.Add("Name", MakeShared<FJsonValueString>(Pump->mDisplayName.ToString()));
 		JPump->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Pump)));
 		JPump->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Pump, Pump->GetCombinedClearanceBox())));
+		JPump->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, Pump->mColorSlot)));
 		JPump->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Pump->GetPowerInfo())));
 		JPumpArray.Add(MakeShared<FJsonValueObject>(JPump));
 	}
@@ -714,6 +724,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPortal(UObject* WorldContext, FR
 		JPortal->Values.Add("Name", MakeShared<FJsonValueString>(Portal->mDisplayName.ToString()));
 		JPortal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Portal)));
 		JPortal->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Portal, Portal->GetCombinedClearanceBox())));
+		JPortal->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, Portal->mColorSlot)));
 		JPortal->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Portal->GetPowerInfo())));
 		JPortalArray.Add(MakeShared<FJsonValueObject>(JPortal));
 	}
@@ -726,6 +737,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPortal(UObject* WorldContext, FR
 		JPortal->Values.Add("Name", MakeShared<FJsonValueString>(Portal->mDisplayName.ToString()));
 		JPortal->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Portal)));
 		JPortal->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Portal, Portal->GetCombinedClearanceBox())));
+		JPortal->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, Portal->mColorSlot)));
 		JPortal->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Portal->GetPowerInfo())));
 		JPortalArray.Add(MakeShared<FJsonValueObject>(JPortal));
 	}
@@ -745,6 +757,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHypertube(UObject* WorldContext,
 		TSharedPtr<FJsonObject> JHypertube = UFRM_Library::CreateBaseJsonObject(Hypertube);
 		JHypertube->Values.Add("Name", MakeShared<FJsonValueString>(Hypertube->mDisplayName.ToString()));
 		JHypertube->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Hypertube)));
+		JHypertube->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, Hypertube->mColorSlot)));
 		JHypertube->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Hypertube->GetPowerInfo())));
 		JHypertubeArray.Add(MakeShared<FJsonValueObject>(JHypertube));
 	}
@@ -763,6 +776,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFrackingActivator(UObject* World
 		TSharedPtr<FJsonObject> JFrackingActivator = UFRM_Library::CreateBaseJsonObject(Fracking);
 		JFrackingActivator->Values.Add("Name", MakeShared<FJsonValueString>(Fracking->mDisplayName.ToString()));
 		JFrackingActivator->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Fracking)));
+		JFrackingActivator->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, Fracking->mColorSlot)));
 		JFrackingActivator->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Fracking->GetPowerInfo())));
 		JFrackingActivatorArray.Add(MakeShared<FJsonValueObject>(JFrackingActivator));
 	}
@@ -802,6 +816,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getSpaceElevator(UObject* WorldCont
 		JSpaceElevator->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(SpaceElevator->GetClass())));
 		JSpaceElevator->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(SpaceElevator)));
 		JSpaceElevator->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(SpaceElevator, SpaceElevator->GetCombinedClearanceBox())));
+		JSpaceElevator->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, SpaceElevator->mColorSlot)));
 		JSpaceElevator->Values.Add("CurrentPhase", MakeShared<FJsonValueArray>(JCurrentPhaseArray));
 		JSpaceElevator->Values.Add("FullyUpgraded", MakeShared<FJsonValueBoolean>(SpaceElevator->IsFullyUpgraded()));
 		JSpaceElevator->Values.Add("UpgradeReady", MakeShared<FJsonValueBoolean>(SpaceElevator->IsReadyToUpgrade()));
@@ -850,6 +865,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPipes(UObject* WorldContext, FRe
 		JPipe->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
 		JPipe->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorPipeXYZ(Pipe, ConnectionOne)));
 		JPipe->Values.Add("Connected1", MakeShared<FJsonValueBoolean>(ConnectionOne->IsConnected()));
+		JPipe->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, Pipe->mColorSlot)));
 		JPipe->Values.Add("Length", MakeShared<FJsonValueNumber>(Pipe->GetLength()));
 		JPipe->Values.Add("Speed", MakeShared<FJsonValueNumber>(Pipe->GetFlowLimit()));
 		JPipe->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Pipe), Pipe->mDisplayName.ToString(), Pipe->mDisplayName.ToString())));
@@ -904,6 +920,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getCables(UObject* WorldContext, FR
 		JPowerWire->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(PowerWire->GetClass())));
 		JPowerWire->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::ConvertVectorToFJsonObject(PowerWire->GetConnectionLocation(0))));
 		JPowerWire->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::ConvertVectorToFJsonObject(PowerWire->GetConnectionLocation(1))));
+		JPowerWire->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, PowerWire->mColorSlot)));
 		JPowerWire->Values.Add("Length", MakeShared<FJsonValueNumber>(PowerWire->GetLength()));
 		JPowerWire->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::GetActorLineFeaturesJSON(PowerWire->GetConnectionLocation(0), PowerWire->GetConnectionLocation(1), PowerWire->mDisplayName.ToString(), PowerWire->mDisplayName.ToString())));
 

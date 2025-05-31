@@ -1,6 +1,7 @@
 #include "FRM_Library.h"
 
 #include "Config_FactoryStruct.h"
+#include "FGBuildableSubsystem.h"
 #include "FGCharacterPlayer.h"
 #include "FGFactoryConnectionComponent.h"
 #include "FGInventoryLibrary.h"
@@ -75,6 +76,18 @@ TSharedPtr<FJsonObject> UFRM_Library::ConvertVectorToFJsonObject(FVector PowerWi
 	return JLibrary;
 
 };
+
+TSharedPtr<FJsonObject> UFRM_Library::ColorSlotToJson(AFGBuildableSubsystem* BuildableSubsystem, uint8 ColorSlot)
+{
+	TSharedPtr<FJsonObject> Json = MakeShared<FJsonObject>();
+
+	FFactoryCustomizationColorSlot ColorData = BuildableSubsystem->GetColorSlot_Data(ColorSlot);
+
+	Json->SetStringField("PrimaryColor", LinearColorToHex(ColorData.PrimaryColor));
+	Json->SetStringField("SecondaryColor", LinearColorToHex(ColorData.SecondaryColor));
+
+	return Json;
+}
 
 TSharedPtr<FJsonObject> UFRM_Library::FBoxToJson(AFGBuildable* Buildable, const FBox& Box)
 {

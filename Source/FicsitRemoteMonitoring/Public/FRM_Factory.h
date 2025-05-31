@@ -41,4 +41,5 @@ public:
 	friend class AFGSchematicManager;
 	friend class AFGBuildableFactory;
 	friend class AFGBuildableRadarTower;
+	friend class AFGBuildable;
 };
