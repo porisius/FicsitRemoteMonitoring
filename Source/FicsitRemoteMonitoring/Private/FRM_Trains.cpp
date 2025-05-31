@@ -261,7 +261,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 			JTrainPlatform->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(TrainPlatform->GetClass())));
 			JTrainPlatform->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(TrainPlatform)));
 			JTrainPlatform->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(TrainPlatform, TrainPlatform->GetCombinedClearanceBox())));
-			JTrainPlatform->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, TrainPlatform->mColorSlot)));
+			JTrainPlatform->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(TrainPlatform)));
 			JTrainPlatform->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(TrainPlatform->GetPowerInfo())));
 			JTrainPlatform->Values.Add("TransferRate", MakeShared<FJsonValueNumber>(CargoTransferRate));
 			JTrainPlatform->Values.Add("InflowRate", MakeShared<FJsonValueNumber>(CargoInFlowRate));
@@ -280,7 +280,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 		JTrainStation->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(RailStation->GetClass())));
 		JTrainStation->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(TrainStation->GetStation())));
 		JTrainStation->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(TrainStation->GetStation(), TrainStation->GetStation()->GetCombinedClearanceBox())));
-		JTrainStation->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, TrainStation->GetStation()->mColorSlot)));
+		JTrainStation->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(TrainStation->GetStation())));
 		JTrainStation->Values.Add("TransferRate", MakeShared<FJsonValueNumber>(TransferRate));
 		JTrainStation->Values.Add("InflowRate", MakeShared<FJsonValueNumber>(InFlowRate));
 		JTrainStation->Values.Add("OutflowRate", MakeShared<FJsonValueNumber>(OutFlowRate));
@@ -315,7 +315,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainRails(UObject* WorldContext,
 		
 		JRailroadTrack->Values.Add("Name", MakeShared<FJsonValueString>(RailroadTrack->mDisplayName.ToString()));
 		JRailroadTrack->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(RailroadTrack->GetClass())));
-		JRailroadTrack->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(BuildableSubsystem, RailroadTrack->mColorSlot)));
+		JRailroadTrack->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(RailroadTrack)));
 		JRailroadTrack->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::ConvertVectorToFJsonObject(ConnectionZero->GetConnectorLocation())));
 		JRailroadTrack->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
 		JRailroadTrack->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::ConvertVectorToFJsonObject(ConnectionOne->GetConnectorLocation())));

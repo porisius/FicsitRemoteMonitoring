@@ -77,14 +77,24 @@ TSharedPtr<FJsonObject> UFRM_Library::ConvertVectorToFJsonObject(FVector PowerWi
 
 };
 
-TSharedPtr<FJsonObject> UFRM_Library::ColorSlotToJson(AFGBuildableSubsystem* BuildableSubsystem, uint8 ColorSlot)
+TSharedPtr<FJsonObject> UFRM_Library::ColorSlotToJson(AFGBuildable* Buildable)
 {
 	TSharedPtr<FJsonObject> Json = MakeShared<FJsonObject>();
 
-	FFactoryCustomizationColorSlot ColorData = BuildableSubsystem->GetColorSlot_Data(ColorSlot);
+	TArray<float> FactoryCustomizationData = Buildable->GetCustomizationData_Implementation().Data;
 
-	Json->SetStringField("PrimaryColor", LinearColorToHex(ColorData.PrimaryColor));
-	Json->SetStringField("SecondaryColor", LinearColorToHex(ColorData.SecondaryColor));
+	FLinearColor PrimaryColor = FLinearColor( FactoryCustomizationData[0],
+											  FactoryCustomizationData[1],
+											  FactoryCustomizationData[2],
+											  0.0);
+
+	FLinearColor SecondaryColor = FLinearColor(FactoryCustomizationData[3],
+											   FactoryCustomizationData[4],
+											   FactoryCustomizationData[5],
+											   0.0);
+	
+	Json->SetStringField("PrimaryColor", LinearColorToHex(PrimaryColor));
+	Json->SetStringField("SecondaryColor", LinearColorToHex(SecondaryColor));
 
 	return Json;
 }
@@ -92,7 +102,7 @@ TSharedPtr<FJsonObject> UFRM_Library::ColorSlotToJson(AFGBuildableSubsystem* Bui
 TSharedPtr<FJsonObject> UFRM_Library::FBoxToJson(AFGBuildable* Buildable, const FBox& Box)
 {
 	TSharedPtr<FJsonObject> Json = MakeShared<FJsonObject>();
-
+	
 	const long double actorX = Buildable->GetActorLocation().X;
 	const long double actorY = Buildable->GetActorLocation().Y;
 	const long double actorZ = Buildable->GetActorLocation().Z;
