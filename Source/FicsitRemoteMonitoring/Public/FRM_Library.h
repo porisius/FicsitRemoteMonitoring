@@ -32,6 +32,7 @@ public:
 	static TSharedPtr<FJsonObject> GetItemValueObject(const FInventoryStack& Item);
 	static TSharedPtr<FJsonObject> GetResourceNodeJSON(AActor* Actor, const bool bIncludeFeatures = false);
 	static TSharedPtr<FJsonObject> CreateBaseJsonObject(const UObject* Actor);
+	static TSharedPtr<FJsonObject> CreateBuildableBaseJsonObject(AFGBuildable* Buildable);
 	static FString APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext);
 	static bool IsIntInRange(int32 Number, int32 LowerBound, int32 UpperBound);
 	static TSharedPtr<FJsonObject> GetActorLineFeaturesJSON(FVector PointOne, FVector PointTwo, FString DisplayName, FString TypeName);

@@ -68,7 +68,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getSwitches(UObject* WorldContext)
 
 	for (AFGBuildableCircuitSwitch* PowerSwitch : PowerSwitches) {
 
-		TSharedPtr<FJsonObject> JSwitches = UFRM_Library::CreateBaseJsonObject(PowerSwitch);
+		TSharedPtr<FJsonObject> JSwitches = UFRM_Library::CreateBuildableBaseJsonObject(PowerSwitch);
 
 		UFGCircuitConnectionComponent* ConnectionZero = PowerSwitch->GetConnection0();
 		UFGCircuitConnectionComponent* ConnectionOne = PowerSwitch->GetConnection1();
@@ -82,9 +82,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getSwitches(UObject* WorldContext)
 		}
 
 		FString Name = PowerSwitch->GetBuildingTag_Implementation();
-		JSwitches->Values.Add("Name", MakeShared<FJsonValueString>(Name));
-		JSwitches->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(PowerSwitch->GetClass())));
-		JSwitches->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(PowerSwitch)));
 		JSwitches->Values.Add("SwitchTag", MakeShared<FJsonValueString>(PowerSwitch->GetBuildingTag_Implementation()));
 		JSwitches->Values.Add("Connected0", MakeShared<FJsonValueNumber>(ConnectionZero->IsConnected()));
 		JSwitches->Values.Add("IsOn", MakeShared<FJsonValueBoolean>(PowerSwitch->IsSwitchOn()));
@@ -203,7 +200,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 
 	for (AFGBuildable* Buildable : Buildables) {
 
-		TSharedPtr<FJsonObject> JGenerator = UFRM_Library::CreateBaseJsonObject(Buildable);
+		TSharedPtr<FJsonObject> JGenerator = UFRM_Library::CreateBuildableBaseJsonObject(Buildable);
 
 		AFGBuildableGenerator* Generator = Cast<AFGBuildableGenerator>(Buildable);
 		AFGBuildableGeneratorFuel* GeneratorFuel = Cast<AFGBuildableGeneratorFuel>(Buildable);
@@ -303,10 +300,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Power::getGenerators(UObject* WorldContext, 
 		float RegDynamicProduction = PowerInfo->GetRegulatedDynamicProduction();
 		bool IsFullBlast = PowerInfo->IsFullBlast();
 
-		JGenerator->Values.Add("Name", MakeShared<FJsonValueString>(Generator->mDisplayName.ToString()));
-		JGenerator->Values.Add("ClassName", MakeShared<FJsonValueString>(Generator->GetClass()->GetName()));
-		JGenerator->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Cast<AActor>(Generator))));
-		JGenerator->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Generator, Generator->GetCombinedClearanceBox())));
 		JGenerator->Values.Add("BaseProd", MakeShared<FJsonValueNumber>(Generator->GetPowerProductionCapacity()));
 		JGenerator->Values.Add("DynamicProdCapacity", MakeShared<FJsonValueNumber>(DynProductionCapacity));
 		JGenerator->Values.Add("DynamicProdDemandFactor", MakeShared<FJsonValueNumber>(DynProductionDemand));

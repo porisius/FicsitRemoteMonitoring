@@ -188,7 +188,6 @@ static FString DockingStatusToString(const ETrainPlatformDockingStatus DockingSt
 TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContext) {
 	TArray<TSharedPtr<FJsonValue>> JTrainStationArray;
 	AFGRailroadSubsystem* RailroadSubsystem = AFGRailroadSubsystem::Get(WorldContext);
-	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext);
 	
 	if (!IsValid(RailroadSubsystem)) {
 		return JTrainStationArray;
@@ -255,13 +254,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 				TrainPlatformInventory = UFRM_Library::GetGroupedInventoryItems(TrainPlatformCargo->GetInventory());
 			}
 
-			TSharedPtr<FJsonObject> JTrainPlatform = UFRM_Library::CreateBaseJsonObject(TrainPlatform);
+			TSharedPtr<FJsonObject> JTrainPlatform = UFRM_Library::CreateBuildableBaseJsonObject(TrainPlatform);
 
-			JTrainPlatform->Values.Add("Name", MakeShared<FJsonValueString>(TrainPlatform->mDisplayName.ToString()));
-			JTrainPlatform->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(TrainPlatform->GetClass())));
-			JTrainPlatform->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(TrainPlatform)));
-			JTrainPlatform->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(TrainPlatform, TrainPlatform->GetCombinedClearanceBox())));
-			JTrainPlatform->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(TrainPlatform)));
 			JTrainPlatform->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(TrainPlatform->GetPowerInfo())));
 			JTrainPlatform->Values.Add("TransferRate", MakeShared<FJsonValueNumber>(CargoTransferRate));
 			JTrainPlatform->Values.Add("InflowRate", MakeShared<FJsonValueNumber>(CargoInFlowRate));
@@ -274,13 +268,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainStation(UObject* WorldContex
 			JTrainPlatformArray.Add(MakeShared<FJsonValueObject>(JTrainPlatform));
 		}
 
-		TSharedPtr<FJsonObject> JTrainStation = UFRM_Library::CreateBaseJsonObject(TrainStation);
+		TSharedPtr<FJsonObject> JTrainStation = UFRM_Library::CreateBuildableBaseJsonObject(TrainStation->GetStation());
 
-		JTrainStation->Values.Add("Name", MakeShared<FJsonValueString>(TrainStation->GetStationName().ToString()));
-		JTrainStation->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(RailStation->GetClass())));
-		JTrainStation->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(TrainStation->GetStation())));
-		JTrainStation->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(TrainStation->GetStation(), TrainStation->GetStation()->GetCombinedClearanceBox())));
-		JTrainStation->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(TrainStation->GetStation())));
 		JTrainStation->Values.Add("TransferRate", MakeShared<FJsonValueNumber>(TransferRate));
 		JTrainStation->Values.Add("InflowRate", MakeShared<FJsonValueNumber>(InFlowRate));
 		JTrainStation->Values.Add("OutflowRate", MakeShared<FJsonValueNumber>(OutFlowRate));
@@ -305,7 +294,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainRails(UObject* WorldContext,
 
 		if (!IsValid(RailroadTrack)) { continue; }
 
-		TSharedPtr<FJsonObject> JRailroadTrack = UFRM_Library::CreateBaseJsonObject(RailroadTrack);
+		TSharedPtr<FJsonObject> JRailroadTrack = UFRM_Library::CreateBuildableBaseJsonObject(RailroadTrack);
 		
 		UFGRailroadTrackConnectionComponent* ConnectionZero = RailroadTrack->GetConnection(0);
 		UFGRailroadTrackConnectionComponent* ConnectionOne = RailroadTrack->GetConnection(1);
@@ -313,9 +302,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainRails(UObject* WorldContext,
 		FVector PointZero = ConnectionZero->GetConnectorLocation();
 		FVector PointOne = ConnectionOne->GetConnectorLocation();
 		
-		JRailroadTrack->Values.Add("Name", MakeShared<FJsonValueString>(RailroadTrack->mDisplayName.ToString()));
-		JRailroadTrack->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(RailroadTrack->GetClass())));
-		JRailroadTrack->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(RailroadTrack)));
 		JRailroadTrack->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::ConvertVectorToFJsonObject(ConnectionZero->GetConnectorLocation())));
 		JRailroadTrack->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
 		JRailroadTrack->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::ConvertVectorToFJsonObject(ConnectionOne->GetConnectorLocation())));

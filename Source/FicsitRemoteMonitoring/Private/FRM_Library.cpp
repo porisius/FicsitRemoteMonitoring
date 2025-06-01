@@ -1,6 +1,9 @@
 #include "FRM_Library.h"
 
 #include "Config_FactoryStruct.h"
+#include "FGBuildableCircuitSwitch.h"
+#include "FGBuildableDroneStation.h"
+#include "FGBuildableRailroadStation.h"
 #include "FGBuildableSubsystem.h"
 #include "FGCharacterPlayer.h"
 #include "FGFactoryConnectionComponent.h"
@@ -10,6 +13,7 @@
 #include "FGPowerInfoComponent.h"
 #include "FGResourceNode.h"
 #include "FGSchematicManager.h"
+#include "FGTrainStationIdentifier.h"
 #include "FicsitRemoteMonitoring.h"
 #include "FicsitRemoteMonitoringModule.h"
 #include "FRM_Factory.h"
@@ -415,6 +419,38 @@ TSharedPtr<FJsonObject> UFRM_Library::CreateBaseJsonObject(const UObject* Actor)
 {
 	TSharedPtr<FJsonObject> JObject = MakeShared<FJsonObject>();
 	JObject->Values.Add("ID", MakeShared<FJsonValueString>(Actor->GetName()));
+
+	return JObject;
+}
+
+TSharedPtr<FJsonObject> UFRM_Library::CreateBuildableBaseJsonObject(AFGBuildable* Buildable)
+{
+	TSharedPtr<FJsonObject> JObject = MakeShared<FJsonObject>();
+	JObject->Values.Add("ID", MakeShared<FJsonValueString>(Buildable->GetName()));
+	
+	if (AFGBuildableDroneStation* DroneStation = Cast<AFGBuildableDroneStation>(Buildable))
+	{
+		JObject->Values.Add("Name", MakeShared<FJsonValueString>(UFRM_Drones::getDronePortName(DroneStation)));
+	} else if (AFGBuildableRailroadStation* RailroadStation = Cast<AFGBuildableRailroadStation>(Buildable))
+	{
+		if (AFGTrainStationIdentifier* StationIdentifier = RailroadStation->GetStationIdentifier())
+		{
+			JObject->Values.Add("Name", MakeShared<FJsonValueString>(StationIdentifier->GetStationName().ToString()));
+		}
+	} else 	if (AFGBuildableCircuitSwitch* PowerSwitch = Cast<AFGBuildableCircuitSwitch>(Buildable))
+	{
+		FString Name = PowerSwitch->GetBuildingTag_Implementation();
+		JObject->Values.Add("Name", MakeShared<FJsonValueString>(Name));	
+	} else
+	{
+		JObject->Values.Add("Name", MakeShared<FJsonValueString>(Buildable->mDisplayName.ToString()));
+	}
+	
+	
+	JObject->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Buildable->GetClass())));
+	JObject->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Buildable)));
+	JObject->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(FBoxToJson(Buildable, Buildable->GetCombinedClearanceBox())));
+	JObject->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(ColorSlotToJson(Buildable)));
 
 	return JObject;
 }

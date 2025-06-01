@@ -23,7 +23,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 	// Factory Building Production Stats
 	for (AFGBuildableDroneStation* DroneStation : DroneStations) {
 		
-		TSharedPtr<FJsonObject> JDroneStation = UFRM_Library::CreateBaseJsonObject(DroneStation);
+		TSharedPtr<FJsonObject> JDroneStation = UFRM_Library::CreateBuildableBaseJsonObject(DroneStation);
 
 		// get fuel inventory
 		TMap<TSubclassOf<UFGItemDescriptor>, int32> FuelInventory = UFRM_Library::GetGroupedInventoryItems(DroneStation->GetFuelInventory());
@@ -86,9 +86,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Drones::getDroneStation(UObject* WorldContex
 			JFuelInfoArray.Add(MakeShared<FJsonValueObject>(JFuelInfo));
 		}
 
-		JDroneStation->Values.Add("Name", MakeShared<FJsonValueString>(UFRM_Drones::getDronePortName(DroneStation)));
-		JDroneStation->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(DroneStation->GetClass())));
-		JDroneStation->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(DroneStation)));
 		JDroneStation->Values.Add("InputInventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(InputInventory)));
 		JDroneStation->Values.Add("OutputInventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(OutputInventory)));
 		JDroneStation->Values.Add("FuelInventory", MakeShared<FJsonValueArray>(UFRM_Library::GetInventoryJSON(FuelInventory)));

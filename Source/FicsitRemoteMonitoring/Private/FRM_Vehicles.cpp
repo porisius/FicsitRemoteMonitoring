@@ -18,7 +18,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getTruckStation(UObject* WorldCont
 	// Factory Building Production Stats
 	for (AFGBuildableDockingStation* TruckStation : Buildables) {
 
-		TSharedPtr<FJsonObject> JTruckStation = UFRM_Library::CreateBaseJsonObject(TruckStation);
+		TSharedPtr<FJsonObject> JTruckStation = UFRM_Library::CreateBuildableBaseJsonObject(TruckStation);
 
 		FString LoadMode;
 		if (TruckStation->GetIsInLoadMode()) {
@@ -60,9 +60,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getTruckStation(UObject* WorldCont
 		// get inventory
 		TMap<TSubclassOf<UFGItemDescriptor>, int32> Inventory = UFRM_Library::GetGroupedInventoryItems(TruckStation->GetInventory());
 
-		JTruckStation->Values.Add("Name", MakeShared<FJsonValueString>(TruckStation->mDisplayName.ToString()));
-		JTruckStation->Values.Add("ClassName", MakeShared<FJsonValueString>(TruckStation->GetClass()->GetName()));
-		JTruckStation->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(TruckStation)));
 		JTruckStation->Values.Add("DockVehicleCount", MakeShared<FJsonValueNumber>(TruckStation->GetDockingVehicleCount()));
 		JTruckStation->Values.Add("LoadMode", MakeShared<FJsonValueString>(LoadMode));
 		JTruckStation->Values.Add("TransferRate", MakeShared<FJsonValueNumber>(TruckStation->GetItemTransferRate()));
