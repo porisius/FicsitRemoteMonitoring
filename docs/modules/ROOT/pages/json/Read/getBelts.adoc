@@ -17,6 +17,14 @@ include::../_responseBody.adoc[]
 | Name | String | Name of the Belt Type.
 | ClassName | String | Class Name of the Belt.
 
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
 {set:key-name:location0}
 {set:key-description:Start Location of the Belt}
 include::../Models/_location.adoc[tags=!rotation]

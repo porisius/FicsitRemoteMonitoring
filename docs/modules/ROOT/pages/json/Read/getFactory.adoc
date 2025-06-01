@@ -58,6 +58,10 @@ include::../Models/_location.adoc[]
 // power info fields
 include::../Models/_powerInfo.adoc[]
 
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
 // bounding box
 {set:key-name:BoundingBox}
 include::../Models/_boundingBox.adoc[]

@@ -17,6 +17,14 @@ include::../_responseBody.adoc[]
 | Name | String | Name of the Drone Station.
 | ClassName | String | ClassName of the Drone Station.
 
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
 {set:key-name:location}
 {set:key-description:Location details of the Drone.}
 include::../Models/_location.adoc[]

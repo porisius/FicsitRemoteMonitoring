@@ -27,6 +27,14 @@ include::../_responseBody.adoc[]
 | HasPower | Boolean | Indicates whether the elevator has power.
 | IsOccupied | Boolean | Indicates if any player is inside the Elevator Cabin.
 
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
 // location fields
 {set:key-name:location}
 {set:key-description:Location details of the Elevator.}

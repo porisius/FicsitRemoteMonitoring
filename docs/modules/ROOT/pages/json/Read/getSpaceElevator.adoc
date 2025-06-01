@@ -22,6 +22,14 @@ include::../_responseBody.adoc[]
 {set:key-description:Location details of the Space Elevator.}
 include::../Models/_location.adoc[]
 
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
 // CurrentPhase
 | CurrentPhase | Object[] | A list of required items for the current phase.
 include::../Models/_inventoryItem.adoc[]
