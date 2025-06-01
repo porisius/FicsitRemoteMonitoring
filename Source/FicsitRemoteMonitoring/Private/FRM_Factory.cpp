@@ -53,6 +53,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, FRe
 
 		JConveyorBelt->Values.Add("Name", MakeShared<FJsonValueString>(ConveyorBelt->mDisplayName.ToString()));
 		JConveyorBelt->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ConveyorBelt->GetClass())));
+		JConveyorBelt->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(ConveyorBelt, ConveyorBelt->GetCombinedClearanceBox())));
 		JConveyorBelt->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(ConveyorBelt)));
 		JConveyorBelt->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorFactoryCompXYZ(ConveyorBelt, ConnectionZero)));
 		JConveyorBelt->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
@@ -145,6 +146,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getElevators(UObject* WorldContext,
 		}
 
 		JElevator->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Elevator->GetClass())));
+		JElevator->Values.Add("BoundingBox", MakeShared<FJsonValueObject>(UFRM_Library::FBoxToJson(Elevator, Elevator->GetCombinedClearanceBox())));
 		JElevator->Values.Add("ColorSlot", MakeShared<FJsonValueObject>(UFRM_Library::ColorSlotToJson(Elevator)));
 		JElevator->Values.Add("Status", MakeShared<FJsonValueString>(Status));
 		JElevator->Values.Add("ReadableStatus", MakeShared<FJsonValueString>(ReadableStatus));
