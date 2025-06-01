@@ -27,6 +27,7 @@ List of included endpoints:
 | Factory | xref:json/Read/getSpaceElevator.adoc[getSpaceElevator] | Gets a list of all space elevators.
 | Factory | xref:json/Read/getHUBTerminal.adoc[getHUBTerminal] | Gets a list of the HUB Terminals.
 | Factory | xref:json/Read/getSwitches.adoc[getSwitches] | Gets a list of all switches (priority power switches and power switches).
+| Factory | xref:json/Read/getSplitterMerger.adoc[getSplitterMerger] | Gets a list of all Splitters and Mergers (priority mergers and smart/programmable splitters).
 
 | Generators | xref:json/Read/getGenerators.adoc[getGenerators] | Gets a list of all generators (biomass burners, coal generators, etc.).
 
