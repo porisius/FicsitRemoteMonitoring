@@ -29,7 +29,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 		TSharedPtr<FJsonObject> JTrain = UFRM_Library::CreateBaseJsonObject(Train);
 		TArray<TSharedPtr<FJsonValue>> JTimetableArray;
 
-		AFGLocomotive* MasterTrain = Train->GetMultipleUnitMaster();
+		AFGRailroadVehicle* FirstVehicle = Train->GetFirstVehicle();
 
 		float TTotalMass = 0.0;
 		float TPayloadMass = 0.0;
@@ -84,7 +84,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrains(UObject* WorldContext) {
 			
 		} else {
 
-			TrainLocation = UFRM_Library::getActorJSON(Train);
+			TrainLocation = UFRM_Library::getActorJSON(FirstVehicle);
 
 		}
 
