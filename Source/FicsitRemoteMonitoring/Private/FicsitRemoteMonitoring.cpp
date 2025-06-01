@@ -706,6 +706,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getStorageInv", &AFicsitRemoteMonitoring::getStorageInv).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getSwitches", &AFicsitRemoteMonitoring::getSwitches).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getTractor", &AFicsitRemoteMonitoring::getTractor));
+	RegisterEndpoint(FAPIEndpoint("GET", "getTradingPost", &AFicsitRemoteMonitoring::getTradingPost).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getTrains", &AFicsitRemoteMonitoring::getTrains).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getTrainRails", &AFicsitRemoteMonitoring::getTrainRails).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getTrainStation", &AFicsitRemoteMonitoring::getTrainStation).GetAll());

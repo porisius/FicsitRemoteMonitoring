@@ -18,6 +18,7 @@
 #include "FRM_Vehicles.h"
 #include "FRM_World.h"
 #include "getSplitterMerger.h"
+#include "getTradingPost.h"
 #include "ModSubsystem.h"
 #include "Endpoints/Factory/setEnabled.h"
 
@@ -497,6 +498,10 @@ public:
 
 	void setEnabled(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = USetEnabled::setEnabled(WorldContext, RequestData);
+	}
+
+	void getTradingPost(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UGetTradingPost::getTradingPost(WorldContext);
 	}
 	
 	void getTractor(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
