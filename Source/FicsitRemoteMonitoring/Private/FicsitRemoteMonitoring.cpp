@@ -261,7 +261,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
             	{
             		UFRM_RequestLibrary::AddResponseHeaders(res, false);
             		res->writeHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-            			->writeHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+            			->writeHeader("Access-Control-Allow-Headers", "Content-Type, X-FRM-Authorization");
             		res->end();
             	});
             	
@@ -299,10 +299,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 			            	{
 			            		return UFRM_RequestLibrary::SendErrorMessage(res, "400 Bad Request", FString("Invalid Request Body"));
 			            	}
-			            	
-							res->writeHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-								->writeHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-FRM-Authorization");
-			            	
+
 			            	HandleApiRequest(World, res, req, RelativePath, RequestData);
 			            }
 			            catch (const std::exception &e)
