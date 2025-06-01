@@ -50,6 +50,7 @@
 **** xref:json/Read/getResourceSinkBuilding.adoc[getResourceSinkBuilding]
 **** xref:json/Read/getFactory.adoc[getSmelter]
 **** xref:json/Read/getSpaceElevator.adoc[getSpaceElevator]
+**** xref:json/Read/getSplitterMerger.adoc[getSplitterMerger]
 **** xref:json/Read/getSwitches.adoc[getSwitches]
 **** xref:json/Read/getTrainRails.adoc[getTrainRails]
 
