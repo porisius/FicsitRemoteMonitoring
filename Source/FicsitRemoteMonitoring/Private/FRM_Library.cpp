@@ -439,8 +439,7 @@ TSharedPtr<FJsonObject> UFRM_Library::CreateBuildableBaseJsonObject(AFGBuildable
 		}
 	} else 	if (AFGBuildableCircuitSwitch* PowerSwitch = Cast<AFGBuildableCircuitSwitch>(Buildable))
 	{
-		FString Name = PowerSwitch->GetBuildingTag_Implementation();
-		JObject->Values.Add("Name", MakeShared<FJsonValueString>(Name));	
+		JObject->Values.Add("Name", MakeShared<FJsonValueString>(PowerSwitch->GetBuildingTag_Implementation()));	
 	} else
 	{
 		JObject->Values.Add("Name", MakeShared<FJsonValueString>(Buildable->mDisplayName.ToString()));

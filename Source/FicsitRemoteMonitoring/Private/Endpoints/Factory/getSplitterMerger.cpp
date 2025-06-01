@@ -31,7 +31,11 @@ TArray<TSharedPtr<FJsonValue>> UGetSplitterMerger::getSplitterMerger(UObject* Wo
 		if (AFGBuildableSplitterSmart* Splitter = Cast<AFGBuildableSplitterSmart>(ConveyorAttachment))
 		{
 			TArray<FSplitterSortRule> SortRules = Splitter->GetSortRules();
-			TArray<TSharedPtr<FJsonValue>> JSplitterArray;
+			TSharedPtr<FJsonObject> JConfiguration;
+			
+			TArray<TSharedPtr<FJsonValue>> JLeft;
+			TArray<TSharedPtr<FJsonValue>> JCenter;
+			TArray<TSharedPtr<FJsonValue>> JRight;
 			
 			for (FSplitterSortRule SortRule : SortRules)
 			{
@@ -39,20 +43,22 @@ TArray<TSharedPtr<FJsonValue>> UGetSplitterMerger::getSplitterMerger(UObject* Wo
 				FString SplitterDirection = "Unknown";
 				switch (SortRule.OutputIndex) {
 				case 0:
-					SplitterDirection = "Center";
+					JCenter.Add(MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(SortRule.ItemClass).ToString()));
 					break;
 				case 1:
-					SplitterDirection = "Right";
+					JRight.Add(MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(SortRule.ItemClass).ToString()));
 					break;
 				case 2:
-					SplitterDirection = "Left";
+					JLeft.Add(MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(SortRule.ItemClass).ToString()));
 					break;
 				}
-				JSplitter->Values.Add("Item", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(SortRule.ItemClass).ToString()));
-				JSplitter->Values.Add("Direction", MakeShared<FJsonValueString>(SplitterDirection));
-				JSplitterArray.Add(MakeShared<FJsonValueObject>(JSplitter));
 			}
-			JConveyorAttachment->Values.Add("Splitter", MakeShared<FJsonValueArray>(JSplitterArray));	
+
+			JConfiguration->Values.Add("Left", MakeShared<FJsonValueArray>(JLeft));
+			JConfiguration->Values.Add("Center", MakeShared<FJsonValueArray>(JCenter));
+			JConfiguration->Values.Add("Right", MakeShared<FJsonValueArray>(JRight));
+			
+			JConveyorAttachment->Values.Add("Splitter", MakeShared<FJsonValueObject>(JConfiguration));	
 		}
 
 		if (AFGBuildableMergerPriority* PriorityMerger = Cast<AFGBuildableMergerPriority>(ConveyorAttachment))
