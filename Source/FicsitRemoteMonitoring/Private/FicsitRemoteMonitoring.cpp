@@ -697,6 +697,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getResourceSink", &AFicsitRemoteMonitoring::getResourceSink).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getResourceSinkBuilding", &AFicsitRemoteMonitoring::getResourceSinkBuilding).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getResourceWell", &AFicsitRemoteMonitoring::getResourceWell).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getSplitterMerger", &AFicsitRemoteMonitoring::getSplitterMerger).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getSessionInfo", &AFicsitRemoteMonitoring::getSessionInfo).GetAll().RequiresGameThread().UseFirstObject());
 	RegisterEndpoint(FAPIEndpoint("GET", "getSchematics", &AFicsitRemoteMonitoring::getSchematics).GetAll().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getSinkList", &AFicsitRemoteMonitoring::getSinkList).GetAll().RequiresGameThread());

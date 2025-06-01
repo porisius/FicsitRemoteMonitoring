@@ -17,6 +17,7 @@
 #include "FRM_Trains.h"
 #include "FRM_Vehicles.h"
 #include "FRM_World.h"
+#include "getSplitterMerger.h"
 #include "ModSubsystem.h"
 #include "Endpoints/Factory/setEnabled.h"
 
@@ -472,6 +473,10 @@ public:
 	
 	void getSessionInfo(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 		OutJsonArray = UFRM_Factory::getSessionInfo(WorldContext, RequestData);
+	}
+
+	void getSplitterMerger(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+		OutJsonArray = UGetSplitterMerger::getSplitterMerger(WorldContext);
 	}
 	
 	void getSpaceElevator(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
