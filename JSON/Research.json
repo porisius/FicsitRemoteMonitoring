@@ -1,11 +1,22 @@
 {
-	"username": "Ficsit Remote Monitoring: Research Notification",
-	"avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
-	"embeds": [{
-		"title": "Notification: Hard Drive Scan Complete",
-		"fields": [
-			{"name": "Schematics Available:", "value": "{Schematic}", "inline": true},
-		],
-		"footer": {"text": "{Flavor}"}
-	}]
+  "embeds": [
+    {
+      "title": "Notification: Hard Drive Scan Complete",
+      "color": 15059088,
+      "footer": {
+        "text": "{Flavor}"
+      },
+      "thumbnail": {
+        "url": "https://satisfactory.wiki.gg/images/c/c6/Hard_Drive.png?e40a92"
+      },
+      "fields": [
+        {
+          "name": "Schematics Available:",
+          "value": "{Schematic}"
+        }
+      ]
+    }
+  ],
+  "username": "Ficsit Remote Monitoring: Research Notification",
+  "avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp"
 }

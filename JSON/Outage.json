@@ -1,11 +1,22 @@
 {
-	"username": "Ficsit Remote Monitoring: Power Alert",
-	"avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
-	"embeds": [{
-		"title": "Alarm: Circuit #{CircuitID} has suffered a critical outage.",
-		"fields": [
-			{"name": "Additional Info:", "value": "Please seek and resolve this power outage as soon as possible.", "inline": true}
-		],
-		"footer": {"text": "{Flavor}"}
-	}]
+  "username": "Ficsit Remote Monitoring: Power Alert",
+  "avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
+  "embeds": [
+    {
+      "title": "Alarm: Circuit #{CircuitID} has suffered a critical outage.",
+      "fields": [
+        {
+          "name": "Additional Info:",
+          "value": "Please seek and resolve this power outage as soon as possible.",
+          "inline": true
+        }
+      ],
+      "footer": {
+        "text": "{Flavor}"
+      },
+      "thumbnail": {
+        "url": "https://satisfactory.wiki.gg/images/thumb/4/46/Nuclear_Power_Plant.png/300px-Nuclear_Power_Plant.png?3cc693"
+      }
+    }
+  ]
 }
