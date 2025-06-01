@@ -31,7 +31,7 @@ TArray<TSharedPtr<FJsonValue>> UGetSplitterMerger::getSplitterMerger(UObject* Wo
 		if (AFGBuildableSplitterSmart* Splitter = Cast<AFGBuildableSplitterSmart>(ConveyorAttachment))
 		{
 			TArray<FSplitterSortRule> SortRules = Splitter->GetSortRules();
-			TSharedPtr<FJsonObject> JConfiguration;
+			TSharedPtr<FJsonObject> JConfiguration = MakeShared<FJsonObject>();;
 			
 			TArray<TSharedPtr<FJsonValue>> JLeft;
 			TArray<TSharedPtr<FJsonValue>> JCenter;
