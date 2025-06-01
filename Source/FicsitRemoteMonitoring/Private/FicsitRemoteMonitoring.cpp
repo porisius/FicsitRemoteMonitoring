@@ -302,7 +302,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
 			            	UFRM_RequestLibrary::AddResponseHeaders(res, false);
 							res->writeHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-								->writeHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+								->writeHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-FRM-Authorization");
 			            	
 			            	HandleApiRequest(World, res, req, RelativePath, RequestData);
 			            }
