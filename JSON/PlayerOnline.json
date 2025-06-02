@@ -2,8 +2,8 @@
   "content": null,
   "embeds": [
     {
-      "title": "Player: {Player} is offline!",
-      "color": 15172228,
+      "title": "Player: {Player} is online!",
+      "color": 10932617,
       "footer": {
         "text": "{Flavor}"
       },
