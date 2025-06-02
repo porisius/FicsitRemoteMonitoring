@@ -80,21 +80,20 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getTruckStation(UObject* WorldCont
 TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext, UClass* VehicleClass) {
 	
 	AFGVehicleSubsystem* VehicleSubsystem = AFGVehicleSubsystem::Get(WorldContext);
-	TArray<AFGVehicle*> Vehicles = VehicleSubsystem->GetVehicles();
+	TArray<AFGWheeledVehicleInfo*> VehicleInfos = VehicleSubsystem->mWheeledVehicles;
 	TArray<AFGSavedWheeledVehiclePath*> SavedPaths = VehicleSubsystem->mSavedPaths;
 	TArray<TSharedPtr<FJsonValue>> JVehicleArray;
 
-	for (AFGVehicle* Vehicle : Vehicles) {
+	for (AFGWheeledVehicleInfo* VehicleInfo : VehicleInfos) {
 
-		if (Vehicle->GetClass()->IsChildOf(VehicleClass)) {
+		AFGWheeledVehicle* WheeledVehicle = VehicleInfo->GetVehicle();
+		
+		if (WheeledVehicle->GetClass()->IsChildOf(VehicleClass)) {
 			//UE_LOG(LogFRMAPI, Warning, TEXT("Processing vehicle '%s'"), *Vehicle->GetName());
-			TSharedPtr<FJsonObject> JVehicle = UFRM_Library::CreateBaseJsonObject(Vehicle);
-
-			AFGWheeledVehicle* WheeledVehicle = Cast<AFGWheeledVehicle>(Vehicle);
-			fgcheck(WheeledVehicle);
+			TSharedPtr<FJsonObject> JVehicle = UFRM_Library::CreateBaseJsonObject(WheeledVehicle);
+			
 			UFGWheeledVehicleMovementComponent* VehicleMovement = WheeledVehicle->GetVehicleMovementComponent();
-			AFGWheeledVehicleInfo* VehicleInfo = WheeledVehicle->GetInfo();
-
+						
 			// get vehicle fuel inventory
 			UFGInventoryComponent* VehicleFuelInventory = WheeledVehicle->GetFuelInventory();
 			TArray<TSharedPtr<FJsonValue>> FuelInventory;
@@ -146,9 +145,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 
 			const FString VehiclePathName = GetPathNameForTargetList(VehicleInfo->GetTargetList());
 
-			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(Vehicle->mDisplayName.ToString()));
-			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Vehicle->GetClass())));
-			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(Vehicle)));
+			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(WheeledVehicle->mDisplayName.ToString()));
+			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(WheeledVehicle->GetClass())));
+			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(UFRM_Library::getActorJSON(WheeledVehicle)));
 			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>(VehiclePathName));
 			JVehicle->Values.Add("Status", MakeShared<FJsonValueString>(FormString));
 			JVehicle->Values.Add("CurrentGear", MakeShared<FJsonValueNumber>(VehicleMovement->GetCurrentGear()));
@@ -164,7 +163,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Vehicles::getVehicles(UObject* WorldContext,
 			JVehicle->Values.Add("MaxFuelEnergy", MakeShared<FJsonValueNumber>(WheeledVehicle->GetMaxFuelEnergy()));
 			JVehicle->Values.Add("Inventory", MakeShared<FJsonValueArray>(Inventory));
 			JVehicle->Values.Add("FuelInventory", MakeShared<FJsonValueArray>(FuelInventory));
-			JVehicle->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Vehicle, Vehicle->mDisplayName.ToString(), Vehicle->mDisplayName.ToString())));
+			JVehicle->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(WheeledVehicle, WheeledVehicle->mDisplayName.ToString(), WheeledVehicle->mDisplayName.ToString())));
 
 			JVehicleArray.Add(MakeShared<FJsonValueObject>(JVehicle));
 		};
