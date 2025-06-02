@@ -302,6 +302,25 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Trains::getTrainRails(UObject* WorldContext,
 		FVector PointZero = ConnectionZero->GetConnectorLocation();
 		FVector PointOne = ConnectionOne->GetConnectorLocation();
 		
+		TArray<TSharedPtr<FJsonValue>> JSpineArray;
+		TArray<FSplinePointData> SplineData = RailroadTrack->GetSplinePointData();
+		for (FSplinePointData Spline : SplineData)
+		{
+			TSharedPtr<FJsonObject> Json = MakeShared<FJsonObject>();
+	
+			const long double actorX = RailroadTrack->GetActorLocation().X;
+			const long double actorY = RailroadTrack->GetActorLocation().Y;
+			const long double actorZ = RailroadTrack->GetActorLocation().Z;
+				
+			Json->SetNumberField("x", actorX + Spline.Location.X);
+			Json->SetNumberField("y", actorY + Spline.Location.Y);
+			Json->SetNumberField("z", actorZ + Spline.Location.Z);
+
+			JSpineArray.Add(MakeShared<FJsonValueObject>(Json));
+		}
+
+		JRailroadTrack->Values.Add("SplineData", MakeShared<FJsonValueArray>(JSpineArray));
+		
 		JRailroadTrack->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::ConvertVectorToFJsonObject(ConnectionZero->GetConnectorLocation())));
 		JRailroadTrack->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
 		JRailroadTrack->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::ConvertVectorToFJsonObject(ConnectionOne->GetConnectorLocation())));
