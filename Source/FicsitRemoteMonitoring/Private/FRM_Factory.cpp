@@ -36,7 +36,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, FRequestData RequestData) {
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, UClass* ConveyorClass) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 
 	TArray<AFGBuildableConveyorBase*> Conveyors;
@@ -46,7 +46,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, FRe
 	for (AFGBuildableConveyorBase* Conveyor : Conveyors) {
 
 		if (!IsValid(Conveyor)) { continue; }
-
+		if (Conveyor->GetClass() != ConveyorClass){ continue; }
+			
 		TSharedPtr<FJsonObject> JConveyor = UFRM_Library::CreateBuildableBaseJsonObject(Conveyor);
 		
 		UFGFactoryConnectionComponent* ConnectionZero = Conveyor->GetConnection0();

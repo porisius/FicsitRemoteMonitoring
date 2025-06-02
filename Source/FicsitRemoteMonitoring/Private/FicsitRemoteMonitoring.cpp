@@ -651,6 +651,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	//Registering Endpoints: API Name, bGetAll, bRequireGameThread, FunctionPtr
 	RegisterEndpoint(FAPIEndpoint("GET", "getAssembler", &AFicsitRemoteMonitoring::getAssembler));
 	RegisterEndpoint(FAPIEndpoint("GET", "getBelts", &AFicsitRemoteMonitoring::getBelts).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getLifts", &AFicsitRemoteMonitoring::getLifts).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getElevators", &AFicsitRemoteMonitoring::getElevators).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getBiomassGenerator", &AFicsitRemoteMonitoring::getBiomassGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getBlender", &AFicsitRemoteMonitoring::getBlender));

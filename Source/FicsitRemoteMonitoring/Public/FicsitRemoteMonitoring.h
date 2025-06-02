@@ -1,5 +1,7 @@
 #pragma once
 
+#include "FGBuildableConveyorBelt.h"
+#include "FGBuildableConveyorLift.h"
 #include "FGBuildableGenerator.h"
 #include "FGBuildableManufacturer.h"
 #include "FGResourceDeposit.h"
@@ -243,7 +245,11 @@ public:
 	}
 	
 	void getBelts(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
-		OutJsonArray = UFRM_Factory::getBelts(WorldContext, RequestData);
+		OutJsonArray = UFRM_Factory::getBelts(WorldContext, AFGBuildableConveyorBelt::StaticClass());
+	}
+
+	void getLifts(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getBelts(WorldContext, AFGBuildableConveyorLift::StaticClass());
 	}
 
 	void getElevators(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
