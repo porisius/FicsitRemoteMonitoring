@@ -245,11 +245,11 @@ public:
 	}
 	
 	void getBelts(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
-		OutJsonArray = UFRM_Factory::getBelts(WorldContext, AFGBuildableConveyorBelt::StaticClass());
+		OutJsonArray = UFRM_Factory::getBelts(WorldContext, true);
 	}
 
 	void getLifts(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
-		OutJsonArray = UFRM_Factory::getBelts(WorldContext, AFGBuildableConveyorLift::StaticClass());
+		OutJsonArray = UFRM_Factory::getBelts(WorldContext, false);
 	}
 
 	void getElevators(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		

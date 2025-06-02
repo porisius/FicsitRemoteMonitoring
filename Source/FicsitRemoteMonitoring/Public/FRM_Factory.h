@@ -13,7 +13,7 @@ class FICSITREMOTEMONITORING_API UFRM_Factory : public UFGBlueprintFunctionLibra
 
 public:
 
-	static TArray<TSharedPtr<FJsonValue>> getBelts(UObject* WorldContext, UClass* BeltClass);
+	static TArray<TSharedPtr<FJsonValue>> getBelts(UObject* WorldContext, bool IsBelt);
 	static TArray<TSharedPtr<FJsonValue>> getElevators(UObject* WorldContext, FRequestData RequestData);
 	static TArray<TSharedPtr<FJsonValue>> getFactory(UObject* WorldContext, FRequestData RequestData, UClass* TypedBuildable);
 	static TArray<TSharedPtr<FJsonValue>> getFrackingActivator(UObject* WorldContext, FRequestData RequestData);
