@@ -276,7 +276,14 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, F
 			JIngredientsArray.Add(MakeShared<FJsonValueObject>(JIngredients));
 		};
 
-		JFactory->Values.Add("Recipe", MakeShared<FJsonValueString>(UFGRecipe::GetRecipeName(Manufacturer->GetCurrentRecipe()).ToString()));
+		FString RecipeName = TEXT("Unassigned");
+		
+		if (Manufacturer->GetCurrentRecipe() != nullptr)
+		{
+			RecipeName = UFGRecipe::GetRecipeName(Manufacturer->GetCurrentRecipe()).ToString();
+		}	
+		
+		JFactory->Values.Add("Recipe", MakeShared<FJsonValueString>(RecipeName));
 		JFactory->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetCurrentRecipe())));
 		JFactory->Values.Add("production", MakeShared<FJsonValueArray>(JProductArray));
 		JFactory->Values.Add("ingredients", MakeShared<FJsonValueArray>(JIngredientsArray));
