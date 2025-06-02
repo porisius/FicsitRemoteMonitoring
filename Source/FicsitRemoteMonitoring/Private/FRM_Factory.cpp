@@ -281,7 +281,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFactory(UObject* WorldContext, F
 		JFactory->Values.Add("production", MakeShared<FJsonValueArray>(JProductArray));
 		JFactory->Values.Add("ingredients", MakeShared<FJsonValueArray>(JIngredientsArray));
 		JFactory->Values.Add("Productivity", MakeShared<FJsonValueNumber>(Productivity * 100));
-		JFactory->Values.Add("ManuSpeed", MakeShared<FJsonValueNumber>(Manufacturer->GetManufacturingSpeed() * 100));
+		JFactory->Values.Add("ManuSpeed", MakeShared<FJsonValueNumber>(Manufacturer->GetCurrentPotential() * 100));
 		JFactory->Values.Add("IsConfigured", MakeShared<FJsonValueBoolean>(Manufacturer->IsConfigured()));
 		JFactory->Values.Add("IsProducing", MakeShared<FJsonValueBoolean>(Manufacturer->IsProducing()));
 		JFactory->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(Manufacturer->IsProductionPaused()));
