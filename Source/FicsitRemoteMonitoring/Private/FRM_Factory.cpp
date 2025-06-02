@@ -1,6 +1,7 @@
 #include "FRM_Factory.h"
 
 #include "FGBuildableConveyorBase.h"
+#include "FGBuildableConveyorBelt.h"
 #include "FGBuildableElevator.h"
 #include "FGBuildableFrackingActivator.h"
 #include "FGBuildableHubTerminal.h"
@@ -38,32 +39,55 @@
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, FRequestData RequestData) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 
-	TArray<AFGBuildableConveyorBase*> ConveyorBelts;
-	BuildableSubsystem->GetTypedBuildable<AFGBuildableConveyorBase>(ConveyorBelts);
-	TArray<TSharedPtr<FJsonValue>> JConveyorBeltArray;
+	TArray<AFGBuildableConveyorBase*> Conveyors;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableConveyorBase>(Conveyors);
+	TArray<TSharedPtr<FJsonValue>> JConveyorArray;
 
-	for (AFGBuildableConveyorBase* ConveyorBelt : ConveyorBelts) {
+	for (AFGBuildableConveyorBase* Conveyor : Conveyors) {
 
-		if (!IsValid(ConveyorBelt)) { continue; }
+		if (!IsValid(Conveyor)) { continue; }
 
-		TSharedPtr<FJsonObject> JConveyorBelt = UFRM_Library::CreateBuildableBaseJsonObject(ConveyorBelt);
+		TSharedPtr<FJsonObject> JConveyor = UFRM_Library::CreateBuildableBaseJsonObject(Conveyor);
 		
-		UFGFactoryConnectionComponent* ConnectionZero = ConveyorBelt->GetConnection0();
-		UFGFactoryConnectionComponent* ConnectionOne = ConveyorBelt->GetConnection1();
+		UFGFactoryConnectionComponent* ConnectionZero = Conveyor->GetConnection0();
+		UFGFactoryConnectionComponent* ConnectionOne = Conveyor->GetConnection1();
 
-		JConveyorBelt->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorFactoryCompXYZ(ConveyorBelt, ConnectionZero)));
-		JConveyorBelt->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
-		JConveyorBelt->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorFactoryCompXYZ(ConveyorBelt, ConnectionOne)));
-		JConveyorBelt->Values.Add("Connected1", MakeShared<FJsonValueBoolean>(ConnectionOne->IsConnected()));
-		JConveyorBelt->Values.Add("Length", MakeShared<FJsonValueNumber>(ConveyorBelt->GetLength()));
-		JConveyorBelt->Values.Add("ItemsPerMinute", MakeShared<FJsonValueNumber>((UFRM_Library::SafeDivide_Float(ConveyorBelt->GetSpeed(), 2))));
-		JConveyorBelt->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(ConveyorBelt), ConveyorBelt->mDisplayName.ToString(), ConveyorBelt->mDisplayName.ToString())));
+		if (!Conveyor->GetIsConveyorLift())
+		{
+			const AFGBuildableConveyorBelt* ConveyorBelt = Cast<AFGBuildableConveyorBelt>(Conveyor);
+			TArray<TSharedPtr<FJsonValue>> JSpineArray;
+			TArray<FSplinePointData> SplineData = ConveyorBelt->GetSplinePointData();
+			for (FSplinePointData Spline : SplineData)
+			{
+				TSharedPtr<FJsonObject> Json = MakeShared<FJsonObject>();
+	
+				const long double actorX = ConveyorBelt->GetActorLocation().X;
+				const long double actorY = ConveyorBelt->GetActorLocation().Y;
+				const long double actorZ = ConveyorBelt->GetActorLocation().Z;
+				
+				Json->SetNumberField("x", actorX + Spline.Location.X);
+				Json->SetNumberField("y", actorY + Spline.Location.Y);
+				Json->SetNumberField("z", actorZ + Spline.Location.Z);
 
-		JConveyorBeltArray.Add(MakeShared<FJsonValueObject>(JConveyorBelt));
+				JSpineArray.Add(MakeShared<FJsonValueObject>(Json));
+			}
+
+			JConveyor->Values.Add("SplineData", MakeShared<FJsonValueArray>(JSpineArray));
+		};
+		
+		JConveyor->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorFactoryCompXYZ(Conveyor, ConnectionZero)));
+		JConveyor->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
+		JConveyor->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorFactoryCompXYZ(Conveyor, ConnectionOne)));
+		JConveyor->Values.Add("Connected1", MakeShared<FJsonValueBoolean>(ConnectionOne->IsConnected()));
+		JConveyor->Values.Add("Length", MakeShared<FJsonValueNumber>(Conveyor->GetLength()));
+		JConveyor->Values.Add("ItemsPerMinute", MakeShared<FJsonValueNumber>((UFRM_Library::SafeDivide_Float(Conveyor->GetSpeed(), 2))));
+		JConveyor->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(Conveyor), Conveyor->mDisplayName.ToString(), Conveyor->mDisplayName.ToString())));
+
+		JConveyorArray.Add(MakeShared<FJsonValueObject>(JConveyor));
 
 	};
 
-	return JConveyorBeltArray;
+	return JConveyorArray;
 };
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getElevators(UObject* WorldContext, FRequestData RequestData) {
