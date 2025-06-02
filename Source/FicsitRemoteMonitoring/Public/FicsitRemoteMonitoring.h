@@ -19,6 +19,7 @@
 #include "FRM_Trains.h"
 #include "FRM_Vehicles.h"
 #include "FRM_World.h"
+#include "getPipelineJunction.h"
 #include "getSplitterMerger.h"
 #include "getTradingPost.h"
 #include "ModSubsystem.h"
@@ -394,6 +395,10 @@ public:
 	
 	void getPipes(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Factory::getPipes(WorldContext, RequestData);
+	}
+	
+	void getPipeJunctions(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UGetPipelineJunction::getPipeJunctions(WorldContext);
 	}
 	
 	void getPlayer(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
