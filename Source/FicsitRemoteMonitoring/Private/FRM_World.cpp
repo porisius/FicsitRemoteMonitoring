@@ -176,9 +176,13 @@ TArray<TSharedPtr<FJsonValue>> UFRM_World::GetChatMessages(UObject* WorldContext
 
 	AFGChatManager::Get(WorldContext->GetWorld())->GetReceivedChatMessages(Messages);
 
+	const int64 ServerTimestamp = FMath::RoundToInt64(UGameplayStatics::GetTimeSeconds(WorldContext));
+	const int64 CurrentTimestamp = FDateTime::UtcNow().ToUnixTimestamp();
+	
 	for (const FChatMessageStruct& ChatMessage : Messages)
 	{
 		TSharedPtr<FJsonObject> JChatMessage = MakeShared<FJsonObject>();
+		JChatMessage->Values.Add("TimeStamp", MakeShared<FJsonValueNumber>(CurrentTimestamp - ServerTimestamp + FMath::RoundToInt64(ChatMessage.ServerTimeStamp)));
 		JChatMessage->Values.Add("ServerTimeStamp", MakeShared<FJsonValueNumber>(ChatMessage.ServerTimeStamp));
 		JChatMessage->Values.Add("Sender", MakeShared<FJsonValueString>(ChatMessage.MessageSender.ToString()));
 
