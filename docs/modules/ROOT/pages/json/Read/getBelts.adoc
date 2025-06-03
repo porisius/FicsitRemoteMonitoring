@@ -30,7 +30,7 @@ include::../Models/_boundingBox.adoc[]
 include::../Models/_boundingBox.adoc[]
 
 // Spline Data
-{set:key-name:SpineData}
+{set:key-name:SplineData}
 include::../Models/_splinedata.adoc[]
 
 {set:key-name:location0}
