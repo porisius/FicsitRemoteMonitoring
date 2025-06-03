@@ -25,6 +25,14 @@ include::../Models/_colorSlot.adoc[]
 {set:key-name:BoundingBox}
 include::../Models/_boundingBox.adoc[]
 
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
+// Spline Data
+{set:key-name:SpineData}
+include::../Models/_splinedata.adoc[]
+
 {set:key-name:location0}
 {set:key-description:Start Location of the Belt}
 include::../Models/_location.adoc[tags=!rotation]

@@ -23,7 +23,7 @@ include::../_responseBody.adoc[]
 {set:key-description:Location details of the Splitter/Merger.}
 include::../Models/_location.adoc[]
 
-// Splitter
+// Splitter (if applicable)
 | Splitter | Object[] | List of Smart/Programmable Splitter Settings.
 | {depth}  Left | Object | Left Output
 | {depth}  Center | Object | Center/Middle Output

@@ -1,4 +1,4 @@
-﻿#include "Hypertubes.h"
+#include "Hypertubes.h"
 
 #include "FGBuildablePipeHyper.h"
 #include "FGPipeHyperStart.h"

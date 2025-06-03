@@ -1,200 +1,155 @@
-= Belt Stats/GeoLocation
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getBelts +
+= Get Pipes
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+include::../_isGetAll.adoc[]
 
-|Name
-|Pipe Type
-|String
-|Output
+Get a list of all Pipes.
 
-|ClassName
-|UE Class Name
-|String
-|Output
+== URL
 
-|FluidName
-|Fluid/Gas in Pipe
-|String
-|Output
+`GET http://localhost:8080/getPipes`
 
-|location0/x
-|X Location of Pipe
-|Float
-|Output
+include::../_responseBody.adoc[]
 
-|location0/y
-|Y Location of Pipe
-|Float
-|Output
+| ID | String | Unique ID of the Pipe.
+| Name | String | Name of the Pipe Type.
+| ClassName | String | Class Name of the Pipe.
 
-|location0/z
-|Z Location of Pipe
-|Float
-|Output
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
 
-|Connected0
-|Is Pipe Connected at starting point?
-|Boolean
-|Output
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
 
-|location1/x
-|X Location of Pipe
-|Float
-|Output
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
 
-|location1/y
-|Y Location of Pipe
-|Float
-|Output
+// Spline Data
+{set:key-name:SpineData}
+include::../Models/_splinedata.adoc[]
 
-|location1/z
-|Z Location of Pipe
-|Float
-|Output
+{set:key-name:location0}
+{set:key-description:Start Location of the Pipe}
+include::../Models/_location.adoc[tags=!rotation]
+| Connected0 | Boolean | Is Pipe Connected at starting point?
 
-|Connected1
-|Is Belt Connected at starting point?
-|Boolean
-|Output
+{set:key-name:location1}
+{set:key-description:End Location of the Pipe}
+include::../Models/_location.adoc[tags=!rotation]
+| Connected1 | Boolean | Is Pipe Connected at ending point?
 
-|Flow
-|Flow Speed
-|Float
-|Output
+| Length | Float | Length of the Pipe in centimetre (cm).
+| ItemsPerMinute | Float | Speed of the Pipe.
 
-|FlowPct
-|Flow Speed Percentage
-|Float
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
+include::../Models/_features.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-   {
-		"Name": "Pipeline Mk.2",
-		"ClassName": "Build_PipelineMK2_C_2146967477",
-		"FluidName": "Water",
-		"FluidClass": "Desc_Water_C",
-		"location0":
-		{
-			"X": -92593.2890625,
-			"Y": -85316.9296875,
-			"Z": 4264.8427734375
-		},
-		"Connected0": true,
-		"location1":
-		{
-			"X": -90623.703125,
-			"Y": -84969.46875,
-			"Z": 4264.8427734375
-		},
-		"Connected1": true,
-		"Flow": 0.78740155696868896,
-		"FlowPct": 0.078740157186985016,
-		"features":
-		{
-			"properties":
-			{
-				"name": "Pipeline Mk.2",
-				"type": "Pipeline Mk.2"
-			},
-			"geometry":
-			{
-				"coordinates": [
-					{
-						"X": -92593.2890625,
-						"Y": -85316.9296875,
-						"Z": 4264.8427734375
-					},
-					{
-						"X": -90623.703125,
-						"Y": -84969.46875,
-						"Z": 4264.8427734375
-					}
-				],
-				"type": "Line"
-			}
-		}
-	},
-	{
-		"Name": "Pipeline Mk.2",
-		"ClassName": "Build_PipelineMK2_C_2147016322",
-		"FluidName": "Crude Oil",
-		"FluidClass": "Desc_LiquidOil_C",
-		"location0":
-		{
-			"X": -49386.03515625,
-			"Y": -169084.453125,
-			"Z": -335.15765380859375
-		},
-		"Connected0": true,
-		"location1":
-		{
-			"X": -51749.51953125,
-			"Y": -169501.5,
-			"Z": -335.15756225585938
-		},
-		"Connected1": true,
-		"Flow": 10,
-		"FlowPct": 1,
-		"features":
-		{
-			"properties":
-			{
-				"name": "Pipeline Mk.2",
-				"type": "Pipeline Mk.2"
-			},
-			"geometry":
-			{
-				"coordinates": [
-					{
-						"X": -49386.03515625,
-						"Y": -169084.453125,
-						"Z": -335.15765380859375
-					},
-					{
-						"X": -51749.51953125,
-						"Y": -169501.5,
-						"Z": -335.15756225585938
-					}
-				],
-				"type": "Line"
-			}
-		}
-	}
+  {
+    "ID": "Build_Pipeline_C_2146289486",
+    "Name": "Pipeline Mk.1",
+    "ClassName": "Build_Pipeline_C",
+    "location": {
+      "x": -279675.15625,
+      "y": -150033.5,
+      "z": -1513.14123535156,
+      "rotation": 90
+    },
+    "BoundingBox": {
+      "min": {
+        "x": -279675.15625,
+        "y": -150033.5,
+        "z": -1513.14123535156
+      },
+      "max": {
+        "x": -279675.15625,
+        "y": -150033.5,
+        "z": -1513.14123535156
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "FA954900"
+    },
+    "SplineData": [
+      {
+        "x": -279675.15625,
+        "y": -150033.5,
+        "z": -1513.14123535156
+      },
+      {
+        "x": -279675.455968669,
+        "y": -150133.499550843,
+        "z": -1513.14123535156
+      },
+      {
+        "x": -279675.455968669,
+        "y": -150133.499550843,
+        "z": -1513.14123535156
+      },
+      {
+        "x": -279676.677520446,
+        "y": -150541.06384952,
+        "z": -1435.00002617008
+      },
+      {
+        "x": -279776.911449535,
+        "y": -150640.763856185,
+        "z": -1435.00002617008
+      },
+      {
+        "x": -281765.400404549,
+        "y": -150636.103274844,
+        "z": -1435.00002617008
+      },
+      {
+        "x": -281765.63476251,
+        "y": -150636.103000226,
+        "z": -1435.00002617008
+      },
+      {
+        "x": -281865.63476251,
+        "y": -150636.103000226,
+        "z": -1435.00002617008
+      }
+    ],
+    "location0": {
+      "x": -279675.15625,
+      "y": -150033.5,
+      "z": -1513.14123535156
+    },
+    "Connected0": true,
+    "location1": {
+      "x": -281865.63476251,
+      "y": -150636.103000226,
+      "z": -1435.00002617008
+    },
+    "Connected1": true,
+    "Length": 2761.6640625,
+    "Speed": 5,
+    "features": {
+      "properties": {
+        "name": "Pipeline Mk.1",
+        "type": "Pipeline Mk.1"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -279675.15625,
+          "y": -150033.5,
+          "z": -1513.14123535156
+        },
+        "type": "Point"
+      }
+    }
+  }
 ]
 -----------------

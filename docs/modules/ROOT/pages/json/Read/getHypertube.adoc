@@ -1,11 +1,114 @@
-﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= getHypertube
+= Hypertubes
 
 include::../_isGetAll.adoc[]
 
-[WARNING]
-====
-This endpoint is new and not yet documented.
-====
+Get a list of all Hypertubes.
+
+== URL
+
+`GET http://localhost:8080/getHypertube`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Hypertube.
+| Name | String | Name of the Hypertube Type.
+| ClassName | String | Class Name of the Hypertube.
+
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
+{set:key-name:location0}
+{set:key-description:Start Location of the Hypertube}
+include::../Models/_location.adoc[tags=!rotation]
+| Connected0 | Boolean | Is Hypertube Connected at starting point?
+
+{set:key-name:location1}
+{set:key-description:End Location of the Hypertube}
+include::../Models/_location.adoc[tags=!rotation]
+| Connected1 | Boolean | Is Hypertube Connected at ending point?
+
+| Length | Float | Length of the Hypertube in centimetre (cm).
+| ItemsPerMinute | Float | Speed of the Hypertube.
+
+include::../Models/_features.adoc[]
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "Build_PipeHyper_C_2146320548",
+    "Name": "Hypertube",
+    "ClassName": "Build_PipeHyper_C",
+    "location": {
+      "x": -251831.75,
+      "y": -66029.2421875,
+      "z": 1143.29541015625,
+      "rotation": 90
+    },
+    "BoundingBox": {
+      "min": {
+        "x": -251831.75,
+        "y": -66029.2421875,
+        "z": 1143.29541015625
+      },
+      "max": {
+        "x": -251831.75,
+        "y": -66029.2421875,
+        "z": 1143.29541015625
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "2D2D2D00",
+      "SecondaryColor": "00000000"
+    },
+    "location0": {
+      "x": -251831.75,
+      "y": -66029.2421875,
+      "z": 1143.29541015625
+    },
+    "location1": {
+      "x": -252129.647245099,
+      "y": -65920.8164624313,
+      "z": 710.0068359375
+    },
+    "SplineData": [
+      {
+        "x": -251831.75,
+        "y": -66029.2421875,
+        "z": 1143.29541015625
+      },
+      {
+        "x": -251878.262411959,
+        "y": -66012.3130548064,
+        "z": 1093.79793547319
+      },
+      {
+        "x": -252004.95387678,
+        "y": -65966.2011348097,
+        "z": 735.437320947647
+      },
+      {
+        "x": -252063.868761288,
+        "y": -65944.7578714859,
+        "z": 710.0068359375
+      },
+      {
+        "x": -252129.647245099,
+        "y": -65920.8164624313,
+        "z": 710.0068359375
+      }
+    ]
+  }
+]
+-----------------
