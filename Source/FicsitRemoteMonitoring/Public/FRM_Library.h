@@ -8,6 +8,7 @@ class AFicsitRemoteMonitoring;
 class UFGPowerInfoComponent;
 class UFGFactoryConnectionComponent;
 class UFGPipeConnectionComponent;
+class UFGPipeConnectionComponentBase;
 class UFGInventoryComponent;
 
 UCLASS()
@@ -19,7 +20,9 @@ public:
 	static TSharedPtr<FJsonObject> getActorJSON(AActor* Actor);
 	static TSharedPtr<FJsonObject> getActorFactoryCompXYZ(AFGBuildable* BeltPipe, UFGFactoryConnectionComponent* ConnectionComponent);
 	static TSharedPtr<FJsonObject> getActorPipeXYZ(AFGBuildable* BeltPipe, UFGPipeConnectionComponent* ConnectionComponent);
+	static TSharedPtr<FJsonObject> getActorHyperXYZ(AFGBuildable* HyperTube, UFGPipeConnectionComponentBase* ConnectionComponent);
 	static TSharedPtr<FJsonObject> getActorFeaturesJSON(AActor* Actor, FString DisplayName, FString TypeName);
+	static TArray<TSharedPtr<FJsonValue>> SplineToJSON(AFGBuildable* Buildable, TArray<FSplinePointData> SplineData);
 	static TMap<TSubclassOf<UFGItemDescriptor>, int32> GetGroupedInventoryItems(const UFGInventoryComponent* Inventory);
 	static TMap<TSubclassOf<UFGItemDescriptor>, int32> GetGroupedInventoryItems(const TArray<FInventoryStack>& InventoryStacks);
 	static void GetGroupedInventoryItems(const TArray<FInventoryStack>& InventoryStacks, TMap<TSubclassOf<UFGItemDescriptor>, int32>& InventoryItems);

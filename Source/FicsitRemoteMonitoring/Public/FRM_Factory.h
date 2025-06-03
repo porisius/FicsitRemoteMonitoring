@@ -22,7 +22,6 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getStorageInv(UObject* WorldContext, FRequestData RequestData);
 	static TArray<TSharedPtr<FJsonValue>> getWorldInv(UObject* WorldContext, FRequestData RequestData);
 	static TArray<TSharedPtr<FJsonValue>> getDropPod(UObject* WorldContext, FRequestData RequestData);
-	static TArray<TSharedPtr<FJsonValue>> getHypertube(UObject* WorldContext, FRequestData RequestData);
 	static TArray<TSharedPtr<FJsonValue>> getPortal(UObject* WorldContext, FRequestData RequestData);
 	static TArray<TSharedPtr<FJsonValue>> getPump(UObject* WorldContext, FRequestData RequestData);
 	static TArray<TSharedPtr<FJsonValue>> getResourceExtractor(UObject* WorldContext, FRequestData RequestData);

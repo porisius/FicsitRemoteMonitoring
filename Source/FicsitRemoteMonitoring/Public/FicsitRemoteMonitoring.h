@@ -24,6 +24,7 @@
 #include "getTradingPost.h"
 #include "ModSubsystem.h"
 #include "Endpoints/Factory/setEnabled.h"
+#include "Travel/Hypertubes.h"
 
 THIRD_PARTY_INCLUDES_START
 #include "ThirdParty/uWebSockets/App.h"
@@ -368,9 +369,13 @@ public:
 	void getHUBTerminal(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Factory::getHubTerminal(WorldContext, RequestData);
 	}
+
+	void getHyperEntrance(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+		OutJsonArray = UHypertubes::getHyperEntrance(WorldContext);
+	}
 	
 	void getHypertube(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
-		OutJsonArray = UFRM_Factory::getHypertube(WorldContext, RequestData);
+		OutJsonArray = UHypertubes::getHypertube(WorldContext);
 	}
 	
 	void getManufacturer(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		

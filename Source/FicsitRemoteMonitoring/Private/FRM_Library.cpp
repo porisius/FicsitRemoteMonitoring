@@ -125,6 +125,26 @@ TSharedPtr<FJsonObject> UFRM_Library::FBoxToJson(AFGBuildable* Buildable, const 
 
 	return Json;
 }
+TArray<TSharedPtr<FJsonValue>> UFRM_Library::SplineToJSON(AFGBuildable* Buildable, TArray<FSplinePointData> SplineData)
+{
+	TArray<TSharedPtr<FJsonValue>> JSpineArray;
+	for (FSplinePointData Spline : SplineData)
+	{
+		TSharedPtr<FJsonObject> Json = MakeShared<FJsonObject>();
+		
+		const long double actorX = Buildable->GetActorLocation().X;
+		const long double actorY = Buildable->GetActorLocation().Y;
+		const long double actorZ = Buildable->GetActorLocation().Z;
+					
+		Json->SetNumberField("x", actorX + Spline.Location.X);
+		Json->SetNumberField("y", actorY + Spline.Location.Y);
+		Json->SetNumberField("z", actorZ + Spline.Location.Z);
+
+		JSpineArray.Add(MakeShared<FJsonValueObject>(Json));
+	}
+
+	return JSpineArray;
+}
 
 TSharedPtr<FJsonObject> UFRM_Library::getActorPipeXYZ(AFGBuildable* BeltPipe, UFGPipeConnectionComponent* ConnectionComponent) {
 
@@ -133,6 +153,26 @@ TSharedPtr<FJsonObject> UFRM_Library::getActorPipeXYZ(AFGBuildable* BeltPipe, UF
 	const long double actorX = BeltPipe->GetActorLocation().X;
 	const long double actorY = BeltPipe->GetActorLocation().Y;
 	const long double actorZ = BeltPipe->GetActorLocation().Z;
+	
+	const long double connectionX = ConnectionComponent->GetRelativeTransform().GetTranslation().X;
+	const long double connectionY = ConnectionComponent->GetRelativeTransform().GetTranslation().Y;
+	const long double connectionZ = ConnectionComponent->GetRelativeTransform().GetTranslation().Z;
+
+	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(actorX + connectionX));
+	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(actorY + connectionY));
+	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(actorZ + connectionZ));
+
+	return JLibrary;
+
+};
+
+TSharedPtr<FJsonObject> UFRM_Library::getActorHyperXYZ(AFGBuildable* HyperTube, UFGPipeConnectionComponentBase* ConnectionComponent) {
+
+	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();
+
+	const long double actorX = HyperTube->GetActorLocation().X;
+	const long double actorY = HyperTube->GetActorLocation().Y;
+	const long double actorZ = HyperTube->GetActorLocation().Z;
 	
 	const long double connectionX = ConnectionComponent->GetRelativeTransform().GetTranslation().X;
 	const long double connectionY = ConnectionComponent->GetRelativeTransform().GetTranslation().Y;

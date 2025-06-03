@@ -674,6 +674,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getFuelGenerator", &AFicsitRemoteMonitoring::getFuelGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getGeothermalGenerator", &AFicsitRemoteMonitoring::getGeothermalGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getHUBTerminal", &AFicsitRemoteMonitoring::getHUBTerminal).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getHyperEntrance", &AFicsitRemoteMonitoring::getHyperEntrance).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getHypertube", &AFicsitRemoteMonitoring::getHypertube).GetAll());
 	RegisterEndpoint(FAPIEndpoint("GET", "getManufacturer", &AFicsitRemoteMonitoring::getManufacturer));
 	RegisterEndpoint(FAPIEndpoint("GET", "getModList", &AFicsitRemoteMonitoring::getModList).GetAll());

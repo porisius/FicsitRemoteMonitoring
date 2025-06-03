@@ -54,25 +54,8 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, boo
 
 		if (!Conveyor->GetIsConveyorLift())
 		{
-			const AFGBuildableConveyorBelt* ConveyorBelt = Cast<AFGBuildableConveyorBelt>(Conveyor);
-			TArray<TSharedPtr<FJsonValue>> JSpineArray;
-			TArray<FSplinePointData> SplineData = ConveyorBelt->GetSplinePointData();
-			for (FSplinePointData Spline : SplineData)
-			{
-				TSharedPtr<FJsonObject> Json = MakeShared<FJsonObject>();
-	
-				const long double actorX = ConveyorBelt->GetActorLocation().X;
-				const long double actorY = ConveyorBelt->GetActorLocation().Y;
-				const long double actorZ = ConveyorBelt->GetActorLocation().Z;
-				
-				Json->SetNumberField("x", actorX + Spline.Location.X);
-				Json->SetNumberField("y", actorY + Spline.Location.Y);
-				Json->SetNumberField("z", actorZ + Spline.Location.Z);
-
-				JSpineArray.Add(MakeShared<FJsonValueObject>(Json));
-			}
-
-			JConveyor->Values.Add("SplineData", MakeShared<FJsonValueArray>(JSpineArray));
+			AFGBuildableConveyorBelt* ConveyorBelt = Cast<AFGBuildableConveyorBelt>(Conveyor);
+			JConveyor->Values.Add("SplineData", MakeShared<FJsonValueArray>(UFRM_Library::SplineToJSON(ConveyorBelt, ConveyorBelt->GetSplinePointData())));
 		};
 		
 		JConveyor->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorFactoryCompXYZ(Conveyor, ConnectionZero)));
@@ -729,22 +712,6 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPortal(UObject* WorldContext, FR
 	}
 
 	return JPortalArray;
-}
-
-TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getHypertube(UObject* WorldContext, FRequestData RequestData) {
-
-	TArray<TSharedPtr<FJsonValue>> JHypertubeArray;
-	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-
-	TArray<AFGPipeHyperStart*> HyperStart;
-	BuildableSubsystem->GetTypedBuildable<AFGPipeHyperStart>(HyperStart);
-
-	for (AFGPipeHyperStart* Hypertube : HyperStart) {
-		TSharedPtr<FJsonObject> JHypertube = UFRM_Library::CreateBuildableBaseJsonObject(Hypertube);
-		JHypertube->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(Hypertube->GetPowerInfo())));
-		JHypertubeArray.Add(MakeShared<FJsonValueObject>(JHypertube));
-	}
-	return JHypertubeArray;
 }
 
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getFrackingActivator(UObject* WorldContext, FRequestData RequestData) {
