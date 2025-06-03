@@ -125,7 +125,7 @@ TSharedPtr<FJsonObject> UFRM_Library::FBoxToJson(AFGBuildable* Buildable, const 
 
 	return Json;
 }
-TArray<TSharedPtr<FJsonValue>> UFRM_Library::SplineToJSON(AFGBuildable* Buildable, TArray<FSplinePointData> SplineData)
+TArray<TSharedPtr<FJsonValue>> UFRM_Library::SplineToJSON(AActor* Buildable, TArray<FSplinePointData> SplineData)
 {
 	TArray<TSharedPtr<FJsonValue>> JSpineArray;
 	for (FSplinePointData Spline : SplineData)

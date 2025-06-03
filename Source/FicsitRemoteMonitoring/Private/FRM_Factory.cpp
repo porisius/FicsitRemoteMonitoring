@@ -801,24 +801,9 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getPipes(UObject* WorldContext, FRe
 		UFGPipeConnectionComponent* ConnectionZero = Pipe->GetPipeConnection0();
 		UFGPipeConnectionComponent* ConnectionOne = Pipe->GetPipeConnection1();
 
-		TArray<TSharedPtr<FJsonValue>> JSpineArray;
-		TArray<FSplinePointData> SplineData = Pipe->GetSplinePointData();
-		for (FSplinePointData Spline : SplineData)
-		{
-			TSharedPtr<FJsonObject> Json = MakeShared<FJsonObject>();
-	
-			const long double actorX = Pipe->GetActorLocation().X;
-			const long double actorY = Pipe->GetActorLocation().Y;
-			const long double actorZ = Pipe->GetActorLocation().Z;
-				
-			Json->SetNumberField("x", actorX + Spline.Location.X);
-			Json->SetNumberField("y", actorY + Spline.Location.Y);
-			Json->SetNumberField("z", actorZ + Spline.Location.Z);
-
-			JSpineArray.Add(MakeShared<FJsonValueObject>(Json));
-		}
-
-		JPipe->Values.Add("SplineData", MakeShared<FJsonValueArray>(JSpineArray));
+		JPipe->Values.Add("SplineData", MakeShared<FJsonValueArray>(
+			UFRM_Library::SplineToJSON(Pipe, Pipe->GetSplinePointData())
+		));
 		
 		JPipe->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorPipeXYZ(Pipe, ConnectionZero)));
 		JPipe->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
