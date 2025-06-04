@@ -27,6 +27,7 @@ public:
 	static TArray<TSharedPtr<FJsonValue>> getResourceExtractor(UObject* WorldContext, FRequestData RequestData);
 	static TArray<TSharedPtr<FJsonValue>> getResourceSinkBuilding(UObject* WorldContext, FRequestData RequestData);
 	static TArray<TSharedPtr<FJsonValue>> getPipes(UObject* WorldContext, FRequestData RequestData);
+	static TArray<TSharedPtr<FJsonValue>> getThroughputCounter(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getModList(UObject* WorldContext, FRequestData RequestData);
 	static TArray<TSharedPtr<FJsonValue>> getResourceNode(UObject* WorldContext, FRequestData RequestData, UClass* ResourceActor);
 	static TArray<TSharedPtr<FJsonValue>> getRadarTower(UObject* WorldContext, FRequestData RequestData);

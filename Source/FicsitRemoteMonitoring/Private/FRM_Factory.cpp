@@ -73,6 +73,39 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getBelts(UObject* WorldContext, boo
 	return JConveyorArray;
 };
 
+TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getThroughputCounter(UObject* WorldContext) {
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+
+	TArray<AFGBuildableConveyorMonitor*> BeltCounters;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableConveyorMonitor>(BeltCounters);
+	TArray<TSharedPtr<FJsonValue>> JBeltCounterArray;
+
+	for (AFGBuildableConveyorMonitor* BeltCounter : BeltCounters) {
+
+		TSharedPtr<FJsonObject> JBeltCounter = UFRM_Library::CreateBuildableBaseJsonObject(BeltCounter);
+		
+		AFGBuildableConveyorBase* ConveyorBelt = BeltCounter->GetConveyorBase();
+
+		TSharedPtr<FJsonObject> JBelt = MakeShared<FJsonObject>();
+		JBelt->Values.Add("Name", MakeShared<FJsonValueString>(ConveyorBelt->mDisplayName.ToString()));
+		JBelt->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(ConveyorBelt->GetClass())));		
+		JBelt->Values.Add("ItemsPerMinute", MakeShared<FJsonValueNumber>((UFRM_Library::SafeDivide_Float(ConveyorBelt->GetSpeed(), 2))));
+
+		JBeltCounter->Values.Add("Belt", MakeShared<FJsonValueObject>(JBelt));
+
+		JBeltCounter->Values.Add("CalculatedAverage", MakeShared<FJsonValueNumber>(BeltCounter->GetCalculatedAverage()));
+		JBeltCounter->Values.Add("Confidence", MakeShared<FJsonValueNumber>(BeltCounter->GetConfidence() * 100));
+		JBeltCounter->Values.Add("TimePerAverageSection", MakeShared<FJsonValueNumber>(BeltCounter->GetTimePerAverageSection()));
+		JBeltCounter->Values.Add("MaxTotalAverageDuration", MakeShared<FJsonValueNumber>(BeltCounter->GetMaxTotalAverageDuration()));
+		JBeltCounter->Values.Add("features", MakeShared<FJsonValueObject>(UFRM_Library::getActorFeaturesJSON(Cast<AActor>(BeltCounter), BeltCounter->mDisplayName.ToString(), BeltCounter->mDisplayName.ToString())));
+
+		JBeltCounterArray.Add(MakeShared<FJsonValueObject>(JBeltCounter));
+
+	};
+
+	return JBeltCounterArray;
+};
+
 TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getElevators(UObject* WorldContext, FRequestData RequestData) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 

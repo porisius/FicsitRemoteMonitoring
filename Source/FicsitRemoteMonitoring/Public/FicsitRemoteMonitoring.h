@@ -520,6 +520,10 @@ public:
 		OutJsonArray = USetEnabled::setEnabled(WorldContext, RequestData);
 	}
 
+	void getThroughputCounter(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
+		OutJsonArray = UFRM_Factory::getThroughputCounter(WorldContext);
+	}
+	
 	void getTradingPost(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UGetTradingPost::getTradingPost(WorldContext);
 	}
