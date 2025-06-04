@@ -377,6 +377,10 @@ public:
 	void getHypertube(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 		OutJsonArray = UHypertubes::getHypertube(WorldContext);
 	}
+
+	void getHyperJunctions(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+		OutJsonArray = UHypertubes::getHyperJunctions(WorldContext);
+	}
 	
 	void getManufacturer(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {		
 		OutJsonArray = UFRM_Factory::getFactory(WorldContext, RequestData, LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/ManufacturerMk1/Build_ManufacturerMk1.Build_ManufacturerMk1_C")));

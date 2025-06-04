@@ -1,6 +1,7 @@
 #include "Hypertubes.h"
 
 #include "FGBuildablePipeHyper.h"
+#include "FGBuildablePipeHyperJunction.h"
 #include "FGPipeHyperStart.h"
 #include "FGFactoryConnectionComponent.h"
 #include "../../../../../../../Source/FactoryGame/Public/Buildables/FGBuildablePipeHyper.h"
@@ -46,6 +47,27 @@ TArray<TSharedPtr<FJsonValue>> UHypertubes::getHypertube(UObject* WorldContext) 
 		JHypertube->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorHyperXYZ(Hypertube, ConnectionZero)));
 		JHypertube->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorHyperXYZ(Hypertube, ConnectionOne)));
 		JHypertube->Values.Add("SplineData", MakeShared<FJsonValueArray>(UFRM_Library::SplineToJSON(Hypertube, Hypertube->GetSplinePointData())));
+		JHypertubeArray.Add(MakeShared<FJsonValueObject>(JHypertube));
+	}
+	return JHypertubeArray;
+}
+
+TArray<TSharedPtr<FJsonValue>> UHypertubes::getHyperJunctions(UObject* WorldContext) {
+
+	TArray<TSharedPtr<FJsonValue>> JHypertubeArray;
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+
+	TArray<AFGBuildablePipeHyperJunction*> Hypertubes;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildablePipeHyperJunction>(Hypertubes);
+
+	for (AFGBuildablePipeHyperJunction* Hypertube : Hypertubes) {
+		TSharedPtr<FJsonObject> JHypertube = UFRM_Library::CreateBuildableBaseJsonObject(Hypertube);
+
+		UFGPipeConnectionComponentBase* ConnectionZero = Hypertube->GetConnection0();
+		UFGPipeConnectionComponentBase* ConnectionOne = Hypertube->GetConnection1();
+		
+		JHypertube->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorHyperXYZ(Hypertube, ConnectionZero)));
+		JHypertube->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorHyperXYZ(Hypertube, ConnectionOne)));
 		JHypertubeArray.Add(MakeShared<FJsonValueObject>(JHypertube));
 	}
 	return JHypertubeArray;

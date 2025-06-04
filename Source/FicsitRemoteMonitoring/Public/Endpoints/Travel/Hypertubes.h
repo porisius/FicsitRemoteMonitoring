@@ -13,5 +13,6 @@ public:
 
 	static TArray<TSharedPtr<FJsonValue>> getHyperEntrance(UObject* WorldContext);
 	static TArray<TSharedPtr<FJsonValue>> getHypertube(UObject* WorldContext);
+	static TArray<TSharedPtr<FJsonValue>> getHyperJunctions(UObject* WorldContext);
 
 };
