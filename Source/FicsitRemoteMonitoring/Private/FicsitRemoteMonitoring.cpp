@@ -996,7 +996,17 @@ void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, FRequestData Re
 
 	if (bSuccess && !bUseFirstObject)
 	{
-		Out_Data = UFRM_RequestLibrary::JsonArrayToString(JsonValues, JSONDebugMode);
+		if (Interface == EInterfaceType::Socket)
+		{
+			const TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
+			JsonObject->Values.Add("endpoint", MakeShared<FJsonValueString>(InEndpoint));
+			JsonObject->Values.Add("data", MakeShared<FJsonValueArray>(JsonValues));
+			Out_Data = UFRM_RequestLibrary::JsonObjectToString(JsonObject, JSONDebugMode);
+		}
+		else
+		{
+			Out_Data = UFRM_RequestLibrary::JsonArrayToString(JsonValues, JSONDebugMode);
+		}
 	} else if (JsonValues.Num() == 0) {
 		Out_Data = "{}";
 	}
