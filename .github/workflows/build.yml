@@ -27,6 +27,10 @@ on:
       - "www/**"
   workflow_dispatch:
 
+concurrency:
+  group: build-${{ github.head_ref || github.event.pull_request.head.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     if: github.event.pull_request.draft == false
