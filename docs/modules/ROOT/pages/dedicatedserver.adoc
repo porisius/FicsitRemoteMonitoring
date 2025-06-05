@@ -24,7 +24,7 @@ There are some differences between the FRM Web Server and the Game Port API, whi
 
 * The Game Port API does not support simple GET requests for API data. You must use a POST request in the following format to get data returned. Please refer to each endpoint's documentation for the specific request body.
 
-    ** Here is an example request using Powershell 7's Invoke-WebRequest:
+    ** Here is an example request using Powershell 7's Invoke-WebRequest: Similiar request can also be made by `curl`
 
     ```
     Invoke-WebRequest -Uri https://localhost:7777/api/v1 -Method POST -ContentType application/json -Body '{"function": "frm", "endpoint": "getPlayer"}' -SkipCertificateCheck
@@ -54,7 +54,7 @@ There are some differences between the FRM Web Server and the Game Port API, whi
     ```json
     {
         "function": "frm",
-        "endpoint": "getPlayer",
+        "endpoint": "getPlayer"
     }
     ```
 

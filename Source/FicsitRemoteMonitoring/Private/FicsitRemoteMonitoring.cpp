@@ -14,6 +14,8 @@
 #include "StructuredLog.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetStringLibrary.h"
+#include "TimerManager.h"
+#include "Engine/World.h"
 
 us_listen_socket_t* SocketListener;
 bool SocketRunning = false;
@@ -422,7 +424,7 @@ void AFicsitRemoteMonitoring::OnClientDisconnected(uWS::WebSocket<false, true, F
 
 void AFicsitRemoteMonitoring::OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode) {
 
-	FString MessageContent = FString(message.data());
+	FString MessageContent = FString(message.data()).Left(message.size());
 
 	// Parse JSON message from the client
 	TSharedPtr<FJsonObject> JsonRequest;
@@ -496,7 +498,7 @@ void AFicsitRemoteMonitoring::PushUpdatedData() {
             continue;
         }
 
-        bool bAllocationComplete = false;
+        bool bSuccess = false;
     	int32 ErrorCode = 404;
 
     	FRequestData RequestData = FRequestData();
@@ -504,18 +506,14 @@ void AFicsitRemoteMonitoring::PushUpdatedData() {
 
         FString Json;
 
-    	HandleEndpoint(Endpoint, RequestData, bAllocationComplete, ErrorCode, Json, EInterfaceType::Socket);
+    	HandleEndpoint(Endpoint, RequestData, bSuccess, ErrorCode, Json, EInterfaceType::Socket);
 
-        //block while not complete
-        while (!bAllocationComplete)
-        {
-            //100micros sleep, this should be very quick
-            FPlatformProcess::Sleep(0.0001f);
-        };        
-
+    	FTCHARToUTF8 Converted(*Json);
+    	const char* UWSOutput = Converted.Get();
+    	
         // Broadcast updated data to all clients subscribed to this endpoint
         for (uWS::WebSocket<false, true, FWebSocketUserData>* Client : Elem.Value) {
-            Client->send(TCHAR_TO_UTF8(*Json), uWS::OpCode::TEXT);
+            Client->send(UWSOutput, uWS::OpCode::TEXT);
         }
     }
 }

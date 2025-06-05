@@ -2,21 +2,17 @@
 
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
-[WARNING]
-====
-**CURRENTLY BEING RE-WRITTEN THIS INFORMATION IS SUBJECT TO CHANGE, INFORMATION IS LEFT FOR REFERENCE FOR RE-WRITE**
-====
+FRM provides a WebSocket server that can be configured on a port of your choosing (Default: 8080). This is the same as the web server URL/Port.
 
-FRM provides a WebSocket server that can be configured on a port of your choosing (Default: 8081). This can be modified by either modifying the HTTP_Root value in %SatisfactoryRootFolder%\FactoryGame\Configs\FicsitRemoteMonitoring\WebSockets.cfg (Config File Method), or by Satisfactory's Main Menu > Mods > FicsitRemoteMonitoring > WebSocket Port (Game UI Method).
+Accessing the websocket server can be done via a browser that is using a WebSockets Tester (I recommend https://www.piesocket.com/websocket-tester). The default WebSocket connection is ws://<IP Address>:8080/
 
-Accessing the websocket server can be done via a browser that is using a WebSockets Tester (I recommend https://www.piesocket.com/websocket-tester). The default WebSocket connection is ws://<IP Address>:8081/
+Useful Online Testers:
+https://www.piesocket.com/websocket-tester - Ensures connection
+https://websocketking.com/ - Allows payloads to be sent. Please note that you may have to allow Insecure connections in your browser as there is no `wss` functionality.
 
-The websocket server, by default, is not activated until the appropriate chat command is provided. You may also have the websocket server auto-start by enabling the Autostart WebSocket Server in Game UI Method, or changing the WebSocket_Autostart in the Config File Method to true.
+The websocket server, by default, is not activated until the appropriate chat command is provided (/frm http start). You may also have the web server auto-start changing the Web_Autostart in the Config File Method to true.
 
-There are two methods of receiving information. A one time request, or a subscription/publishing. 
-
-One-Time Request: +
-This is a simple call for information, and not a constant reply. Useful for testing or controlling the polling rate.
+Please note that the web server and web socket system are one module, so enabling one enables the other.
 
 Subscription/Publishing: +
 A request is needed to be made to "subscribe" to an API function. Afterwards, the mod will then "publish" the output, of the subscribed APIs, to the connecting client as defined by the WebSocket Delay.
@@ -28,33 +24,49 @@ API Endpoint Usage:
 
 Usage Example:
 
-* One Time Client Request to Server:
+* Subscription To API Endpoints Request to Server:
 +
 [source,json]
 -----------------
-{
-   "command":"API_Name",
+{ 
+  "action": "subscribe",
+  "endpoints":  { "getPlayers" }
 }
 -----------------
 
-* Subscription Request to Server:
 +
 [source,json]
 -----------------
-{
-   "subscribe":"API_Name",
+{ 
+  "action": "subscribe",
+  "endpoints": [
+                  "getPlayers",
+                  "getPower"
+               ]
 }
 -----------------
 
-* Un-subscription Request to Server:
+* Unsubscribe from API Endpoints Request to Server:
 +
 [source,json]
 -----------------
-{
-   "unsubscribe":"API_Name",
+{ 
+  "action": "unsubscribe",
+  "endpoints":  { "getPlayers" }
 }
 -----------------
 
++
+[source,json]
+-----------------
+{ 
+  "action": "unsubscribe",
+  "endpoints": [
+                  "getPlayers",
+                  "getPower"
+               ]
+}
+-----------------
 
 Live use case: (Example is API Endpoint: getPower)
 
@@ -62,8 +74,11 @@ Live use case: (Example is API Endpoint: getPower)
 +
 [source,json]
 -----------------
-{
-   "command":"getPower"
+{ 
+  "action": "subscribe",
+  "endpoints":  [
+                  "getPower"
+               ]
 }
 -----------------
 

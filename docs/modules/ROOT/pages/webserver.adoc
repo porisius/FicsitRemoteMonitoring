@@ -6,7 +6,9 @@ FRM provides a HTTP & WebSocket server that can be configured on a port of your 
 
 Accessing the web server can be done via a browser (Tested on Chrome and Opera) at localhost:<port> (Ex. localhost:8080)
 
-The web server, by default, is not activated until the appropriate chat command is provided. You may also have the web server auto-start by enabling the Autostart Web Server in Game UI Method, or changing the Web_Autostart in the Config File Method to true.
+The web server, by default, is not activated until the appropriate chat command is provided. You may also have the web server auto-start changing the Web_Autostart in the Config File Method to true.
+
+Please note that the web server and web socket system are one module, so enabling one enables the other.
 
 Chat Commands:
 
