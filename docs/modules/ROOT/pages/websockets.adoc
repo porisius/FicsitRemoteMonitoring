@@ -30,7 +30,7 @@ Usage Example:
 -----------------
 { 
   "action": "subscribe",
-  "endpoints":  { "getPlayers" }
+  "endpoints":  { "getPlayer" }
 }
 -----------------
 
@@ -40,7 +40,7 @@ Usage Example:
 { 
   "action": "subscribe",
   "endpoints": [
-                  "getPlayers",
+                  "getPlayer",
                   "getPower"
                ]
 }
@@ -52,7 +52,7 @@ Usage Example:
 -----------------
 { 
   "action": "unsubscribe",
-  "endpoints":  { "getPlayers" }
+  "endpoints":  { "getPlayer" }
 }
 -----------------
 
@@ -62,7 +62,7 @@ Usage Example:
 { 
   "action": "unsubscribe",
   "endpoints": [
-                  "getPlayers",
+                  "getPlayer",
                   "getPower"
                ]
 }
