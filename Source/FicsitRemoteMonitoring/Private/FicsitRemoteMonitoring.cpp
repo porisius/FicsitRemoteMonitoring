@@ -921,7 +921,7 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
         Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
 
         try {
-            if (EndpointInfo.bRequireGameThread && RequestData.Interface != EInterfaceType::Server) {
+            if (EndpointInfo.bRequireGameThread && !IsInGameThread()) {
                 FThreadSafeBool bAllocationComplete = false;
                 AsyncTask(ENamedThreads::GameThread, [this, &EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &ErrorCode, &bSuccess]() {
 					//if (SocketListener && EndpointInfo.FunctionPtr)
