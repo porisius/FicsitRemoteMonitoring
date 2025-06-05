@@ -24,12 +24,37 @@ There are some differences between the FRM Web Server and the Game Port API, whi
 
 * The Game Port API does not support simple GET requests for API data. You must use a POST request in the following format to get data returned. Please refer to each endpoint's documentation for the specific request body.
 
+    ** Here is an example request using Powershell 7's Invoke-WebRequest:
+
+    ```
+    Invoke-WebRequest -Uri https://localhost:7777/api/v1 -Method POST -ContentType application/json -Body '{"function": "frm", "endpoint": "getPlayer"}' -SkipCertificateCheck
+
+    StatusCode        : 200
+    StatusDescription : OK
+    Content           : [{"ID":"Char_Player_C_2146409224","Name":"","ClassName":"Char_Player_C","location":{"x":-258596.109
+                        375,"y":-48086.0078125,"z":439.743896484375,"rotation":353.14453212390106},"Online":false,"PlayerHP
+                        ":…
+    RawContent        : HTTP/1.1 200 OK
+                        Server: FactoryGame/++FactoryGame+rel-main-1.1.0-CL-415558
+                        Server: (Windows)
+                        Keep-Alive: timeout=15.000000
+                        Content-Type: application/json; charset=utf-8
+                        Content-Disposition: inlin…
+    Headers           : {[Server, System.String[]], [Keep-Alive, System.String[]], [Content-Type, System.String[]],
+                        [Content-Disposition, System.String[]]…}
+    Images            : {}
+    InputFields       : {}
+    Links             : {}
+    RawContentLength  : 1522
+    RelationLink      : {}
+    ```
+
     ** The example below is for getting the list of players on the server. Please see the respective endpoint documentation for examples of their JSON response.
 
     ```json
     {
         "function": "frm",
-        "endpoint": "getPlayers",
+        "endpoint": "getPlayer",
     }
     ```
 
