@@ -4,8 +4,6 @@
 
 = Get UObject Count
 
-include::../_isGetAll.adoc[]
-
 Not intended to enrage, aggravate, or annoy alpacas, nor encourage targets for spitting,
 especially those in Europe, Sweden, or at Coffee Stain Studios.
 

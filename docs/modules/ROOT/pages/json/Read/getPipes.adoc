@@ -3,8 +3,6 @@
 
 = Get Pipes
 
-include::../_isGetAll.adoc[]
-
 Get a list of all Pipes.
 
 == URL

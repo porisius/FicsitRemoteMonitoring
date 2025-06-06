@@ -3,8 +3,6 @@
 
 = Get Drone Station
 
-include::../_isGetAll.adoc[]
-
 Gets a list of all drone stations.
 
 == URL

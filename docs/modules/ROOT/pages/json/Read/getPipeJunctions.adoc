@@ -3,8 +3,6 @@
 
 = Pipe Junctions
 
-include::../_isGetAll.adoc[]
-
 Get a list of all pipe junctions.
 
 == URL

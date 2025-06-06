@@ -4,8 +4,6 @@
 
 = Get Space Elevator
 
-include::../_isGetAll.adoc[]
-
 Get a list of all space elevators.
 
 == URL

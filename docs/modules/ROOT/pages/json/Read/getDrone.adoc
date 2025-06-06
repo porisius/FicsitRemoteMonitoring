@@ -3,8 +3,6 @@
 
 = Get Drone
 
-include::../_isGetAll.adoc[]
-
 Gets a list of all drones.
 
 == URL

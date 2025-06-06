@@ -3,8 +3,6 @@
 
 = Get Belts
 
-include::../_isGetAll.adoc[]
-
 Get a list of all belts.
 
 == URL

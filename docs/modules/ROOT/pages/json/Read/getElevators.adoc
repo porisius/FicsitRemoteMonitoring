@@ -4,8 +4,6 @@
 
 = Get Elevators
 
-include::../_isGetAll.adoc[]
-
 Get a list of all elevators.
 
 == URL

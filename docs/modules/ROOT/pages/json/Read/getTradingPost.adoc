@@ -4,8 +4,6 @@
 
 = Central HUB, or as it was originally called the Trading Post, Information
 
-include::../_isGetAll.adoc[]
-
 API Endpoint: getTradingPost
 
 == URL

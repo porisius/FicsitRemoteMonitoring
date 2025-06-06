@@ -4,8 +4,6 @@
 
 = Get Factory
 
-include::../_isGetAll.adoc[]
-
 Get a list of all factory buildings.
 
 getAssembler only retrieves Assemblers +

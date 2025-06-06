@@ -3,8 +3,6 @@
 
 = Get Doggo
 
-include::../_isGetAll.adoc[]
-
 Gets a list of all doggos.
 
 == URL

@@ -3,8 +3,6 @@
 
 = getPowerUsage
 
-include::../_isGetAll.adoc[]
-
 [WARNING]
 ====
 This endpoint is new and not yet documented.

@@ -3,8 +3,6 @@
 
 = Get Cables
 
-include::../_isGetAll.adoc[]
-
 Get a list of all cables.
 
 == URL
