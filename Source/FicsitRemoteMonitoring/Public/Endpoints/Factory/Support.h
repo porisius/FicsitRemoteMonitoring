@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "RemoteMonitoringLibrary.h"
 #include "FRM_RequestData.h"
 #include "Dom/JsonValue.h"
@@ -20,5 +20,8 @@ public:
 	static void getElevators(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray);
 	static void getPortal(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray);
 	static void getRadarTower(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray);
+	static void getSigns(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray);
 
+	friend class AFGBuildableWidgetSign;
+	
 };

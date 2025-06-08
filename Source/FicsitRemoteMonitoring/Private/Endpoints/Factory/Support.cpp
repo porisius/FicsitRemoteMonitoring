@@ -8,6 +8,7 @@
 #include "FGBuildablePortalSatellite.h"
 #include "FGBuildableRadarTower.h"
 #include "FGBuildableResourceSink.h"
+#include "FGBuildableWidgetSign.h"
 #include "FGElevatorTypes.h"
 #include "FGGamePhaseManager.h"
 #include "FGResourceNodeBase.h"
@@ -369,5 +370,47 @@ void USupport::getPortal(UObject* WorldContext, FRequestData RequestData, TArray
 		TSharedPtr<FJsonObject> JPortal = CreateBuildableBaseJsonObject(Portal);
 		JPortal->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(getPowerConsumptionJSON(Portal->GetPowerInfo())));
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JPortal));
+	}
+}
+
+void USupport::getSigns(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+{
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+
+	TArray<AFGBuildableWidgetSign*> Signs;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableWidgetSign>(Signs);
+
+	for (AFGBuildableWidgetSign* Sign : Signs)
+	{
+		TSharedPtr<FJsonObject> JSign = CreateBuildableBaseJsonObject(Sign);
+		
+		TMap<FString, FString> TextMap = Sign->mTextElementToDataMap;
+		TArray<FString> TextKeys;
+		TextMap.GetKeys(TextKeys);
+		TArray<TSharedPtr<FJsonObject>> JTextDataMap;
+		TSharedPtr<FJsonObject> JTextData;
+		for (FString TextKey : TextKeys)
+		{
+			JTextData->SetStringField(TextKey, TextMap[TextKey]);
+			JTextDataMap.Add(JTextData);
+		}
+
+		TMap<FString, int32> IconMap = Sign->mIconElementToDataMap;
+		TArray<FString> IconKeys;
+		IconMap.GetKeys(IconKeys);
+		TArray<TSharedPtr<FJsonObject>> JIconDataMap;
+		TSharedPtr<FJsonObject> JIconData;
+		for (FString IconKey : IconKeys)
+		{
+			JIconData->SetNumberField(IconKey, IconMap[IconKey]);
+			JIconDataMap.Add(JIconData);
+		}
+
+		JSign->Values.Add("Text", MakeShared<FJsonValueObject>(JTextData));
+		JSign->Values.Add("Icon", MakeShared<FJsonValueObject>(JIconData));
+		JSign->Values.Add("Emissive", MakeShared<FJsonValueNumber>(Sign->mEmissive));
+		JSign->Values.Add("Glossiness", MakeShared<FJsonValueNumber>(Sign->mGlossiness));
+		
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JSign));	
 	}
 }

@@ -737,6 +737,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getBlueprints", &USession::getBlueprints));
 	RegisterEndpoint(FAPIEndpoint("GET", "getTrainSignals", &UTrains::getTrainSignals));
 	RegisterEndpoint(FAPIEndpoint("GET", "getVehiclePaths", &UVehicles::getVehiclePaths));
+	RegisterEndpoint(FAPIEndpoint("GET", "getSigns", &USupport::getSigns));
 
 	// event endpoints
 	RegisterEndpoint(FAPIEndpoint("GET", "getFallingGiftBundles", &UEventsLibrary::getFallingGiftBundles).RequiresGameThread());
