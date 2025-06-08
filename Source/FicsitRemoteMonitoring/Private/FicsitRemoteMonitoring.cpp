@@ -742,7 +742,6 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getFallingGiftBundles", &UEventsLibrary::getFallingGiftBundles).RequiresGameThread());
 
 	//FRM API Endpoint Groups
-	RegisterEndpoint(FAPIEndpoint("GET", "getAll", &AFicsitRemoteMonitoring::getAll));
 	RegisterEndpoint(FAPIEndpoint("GET", "getFactory", &UFactoryLibrary::getFactory));
 	RegisterEndpoint(FAPIEndpoint("GET", "getGenerators", &UPower::getGenerators));
 	RegisterEndpoint(FAPIEndpoint("GET", "getVehicles", &UVehicles::getVehicles));
@@ -752,6 +751,11 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("POST", "setEnabled", &UCommunication::setEnabled).RequiresAuthentication());
 	RegisterEndpoint(FAPIEndpoint("POST", "sendChatMessage", &UCommunication::sendChatMessage).RequiresAuthentication().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("POST", "createPing", &UCommunication::createPing).RequiresAuthentication().RequiresGameThread());
+	
+
+	// API Endpoints Retired - Remove in next update after 1.4.0
+	RegisterEndpoint(FAPIEndpoint("GET", "getAll", &AFicsitRemoteMonitoring::getAll));
+	
 }
 
 FString AFicsitRemoteMonitoring::FlavorTextRandomizer(EFlavorType FlavorType) {

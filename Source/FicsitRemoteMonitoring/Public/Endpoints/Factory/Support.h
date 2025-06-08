@@ -1,5 +1,4 @@
-﻿#pragma once
-#include "FGBlueprintFunctionLibrary.h"
+#pragma once
 #include "RemoteMonitoringLibrary.h"
 #include "FRM_RequestData.h"
 #include "Dom/JsonValue.h"

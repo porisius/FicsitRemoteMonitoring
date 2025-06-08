@@ -2,7 +2,7 @@
 
 #include "FGBuildableConveyorBelt.h"
 #include "FGBuildableConveyorLift.h"
-#include "FGBuildableManufacturer.h"
+#include "FGResearchTreeNode.h"
 #include "FGResourceDeposit.h"
 #include "Power.h"
 #include "FRM_RequestData.h"
@@ -119,7 +119,6 @@ public:
 	void RegisterEndpoint(const FAPIEndpoint& Endpoint);
 	
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
-	//FString HandleEndpoint (UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode);
 	void HandleEndpoint (FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode, FString& Out_Data, EInterfaceType Interface);
 	
 	FCallEndpointResponse CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode);
@@ -135,10 +134,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void SchematicToRecipes_BIE(UObject* WorldContext, TSubclassOf<class UFGSchematic> schematicClass, TArray<TSubclassOf< class UFGRecipe >>& out_RecipeClasses, bool& Purchased, bool& HasUnlocks, bool& LockedAny, bool& LockedTutorial, bool& LockedDependent, bool& LockedPhase, bool& Tutorial);
-
-	// TODO unused can be removed
-	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
-	void RecipeNames_BIE(TSubclassOf<class UFGRecipe> recipeClass, FString& Name, FString& ClassName, FString& CategoryName);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void CircuitID_BIE(AFGBuildableFactory* Buildable, int32& CircuitID, float& PowerConsumption);

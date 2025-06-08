@@ -9,6 +9,7 @@
 #include "FGResourceSinkSettings.h"
 #include "Runtime/Engine/Classes/Engine/GameInstance.h"
 #include "ModLoadingLibrary.h"
+#include "OnlineSubsystem.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
