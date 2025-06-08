@@ -1,5 +1,6 @@
-﻿#include "Session.h"
+#include "Session.h"
 
+#include "FGBlueprintSubsystem.h"
 #include "FGBuildableGeneratorFuel.h"
 #include "FGBuildableManufacturer.h"
 #include "FGBuildableResourceExtractor.h"
@@ -8,6 +9,7 @@
 #include "FGResourceSinkSettings.h"
 #include "Runtime/Engine/Classes/Engine/GameInstance.h"
 #include "ModLoadingLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 void USession::getSessionInfo(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
@@ -314,4 +316,40 @@ void USession::getUObjectCount(UObject* WorldContext, FRequestData RequestData, 
 	JResponse->Values.Add("UObjectCount", MakeShared<FJsonValueNumber>(UObjectCount));
 	JResponse->Values.Add("UObjectCapacity", MakeShared<FJsonValueNumber>(UObjectCapacity));
 	OutJsonArray.Add(MakeShared<FJsonValueObject>(JResponse));
+}
+
+void USession::getBlueprints(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+{
+	AFGBlueprintSubsystem* BlueprintSubsystem = AFGBlueprintSubsystem::GetBlueprintSubsystem(WorldContext);
+
+	TArray<UFGBlueprintDescriptor*> BlueprintDescriptors;
+	BlueprintSubsystem->GetBlueprintDescriptors(BlueprintDescriptors, WorldContext);
+
+	for (UFGBlueprintDescriptor* BlueprintDescriptor : BlueprintDescriptors)
+	{
+
+		TSharedPtr<FJsonObject> JResponse = CreateBaseJsonObject(BlueprintDescriptor);
+		
+		TArray<FItemAmount> BlueprintCost;
+		BlueprintDescriptor->GetBlueprintCost(BlueprintCost);
+		
+		FIntVector BlueprintDimensions = BlueprintDescriptor->GetDimensionsOnInstance();
+
+		FBlueprintRecord BlueprintRecord = BlueprintDescriptor->GetDescriptorAsRecord();
+	
+		//FText BlueprintCategory = BlueprintRecord.Category->GetCategoryNameFromInstance();
+		//FText BlueprintSubCategory = BlueprintRecord.SubCategory->GetCategoryNameFromInstance();
+		
+		//TArray<FLocalUserNetIdBundle> LocalUserNetIdBundle = BlueprintDescriptor->GetLastEditedBy();
+
+		JResponse->Values.Add("Name", MakeShared<FJsonValueString>(BlueprintRecord.BlueprintName));
+		JResponse->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(BlueprintDescriptor->GetClass())));
+		JResponse->Values.Add("Description", MakeShared<FJsonValueString>(BlueprintRecord.BlueprintDescription));
+		JResponse->Values.Add("Dimensions", MakeShared<FJsonValueObject>(ConvertVectorToFJsonObject(BlueprintDimensions)));
+		//JResponse->Values.Add("Category", MakeShared<FJsonValueString>(BlueprintCategory.ToString()));
+		//JResponse->Values.Add("SubCategory", MakeShared<FJsonValueString>(BlueprintSubCategory.ToString()));
+		JResponse->Values.Add("BlueprintCost", MakeShared<FJsonValueArray>(GetInventoryJSON(BlueprintCost)));
+
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JResponse));
+	}
 }
