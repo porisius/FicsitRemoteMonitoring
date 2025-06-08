@@ -61,5 +61,6 @@ public:
 	static TSharedPtr<FJsonObject> ColorSlotToJson(AFGBuildable* Buildable);
 	static TSharedPtr<FJsonObject> getPowerConsumptionJSON(UFGPowerInfoComponent* powerInfo);
 	static TSharedPtr<FJsonObject> ConvertVectorToFJsonObject(FVector JsonVector);
+	static TSharedPtr<FJsonObject> ConvertVectorToFJsonObject(FIntVector JsonVector);
 	static TSharedPtr<FJsonValueArray> GetSplineVector(TArray<FSplinePointData>);
 };

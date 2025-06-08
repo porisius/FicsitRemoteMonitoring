@@ -66,13 +66,29 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getActorFactoryCompXYZ(AFGBuil
 
 };
 
-TSharedPtr<FJsonObject> URemoteMonitoringLibrary::ConvertVectorToFJsonObject(FVector PowerWire) {
+TSharedPtr<FJsonObject> URemoteMonitoringLibrary::ConvertVectorToFJsonObject(FVector Vector) {
 
 	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();
 
-	long double primaryX = PowerWire.X;
-	long double primaryY = PowerWire.Y;
-	long double primaryZ = PowerWire.Z;
+	long double primaryX = Vector.X;
+	long double primaryY = Vector.Y;
+	long double primaryZ = Vector.Z;
+
+	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(primaryX));
+	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(primaryY));
+	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(primaryZ));
+
+	return JLibrary;
+
+};
+
+TSharedPtr<FJsonObject> URemoteMonitoringLibrary::ConvertVectorToFJsonObject(FIntVector Vector) {
+
+	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();
+
+	long double primaryX = Vector.X;
+	long double primaryY = Vector.Y;
+	long double primaryZ = Vector.Z;
 
 	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(primaryX));
 	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(primaryY));

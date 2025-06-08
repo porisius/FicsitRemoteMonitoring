@@ -1,7 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "Trains.h"
 
+#include "FGBuildableRailroadSignal.h"
 #include "FGBuildableRailroadStation.h"
 #include "FGBuildableTrainPlatform.h"
 #include "FGBuildableTrainPlatformCargo.h"
@@ -305,5 +304,36 @@ void UTrains::getTrainRails(UObject* WorldContext, FRequestData RequestData, TAr
 		JRailroadTrack->Values.Add("features", MakeShared<FJsonValueObject>(GetActorLineFeaturesJSON(PointZero, PointOne, RailroadTrack->mDisplayName.ToString(), RailroadTrack->mDisplayName.ToString())));
 
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JRailroadTrack));
+	}
+};
+
+void UTrains::getTrainSignals(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+
+	TArray<AFGBuildableRailroadSignal*> RailroadSignals;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildableRailroadSignal>(RailroadSignals);
+
+	for (AFGBuildableRailroadSignal* RailroadSignal : RailroadSignals) {
+
+		if (!IsValid(RailroadSignal)) { continue; }
+
+		TSharedPtr<FJsonObject> JRailroadSignal = CreateBuildableBaseJsonObject(RailroadSignal);
+		
+		ERailroadSignalAspect AspectValue = RailroadSignal->GetAspect();
+		ERailroadBlockValidation BlockValidation = RailroadSignal->GetBlockValidation();
+
+		static const UEnum* AspectValuePtr = StaticEnum<ERailroadBlockValidation>();
+		int32 AspectIndex = AspectValuePtr->GetIndexByValue(static_cast<int64>(AspectValue));
+		FString Aspect = (AspectValuePtr->GetDisplayNameTextByIndex(AspectIndex)).ToString();
+
+		static const UEnum* BlockValidationPtr = StaticEnum<ERailroadBlockValidation>();
+		int32 BlockIndex = BlockValidationPtr->GetIndexByValue(static_cast<int64>(BlockValidation));
+		FString BlockValid = (BlockValidationPtr->GetDisplayNameTextByIndex(BlockIndex)).ToString();
+		
+		JRailroadSignal->Values.Add("Aspect", MakeShared<FJsonValueString>(Aspect));
+		JRailroadSignal->Values.Add("BlockValid", MakeShared<FJsonValueString>(BlockValid));
+		JRailroadSignal->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(RailroadSignal, RailroadSignal->mDisplayName.ToString(), RailroadSignal->mDisplayName.ToString())));
+
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JRailroadSignal));
 	}
 };
