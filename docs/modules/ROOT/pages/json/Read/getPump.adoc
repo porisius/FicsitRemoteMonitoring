@@ -1,7 +1,7 @@
 ﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= Pumps
+= Get Pump
 
 include::../_isGetAll.adoc[]
 

@@ -1,370 +1,578 @@
-= Schematics Status
-
+:doctype: book
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getSchematics +
+= Get Schematics
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+include::../_useGameThread.adoc[]
 
-|Name
-|Schematic/Milestone Name
-|String
-|Output
+Get information about all schematics.
 
-|TechTier
-|Tech Tier
-|Integer
-|Output
+== URL
 
-|Type
-|Schematic/Milestone Type
-|String
-|Output
+`GET http://localhost:8080/getSchematics`
 
-|Recipes/RecipeName
-|Name of Recipe Associated with Schematic/Milestone
-|String
-|Output
+include::../_responseBody.adoc[]
 
-|Recipes/Category
-|Recipe Category
-|String
-|Output
+| | Object[] | List of all Schematics
+// schematic details
+include::../Models/_schematic.adoc[]
 
-|Recipes/Events/Name
-|Special Event Name, if applicable, for recipe
-|String
-|Output
+{set:depth:  }
+include::../Models/_recipe.adoc[]
+// ingredients
+{set:depth:    }}
+| {depth}Ingredients | Object[] | Ingredients for this recipe.
+include::../Models/_inventoryItem.adoc[]
+| {depth}  ManualRate | Float | TODO
+| {depth}  FactoryRate | Float | TODO
 
-|Recipes/Ingredients/Name
-|Name of items needed for Recipe
-|String
-|Output
+// products
+| {depth}Products | Object[] | Products produced by this recipe.
+include::../Models/_inventoryItem.adoc[]
+| {depth}  ManualRate | Float | TODO
+| {depth}  FactoryRate | Float | TODO
+{set:depth:}
+// recipe details end
 
-|Recipes/Ingredients/ClassName
-|UE Class Name
-|String
-|Output
-
-|Recipes/Ingredients/Amount
-|Amount of items required for recipe
-|Integar
-|Output
-
-|Recipes/Ingredients/ManualRate
-|Rate per minute, the items manual processing requires at 100% throughput
-|Float
-|Output
-
-|Recipes/Ingredients/FactoryRate
-|Rate per minute, the items automated processing requires at 100% throughput
-|Float
-|Output
-
-|Recipes/Products/Name
-|Name of items produced for Recipe
-|String
-|Output
-
-|Recipes/Products/ClassName
-|UE Class Name
-|String
-|Output
-
-|Recipes/Products/Amount
-|Amount of items produced for recipe
-|Integar
-|Output
-
-|Recipes/Products/ManualRate
-|Rate per minute, the items manual processing produces at 100% throughput
-|Float
-|Output
-
-|Recipes/Products/FactoryRate
-|Rate per minute, the items automated processing produces at 100% throughput
-|Float
-|Output
-
-|Recipes/ProducedIn/ProducedIn
-|Build tool/factory building used to create item
-|String
-|Output
-
-|Recipes/ManualDuration
-|Name of Item Associated with Schematic/Milestone
-|String
-|Output
-
-|Recipes/ManufacturingDuration
-|Name of Item Associated with Schematic/Milestone
-|String
-|Output
-
-|Locked
-|Is the Schematic/Milestone Locked (Unsure of what CSS Defines)
-|Boolean
-|Output
-
-|Purchased
-|Is Schematic/Milestone Purchased
-|Boolean
-|Output
-
-|DepLocked
-|Dependency Lock for Schematic/Milestone
-|Boolean
-|Output
+| {depth}  Cost | Object[] | A list of required items for this schematic.
+{set:depth:  }
+include::../Models/_inventoryItem.adoc[]
+| {depth}  RemainingCost | Integer | Remaining items to complete this item.
+| {depth}  TotalCost | Integer | Total item amount required to complete this item.
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-   {
-   "Name": "Wall Signs",
-   "TechTier": 1,
-   "Type": 6.1552420141504922e+17,
-   "Recipes": [
+  {
+    "ID": "Schematic_SaveCompatibility_C",
+    "Name": "Save Compatibility",
+    "ClassName": "Schematic_SaveCompatibility_C",
+    "TechTier": 0,
+    "Type": "Custom",
+    "Recipes": [
       {
-         "RecipeName": "Wall Holo Sign 1x1",
-         "Category": "N/A",
-         "Events": [],
-         "Ingredients": [
-            {
-               "Name": "Iron Plate",
-               "ClassName": "Desc_IronPlate_C",
-               "Amount": 3,
-               "ManualRate": 180,
-               "FactoryRate": 180
-            },
-            {
-               "Name": "Iron Rod",
-               "ClassName": "Desc_IronRod_C",
-               "Amount": 4,
-               "ManualRate": 240,
-               "FactoryRate": 240
-            },
-            {
-               "Name": "Screw",
-               "ClassName": "Desc_IronScrew_C",
-               "Amount": 4,
-               "ManualRate": 240,
-               "FactoryRate": 240
-            },
-            {
-               "Name": "Quickwire",
-               "ClassName": "Desc_HighSpeedWire_C",
-               "Amount": 10,
-               "ManualRate": 600,
-               "FactoryRate": 600
-            },
-            {
-               "Name": "Quartz Crystal",
-               "ClassName": "Desc_QuartzCrystal_C",
-               "Amount": 3,
-               "ManualRate": 180,
-               "FactoryRate": 180
-            }
-         ],
-         "Products": [
-            {
-               "Name": "Wall Holo Sign 1x1",
-               "ClassName": "Desc_RSS_Holoscreen_1x1_C",
-               "Amount": 1,
-               "ManualRate": 60,
-               "FactoryRate": 60
-            }
-         ],
-         "ProducedIn": [
-            {
-               "ProducedIn": "Build Gun"
-            }
-         ],
-         "ManualDuration": 1,
-         "ManufacturingDuration": 1
+        "ID": "Recipe_Fence_01_C",
+        "Name": "Industrial Railing",
+        "ClassName": "Recipe_Fence_01_C",
+        "Category": "N/A",
+        "Events": [],
+        "Ingredients": [
+          {
+            "Name": "Iron Rod",
+            "ClassName": "Desc_IronRod_C",
+            "Amount": 4,
+            "MaxAmount": 200,
+            "ManualRate": 240,
+            "FactoryRate": 240
+          }
+        ],
+        "Products": [
+          {
+            "Name": "Industrial Railing",
+            "ClassName": "Desc_Fence_01_C",
+            "Amount": 1,
+            "MaxAmount": 100,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "ProducedIn": [
+          "BP_BuildGun_C"
+        ],
+        "ManualDuration": 1,
+        "FactoryDuration": 1
       },
       {
-         "RecipeName": "Wall Holo Sign 1x2",
-         "Category": "N/A",
-         "Events": [],
-         "Ingredients": [
-            {
-               "Name": "Iron Plate",
-               "ClassName": "Desc_IronPlate_C",
-               "Amount": 3,
-               "ManualRate": 180,
-               "FactoryRate": 180
-            },
-            {
-               "Name": "Iron Rod",
-               "ClassName": "Desc_IronRod_C",
-               "Amount": 4,
-               "ManualRate": 240,
-               "FactoryRate": 240
-            },
-            {
-               "Name": "Screw",
-               "ClassName": "Desc_IronScrew_C",
-               "Amount": 4,
-               "ManualRate": 240,
-               "FactoryRate": 240
-            },
-            {
-               "Name": "Quickwire",
-               "ClassName": "Desc_HighSpeedWire_C",
-               "Amount": 10,
-               "ManualRate": 600,
-               "FactoryRate": 600
-            },
-            {
-               "Name": "Quartz Crystal",
-               "ClassName": "Desc_QuartzCrystal_C",
-               "Amount": 3,
-               "ManualRate": 180,
-               "FactoryRate": 180
-            }
-         ],
-         "Products": [
-            {
-               "Name": "Wall Holo Sign 1x2",
-               "ClassName": "Desc_RSS_Holoscreen_1x2_C",
-               "Amount": 1,
-               "ManualRate": 60,
-               "FactoryRate": 60
-            }
-         ],
-         "ProducedIn": [
-            {
-               "ProducedIn": "Build Gun"
-            }
-         ],
-         "ManualDuration": 1,
-         "ManufacturingDuration": 1
+        "ID": "Recipe_Wall_Window_8x4_03_Steel_C",
+        "Name": "Panel Window",
+        "ClassName": "Recipe_Wall_Window_8x4_03_Steel_C",
+        "Category": "N/A",
+        "Events": [],
+        "Ingredients": [
+          {
+            "Name": "Iron Plate",
+            "ClassName": "Desc_IronPlate_C",
+            "Amount": 3,
+            "MaxAmount": 200,
+            "ManualRate": 180,
+            "FactoryRate": 180
+          },
+          {
+            "Name": "Concrete",
+            "ClassName": "Desc_Cement_C",
+            "Amount": 3,
+            "MaxAmount": 500,
+            "ManualRate": 180,
+            "FactoryRate": 180
+          }
+        ],
+        "Products": [
+          {
+            "Name": "Panel Window",
+            "ClassName": "Desc_Wall_Window_8x4_03_Steel_C",
+            "Amount": 1,
+            "MaxAmount": 100,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "ProducedIn": [],
+        "ManualDuration": 1,
+        "FactoryDuration": 1
       },
       {
-         "RecipeName": "Wall Holo Sign 2x1",
-         "Category": "N/A",
-         "Events": [],
-         "Ingredients": [
-            {
-               "Name": "Iron Plate",
-               "ClassName": "Desc_IronPlate_C",
-               "Amount": 3,
-               "ManualRate": 180,
-               "FactoryRate": 180
-            },
-            {
-               "Name": "Iron Rod",
-               "ClassName": "Desc_IronRod_C",
-               "Amount": 4,
-               "ManualRate": 240,
-               "FactoryRate": 240
-            },
-            {
-               "Name": "Screw",
-               "ClassName": "Desc_IronScrew_C",
-               "Amount": 4,
-               "ManualRate": 240,
-               "FactoryRate": 240
-            },
-            {
-               "Name": "Quickwire",
-               "ClassName": "Desc_HighSpeedWire_C",
-               "Amount": 10,
-               "ManualRate": 600,
-               "FactoryRate": 600
-            },
-            {
-               "Name": "Quartz Crystal",
-               "ClassName": "Desc_QuartzCrystal_C",
-               "Amount": 3,
-               "ManualRate": 180,
-               "FactoryRate": 180
-            }
-         ],
-         "Products": [
-            {
-               "Name": "Wall Holo Sign 2x1",
-               "ClassName": "Desc_RSS_holoscreen_2x1_C",
-               "Amount": 1,
-               "ManualRate": 60,
-               "FactoryRate": 60
-            }
-         ],
-         "ProducedIn": [
-            {
-               "ProducedIn": "Build Gun"
-            }
-         ],
-         "ManualDuration": 1,
-         "ManufacturingDuration": 1
+        "ID": "Recipe_Wall_Conveyor_8x4_04_C",
+        "Name": "Perpendicular Wall Conveyor",
+        "ClassName": "Recipe_Wall_Conveyor_8x4_04_C",
+        "Category": "N/A",
+        "Events": [],
+        "Ingredients": [
+          {
+            "Name": "Iron Plate",
+            "ClassName": "Desc_IronPlate_C",
+            "Amount": 3,
+            "MaxAmount": 200,
+            "ManualRate": 180,
+            "FactoryRate": 180
+          },
+          {
+            "Name": "Concrete",
+            "ClassName": "Desc_Cement_C",
+            "Amount": 3,
+            "MaxAmount": 500,
+            "ManualRate": 180,
+            "FactoryRate": 180
+          }
+        ],
+        "Products": [
+          {
+            "Name": "Perpendicular Wall Conveyor",
+            "ClassName": "Desc_Wall_Conveyor_8x4_04_C",
+            "Amount": 1,
+            "MaxAmount": 100,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "ProducedIn": [
+          "BP_BuildGun_C"
+        ],
+        "ManualDuration": 1,
+        "FactoryDuration": 1
       },
       {
-         "RecipeName": "Wall Sign 7x1",
-         "Category": "N/A",
-         "Events": [],
-         "Ingredients": [
-            {
-               "Name": "Iron Plate",
-               "ClassName": "Desc_IronPlate_C",
-               "Amount": 3,
-               "ManualRate": 180,
-               "FactoryRate": 180
-            },
-            {
-               "Name": "Iron Rod",
-               "ClassName": "Desc_IronRod_C",
-               "Amount": 4,
-               "ManualRate": 240,
-               "FactoryRate": 240
-            },
-            {
-               "Name": "Screw",
-               "ClassName": "Desc_IronScrew_C",
-               "Amount": 4,
-               "ManualRate": 240,
-               "FactoryRate": 240
-            },
-            {
-               "Name": "Quickwire",
-               "ClassName": "Desc_HighSpeedWire_C",
-               "Amount": 10,
-               "ManualRate": 600,
-               "FactoryRate": 600
-            },
-            {
-               "Name": "Quartz Crystal",
-               "ClassName": "Desc_QuartzCrystal_C",
-               "Amount": 3,
-               "ManualRate": 180,
-               "FactoryRate": 180
-            }
-         ],
-         "Products": [
-            {
-               "Name": "Wall Sign 7x1",
-               "ClassName": "Desc_RSS_Holoscreen_7x1_C",
-               "Amount": 1,
-               "ManualRate": 60,
-               "FactoryRate": 60
-            }
-         ],
-         "ProducedIn": [
-            {
-               "ProducedIn": "Build Gun"
-            }
-         ],
-         "ManualDuration": 1,
-         "ManufacturingDuration": 1
+        "ID": "Recipe_Wall_Conveyor_8x4_04_Steel_C",
+        "Name": "Perpendicular Wall Conveyor",
+        "ClassName": "Recipe_Wall_Conveyor_8x4_04_Steel_C",
+        "Category": "N/A",
+        "Events": [],
+        "Ingredients": [
+          {
+            "Name": "Iron Plate",
+            "ClassName": "Desc_IronPlate_C",
+            "Amount": 3,
+            "MaxAmount": 200,
+            "ManualRate": 180,
+            "FactoryRate": 180
+          },
+          {
+            "Name": "Concrete",
+            "ClassName": "Desc_Cement_C",
+            "Amount": 3,
+            "MaxAmount": 500,
+            "ManualRate": 180,
+            "FactoryRate": 180
+          }
+        ],
+        "Products": [
+          {
+            "Name": "Perpendicular Wall Conveyor",
+            "ClassName": "Desc_Wall_Conveyor_8x4_04_Steel_C",
+            "Amount": 1,
+            "MaxAmount": 100,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "ProducedIn": [
+          "BP_BuildGun_C"
+        ],
+        "ManualDuration": 1,
+        "FactoryDuration": 1
+      },
+      {
+        "ID": "Recipe_JumpPad_C",
+        "Name": "Old Jump Pad",
+        "ClassName": "Recipe_JumpPad_C",
+        "Category": "N/A",
+        "Events": [],
+        "Ingredients": [
+          {
+            "Name": "Rotor",
+            "ClassName": "Desc_Rotor_C",
+            "Amount": 2,
+            "MaxAmount": 100,
+            "ManualRate": 120,
+            "FactoryRate": 120
+          },
+          {
+            "Name": "Iron Plate",
+            "ClassName": "Desc_IronPlate_C",
+            "Amount": 15,
+            "MaxAmount": 200,
+            "ManualRate": 900,
+            "FactoryRate": 900
+          },
+          {
+            "Name": "Cable",
+            "ClassName": "Desc_Cable_C",
+            "Amount": 10,
+            "MaxAmount": 200,
+            "ManualRate": 600,
+            "FactoryRate": 600
+          }
+        ],
+        "Products": [
+          {
+            "Name": "Old Jump Pad",
+            "ClassName": "Desc_JumpPad_C",
+            "Amount": 1,
+            "MaxAmount": 100,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "ProducedIn": [],
+        "ManualDuration": 1,
+        "FactoryDuration": 1
+      },
+      {
+        "ID": "Recipe_JumpPadTilted_C",
+        "Name": "Old Tilted Jump Pad",
+        "ClassName": "Recipe_JumpPadTilted_C",
+        "Category": "N/A",
+        "Events": [],
+        "Ingredients": [
+          {
+            "Name": "Rotor",
+            "ClassName": "Desc_Rotor_C",
+            "Amount": 2,
+            "MaxAmount": 100,
+            "ManualRate": 120,
+            "FactoryRate": 120
+          },
+          {
+            "Name": "Iron Plate",
+            "ClassName": "Desc_IronPlate_C",
+            "Amount": 15,
+            "MaxAmount": 200,
+            "ManualRate": 900,
+            "FactoryRate": 900
+          },
+          {
+            "Name": "Cable",
+            "ClassName": "Desc_Cable_C",
+            "Amount": 10,
+            "MaxAmount": 200,
+            "ManualRate": 600,
+            "FactoryRate": 600
+          }
+        ],
+        "Products": [
+          {
+            "Name": "Old Tilted Jump Pad",
+            "ClassName": "Desc_JumpPadTilted_C",
+            "Amount": 1,
+            "MaxAmount": 100,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "ProducedIn": [],
+        "ManualDuration": 1,
+        "FactoryDuration": 1
+      },
+      {
+        "ID": "Recipe_Walkway_Straight_C",
+        "Name": "Straight Walkway",
+        "ClassName": "Recipe_Walkway_Straight_C",
+        "Category": "N/A",
+        "Events": [],
+        "Ingredients": [
+          {
+            "Name": "Iron Rod",
+            "ClassName": "Desc_IronRod_C",
+            "Amount": 2,
+            "MaxAmount": 200,
+            "ManualRate": 120,
+            "FactoryRate": 120
+          },
+          {
+            "Name": "Iron Plate",
+            "ClassName": "Desc_IronPlate_C",
+            "Amount": 1,
+            "MaxAmount": 200,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "Products": [
+          {
+            "Name": "Straight Walkway",
+            "ClassName": "Desc_WalkwayStraight_C",
+            "Amount": 1,
+            "MaxAmount": 100,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "ProducedIn": [
+          "BP_BuildGun_C"
+        ],
+        "ManualDuration": 1,
+        "FactoryDuration": 1
+      },
+      {
+        "ID": "Recipe_Walkway_Cross_C",
+        "Name": "Walkway Intersection",
+        "ClassName": "Recipe_Walkway_Cross_C",
+        "Category": "N/A",
+        "Events": [],
+        "Ingredients": [
+          {
+            "Name": "Iron Rod",
+            "ClassName": "Desc_IronRod_C",
+            "Amount": 2,
+            "MaxAmount": 200,
+            "ManualRate": 120,
+            "FactoryRate": 120
+          },
+          {
+            "Name": "Iron Plate",
+            "ClassName": "Desc_IronPlate_C",
+            "Amount": 1,
+            "MaxAmount": 200,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "Products": [
+          {
+            "Name": "Walkway Intersection",
+            "ClassName": "Desc_WalkwayCross_C",
+            "Amount": 1,
+            "MaxAmount": 100,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "ProducedIn": [
+          "BP_BuildGun_C"
+        ],
+        "ManualDuration": 1,
+        "FactoryDuration": 1
+      },
+      {
+        "ID": "Recipe_Walkway_T_C",
+        "Name": "Walkway T-Junction",
+        "ClassName": "Recipe_Walkway_T_C",
+        "Category": "N/A",
+        "Events": [],
+        "Ingredients": [
+          {
+            "Name": "Iron Rod",
+            "ClassName": "Desc_IronRod_C",
+            "Amount": 2,
+            "MaxAmount": 200,
+            "ManualRate": 120,
+            "FactoryRate": 120
+          },
+          {
+            "Name": "Iron Plate",
+            "ClassName": "Desc_IronPlate_C",
+            "Amount": 1,
+            "MaxAmount": 200,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "Products": [
+          {
+            "Name": "Walkway T-Junction",
+            "ClassName": "Desc_WalkwayT_C",
+            "Amount": 1,
+            "MaxAmount": 100,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "ProducedIn": [
+          "BP_BuildGun_C"
+        ],
+        "ManualDuration": 1,
+        "FactoryDuration": 1
+      },
+      {
+        "ID": "Recipe_Walkway_Ramp_C",
+        "Name": "Walkway Ramp",
+        "ClassName": "Recipe_Walkway_Ramp_C",
+        "Category": "N/A",
+        "Events": [],
+        "Ingredients": [
+          {
+            "Name": "Iron Rod",
+            "ClassName": "Desc_IronRod_C",
+            "Amount": 2,
+            "MaxAmount": 200,
+            "ManualRate": 120,
+            "FactoryRate": 120
+          },
+          {
+            "Name": "Iron Plate",
+            "ClassName": "Desc_IronPlate_C",
+            "Amount": 1,
+            "MaxAmount": 200,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "Products": [
+          {
+            "Name": "Walkway Ramp",
+            "ClassName": "Desc_WalkwayRamp_C",
+            "Amount": 1,
+            "MaxAmount": 100,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "ProducedIn": [
+          "BP_BuildGun_C"
+        ],
+        "ManualDuration": 1,
+        "FactoryDuration": 1
+      },
+      {
+        "ID": "Recipe_Walkway_Turn_C",
+        "Name": "Walkway Corner",
+        "ClassName": "Recipe_Walkway_Turn_C",
+        "Category": "N/A",
+        "Events": [],
+        "Ingredients": [
+          {
+            "Name": "Iron Rod",
+            "ClassName": "Desc_IronRod_C",
+            "Amount": 2,
+            "MaxAmount": 200,
+            "ManualRate": 120,
+            "FactoryRate": 120
+          },
+          {
+            "Name": "Iron Plate",
+            "ClassName": "Desc_IronPlate_C",
+            "Amount": 1,
+            "MaxAmount": 200,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "Products": [
+          {
+            "Name": "Walkway Corner",
+            "ClassName": "Desc_WalkwayTurn_C",
+            "Amount": 1,
+            "MaxAmount": 100,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "ProducedIn": [
+          "BP_BuildGun_C"
+        ],
+        "ManualDuration": 1,
+        "FactoryDuration": 1
+      },
+      {
+        "ID": "Recipe_PillarTop_C",
+        "Name": "Pillar Top",
+        "ClassName": "Recipe_PillarTop_C",
+        "Category": "N/A",
+        "Events": [],
+        "Ingredients": [
+          {
+            "Name": "Concrete",
+            "ClassName": "Desc_Cement_C",
+            "Amount": 6,
+            "MaxAmount": 500,
+            "ManualRate": 360,
+            "FactoryRate": 360
+          }
+        ],
+        "Products": [
+          {
+            "Name": "Pillar Top",
+            "ClassName": "Desc_PillarTop_C",
+            "Amount": 1,
+            "MaxAmount": 100,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "ProducedIn": [],
+        "ManualDuration": 1,
+        "FactoryDuration": 1
+      },
+      {
+        "ID": "Recipe_SteelWall_8x4_C",
+        "Name": "Tilted Wall (4 m)",
+        "ClassName": "Recipe_SteelWall_8x4_C",
+        "Category": "N/A",
+        "Events": [],
+        "Ingredients": [
+          {
+            "Name": "Iron Plate",
+            "ClassName": "Desc_IronPlate_C",
+            "Amount": 3,
+            "MaxAmount": 200,
+            "ManualRate": 180,
+            "FactoryRate": 180
+          },
+          {
+            "Name": "Concrete",
+            "ClassName": "Desc_Cement_C",
+            "Amount": 3,
+            "MaxAmount": 500,
+            "ManualRate": 180,
+            "FactoryRate": 180
+          }
+        ],
+        "Products": [
+          {
+            "Name": "Tilted Wall (4 m)",
+            "ClassName": "Desc_SteelWall_8x4_C",
+            "Amount": 1,
+            "MaxAmount": 100,
+            "ManualRate": 60,
+            "FactoryRate": 60
+          }
+        ],
+        "ProducedIn": [],
+        "ManualDuration": 1,
+        "FactoryDuration": 1
       }
-   ],
-   "Locked": false,
-   "Purchased": false,
-   "DepLocked": false
-}
+    ],
+    "HasUnlocks": true,
+    "Locked": false,
+    "Purchased": false,
+    "DepLocked": false,
+    "LockedTutorial": false,
+    "LockedPhase": false,
+    "Tutorial": false,
+    "Cost": []
+  }
 ]
 -----------------
