@@ -1,0 +1,4 @@
+﻿[IMPORTANT]
+====
+This endpoint runs in game thread.
+====

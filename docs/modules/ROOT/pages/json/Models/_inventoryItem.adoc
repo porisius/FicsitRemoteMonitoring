@@ -2,5 +2,3 @@
 | {depth}  ClassName | String | Class Name of the item.
 | {depth}  Amount | Integar | Amount of the item.
 | {depth}  MaxAmount | Integar | Stack size of the item.
-
-{set:inventory-description!:}
