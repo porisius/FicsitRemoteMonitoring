@@ -1,14 +1,14 @@
 ﻿List of all write endpoints:
 
-[cols="1,1,2"]
+[cols="1,1,1,3"]
 |===
-|Resource|Endpoint|Description
+|Resource|Endpoint|Game Thread|Description
 
-| Chat | xref:json/Write/sendChatMessage.adoc[sendChatMessage] | Sends a chat message to all players.
+| Chat | xref:json/Write/sendChatMessage.adoc[sendChatMessage] | Yes | Sends a chat message to all players.
 
-| Factory | xref:json/Write/setEnabled.adoc[setEnabled] | Updates Status of a factory buildable.
-| Factory | xref:json/Write/setSwitches.adoc[setSwitches] | Updates settings of a power switch (Name, Status, Priority).
+| Factory | xref:json/Write/setEnabled.adoc[setEnabled] | Yes | Updates Status of a factory buildable.
+| Factory | xref:json/Write/setSwitches.adoc[setSwitches] | Yes | Updates settings of a power switch (Name, Status, Priority).
 
-| World | xref:json/Write/createPing.adoc[createPing] | Creates a world ping.
+| World | xref:json/Write/createPing.adoc[createPing] | Yes | Creates a world ping.
 
 |===
