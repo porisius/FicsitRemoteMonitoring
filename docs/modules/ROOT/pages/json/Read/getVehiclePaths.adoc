@@ -1,136 +1,111 @@
-= Vehicles Paths
-
+:doctype: book
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getVehiclePaths +
+= Get Vehicle Paths
 
-Saved Vehicle Paths for Trucks, Explorers, and Tractors
+Gets a list of all vehicle paths.
 
-Gives length of path, and the path itself. The path is a series of points that the vehicle will follow. The path is saved in the game and can be loaded by the vehicle as allowed by type in vanilla.
+== URL
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+`GET http://localhost:8080/getVehiclePaths`
 
-|ID
-|UE Asset Name
-|String
-|Output
+include::../_responseBody.adoc[]
 
+| ID | String | Unique ID of the Vehicle Path.
+| Name | String | Name of the Vehicle Path.
+| ClassName | String | ClassName of the Vehicle Path.
+| PathTargetLength | Integer | Number of Path Points.
+| PathLength | Float | Length of the Path in cm.
 
-|Name
-|Name of vehicle type
-|String
-|Output
-
-|ClassName
-|UE Class Name
-|String
-|Output
-
-|VehicleType
-|Vehicle Type
-|String
-|Output
-
-|PathTargetLength
-|Length of path
-|Integer
-|Output
-
-|PathLength
-|Length of path
-|Float
-|Output
-
-|PathPoints
-|Path Points
-|Array of Points
-|Output
+| PathPoints | Object[] | List of all path points.
+| {depth}  x | Float | X Location in the World.
+| {depth}  y | Float | Y Location in the World.
+| {depth}  z | Float | Z Location in the World.
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
   {
-    "ID": "FGSavedWheeledVehiclePath_2147429285",
-    "Name": "Test Path",
+    "ID": "FGSavedWheeledVehiclePath_2147358392",
+    "Name": "My Vehicle Path Name",
     "ClassName": "FGSavedWheeledVehiclePath",
     "VehicleType": "Explorer",
     "PathTargetLength": 11,
-    "PathLength": 29717.525390625,
+    "PathLength": 20961.51171875,
     "PathPoints": [
       {
-        "x": -22766.7265625,
-        "y": 225161.953125,
-        "z": -1161.16809082031
+        "x": -62978.16796875,
+        "y": 253953.703125,
+        "z": -3704.992431640625
       },
       {
-        "x": -22046.384765625,
-        "y": 222083.65625,
-        "z": -1117.16247558594
+        "x": -62794.34375,
+        "y": 255988.375,
+        "z": -3702.954833984375
       },
       {
-        "x": -21703.625,
-        "y": 221840.28125,
-        "z": -1081.27624511719
+        "x": -61307.01953125,
+        "y": 256632.109375,
+        "z": -3667.7158203125
       },
       {
-        "x": -21007.189453125,
-        "y": 221647.828125,
-        "z": -1011.07678222656
+        "x": -60401.11328125,
+        "y": 256775.65625,
+        "z": -3650.239501953125
       },
       {
-        "x": -19321.4609375,
-        "y": 221569.25,
-        "z": -670.549499511719
+        "x": -58938.93359375,
+        "y": 257103.15625,
+        "z": -3678.6875
       },
       {
-        "x": -17751.630859375,
-        "y": 221910.171875,
-        "z": -328.121551513672
+        "x": -57676.51953125,
+        "y": 257312.53125,
+        "z": -3732.132568359375
       },
       {
-        "x": -16532.416015625,
-        "y": 223058.84375,
-        "z": -199.764434814453
+        "x": -56906.4140625,
+        "y": 256450.265625,
+        "z": -3748.051025390625
       },
       {
-        "x": -16127.111328125,
-        "y": 225555.6875,
-        "z": -372.952758789063
+        "x": -57155.46484375,
+        "y": 255213.640625,
+        "z": -3663.41064453125
       },
       {
-        "x": -17451.2890625,
-        "y": 229264.78125,
-        "z": -468.06591796875
+        "x": -58090.73046875,
+        "y": 254059.015625,
+        "z": -3638.1064453125
       },
       {
-        "x": -20040.94921875,
-        "y": 230833.25,
-        "z": -1100.12121582031
+        "x": -59859.09765625,
+        "y": 252786.453125,
+        "z": -3683.428466796875
       },
       {
-        "x": -21941.6953125,
-        "y": 228989.40625,
-        "z": -1157.54638671875
+        "x": -61563.4140625,
+        "y": 252807.484375,
+        "z": -3700.3544921875
       },
       {
-        "x": -22766.7265625,
-        "y": 225161.953125,
-        "z": -1161.16809082031
+        "x": -62978.16796875,
+        "y": 253953.703125,
+        "z": -3704.992431640625
       },
       {
-        "x": -22046.384765625,
-        "y": 222083.65625,
-        "z": -1117.16247558594
+        "x": -62794.34375,
+        "y": 255988.375,
+        "z": -3702.954833984375
       },
       {
-        "x": -21703.625,
-        "y": 221840.28125,
-        "z": -1081.27624511719
+        "x": -61307.01953125,
+        "y": 256632.109375,
+        "z": -3667.7158203125
       }
     ]
   }

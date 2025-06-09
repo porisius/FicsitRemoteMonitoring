@@ -23,7 +23,6 @@ This is inventory of the dimensional depot.
 
 include::../_responseBody.adoc[]
 
-| | Object[] | A list of items.
 include::../Models/_inventoryItem.adoc[]
 |===
 

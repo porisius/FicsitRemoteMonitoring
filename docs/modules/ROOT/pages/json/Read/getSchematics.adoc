@@ -14,7 +14,6 @@ Get information about all schematics.
 
 include::../_responseBody.adoc[]
 
-| | Object[] | List of all Schematics
 // schematic details
 include::../Models/_schematic.adoc[]
 

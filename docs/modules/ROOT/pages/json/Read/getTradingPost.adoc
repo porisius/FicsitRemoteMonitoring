@@ -2,11 +2,11 @@
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= Central HUB, or as it was originally called the Trading Post, Information
+= Get Trading Post
 
 include::../_isGetAll.adoc[]
 
-API Endpoint: getTradingPost
+Information about the Central HUB, or as it was originally called the Trading Post.
 
 == URL
 
@@ -31,7 +31,7 @@ include::../Models/_colorSlot.adoc[]
 {set:key-name:BoundingBox}
 include::../Models/_boundingBox.adoc[]
 
-| HUBLevel | Integar | HUB Level, not milestone level, from the Tier 0 Tutorial Section
+| HUBLevel | Integer | HUB Level, not milestone level, from the Tier 0 Tutorial Section
 
 // features fields
 include::../Models/_features.adoc[]
