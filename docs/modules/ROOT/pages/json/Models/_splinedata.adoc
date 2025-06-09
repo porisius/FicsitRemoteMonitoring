@@ -1,4 +1,4 @@
 ﻿| {key-name} | Object | Spline Information for Actor.
-| {depth}  x | Object | Value along the X-axis.
-| {depth}  y | Object | Value along the Y-axis.
-| {depth}  z | Object | Value along the Z-axis.
+| {depth}  x | Float | Value along the X-axis.
+| {depth}  y | Float | Value along the Y-axis.
+| {depth}  z | Float | Value along the Z-axis.

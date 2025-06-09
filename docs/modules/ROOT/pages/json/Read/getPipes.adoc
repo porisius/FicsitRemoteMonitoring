@@ -25,10 +25,6 @@ include::../Models/_colorSlot.adoc[]
 {set:key-name:BoundingBox}
 include::../Models/_boundingBox.adoc[]
 
-// bounding box
-{set:key-name:BoundingBox}
-include::../Models/_boundingBox.adoc[]
-
 // Spline Data
 {set:key-name:SplineData}
 include::../Models/_splinedata.adoc[]

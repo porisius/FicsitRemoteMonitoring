@@ -22,6 +22,7 @@
 | Factory | xref:json/Read/getBelts.adoc[getBelts] | No | Gets a list of all belts.
 | Factory | xref:json/Read/getCables.adoc[getCables] | No | Gets a list of all cables.
 | Factory | xref:json/Read/getHypertube.adoc[getHypertube] | No | Gets a list of all hypertubes.
+| Factory | xref:json/Read/getPipeJunctions.adoc[getPipeJunctions] | No | Gets a list of all pipe junctions.
 | Factory | xref:json/Read/getPipes.adoc[getPipes] | No | Gets a list of all pipes.
 | Factory | xref:json/Read/getPump.adoc[getPump] | No | Gets a list of all pumps.
 | Factory | xref:json/Read/getTrainRails.adoc[getTrainRails] | No | Gets a list of all railways.

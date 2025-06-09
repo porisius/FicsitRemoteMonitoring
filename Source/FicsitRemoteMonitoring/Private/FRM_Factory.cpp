@@ -221,7 +221,7 @@ TArray<TSharedPtr<FJsonValue>> UFRM_Factory::getModList(UObject* WorldContext, F
 		JModInfos->Values.Add("Version", MakeShared<FJsonValueString>(ModInfo.Version.ToString()));
 		JModInfos->Values.Add("Description", MakeShared<FJsonValueString>(ModInfo.Description));
 		JModInfos->Values.Add("DocsURL", MakeShared<FJsonValueString>(ModInfo.DocsURL));
-		JModInfos->Values.Add("AcceptsAnyRemoteVersion", MakeShared<FJsonValueString>(ModInfo.SupportURL));
+		JModInfos->Values.Add("SupportURL", MakeShared<FJsonValueString>(ModInfo.SupportURL));
 		JModInfos->Values.Add("CreatedBy", MakeShared<FJsonValueString>(ModInfo.CreatedBy));
 		JModInfos->Values.Add("RemoteVersionRange", MakeShared<FJsonValueString>(ModInfo.RemoteVersionRange.ToString()));
 		JModInfos->Values.Add("RequiredOnRemote", MakeShared<FJsonValueBoolean>(ModInfo.bRequiredOnRemote));

@@ -1,7 +1,7 @@
 ﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= Pipe Junctions
+= Get Pipe Junctions
 
 include::../_isGetAll.adoc[]
 
