@@ -1,113 +1,79 @@
-= Power Slug
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getPowerSlug +
+= Get Power Slug
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+Get a list of all power slugs.
 
-|ID
-|Slug ID
-|Integer
-|Output
+== URL
 
-|SlugType
-|Type of Power Slug (Green, Yellow, Purple)
-|String
-|Output
+`GET http://localhost:8080/getPowerSlug`
 
-|ClassName
-|UE Class Name
-|String
-|Output
+include::../_responseBody.adoc[]
 
-|location/x
-|X Location of Slug
-|Float
-|Output
+| ID | String | Unique ID of the Power Slug.
+| Name | String | Name of the Power Slug.
+| ClassName | String | Class Name of the Power Slug.
 
-|location/y
-|Y Location of Slug
-|Float
-|Output
+{set:key-name:location}
+include::../Models/_location.adoc[]
 
-|location/z
-|Z Location of Slug
-|Float
-|Output
-
-|location/Rotation
-|Compass Heading of Slug
-|Float
-|Output
-
-|MapArea
-|Map Area Name (Future Feature)
-|String
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
+include::../Models/_features.adoc[]
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-	{
-		"ID": 0,
-		"SlugType": "Blue Slug",
-		"ClassName": "BP_Crystal129",
-		"location":
-		{
-			"x": 241707.46875,
-			"y": -310696.75,
-			"z": 6774.1396484375,
-			"rotation": 92
-		},
-		"features":
-		{
-			"properties":
-			{
-				"name": "Blue Slug",
-				"type": "Power Slug"
-			},
-			"geometry":
-			{
-				"coordinates":
-				{
-					"X": 241707.46875,
-					"Y": -310696.75,
-					"Z": 6774.1396484375
-				},
-				"type": "Point"
-			}
-		}
-	}
+  {
+    "ID": "BP_Crystal27_27",
+    "Name": "Blue Power Slug",
+    "ClassName": "BP_Crystal_C",
+    "location": {
+      "x": -54543.35546875,
+      "y": 270830.1875,
+      "z": -1451.72412109375,
+      "rotation": 232.89628601074219
+    },
+    "features": {
+      "properties": {
+        "name": "Blue Power Slug",
+        "type": "Power Slug"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -54543.35546875,
+          "y": 270830.1875,
+          "z": -1451.72412109375
+        },
+        "type": "Point"
+      }
+    }
+  },
+  {
+    "ID": "BP_Crystal3_3",
+    "Name": "Blue Power Slug",
+    "ClassName": "BP_Crystal_C",
+    "location": {
+      "x": -64958.64453125,
+      "y": 268214,
+      "z": -3016.97998046875,
+      "rotation": 115.72634887695312
+    },
+    "features": {
+      "properties": {
+        "name": "Blue Power Slug",
+        "type": "Power Slug"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -64958.64453125,
+          "y": 268214,
+          "z": -3016.97998046875
+        },
+        "type": "Point"
+      }
+    }
+  }
 ]
 -----------------
