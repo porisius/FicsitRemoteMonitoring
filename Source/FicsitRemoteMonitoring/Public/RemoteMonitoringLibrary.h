@@ -15,7 +15,16 @@ class UFGPipeConnectionComponent;
 class UFGPipeConnectionComponentBase;
 class UFGInventoryComponent;
 
-UCLASS()
+UENUM(BlueprintType)
+enum EActionType
+{
+	Add,
+	Set,
+	Remove,
+	Clear
+};
+
+UCLASS(Blueprintable)
 class FICSITREMOTEMONITORING_API URemoteMonitoringLibrary : public UFGBlueprintFunctionLibrary
 {
 	GENERATED_BODY()

@@ -16,6 +16,8 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 	TArray<AActor*> FoundActors;
 
 	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGCharacterPlayer::StaticClass(), FoundActors);
+	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
+	
 	for (AActor* Player : FoundActors) {
 		TSharedPtr<FJsonObject> JPlayer = CreateBaseJsonObject(Player);
 
@@ -30,6 +32,22 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 		//TODO: Find way to get player's name when they are offline
 		FString PlayerName = GetPlayerName(PlayerCharacter);
 
+		TArray<TSharedPtr<FJsonValue>> PlayerToDoList;
+
+		TArray<FShoppingList> PlayerToDo;
+		ModSubsystem->GetShoppingList_BIE(PlayerState, PlayerToDo);
+		for (FShoppingList PlayerToDoItem : PlayerToDo)
+		{
+			TSharedPtr<FJsonObject> JPlayerToDo = MakeShared<FJsonObject>();
+
+			FString Recipe = UFGRecipe::GetRecipeName(PlayerToDoItem.RecipeClass).ToString();
+		
+			JPlayerToDo->Values.Add("Recipe", MakeShared<FJsonValueString>(Recipe));
+			JPlayerToDo->Values.Add("RecipeClass", MakeShared<FJsonValueString>((PlayerToDoItem.RecipeClass)->GetClassPathName().ToString()));
+			JPlayerToDo->Values.Add("Amount", MakeShared<FJsonValueNumber>(PlayerToDoItem.Amount));
+			PlayerToDoList.Add(MakeShared<FJsonValueObject>(JPlayerToDo));
+		}
+		
 		JPlayer->Values.Add("Name", MakeShared<FJsonValueString>(PlayerName));
 		JPlayer->Values.Add("ClassName", MakeShared<FJsonValueString>(Player->GetClass()->GetName()));
 		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(Player))); 
@@ -38,6 +56,7 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 		JPlayer->Values.Add("PlayerHP", MakeShared<FJsonValueNumber>(PlayerCharacter->GetHealthComponent()->GetCurrentHealth()));
 		JPlayer->Values.Add("Dead", MakeShared<FJsonValueBoolean>(PlayerCharacter->GetHealthComponent()->IsDead()));
 		JPlayer->Values.Add("Inventory", MakeShared<FJsonValueArray>(GetInventoryJSON(PlayerInventory)));
+		JPlayer->Values.Add("ToDoList", MakeShared<FJsonValueArray>(PlayerToDoList));
 		JPlayer->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(Player, PlayerName, "Player")));
 
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JPlayer));
@@ -78,6 +97,7 @@ void UPlayerLibrary::setToDoList(UObject* WorldContext, FRequestData RequestData
 	TArray<AActor*> PlayerActors;
 
 	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGPlayerState::StaticClass(), PlayerActors);
+	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
 	
 	for (const auto& BodyObject : RequestData.Body)
 	{
@@ -96,6 +116,36 @@ void UPlayerLibrary::setToDoList(UObject* WorldContext, FRequestData RequestData
 			OutJsonArray.Add(MakeShared<FJsonValueObject>(JResponse));
 			continue;
 		}
+
+		FString Action;
+		if (!JsonObject->TryGetStringField("action", Action))
+		{
+			const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("Missing field action.");
+			JResponse->Values.Add("ID", MakeShared<FJsonValueString>(RequestedPlayerState));
+			OutJsonArray.Add(MakeShared<FJsonValueObject>(JResponse));
+			continue;
+		}
+
+		EActionType ActionType = EActionType::Add;
+		if (Action.ToLower() == "add")
+		{
+			ActionType = EActionType::Add;	
+		} else if (Action.ToLower() == "remove")
+		{
+			ActionType = EActionType::Remove;
+		} else if (Action.ToLower() == "set")
+		{
+			ActionType = EActionType::Set;
+		} else if (Action.ToLower() == "clear")
+		{
+			ActionType = EActionType::Clear;
+		} else
+		{
+			const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("Invalid field action.");
+			JResponse->Values.Add("ID", MakeShared<FJsonValueString>(RequestedPlayerState));
+			OutJsonArray.Add(MakeShared<FJsonValueObject>(JResponse));
+			continue;
+		}
 		
 		for (AActor* PlayerActor : PlayerActors)
 		{
@@ -105,9 +155,6 @@ void UPlayerLibrary::setToDoList(UObject* WorldContext, FRequestData RequestData
 			{
 				TSharedPtr<FJsonObject> JResponse = MakeShared<FJsonObject>();
 				AFGPlayerState* PlayerState = Cast<AFGPlayerState>(PlayerActor);
-				UFGShoppingListComponent* PlayerToDo = PlayerState->GetShoppingListComponent();
-
-				TSubclassOf<UClass> SubClass = nullptr;
 
 				for (const TSharedPtr<FJsonValue>& Recipe : *RecipesArray)
 				{
@@ -134,15 +181,17 @@ void UPlayerLibrary::setToDoList(UObject* WorldContext, FRequestData RequestData
 						UE_LOGFMT(LogFRMDebug, Warning, "Recipe Amount: {Amount}", Amount);
 
 						bool foundClass = false;
+
+						TSubclassOf<UFGRecipe> SubClass;
 						
-						for (TObjectIterator<UClass> It; It; ++It)
+						for (TObjectIterator<UFGRecipe> It; It; ++It)
 						{
-							UClass* Class = *It;
+							UFGRecipe* Class = *It;
 							UE_LOGFMT(LogFRMDebug, Warning, "Checking against UClass: {1}", Class->GetName());
 							if (Class->GetName() == ClassName)
 							{
 								UE_LOGFMT(LogFRMDebug, Warning, "Found UClass: {1}", Class->GetName());
-								SubClass = Class;
+								SubClass = Class->GetClass();
 								foundClass = true;
 								break;
 							}
@@ -151,8 +200,7 @@ void UPlayerLibrary::setToDoList(UObject* WorldContext, FRequestData RequestData
 						if (!foundClass){ break; }
 						
 						UE_LOGFMT(LogFRMDebug, Warning, "Attempting Update");
-						PlayerToDo->Server_SetNumForClassInShoppingList(SubClass, Amount);
-						PlayerToDo->UpdateShoppingList();
+						ModSubsystem->UpdateShoppingList_BIE(PlayerState, ActionType, SubClass, Amount);
 						
 						JResponse->Values.Add("Recipe", MakeShared<FJsonValueString>(ClassName));
 						JResponse->Values.Add("Success", MakeShared<FJsonValueBoolean>(true));

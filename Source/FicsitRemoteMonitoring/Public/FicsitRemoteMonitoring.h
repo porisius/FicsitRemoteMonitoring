@@ -92,6 +92,18 @@ struct FCallEndpointResponse
 	bool bUseFirstObject;
 };
 
+USTRUCT(BlueprintType)
+struct FShoppingList
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowAbstract = "false"))
+	TSubclassOf<UFGRecipe> RecipeClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Amount;
+};
+
 UCLASS()
 class FICSITREMOTEMONITORING_API AFicsitRemoteMonitoring : public AModSubsystem
 {
@@ -149,7 +161,13 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void ResearchTreeNodeUnlockData_BIE(UFGResearchTreeNode* ResearchTreeNode, TArray<FIntPoint>& Parents, TArray<FIntPoint>& UnhiddenBy, FIntPoint& Coordinates);
+	
+	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
+	bool UpdateShoppingList_BIE(AFGPlayerState* PlayerState, EActionType Action, TSubclassOf<UFGRecipe> Recipe, int32 Amount);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
+	void GetShoppingList_BIE(AFGPlayerState* PlayerState, TArray<FShoppingList>& ShoppingLists);
+	
 	// Array of API endpoints
 	TArray<FAPIEndpoint> APIEndpoints;
 
