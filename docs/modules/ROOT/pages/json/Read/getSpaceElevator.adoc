@@ -4,8 +4,6 @@
 
 = Get Space Elevator
 
-include::../_isGetAll.adoc[]
-
 Get a list of all space elevators.
 
 == URL
@@ -22,9 +20,16 @@ include::../_responseBody.adoc[]
 {set:key-description:Location details of the Space Elevator.}
 include::../Models/_location.adoc[]
 
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
 // CurrentPhase
-{set:inventory-name:CurrentPhase}
-{set:inventory-description:A list of required items for the current phase.}
+| CurrentPhase | Object[] | A list of required items for the current phase.
 include::../Models/_inventoryItem.adoc[]
 | &nbsp;&nbsp;RemainingCost | Integer | Remaining items to complete the phase item.
 | &nbsp;&nbsp;TotalCost | Integer | Total item amount required to complete the phase item.
@@ -32,6 +37,10 @@ include::../Models/_inventoryItem.adoc[]
 // normal fields
 | FullyUpgraded | Boolean | `true` if the Space Elevator is fully upgraded.
 | UpgradeReady | Boolean | `true` if an upgrade is ready.
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
 
 // features fields
 include::../Models/_features.adoc[]

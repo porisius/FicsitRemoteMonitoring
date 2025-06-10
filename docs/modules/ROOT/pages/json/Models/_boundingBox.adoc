@@ -1,0 +1,9 @@
+﻿| {key-name} | Object | Bounding Box information about the Actor.
+| {depth}  min | Object | The minimum boundary of the bounding box in the corresponding axis.
+| {depth}    x | Object | Value along the X-axis.
+| {depth}    y | Object | Value along the Y-axis.
+| {depth}    z | Object | Value along the Z-axis.
+| {depth}  max | Object | The maximum boundary of the bounding box in the corresponding axis.
+| {depth}    x | Object | Value along the X-axis.
+| {depth}    y | Object | Value along the Y-axis.
+| {depth}    z | Object | Value along the Z-axis.

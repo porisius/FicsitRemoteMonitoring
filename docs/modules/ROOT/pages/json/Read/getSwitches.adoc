@@ -1,166 +1,96 @@
-= Power Switch Status
-
+:doctype: book
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getSwitches +
+= Get Switches
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+Gets a list of all switches (priority power switches and power switches).
 
-|Name
-|Name
-|String
-|Output
+== URL
 
-|ClassName
-|UE Class Name
-|String
-|Output
+`GET http://localhost:8080/getSwitches`
 
-|location/x
-|X Location of Storage Container
-|Float
-|Output
+include::../_responseBody.adoc[]
 
-|location/y
-|Y Location of Storage Container
-|Float
-|Output
+| ID | String | Unique ID of the Power Switch.
+| Name | String | Name of the Power Switch.
+| SwitchTag | String | Name of Power Switch.
+| ClassName | String | Class Name of the Power Switch.
+| IsOn | Boolean | Is the Power Switch on?
+| Connected0 | Integer | Has a connection at A? 
+| Connected1 | Integer | Has a connection at B?
+| Primary | Integer | Circuit ID on connection A.
+| Secondary | Integer | Circuit ID on connection B.
+| Priority | Integer | Priority of the Power Switch (-1 = No Priority)
 
-|location/z
-|Z Location of Storage Container
-|Float
-|Output
+// location
+{set:key-name:location}
+{set:key-description:Location details of the Power Switch.}
+include::../Models/_location.adoc[]
 
-|location/Rotation
-|Compass Heading of Storage Container
-|Float
-|Output
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
 
-|SwitchTag
-|Name Tag for Power Switch
-|String
-|Output
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
 
-|Connected
-|Is Connected
-|Boolean
-|Output
-
-|IsOn
-|Is the Switch On
-|Boolean
-|Output
-
-|Primary
-|Primary Circuit Connection ID
-|Integer
-|Output
-
-|Secondary
-|Secondary Circuit Connection ID
-|Integer
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
+// features
+include::../Models/_features.adoc[]
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-      {
-            "Name": "Power Switch",
-            "ClassName": "Build_PowerSwitch_C_2147265249",
-            "location":
-            {
-                  "x": -64296.85546875,
-                  "y": -172629.515625,
-                  "z": 289.84228515625,
-                  "rotation": 280
-            },
-            "SwitchTag": "Oil Tower",
-            "Connected": true,
-            "IsOn": true,
-            "Primary": 58,
-            "Secondary": 44,
-            "features":
-            {
-                  "properties":
-                  {
-                        "name": "Oil Tower",
-                        "type": "Power Switch"
-                  },
-                  "geometry":
-                  {
-                        "coordinates":
-                        {
-                              "X": -64296.85546875,
-                              "Y": -172629.515625,
-                              "Z": 289.84228515625
-                        },
-                        "type": "Point"
-                  }
-            }
+  {
+    "ID": "Build_PriorityPowerSwitch_C_2147452709",
+    "Name": "FicsitRemoteMonitoring rocks",
+    "ClassName": "Build_PriorityPowerSwitch_C",
+    "location": {
+      "x": -56603.265625,
+      "y": 261809.015625,
+      "z": -3934.808349609375,
+      "rotation": 300.00000024011166
+    },
+    "BoundingBox": {
+      "min": {
+        "x": -56703.265625,
+        "y": 261759.015625,
+        "z": -3934.808349609375
       },
-      {
-            "Name": "Power Switch",
-            "ClassName": "Build_PowerSwitch_C_2147144997",
-            "location":
-            {
-                  "x": -66175.734375,
-                  "y": -125134.0625,
-                  "z": 3789.84228515625,
-                  "rotation": 190
-            },
-            "SwitchTag": "Steel Prodution",
-            "Connected": true,
-            "IsOn": true,
-            "Primary": 44,
-            "Secondary": 5,
-            "features":
-            {
-                  "properties":
-                  {
-                        "name": "Steel Prodution",
-                        "type": "Power Switch"
-                  },
-                  "geometry":
-                  {
-                        "coordinates":
-                        {
-                              "X": -66175.734375,
-                              "Y": -125134.0625,
-                              "Z": 3789.84228515625
-                        },
-                        "type": "Point"
-                  }
-            }
+      "max": {
+        "x": -56503.265625,
+        "y": 261859.015625,
+        "z": -3634.808349609375
       }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "SwitchTag": "FicsitRemoteMonitoring rocks",
+    "Connected0": 1,
+    "IsOn": true,
+    "Connected1": 1,
+    "Primary": 1,
+    "Secondary": 9,
+    "Priority": 5,
+    "features": {
+      "properties": {
+        "name": "FicsitRemoteMonitoring rocks",
+        "type": "Priority Power Switch"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -56603.265625,
+          "y": 261809.015625,
+          "z": -3934.808349609375
+        },
+        "type": "Point"
+      }
+    }
+  }
 ]
 -----------------

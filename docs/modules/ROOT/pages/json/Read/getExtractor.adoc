@@ -1,218 +1,108 @@
-= Resource Extractor Stats
-
+:doctype: book
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getExtractor +
+= Get Extractor
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+Get a list of all extractors/miners.
 
-|Name
-|Type of Extractor Building
-|String
-|Output
+== URL
 
-|ClassName
-|UE Class Name
-|String
-|Output
+`GET http://localhost:8080/getExtractor`
 
-|location/x
-|X Location of Extractor
-|Float
-|Output
+include::../_responseBody.adoc[]
 
-|location/y
-|Y Location of Extractor
-|Float
-|Output
+| ID | String | Unique ID of the Extractor.
+| Name | String | Name of the Extractor.
+| ClassName | String | ClassName of the Extractor.
 
-|location/z
-|Z Location of Extractor
-|Float
-|Output
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
 
-|location/Rotation
-|Compass Heading of Extractor
-|Float
-|Output
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
 
-|Recipe
-|Item to be Produced
-|String
-|Output
+| Recipe | String | Name of the Recipe.
+| RecipeClassName | String | ClassName of the Recipe.
 
-|production/Name
-|Item Output
-|String Array
-|Output
+// production
+| production | Object[] | Items that are produced.
+include::../Models/_inventoryItem.adoc[]
+| {depth}  CurrentProd | Float | Current produced items per minute.
+| {depth}  MaxProd | Float | Maximum produced items per minutes.
+| {depth}  ProdPercent | Float | Current Efficiency of the extractor.
 
-|production/CurrentProd
-|Current Production
-|Float Array
-|Output
+// other fields
+| ManuSpeed | Float | Configured speed in % (exceeds 100 if the extractor is equipped with a power slug).
+| IsConfigured | Boolean | Is extractor configured?
+| IsProducing | Boolean | Is extractor producing items?
+| IsPaused | Boolean | Is extractor paused?
 
-|production/MaxProd
-|Max Production
-|Float Array
-|Output
+// location fields
+{set:key-name:location}
+{set:key-description:Location details of the Extractor.}
+include::../Models/_location.adoc[]
 
-|production/ProdPercent
-|Efficentcy Percentage
-|Float Array
-|Output
+// power info
+include::../Models/_powerInfo.adoc[]
 
-|Purity
-|Purity of extraction node
-|String
-|Output
-
-|ManuSpeed
-|Configured Speed
-|Float
-|Output
-
-|IsConfigured
-|Is Extractor configured?
-|Boolean
-|Output
-
-|IsProducing
-|Is extracting now?
-|Boolean
-|Output
-
-|IsPaused
-|Is paused?
-|Boolean
-|Output
-
-|CircuitID
-|Circuit ID of the Extractor
-|Integar
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
+// features fields
+include::../Models/_features.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-	{
-		"Name": "Oil Extractor",
-		"ClassName": "Build_OilPump_C_2146865228",
-		"location":
-		{
-			"x": -36415.0859375,
-			"y": -199979.984375,
-			"z": 2486.0576171875,
-			"rotation": 150
-		},
-		"Recipe": "Crude Oil",
-		"production":
-		{
-			"Name": "Crude Oil",
-			"ClassName": "Desc_LiquidOil_C",
-			"Amount": 6444,
-			"CurrentProd": 288.23529052734375,
-			"MaxProd": 749.99993896484375,
-			"ProdPercent": 0.38431376218795776
-		},
-		"Purity": 1,
-		"ManuSpeed": 2.5,
-		"IsConfigured": true,
-		"IsProducing": true,
-		"IsPaused": false,
-		"CircuitID": 44,
-		"features":
-		{
-			"properties":
-			{
-				"name": "Crude Oil",
-				"type": "Oil Extractor"
-			},
-			"geometry":
-			{
-				"coordinates":
-				{
-					"X": -36415.0859375,
-					"Y": -199979.984375,
-					"Z": 2486.0576171875
-				},
-				"type": "Point"
-			}
-		}
-	},
-	{
-		"Name": "Miner Mk.2",
-		"ClassName": "Build_MinerMk2_C_1",
-		"location":
-		{
-			"x": -110109.1015625,
-			"y": -129159.9609375,
-			"z": -1213.412353515625,
-			"rotation": 10
-		},
-		"Recipe": "Coal",
-		"production":
-		{
-			"Name": "Coal",
-			"ClassName": "Desc_Coal_C",
-			"Amount": 97,
-			"CurrentProd": 119.99999237060547,
-			"MaxProd": 269.99996948242188,
-			"ProdPercent": 0.44444447755813599
-		},
-		"Purity": 1,
-		"ManuSpeed": 1.5,
-		"IsConfigured": true,
-		"IsProducing": false,
-		"IsPaused": false,
-		"CircuitID": 44,
-		"features":
-		{
-			"properties":
-			{
-				"name": "Coal",
-				"type": "Miner Mk.2"
-			},
-			"geometry":
-			{
-				"coordinates":
-				{
-					"X": -110109.1015625,
-					"Y": -129159.9609375,
-					"Z": -1213.412353515625
-				},
-				"type": "Point"
-			}
-		}
-	}
+  {
+    "ID": "Build_MinerMk1_C_2147453782",
+    "Name": "Miner Mk.1",
+    "ClassName": "Build_MinerMk1_C",
+    "location": {
+      "x": -52587.4375,
+      "y": 264646.90625,
+      "z": -3740.842529296875,
+      "rotation": 199.99999953283191
+    },
+    "Recipe": "Limestone",
+    "RecipeClassName": "Desc_Stone_C",
+    "production": [
+      {
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Amount": 12,
+        "CurrentProd": 2.3529410362243652,
+        "MaxProd": 149.99998474121094,
+        "ProdPercent": 1.5686275170519528
+      }
+    ],
+    "ManuSpeed": 250,
+    "IsConfigured": true,
+    "IsProducing": true,
+    "IsPaused": false,
+    "PowerInfo": {
+      "CircuitGroupID": 7,
+      "CircuitID": 10,
+      "PowerConsumed": 16.788753509521484,
+      "MaxPowerConsumed": 16.788753509521484
+    },
+    "features": {
+      "properties": {
+        "name": "Miner Mk.1",
+        "type": "Miner Mk.1"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -52587.4375,
+          "y": 264646.90625,
+          "z": -3740.842529296875
+        },
+        "type": "Point"
+      }
+    }
+  }
 ]
 -----------------

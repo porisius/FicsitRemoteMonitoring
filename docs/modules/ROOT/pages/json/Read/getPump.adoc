@@ -1,0 +1,71 @@
+﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Pump
+
+Get a list of all Pumps and Valves.
+
+== URL
+
+`GET http://localhost:8080/getPump`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Pump or Valve.
+| Name | String | Name of the Pump or Valve.
+| ClassName | String | Class Name of the Pump or Valve.
+
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
+// power info fields
+include::../Models/_powerInfo.adoc[]
+
+include::../Models/_features.adoc[]
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "Build_PipelinePump_C_2146879650",
+    "Name": "Pipeline Pump Mk.1",
+    "ClassName": "Build_PipelinePump_C",
+    "location": {
+      "x": -5286.63427734375,
+      "y": 48738.54296875,
+      "z": 26675,
+      "rotation": 0.191588392598305
+    },
+    "BoundingBox": {
+      "min": {
+        "x": -5454.63427734375,
+        "y": 48678.54296875,
+        "z": 26615
+      },
+      "max": {
+        "x": -5074.63427734375,
+        "y": 48798.54296875,
+        "z": 26735
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "FA954900"
+    },
+    "PowerInfo": {
+      "CircuitGroupID": -1,
+      "CircuitID": -1,
+      "PowerConsumed": 0,
+      "MaxPowerConsumed": 0
+    }
+  }
+]
+-----------------

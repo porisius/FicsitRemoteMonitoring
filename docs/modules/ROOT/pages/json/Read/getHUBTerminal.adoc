@@ -1,143 +1,308 @@
-= HUB Terminal Information
-
+:doctype: book
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getHUBTerminal
+= Get HUB Terminal
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+include::../_isGetAll.adoc[]
+include::../_useGameThread.adoc[]
 
-|Name
-|HUB Name
-|String
-|Output
+Get information about the HUB Terminal.
 
-|ClassName
-|UE Class Name
-|String
-|Output
+== URL
 
-|location/x
-|X Location of HUB Terminal
-|Float
-|Output
+`GET http://localhost:8080/getHubTerminal`
 
-|location/y
-|Y Location of HUB Terminal
-|Float
-|Output
+include::../_responseBody.adoc[]
 
-|location/z
-|Z Location of HUB Terminal
-|Float
-|Output
+| ID | String | Unique ID of the HUB Terminal.
+| Name | String | Name of the HUB Terminal.
+| ClassName | String | ClassName of the HUB Terminal.
 
-|location/Rotation
-|Heading of HUB Terminal
-|Float
-|Output
+// location
+{set:key-name:location}
+{set:key-description:Location details of the Doggo.}
+include::../Models/_location.adoc[]
 
-|ShipDock
-|Drone Ship in Dock
-|Boolean
-|Output
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
 
-|HUBLevel
-|Level of HUB
-|Integer
-|Output
+| HasActiveMilestone | Boolean | Is a milestone selected?
 
-|SchName
-|Current Active Schematic
-|String
-|Output
+// schematic details
+| ActiveMilestone | Object | Current selected Milestone.
+include::../Models/_schematic.adoc[]
+{set:depth:  }
+include::../Models/_recipe.adoc[]
+// ingredients
+| {depth}  Ingredients | Object[] | Ingredients for this recipe.
+{set:depth:    }
+include::../Models/_inventoryItem.adoc[]
+| {depth}  ManualRate | Float | TODO
+| {depth}  FactoryRate | Float | TODO
+{set:depth:  }
 
-|ShipReturn
-|Time until ship returns
-|String
-|Output
+// products
+| {depth}  Products | Object[] | Products produced by this recipe.
+{set:depth:    }
+include::../Models/_inventoryItem.adoc[]
+| {depth}  ManualRate | Float | TODO
+| {depth}  FactoryRate | Float | TODO
+{set:depth:  }
+// schematic details end
 
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
+| ShipDock | Boolean | Is the Ship docked to the HUB?
+| SchName | String | Selected Schematic.
+| ShipReturn | String | Time until the Ship is back. Format: Hours:Minutes:Seconds
 
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
+// features fields
+include::../Models/_features.adoc[] 
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-   {
-      "NodeName":"Crude Oil",
-      "location":{
-         "x":178265.375,
-         "y":206095.640625,
-         "z":-9238.571289
+  {
+    "ID": "Build_HubTerminal_C_2147452924",
+    "Name": "HUB Terminal",
+    "ClassName": "Build_HubTerminal_C",
+    "location": {
+      "x": -70900,
+      "y": 249600,
+      "z": -3666.579833984375,
+      "rotation": 0
+    },
+    "BoundingBox": {
+      "min": {
+        "x": -70900,
+        "y": 249600,
+        "z": -3666.579833984375
       },
-      "EnumPurity":"RP_Normal",
-      "Purity":"Normal",
-      "NodeType":"Node",
-      "Exploited":false,
-      "features":{
-         "properties":{
-            "type":"Normal"
-         },
-         "geometry":{
-            "coordinates":{
-               "x":178265.375,
-               "y":206095.640625,
-               "z":-9238.571289
-            },
-            "type":"Point"
-         }
+      "max": {
+        "x": -70900,
+        "y": 249600,
+        "z": -3666.579833984375
       }
-   },
-   {
-      "NodeName":"SAM Ore",
-      "location":{
-         "x":181999.0625,
-         "y":114342.0,
-         "z":10285.46875
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "HasActiveMilestone": true,
+    "ActiveMilestone": {
+      "ID": "Schematic_4-3_C",
+      "Name": "Expanded Power Infrastructure",
+      "ClassName": "Schematic_4-3_C",
+      "TechTier": 4,
+      "Type": "Milestone",
+      "Recipes": [
+        {
+          "ID": "Recipe_PowerStorageMk1_C",
+          "Name": "Power Storage",
+          "ClassName": "Recipe_PowerStorageMk1_C",
+          "Category": "N/A",
+          "Events": [],
+          "Ingredients": [
+            {
+              "Name": "Encased Industrial Beam",
+              "ClassName": "Desc_SteelPlateReinforced_C",
+              "Amount": 5,
+              "MaxAmount": 100,
+              "ManualRate": 300,
+              "FactoryRate": 300
+            },
+            {
+              "Name": "Modular Frame",
+              "ClassName": "Desc_ModularFrame_C",
+              "Amount": 10,
+              "MaxAmount": 50,
+              "ManualRate": 600,
+              "FactoryRate": 600
+            },
+            {
+              "Name": "Wire",
+              "ClassName": "Desc_Wire_C",
+              "Amount": 100,
+              "MaxAmount": 500,
+              "ManualRate": 6000,
+              "FactoryRate": 6000
+            }
+          ],
+          "Products": [
+            {
+              "Name": "Power Storage",
+              "ClassName": "Desc_PowerStorageMk1_C",
+              "Amount": 1,
+              "MaxAmount": 100,
+              "ManualRate": 60,
+              "FactoryRate": 60
+            }
+          ],
+          "ProducedIn": [
+            "BP_BuildGun_C"
+          ],
+          "ManualDuration": 1,
+          "FactoryDuration": 1
+        },
+        {
+          "ID": "Recipe_PowerTower_C",
+          "Name": "Power Tower",
+          "ClassName": "Recipe_PowerTower_C",
+          "Category": "N/A",
+          "Events": [],
+          "Ingredients": [
+            {
+              "Name": "Concrete",
+              "ClassName": "Desc_Cement_C",
+              "Amount": 10,
+              "MaxAmount": 500,
+              "ManualRate": 600,
+              "FactoryRate": 600
+            },
+            {
+              "Name": "Wire",
+              "ClassName": "Desc_Wire_C",
+              "Amount": 20,
+              "MaxAmount": 500,
+              "ManualRate": 1200,
+              "FactoryRate": 1200
+            },
+            {
+              "Name": "Steel Beam",
+              "ClassName": "Desc_SteelPlate_C",
+              "Amount": 20,
+              "MaxAmount": 200,
+              "ManualRate": 1200,
+              "FactoryRate": 1200
+            }
+          ],
+          "Products": [
+            {
+              "Name": "Power Tower",
+              "ClassName": "Desc_PowerTower_C",
+              "Amount": 1,
+              "MaxAmount": 100,
+              "ManualRate": 60,
+              "FactoryRate": 60
+            }
+          ],
+          "ProducedIn": [
+            "BP_BuildGun_C"
+          ],
+          "ManualDuration": 1,
+          "FactoryDuration": 1
+        },
+        {
+          "ID": "Recipe_PowerTowerPlatform_C",
+          "Name": "Power Tower Platform",
+          "ClassName": "Recipe_PowerTowerPlatform_C",
+          "Category": "N/A",
+          "Events": [],
+          "Ingredients": [
+            {
+              "Name": "Concrete",
+              "ClassName": "Desc_Cement_C",
+              "Amount": 10,
+              "MaxAmount": 500,
+              "ManualRate": 600,
+              "FactoryRate": 600
+            },
+            {
+              "Name": "Wire",
+              "ClassName": "Desc_Wire_C",
+              "Amount": 20,
+              "MaxAmount": 500,
+              "ManualRate": 1200,
+              "FactoryRate": 1200
+            },
+            {
+              "Name": "Steel Beam",
+              "ClassName": "Desc_SteelPlate_C",
+              "Amount": 20,
+              "MaxAmount": 200,
+              "ManualRate": 1200,
+              "FactoryRate": 1200
+            }
+          ],
+          "Products": [
+            {
+              "Name": "Power Tower Platform",
+              "ClassName": "Desc_PowerTowerPlatform_C",
+              "Amount": 1,
+              "MaxAmount": 100,
+              "ManualRate": 60,
+              "FactoryRate": 60
+            }
+          ],
+          "ProducedIn": [
+            "BP_BuildGun_C"
+          ],
+          "ManualDuration": 1,
+          "FactoryDuration": 1
+        }
+      ],
+      "HasUnlocks": true,
+      "Locked": false,
+      "Purchased": false,
+      "DepLocked": false,
+      "LockedTutorial": false,
+      "LockedPhase": false,
+      "Tutorial": false,
+      "Cost": [
+        {
+          "Name": "Encased Industrial Beam",
+          "ClassName": "Desc_SteelPlateReinforced_C",
+          "Amount": 50,
+          "MaxAmount": 100,
+          "RemainingCost": 50,
+          "TotalCost": 50
+        },
+        {
+          "Name": "Steel Beam",
+          "ClassName": "Desc_SteelPlate_C",
+          "Amount": 100,
+          "MaxAmount": 200,
+          "RemainingCost": 100,
+          "TotalCost": 100
+        },
+        {
+          "Name": "Modular Frame",
+          "ClassName": "Desc_ModularFrame_C",
+          "Amount": 200,
+          "MaxAmount": 50,
+          "RemainingCost": 200,
+          "TotalCost": 200
+        },
+        {
+          "Name": "Wire",
+          "ClassName": "Desc_Wire_C",
+          "Amount": 2000,
+          "MaxAmount": 500,
+          "RemainingCost": 2000,
+          "TotalCost": 2000
+        }
+      ]
+    },
+    "ShipDock": true,
+    "SchName": "Expanded Power Infrastructure",
+    "ShipReturn": "00:00:00",
+    "features": {
+      "properties": {
+        "name": "HUB Terminal",
+        "type": "HUB Terminal"
       },
-      "EnumPurity":"RP_Normal",
-      "Purity":"Normal",
-      "NodeType":"Node",
-      "Exploited":false,
-      "features":{
-         "properties":{
-            "type":"Normal"
-         },
-         "geometry":{
-            "coordinates":{
-               "x":181999.0625,
-               "y":114342.0,
-               "z":10285.46875
-            },
-            "type":"Point"
-         }
+      "geometry": {
+        "coordinates": {
+          "x": -70900,
+          "y": 249600,
+          "z": -3666.579833984375
+        },
+        "type": "Point"
       }
-   }
+    }
+  }
 ]
 -----------------

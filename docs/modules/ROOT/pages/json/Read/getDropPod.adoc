@@ -1,157 +1,71 @@
-= Drop Pod/Crash Site
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getDropPod + 
+= Get Drop Pod
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+Gets a list of all drop pods.
 
-|ID
-|DropPod ID
-|String
-|Output
+== URL
 
-|location/x
-|X Location of DropPod
-|Float
-|Output
+`GET http://localhost:8080/getDropPod`
 
-|location/y
-|Y Location of DropPod
-|Float
-|Output
+include::../_responseBody.adoc[]
 
-|location/z
-|Z Location of DropPod
-|Float
-|Output
+| ID | String | Unique ID of the Drop Pod.
 
-|location/Rotation
-|Compass Heading of DropPod
-|Float
-|Output
+{set:key-name:location}
+{set:key-description:Location details of the Drop Pod.}
+include::../Models/_location.adoc[]
 
-|Looted
-|Has Hard Drive been collected?
-|Boolean
-|Output
+| Opened | Boolean | Is Drop Pod opened?
+| Looted | Boolean | Is Drop Pod looted?
 
-|RepairItem
-|Item Required to Repair DropPod
-|String
-|Output
+// inventory items
+| RequiredItem | Object | Required Item to open the Drop Pod.
+include::../Models/_inventoryItem.adoc[]
 
-|RepairItemClass
-|UE Class Name
-|String
-|Output
+| RequiredPower | Integer | Required Power to open the Drop Pod.
 
-|RepairAmount
-|# of Repair Item required to open DropPod/Crash Site
-|Integer
-|Output
-
-|PowerRequired
-|Power Required to open DropPod/Crash Site
-|Float
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
+// features
+include::../Models/_features.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-   {
-      "DropPodID": 0,
-      "location":
-      {
-         "X": -123677.3671875,
-         "Y": -167107.46875,
-         "Z": 29710.71875
+  {
+    "ID": "BP_DropPod14_389",
+    "location": {
+      "x": -43144,
+      "y": 145820,
+      "z": 7472,
+      "rotation": 90
+    },
+    "Opened": false,
+    "Looted": false,
+    "RequiredItem": {
+      "Name": "Modular Frame",
+      "ClassName": "Desc_ModularFrame_C",
+      "Amount": 5,
+      "MaxAmount": 50
+    },
+    "RequiredPower": 0,
+    "features": {
+      "properties": {
+        "name": "Drop Pod",
+        "type": "Drop Pod"
       },
-      "Looted": true,
-      "RepairItem": "Motor",
-      "RepairItemClass": "Desc_Motor_C",
-      "RepairAmount": 4,
-      "PowerRequired": 0,
-      "features":
-      {
-         "properties":
-         {
-            "name": "Crash Site #0",
-            "type": "Drop Pod"
-         },
-         "geometry":
-         {
-            "coordinates":
-            {
-               "X": -123677.3671875,
-               "Y": -167107.46875,
-               "Z": 29710.71875
-            },
-            "type": "Point"
-         }
+      "geometry": {
+        "coordinates": {
+          "x": -43144,
+          "y": 145820,
+          "z": 7472
+        },
+        "type": "Point"
       }
-   },
-   {
-      "DropPodID": 1,
-      "location":
-      {
-         "X": 236508.34375,
-         "Y": -312236.40625,
-         "Z": 9971.1552734375
-      },
-      "Looted": true,
-      "RepairItem": "Motor",
-      "RepairItemClass": "Desc_Motor_C",
-      "RepairAmount": 30,
-      "PowerRequired": 0,
-      "features":
-      {
-         "properties":
-         {
-            "name": "Crash Site #1",
-            "type": "Drop Pod"
-         },
-         "geometry":
-         {
-            "coordinates":
-            {
-               "X": 236508.34375,
-               "Y": -312236.40625,
-               "Z": 9971.1552734375
-            },
-            "type": "Point"
-         }
-      }
-   }
+    }
+  }
 ]
 -----------------

@@ -1,162 +1,71 @@
-= Drone Stats
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getDrone +
+= Get Drone
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+Gets a list of all drones.
 
-|Name
-|Drone Name
-|String
-|Output
+== URL
 
-|ClassName
-|UE Class Name
-|String
-|Output
+`GET http://localhost:8080/getDrone`
 
-|location/x
-|X Location of Drone
-|Float
-|Output
+include::../_responseBody.adoc[]
 
-|location/y
-|Y Location of Drone
-|Float
-|Output
+| ID | String | Unique ID of the Drone.
+| Name | String | Name of the Drone.
+| ClassName | String | ClassName of the Drone.
 
-|location/z
-|Z Location of Drone
-|Float
-|Output
+| HomeStation | String | Station name of the Home Station.
+| PairedStation | String | Station name of the paired Station (None if not set).
+| HasPairedStation | Boolean | Has Drone a paired station?
+| CurrentDestination | String | Current Destination of the drone (No Destination if drone has no destination).
+| FlyingSpeed | String | Current speed of the drone in km/h.
+| MaxSpeed | String | Max speed of the drone in km/h.
+| CurrentFlyingMode | String | Current flying mode of the Drone. +
+- `Unknown`: Unknown mode. +
+- `Flying`: Drone is in starting or landing mode. +
+- `None`: Drone is in idle mode. +
+- `Travelling`: Drone is travelling.
 
-|location/Rotation
-|Compass Heading of Drone
-|Float
-|Output
+{set:key-name:location}
+{set:key-description:Location details of the Drone.}
+include::../Models/_location.adoc[]
 
-|HomeStation
-|Drone's Home Station
-|String
-|Output
-
-|PairedStation
-|Drone's Paired Station
-|String
-|Output
-
-|CurrentDestination
-|Current Destination Drone Station
-|String
-|Output
-
-|FlyingSpeed
-|Flying Speed of Drone
-|Integer
-|Output
-
-|CurrentFlyingMode
-|Current ENUM Status
-|String
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
+include::../Models/_features.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
   {
-    "ID": 0,
+    "ID": "BP_DroneTransport_C_2147415346",
     "Name": "Drone",
-    "ClassName": "BP_DroneTransport_C_2147138365",
-    "location":
-    {
-      "x": -56065.14453125,
-      "y": -156554.703125,
-      "z": 1550.282958984375,
-      "rotation": 10
-    },
-    "CurrentDestination": "Storage Import 2",
-    "HomeStation": "Aluminium Drone",
+    "ClassName": "BP_DroneTransport_C",
+    "HomeStation": "Arlanda",
+    "PairedStation": "None",
+    "HasPairedStation": false,
+    "CurrentDestination": "No Destination",
     "FlyingSpeed": 0,
-    "CurrentFlyingMode": 5.0609362990541046e+18,
-    "features":
-    {
-      "properties":
-      {
-        "name": "Drone",
-        "type": "Drone"
-      },
-      "geometry":
-      {
-        "coordinates":
-        {
-          "X": -56065.14453125,
-          "Y": -156554.703125,
-          "Z": 1550.282958984375
-        },
-        "type": "Point"
-      }
-    }
-  },
-  {
-    "ID": 1,
-    "Name": "Drone",
-    "ClassName": "BP_DroneTransport_C_2147201133",
-    "location":
-    {
-      "x": -81024.140625,
-      "y": -146122.15625,
-      "z": 3992.3212890625,
-      "rotation": 255
+    "MaxSpeed": 0,
+    "CurrentFlyingMode": "None",
+    "location": {
+      "x": -48777.9609375,
+      "y": 252677.703125,
+      "z": -3190.923583984375,
+      "rotation": 90
     },
-    "CurrentDestination": "Battery Import",
-    "HomeStation": "Battery Port",
-    "FlyingSpeed": 130.0966796875,
-    "CurrentFlyingMode": 5.0609362990541046e+18,
-    "features":
-    {
-      "properties":
-      {
+    "features": {
+      "properties": {
         "name": "Drone",
         "type": "Drone"
       },
-      "geometry":
-      {
-        "coordinates":
-        {
-          "X": -81024.140625,
-          "Y": -146122.15625,
-          "Z": 3992.3212890625
+      "geometry": {
+        "coordinates": {
+          "x": -48777.9609375,
+          "y": 252677.703125,
+          "z": -3190.923583984375
         },
         "type": "Point"
       }

@@ -1,0 +1,71 @@
+﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Hypertube Entrances
+
+Get a list of all Hypertube Entrances.
+
+== URL
+
+`GET http://localhost:8080/getHyperEntrance`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Hypertube Entrances.
+| Name | String | Name of the Hypertube Entrances.
+| ClassName | String | Class Name of the Hypertube Entrances.
+
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
+// power info fields
+include::../Models/_powerInfo.adoc[]
+
+include::../Models/_features.adoc[]
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "Build_PipeHyperStart_C_2142927173",
+    "Name": "Hypertube Entrance",
+    "ClassName": "Build_PipeHyperStart_C",
+    "location": {
+      "x": -254709.78125,
+      "y": -44782.69921875,
+      "z": -125,
+      "rotation": 95.1965333687203
+    },
+    "BoundingBox": {
+      "min": {
+        "x": -254709.78125,
+        "y": -44782.69921875,
+        "z": -125
+      },
+      "max": {
+        "x": -254709.78125,
+        "y": -44782.69921875,
+        "z": -125
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "PowerInfo": {
+      "CircuitGroupID": 0,
+      "CircuitID": 23,
+      "PowerConsumed": 10,
+      "MaxPowerConsumed": 10
+    }
+  }
+]
+-----------------

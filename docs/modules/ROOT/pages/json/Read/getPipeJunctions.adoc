@@ -1,0 +1,62 @@
+﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Pipe Junctions
+
+Get a list of all pipe junctions.
+
+== URL
+
+`GET http://localhost:8080/getPipeJunctions`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Pipe Junction.
+| Name | String | Name of the Pipe Junction.
+| ClassName | String | Class Name of the Pipe Junction.
+
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
+include::../Models/_features.adoc[]
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "Build_PipelineJunction_Cross_C_2147369909",
+    "Name": "Pipeline Junction",
+    "ClassName": "Build_PipelineJunction_Cross_C",
+    "location": {
+      "x": -279356.65625,
+      "y": -145735.484375,
+      "z": -1447.62060546875,
+      "rotation": 90
+    },
+    "BoundingBox": {
+      "min": {
+        "x": -279476.65625,
+        "y": -145855.484375,
+        "z": -1522.62060546875
+      },
+      "max": {
+        "x": -279236.65625,
+        "y": -145615.484375,
+        "z": -1372.62060546875
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "FA954900"
+    }
+  }
+]
+-----------------

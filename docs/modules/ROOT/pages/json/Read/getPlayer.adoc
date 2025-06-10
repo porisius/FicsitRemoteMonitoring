@@ -1,160 +1,110 @@
-= Player Info
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getPlayer +
+= Get Player
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+Get a list of all Players.
 
-|ID
-|Player ID
-|Integer
-|Output
+== URL
 
-|PlayerName
-|Player Name: Please note that disconnected/logged out players will not have a name.
-|String
-|Output
+`GET http://localhost:8080/getPlayer`
 
-|ClassName
-|UE Class Name
-|String
-|Output
+include::../_responseBody.adoc[]
 
-|location/x
-|X Location of Player
-|Float
-|Output
+| ID | String | Unique ID of the Player.
+| Name | String | Name of the Player.
+| ClassName | String | Class Name of the Player.
 
-|location/y
-|Y Location of Player
-|Float
-|Output
+{set:key-name:location}
+{set:key-description:Location of the Player.}
+include::../Models/_location.adoc[]
 
-|location/z
-|Z Location of Player
-|Float
-|Output
+| PlayerHP | Float | HP of the Player.
+| Online | Boolean | Is the player online?
+| Dead | Boolean | Is the player dead?
 
-|location/Rotation
-|Compass Heading of Player
-|Float
-|Output
+| Inventory | Object[] | A list of items.
+include::../Models/_inventoryItem.adoc[]
 
-|Dead
-|Ragdoll
-|Boolean
-|Output
-
-|PlayerHP
-|Player Hitpoints/HP
-|Integer
-|Output
-
-|PingTime
-|Ping Time of Player
-|Byte
-|Output
-
-|MapArea
-|Map Area Name (Future Feature)
-|String
-|Output
-
-|TagColor
-|Player Color
-|RGBA
-|Output
+include::../Models/_features.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-   {
-      "ID": 0,
-      "PlayerName": "",
-      "ClassName": "",
-      "location":
+  {
+    "ID": "Char_Player_C_2147452680",
+    "Name": "derpierre65",
+    "ClassName": "Char_Player_C",
+    "location": {
+      "x": -57604.6796875,
+      "y": 260436.1875,
+      "z": -3018.36083984375,
+      "rotation": 115.5536737696151
+    },
+    "Online": true,
+    "PlayerHP": 100,
+    "Dead": false,
+    "Inventory": [
       {
-         "x": -92569.3203125,
-         "y": -122266.9375,
-         "z": -964.68499755859375,
-         "rotation": 9
+        "Name": "Beryl Nut",
+        "ClassName": "Desc_Nut_C",
+        "Amount": 10,
+        "MaxAmount": 100
       },
-      "PlayerHP": 100,
-      "Dead": false,
-      "PingTime": 0,
-      "MapArea": "",
-      "TagColor":
       {
-         "R": 0,
-         "G": 0,
-         "B": 0,
-         "A": 0
+        "Name": "Paleberry",
+        "ClassName": "Desc_Berry_C",
+        "Amount": 50,
+        "MaxAmount": 50
       },
-      "features":
       {
-         "properties":
-         {
-            "name": "",
-            "type": "Player"
-         },
-         "geometry":
-         {
-            "coordinates":
-            {
-               "X": -92569.3203125,
-               "Y": -122266.9375,
-               "Z": -964.68499755859375
-            },
-            "type": "Point"
-         }
+        "Name": "FICSIT Coupon",
+        "ClassName": "Desc_ResourceSinkCoupon_C",
+        "Amount": 11,
+        "MaxAmount": 500
+      },
+      {
+        "Name": "Hard Drive",
+        "ClassName": "Desc_HardDrive_C",
+        "Amount": 48,
+        "MaxAmount": 100
+      },
+      {
+        "Name": "Mercer Sphere",
+        "ClassName": "Desc_WAT2_C",
+        "Amount": 1,
+        "MaxAmount": 50
+      },
+      {
+        "Name": "Wood",
+        "ClassName": "Desc_Wood_C",
+        "Amount": 51,
+        "MaxAmount": 200
+      },
+      {
+        "Name": "Hoverpack",
+        "ClassName": "BP_EquipmentDescriptorHoverPack_C",
+        "Amount": 1,
+        "MaxAmount": 1
       }
-   },
-   {
-      "ID": 1,
-      "PlayerName": "porisius",
-      "ClassName": "",
-      "location":
-      {
-         "x": -92278.453125,
-         "y": -121765.703125,
-         "z": -984.6280517578125,
-         "rotation": 345
+    ],
+    "features": {
+      "properties": {
+        "name": "derpierre65",
+        "type": "Player"
       },
-      "PlayerHP": 100,
-      "Dead": false,
-      "PingTime": 0,
-      "MapArea": "",
-      "TagColor":
-      {
-         "R": 0.0051819998770952225,
-         "G": 0.39157301187515259,
-         "B": 0.25415199995040894,
-         "A": 1
-      },
-      "features":
-      {
-         "properties":
-         {
-            "name": "porisius",
-            "type": "Player"
-         },
-         "geometry":
-         {
-            "coordinates":
-            {
-               "X": -92278.453125,
-               "Y": -121765.703125,
-               "Z": -984.6280517578125
-            },
-            "type": "Point"
-         }
+      "geometry": {
+        "coordinates": {
+          "x": -57604.6796875,
+          "y": 260436.1875,
+          "z": -3018.36083984375
+        },
+        "type": "Point"
       }
-   }
+    }
+  }
 ]
 -----------------

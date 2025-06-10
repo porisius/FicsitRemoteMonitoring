@@ -1,0 +1,84 @@
+:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Trading Post
+
+Information about the Central HUB, or as it was originally called the Trading Post.
+
+== URL
+
+`GET http://localhost:8080/getTradingPost`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Factory Building.
+| Name | String | Name of the Factory Building.
+| ClassName | String | ClassName of the Factory Building.
+
+// location fields
+{set:key-name:location}
+{set:key-description:Location details of the HUB.}
+include::../Models/_location.adoc[]
+
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
+| HUBLevel | Integer | HUB Level, not milestone level, from the Tier 0 Tutorial Section
+
+// features fields
+include::../Models/_features.adoc[]
+
+Example:
+[source,json]
+-----------------
+[
+  {
+    "ID": "Build_TradingPost_C_2146408329",
+    "Name": "The HUB",
+    "ClassName": "Build_TradingPost_C",
+    "location": {
+      "x": -259600,
+      "y": -46500,
+      "z": -399.988555908203,
+      "rotation": 270
+    },
+    "BoundingBox": {
+      "min": {
+        "x": -260400,
+        "y": -47780,
+        "z": -399.988555908203
+      },
+      "max": {
+        "x": -259000,
+        "y": -45180,
+        "z": 1150.0114440918
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "HUBLevel": 6,
+    "features": {
+      "properties": {
+        "name": "The HUB",
+        "type": "The HUB"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -259600,
+          "y": -46500,
+          "z": -399.988555908203
+        },
+        "type": "Point"
+      }
+    }
+  }
+]
+-----------------

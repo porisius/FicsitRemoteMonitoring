@@ -1,84 +1,63 @@
-= Installed Mod List
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getModList +
+= Get Mod List
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+Get a list of all installed mods.
 
-|SMRName
-|Name of Mod as Mod Repository and Unreal Engine see it as
-|String
-|Output
+== URL
 
-|ModName
-|Common Name of Mod
-|String
-|Output
+`GET http://localhost:8080/getModList`
 
-|ModVersion
-|SemVer of Mod
-|String
-|Output
+include::../_responseBody.adoc[]
 
-|Description
-|Description
-|String
-|Output
-
-|CreatedBy
-|Author
-|String
-|Output
-
-|DocsURL
-|Mod Documentation URL
-|String
-|Output
-
-|SupportURL
-|Mod Support URL
-|String
-|Output
-	
-|AcceptAnyRemoteVersion
-|If true, mod is not required on all clients, else mod is required on all clients.
-|Boolean
-|Output
-
-|RemoteVersionRange
-|Acceptable Version Range of other client/server mod versions
-|String
-|Output	
+| Name | String | Name of the Mod.
+| SMRName | String | Name of Mod as Mod Repository and Unreal Engine see it as.
+| Version | String | Version (SemVer format) of the Mod.
+| Description | String | Description of the Mod.
+| DocsURL | String | Docs URL of the Mod.
+| SupportURL | String | Support URL of the Mod.
+| CreatedBy | String | Author of the Mod.
+| RemoteVersionRange | String | Acceptable Version Range of other client/server mod versions.
+| RequiredOnRemote | Boolean | Is the Mod required on the server?
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-    {
-        "SMRName": "DiscIT",
-        "ModName": "DiscIT",
-        "ModVersion": "1.0.2",
-        "Description": "",
-        "CreatedBy": "Porisius",
-        "DocsURL": "",
-        "SupportURL": "",
-        "AcceptAnyRemoteVersion": true,
-        "RemoteVersionRange": ">=1.0.2"
-    },
-    {
-        "SMRName": "FicsitRemoteMonitoring",
-        "ModName": "Ficsit Remote Monitoring",
-        "ModVersion": "0.8.31",
-        "Description": "Statistical and GeoLocation Monitoring for Satisfactory",
-        "CreatedBy": "Porisius",
-        "DocsURL": "https://docs.ficsit.app/ficsitremotemonitoring/latest/index.html",
-        "SupportURL": "https://github.com/porisius/FicsitRemoteMonitoring",
-        "AcceptAnyRemoteVersion": true,
-        "RemoteVersionRange": ">=0.8.31"
-    }
+  {
+    "Name": "Ficsit Remote Monitoring",
+    "SMRName": "FicsitRemoteMonitoring",
+    "Version": "1.4.0",
+    "Description": "Statistical and GeoLocation Monitoring for Satisfactory",
+    "DocsURL": "https://docs.ficsit.app/ficsitremotemonitoring/latest/index.html",
+    "AcceptsAnyRemoteVersion": "https://github.com/porisius/FicsitRemoteMonitoring",
+    "CreatedBy": "Porisius",
+    "RemoteVersionRange": ">=1.4.0",
+    "RequiredOnRemote": false
+  },
+  {
+    "Name": "Satisfactory",
+    "SMRName": "FactoryGame",
+    "Version": "415558.0.0",
+    "Description": "",
+    "DocsURL": "",
+    "AcceptsAnyRemoteVersion": "http://www.coffeestainstudios.com",
+    "CreatedBy": "Coffee Stain Studios AB",
+    "RemoteVersionRange": "*",
+    "RequiredOnRemote": false
+  },
+  {
+    "Name": "Satisfactory Mod Loader",
+    "SMRName": "SML",
+    "Version": "3.11.1",
+    "Description": "Mod loading and compatibility API for Satisfactory",
+    "DocsURL": "https://docs.ficsit.app",
+    "AcceptsAnyRemoteVersion": "https://discord.ficsit.app",
+    "CreatedBy": "SML Team",
+    "RemoteVersionRange": ">=3.11.1",
+    "RequiredOnRemote": true
+  }
 ]
 -----------------

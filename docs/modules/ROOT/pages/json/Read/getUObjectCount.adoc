@@ -1,0 +1,37 @@
+:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get UObject Count
+
+Not intended to enrage, aggravate, or annoy alpacas, nor encourage targets for spitting,
+especially those in Europe, Sweden, or at Coffee Stain Studios.
+
+We love you Ben! - Porisius
+no, seriously, we do.
+
+This endpoint is used to get the current UObject count and the maximum UObject capacity.
+This is useful for monitoring the health of the game and ensuring that it is not running out of memory.
+
+Please note that this endpoint WILL NOT BE ACCURATE, as it creates UObjects to count UObjects.
+Code credit goes to Th3Fanbus/Rex as this was first made under Th3UObjectCounter.
+
+== URL
+
+`GET http://localhost:8080/getUObjectCount`
+
+include::../_responseBody.adoc[]
+
+| UObjectCount | Integer | UObject Count in use
+| UObjectCapacity | Integer | Maximium UObjects allowed before crash
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+{
+  "UObjectCount": 391076,
+  "UObjectCapacity": 2162688
+}
+-----------------

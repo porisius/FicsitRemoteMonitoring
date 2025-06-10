@@ -4,8 +4,6 @@
 
 = Get Factory
 
-include::../_isGetAll.adoc[]
-
 Get a list of all factory buildings.
 
 getAssembler only retrieves Assemblers +
@@ -34,21 +32,21 @@ include::../Models/_location.adoc[]
 
 // production
 | production | Object[] | List of produced items.
-|   Name | String | Name of the item.
-|   ClassName | String | ClassName of the item.
-|   Amount | String | Number of items stored in Building.
-|   CurrentProd | Float | Current production rate per minute (amount decreases if an ingredient is unavailable).
-|   MaxProd | Float | Maximum items produced per minute.
-|   ProdPercent | Float | Efficiency Percentage.
+| {depth}  Name | String | Name of the item.
+| {depth}  ClassName | String | ClassName of the item.
+| {depth}  Amount | String | Number of items stored in Building.
+| {depth}  CurrentProd | Float | Current production rate per minute (amount decreases if an ingredient is unavailable).
+| {depth}  MaxProd | Float | Maximum items produced per minute.
+| {depth}  ProdPercent | Float | Efficiency Percentage.
 
 // ingredients
 | ingredients | Object[] | List of required items.
-|   Name | String | Name of the item.
-|   ClassName | String | ClassName of the item.
-|   Amount | String | Number of items stored in Building.
-|   CurrentConsumed | Float | Current consumption rate per minute (amount decreases if an ingredient is unavailable).
-|   MaxConsumed | Float | Maximum items consumed per minute.
-|   ConsPercent | Float | Efficiency Percentage.
+| {depth}  Name | String | Name of the item.
+| {depth}  ClassName | String | ClassName of the item.
+| {depth}  Amount | String | Number of items stored in Building.
+| {depth}  CurrentConsumed | Float | Current consumption rate per minute (amount decreases if an ingredient is unavailable).
+| {depth}  MaxConsumed | Float | Maximum items consumed per minute.
+| {depth}  ConsPercent | Float | Efficiency Percentage.
 
 | ManuSpeed | Float | Configured speed in % (exceeds 100 if the machine is equipped with a power slug).
 | IsConfigured | Boolean | Is a recipe configured?
@@ -57,6 +55,14 @@ include::../Models/_location.adoc[]
 
 // power info fields
 include::../Models/_powerInfo.adoc[]
+
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
 
 // features fields
 include::../Models/_features.adoc[]

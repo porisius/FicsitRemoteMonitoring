@@ -1,0 +1,44 @@
+﻿:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Cloud Inv
+
+This is inventory of the dimensional depot.
+
+== Similar
+
+[cols="1,1,2"]
+|===
+|Resource|Endpoint|Description
+| Inventory | xref:json/Read/getStorageInv.adoc[getStorageInv] | Gets a list of all storage inventories.
+| Inventory | xref:json/Read/getWorldInv.adoc[getWorldInv] | Gets a list of the world inventory.
+|===
+
+== URL
+
+`GET http://localhost:8080/getCloudInv`
+
+include::../_responseBody.adoc[]
+
+include::../Models/_inventoryItem.adoc[]
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "Name": "Iron Plate",
+    "ClassName": "Desc_IronPlate_C",
+    "Amount": 164,
+    "MaxAmount": 200
+  },
+  {
+    "Name": "Copper Sheet",
+    "ClassName": "Desc_CopperSheet_C",
+    "Amount": 200,
+    "MaxAmount": 200
+  }
+]
+-----------------

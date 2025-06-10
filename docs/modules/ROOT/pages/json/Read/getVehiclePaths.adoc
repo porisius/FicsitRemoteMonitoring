@@ -1,0 +1,113 @@
+:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Vehicle Paths
+
+Gets a list of all vehicle paths.
+
+== URL
+
+`GET http://localhost:8080/getVehiclePaths`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Vehicle Path.
+| Name | String | Name of the Vehicle Path.
+| ClassName | String | ClassName of the Vehicle Path.
+| PathTargetLength | Integer | Number of Path Points.
+| PathLength | Float | Length of the Path in cm.
+
+| PathPoints | Object[] | List of all path points.
+| {depth}  x | Float | X Location in the World.
+| {depth}  y | Float | Y Location in the World.
+| {depth}  z | Float | Z Location in the World.
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "FGSavedWheeledVehiclePath_2147358392",
+    "Name": "My Vehicle Path Name",
+    "ClassName": "FGSavedWheeledVehiclePath",
+    "VehicleType": "Explorer",
+    "PathTargetLength": 11,
+    "PathLength": 20961.51171875,
+    "PathPoints": [
+      {
+        "x": -62978.16796875,
+        "y": 253953.703125,
+        "z": -3704.992431640625
+      },
+      {
+        "x": -62794.34375,
+        "y": 255988.375,
+        "z": -3702.954833984375
+      },
+      {
+        "x": -61307.01953125,
+        "y": 256632.109375,
+        "z": -3667.7158203125
+      },
+      {
+        "x": -60401.11328125,
+        "y": 256775.65625,
+        "z": -3650.239501953125
+      },
+      {
+        "x": -58938.93359375,
+        "y": 257103.15625,
+        "z": -3678.6875
+      },
+      {
+        "x": -57676.51953125,
+        "y": 257312.53125,
+        "z": -3732.132568359375
+      },
+      {
+        "x": -56906.4140625,
+        "y": 256450.265625,
+        "z": -3748.051025390625
+      },
+      {
+        "x": -57155.46484375,
+        "y": 255213.640625,
+        "z": -3663.41064453125
+      },
+      {
+        "x": -58090.73046875,
+        "y": 254059.015625,
+        "z": -3638.1064453125
+      },
+      {
+        "x": -59859.09765625,
+        "y": 252786.453125,
+        "z": -3683.428466796875
+      },
+      {
+        "x": -61563.4140625,
+        "y": 252807.484375,
+        "z": -3700.3544921875
+      },
+      {
+        "x": -62978.16796875,
+        "y": 253953.703125,
+        "z": -3704.992431640625
+      },
+      {
+        "x": -62794.34375,
+        "y": 255988.375,
+        "z": -3702.954833984375
+      },
+      {
+        "x": -61307.01953125,
+        "y": 256632.109375,
+        "z": -3667.7158203125
+      }
+    ]
+  }
+]
+-----------------

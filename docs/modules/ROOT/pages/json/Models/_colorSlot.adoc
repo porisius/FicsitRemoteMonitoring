@@ -1,0 +1,3 @@
+﻿| {key-name} | Object | Color/Decoration information about the Actor.
+| {depth}  PrimaryColor | String | Hex Code of Primary Color
+| {depth}  SecondaryColor | String | Hex Code of Secondary Color

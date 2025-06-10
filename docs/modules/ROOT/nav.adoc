@@ -4,6 +4,7 @@
 * xref:webserver.adoc[Web Server]
 * xref:websockets.adoc[Web Sockets]
 * xref:webhook.adoc[Webhook Notifications]
+* xref:dedicatedserver.adoc[Dedicated Server API]
 * xref:icons.adoc[Icon System (Web Server Only)]
 
 * xref:config/config.adoc[Config]
@@ -17,7 +18,7 @@
 ** xref:json/authentication.adoc[Authentication]
 ** xref:json/Read/Read.adoc[Read]
 
-*** xref:json/Read/getAll.adoc[getAll]
+*** xref:json/Read/getAll.adoc[getAll - Retired]
 
 *** Chat
 **** xref:json/Read/getChatMessages.adoc[getChatMessages]
@@ -27,29 +28,34 @@
 **** xref:json/Read/getFactory.adoc[getAssembler]
 **** xref:json/Read/getBelts.adoc[getBelts]
 **** xref:json/Read/getFactory.adoc[getBlender]
-**** getCables (soon)
+**** xref:json/Read/getCables.adoc[getCables]
 **** xref:json/Read/getFactory.adoc[getConstructor]
 **** xref:json/Read/getFactory.adoc[getConverter]
 **** xref:json/Read/getFactory.adoc[getEncoder]
+**** xref:json/Read/getElevators.adoc[getElevators]
 **** xref:json/Read/getExtractor.adoc[getExtractor]
 **** xref:json/Read/getFactory.adoc[getFactory]
-**** getFrackingActivator (soon)
+**** xref:json/Read/getFrackingActivator.adoc[getFrackingActivator]
 **** xref:json/Read/getFactory.adoc[getFoundry]
 **** xref:json/Read/getHUBTerminal.adoc[getHUBTerminal]
-**** getHypertube (soon)
+**** xref:json/Read/getHyperEntrance.adoc[getHyperEntrance]
+**** xref:json/Read/getHypertube.adoc[getHypertube]
 **** xref:json/Read/getFactory.adoc[getManufacturer]
 **** xref:json/Read/getFactory.adoc[getPackager]
 **** xref:json/Read/getFactory.adoc[getParticle]
 **** xref:json/Read/getPipes.adoc[getPipes]
-**** getPortal (soon)
-**** getPump (soon)
+**** xref:json/Read/getPipeJunctions.adoc[getPipeJunctions]
+**** xref:json/Read/getPortal.adoc[getPortal]
+**** xref:json/Read/getPump.adoc[getPump]
 **** xref:json/Read/getRadarTower.adoc[getRadarTower]
 **** xref:json/Read/getFactory.adoc[getRefinery]
-**** getResourceSinkBuilding (soon)
+**** xref:json/Read/getResourceSinkBuilding.adoc[getResourceSinkBuilding]
 **** xref:json/Read/getFactory.adoc[getSmelter]
 **** xref:json/Read/getSpaceElevator.adoc[getSpaceElevator]
+**** xref:json/Read/getSplitterMerger.adoc[getSplitterMerger]
 **** xref:json/Read/getSwitches.adoc[getSwitches]
-**** getTrainRails (soon)
+**** xref:json/Read/getTradingPost.adoc[getTradingPost]
+**** xref:json/Read/getTrainRails.adoc[getTrainRails]
 
 *** Generators
 **** xref:json/Read/getGenerators.adoc[getBiomassGenerator]
@@ -60,11 +66,12 @@
 **** xref:json/Read/getGenerators.adoc[getNuclearGenerator]
 
 *** Inventory
-**** getCloudInv (soon)
+**** xref:json/Read/getCloudInv.adoc[getCloudInv]
 **** xref:json/Read/getStorageInv.adoc[getStorageInv]
 **** xref:json/Read/getWorldInv.adoc[getWorldInv]
 
 *** Resource Nodes
+**** xref:json/Read/getResourceNode.adoc[getResourceDeposit]
 **** xref:json/Read/getResourceNode.adoc[getResourceGeyser]
 **** xref:json/Read/getResourceNode.adoc[getResourceNode]
 **** xref:json/Read/getResourceNode.adoc[getResourceWell]
@@ -72,8 +79,8 @@
 *** Session
 **** xref:json/Read/getModList.adoc[getModList]
 **** xref:json/Read/getPlayer.adoc[getPlayer]
-**** getResearchTrees (soon)
-**** getSessionInfo (soon)
+**** xref:json/Read/getResearchTrees.adoc[getResearchTrees]
+**** xref:json/Read/getSessionInfo.adoc[getSessionInfo]
 
 *** Sink
 **** xref:json/Read/getResourceSink.adoc[getExplorationSink]
@@ -89,23 +96,25 @@
 **** xref:json/Read/getDrone.adoc[getDrone]
 **** xref:json/Read/getVehicles.adoc[getExplorer]
 **** xref:json/Read/getVehicles.adoc[getFactoryCart]
-**** xref:json/Read/getPaths.adoc[getPaths]
 **** xref:json/Read/getVehicles.adoc[getTractor]
-**** getTrains (soon)
+**** xref:json/Read/getTrains.adoc[getTrains]
 **** xref:json/Read/getVehicles.adoc[getTruck]
+**** xref:json/Read/getVehiclePaths.adoc[getVehiclePaths]
 **** xref:json/Read/getVehicles.adoc[getVehicles]
 
 *** World
+**** xref:json/Read/getArtifacts.adoc[getArtifacts]
 **** xref:json/Read/getDoggo.adoc[getDoggo]
 **** xref:json/Read/getDropPod.adoc[getDropPod]
 **** xref:json/Read/getPowerSlug.adoc[getPowerSlug]
 **** xref:json/Read/getProdStats.adoc[getProdStats]
 **** xref:json/Read/getRecipes.adoc[getRecipes]
 **** xref:json/Read/getSchematics.adoc[getSchematics]
+**** xref:json/Read/getUObjectCount.adoc[getUObjectCount]
 
 *** Power
 **** xref:json/Read/getPower.adoc[getPower]
-**** getPowerUsage
+**** xref:json/Read/getPowerUsage.adoc[getPowerUsage]
 
 ** xref:json/Write/Write.adoc[Write]
 
@@ -113,6 +122,7 @@
 **** xref:json/Write/sendChatMessage.adoc[sendChatMessage]
 
 *** Factory
+**** xref:json/Write/setEnabled.adoc[setEnabled]
 **** xref:json/Write/setSwitches.adoc[setSwitches]
 
 *** World

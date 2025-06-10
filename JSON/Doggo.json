@@ -1,12 +1,28 @@
 {
-	"username": "Ficsit Remote Monitoring: Lizard Doggo Notification",
-	"avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
-	"embeds": [{
-		"title": "Notification: A Lizard Doggo has gained an item!",
-		"fields": [
-			{"name": "Item Name:", "value": "{ItemName}", "inline": true},
-			{"name": "Quantity:", "value": "{ItemNum}", "inline": true}
-		],
-		"footer": {"text": "{Flavor}"}
-	}]
+  "username": "Ficsit Remote Monitoring: Lizard Doggo Notification",
+  "avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
+  "embeds": [
+    {
+      "title": "Notification: A Lizard Doggo has gained an item!",
+      "fields": [
+        {
+          "name": "Item Name:",
+          "value": "{ItemName}",
+          "inline": true
+        },
+        {
+          "name": "Quantity:",
+          "value": "{ItemNum}",
+          "inline": true
+        }
+      ],
+      "footer": {
+        "text": "{Flavor}"
+      },
+      "thumbnail": {
+        "url": "https://satisfactory.wiki.gg/images/thumb/7/79/Lizard_Doggo.png/300px-Lizard_Doggo.png?4f2629"
+      },
+      "color": 15703926
+    }
+  ]
 }

@@ -1,0 +1,283 @@
+:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Splitters and Mergers
+
+Get a list of all splitters and mergers +
+
+== URL
+
+`GET http://localhost:8080/getSplitterMerger`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Splitter/Merger.
+| Name | String | Name of the Splitter/Merger.
+| ClassName | String | ClassName of the Splitter/Merger.
+
+// location fields
+{set:key-name:location}
+{set:key-description:Location details of the Splitter/Merger.}
+include::../Models/_location.adoc[]
+
+// Splitter (if applicable)
+| Splitter | Object[] | List of Smart/Programmable Splitter Settings.
+| {depth}  Left | Object | Left Output
+| {depth}  Center | Object | Center/Middle Output
+| {depth}  Right | Object | Right Output
+
+// PriorityMerger (if applicable)
+| PriorityMerger | Object[] | Shows priority of input from 0-2, with 0 being the lowest priority and 2 being the highest
+| {depth}  Center | Integar | Center Input of Priority Merger
+| {depth}  Right | Integar | Right Input of Priority Merger
+| {depth}  Left | Integar | Left Input of Priority Merger
+
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
+// features fields
+include::../Models/_features.adoc[]
+|===
+
+== Example Response (Note that all 5 splitters/mergers are listed)
+[source,json]
+-----------------
+[
+  {
+    "ID": "Build_ConveyorAttachmentMerger_C_2146358142",
+    "Name": "Conveyor Merger",
+    "ClassName": "Build_ConveyorAttachmentMerger_C",
+    "location": {
+      "x": -258900,
+      "y": -43000,
+      "z": -99.9896545410156,
+      "rotation": 90
+    },
+    "BoundingBox": {
+      "min": {
+        "x": -259100,
+        "y": -43200,
+        "z": -179.989654541016
+      },
+      "max": {
+        "x": -258700,
+        "y": -42800,
+        "z": 80.0103454589844
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "features": {
+      "properties": {
+        "name": "Conveyor Merger",
+        "type": "Conveyor Merger"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -258900,
+          "y": -43000,
+          "z": -99.9896545410156
+        },
+        "type": "Point"
+      }
+    }
+  },
+  {
+    "ID": "Build_ConveyorAttachmentSplitter_C_2145579438",
+    "Name": "Conveyor Splitter",
+    "ClassName": "Build_ConveyorAttachmentSplitter_C",
+    "location": {
+      "x": 135400,
+      "y": 218700,
+      "z": -7200.01904296875,
+      "rotation": 0
+    },
+    "BoundingBox": {
+      "min": {
+        "x": 135200,
+        "y": 218500,
+        "z": -7280.01904296875
+      },
+      "max": {
+        "x": 135600,
+        "y": 218900,
+        "z": -7020.01904296875
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "features": {
+      "properties": {
+        "name": "Conveyor Splitter",
+        "type": "Conveyor Splitter"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": 135400,
+          "y": 218700,
+          "z": -7200.01904296875
+        },
+        "type": "Point"
+      }
+    }
+  },
+  {
+    "ID": "Build_ConveyorAttachmentMergerPriority_C_2147456537",
+    "Name": "Priority Merger",
+    "ClassName": "Build_ConveyorAttachmentMergerPriority_C",
+    "location": {
+      "x": 139900,
+      "y": 213900,
+      "z": -7399.99658203125,
+      "rotation": 90
+    },
+    "BoundingBox": {
+      "min": {
+        "x": 139700,
+        "y": 213700,
+        "z": -7479.99658203125
+      },
+      "max": {
+        "x": 140100,
+        "y": 214100,
+        "z": -7219.99658203125
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "PriorityMerger": {
+      "Center": 1,
+      "Right": 2,
+      "Left": 0
+    },
+    "features": {
+      "properties": {
+        "name": "Priority Merger",
+        "type": "Priority Merger"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": 139900,
+          "y": 213900,
+          "z": -7399.99658203125
+        },
+        "type": "Point"
+      }
+    }
+  },
+  {
+    "ID": "Build_ConveyorAttachmentSplitterSmart_C_2142557047",
+    "Name": "Smart Splitter",
+    "ClassName": "Build_ConveyorAttachmentSplitterSmart_C",
+    "location": {
+      "x": -104600,
+      "y": -136700,
+      "z": 2199.99682617188,
+      "rotation": 90
+    },
+    "BoundingBox": {
+      "min": {
+        "x": -104800,
+        "y": -136900,
+        "z": 2119.99682617188
+      },
+      "max": {
+        "x": -104400,
+        "y": -136500,
+        "z": 2379.99682617188
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "Splitter": {
+      "Left": [
+        "Overflow"
+      ],
+      "Center": [
+        "Any"
+      ],
+      "Right": [
+        "None"
+      ]
+    },
+    "features": {
+      "properties": {
+        "name": "Smart Splitter",
+        "type": "Smart Splitter"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -104600,
+          "y": -136700,
+          "z": 2199.99682617188
+        },
+        "type": "Point"
+      }
+    }
+  },
+  {
+    "ID": "Build_ConveyorAttachmentSplitterProgrammable_C_2147456408",
+    "Name": "Programmable Splitter",
+    "ClassName": "Build_ConveyorAttachmentSplitterProgrammable_C",
+    "location": {
+      "x": 139900,
+      "y": 214700,
+      "z": -7399.99658203125,
+      "rotation": 90
+    },
+    "BoundingBox": {
+      "min": {
+        "x": 139700,
+        "y": 214500,
+        "z": -7479.99658203125
+      },
+      "max": {
+        "x": 140100,
+        "y": 214900,
+        "z": -7219.99658203125
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "Splitter": {
+      "Left": [
+        "AI Expansion Server"
+      ],
+      "Center": [
+        "Any"
+      ],
+      "Right": []
+    },
+    "features": {
+      "properties": {
+        "name": "Programmable Splitter",
+        "type": "Programmable Splitter"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": 139900,
+          "y": 214700,
+          "z": -7399.99658203125
+        },
+        "type": "Point"
+      }
+    }
+  }
+]
+-----------------

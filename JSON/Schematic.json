@@ -1,12 +1,23 @@
 {
-	"username": "Ficsit Remote Monitoring: Research Notification",
-	"avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
-	"embeds": [{
-		"title": "Notification: New Recipes Unlocked",
-		"description": "Schematic: {Schematic}",
-		"fields": [
-			{"name": "Recipes Unlocked:", "value": "{Recipes}", "inline": true},
-		],
-		"footer": {"text": "{Flavor}"}
-	}]
+  "embeds": [
+    {
+      "title": "Notification: New Recipes Unlocked",
+	  "description": "Schematic: {Schematic}",
+      "color": 15059088,
+      "footer": {
+        "text": "{Flavor}"
+      },
+      "thumbnail": {
+        "url": "https://satisfactory.wiki.gg/images/thumb/5/5e/The_HUB.png/300px-The_HUB.png?9d3cf6"
+      },
+      "fields": [
+        {
+          "name": "Recipes Unlocked:",
+          "value": "{Recipes}"
+        }
+      ]
+    }
+  ],
+  "username": "Ficsit Remote Monitoring: Research Notification",
+  "avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp"
 }

@@ -1,138 +1,69 @@
-= Lizard Doggo Info
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getDoggo +
+= Get Doggo
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+Gets a list of all doggos.
 
-|ID
-|Doggo ID
-|Integer
-|Output
+== URL
 
-|Name
-|Doggo Name
-|String
-|Output
+`GET http://localhost:8080/getDoggo`
 
-|ClassName
-|UE Class Name
-|String
-|Output
+include::../_responseBody.adoc[]
 
-|location/x
-|X Location of Lizard Doggo
-|Float
-|Output
+| ID | String | Unique ID of the Doggo.
+| Name | String | Name of the Doggo.
+| ClassName | String | ClassName of the Doggo.
 
-|location/y
-|Y Location of Lizard Doggo
-|Float
-|Output
+{set:key-name:location}
+{set:key-description:Location details of the Doggo.}
+include::../Models/_location.adoc[]
 
-|location/z
-|Z Location of Lizard Doggo
-|Float
-|Output
+// inventory items
+| Inventory | Object[] | List of items being carried by the doggo.
+include::../Models/_inventoryItem.adoc[]
 
-|location/Rotation
-|Compass Heading of Lizard Doggo
-|Float
-|Output
-
-|ItemName
-|Item in Doggo's Inventory
-|String
-|Output
-
-|ClassName
-|UE Class Name
-|String
-|Output
-
-|ItemAmt
-|# of Item in Doggo's Inventory
-|Integer
-|Output
-
-|MapArea
-|Map Area Name (Future Feature)
-|String
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
+// features
+include::../Models/_features.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
+  {
+    "ID": "Char_SpaceRabbit_C_2147414178",
+    "Name": "Ficsit Remote Monitoring rocks",
+    "ClassName": "Char_SpaceRabbit_C",
+    "location": {
+      "x": -43942.754996165997,
+      "y": 275363.09331948927,
+      "z": -3529.0104559118095,
+      "rotation": 283.58592224121094
+    },
+    "Inventory": [
       {
-            "ID": 0,
-            "Name": "DoggoWithLongName",
-            "ClassName": "Char_SpaceRabbit_C_2147364440",
-            "location":
-            {
-                  "x": -94763.59375,
-                  "y": -119329.2578125,
-                  "z": -1139.87548828125,
-                  "rotation": 178
-            },
-            "Inventory": [
-                  {
-                        "Name": "Purple Power Slug",
-                        "ClassName": "Desc_Crystal_mk3_C",
-                        "Amount": 1
-                  }
-            ],
-            "MapArea": ""
-      },
-      {
-            "ID": 1,
-            "Name": "DoggoWithLongName",
-            "ClassName": "Char_SpaceRabbit_C_2146938592",
-            "location":
-            {
-                  "x": -94779.3671875,
-                  "y": -119239.90625,
-                  "z": -1139.7823486328125,
-                  "rotation": 150
-            },
-            "Inventory": [
-                  {
-                        "Name": "Wood",
-                        "ClassName": "Desc_Wood_C",
-                        "Amount": 4
-                  }
-            ],
-            "MapArea": ""
+        "Name": "Steel Beam",
+        "ClassName": "Desc_SteelPlate_C",
+        "Amount": 200,
+        "MaxAmount": 200
       }
+    ],
+    "features": {
+      "properties": {
+        "name": "Ficsit Remote Monitoring rocks",
+        "type": "Lizard Doggo"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -43942.754996165997,
+          "y": 275363.09331948927,
+          "z": -3529.0104559118095
+        },
+        "type": "Point"
+      }
+    }
+  }
 ]
 -----------------

@@ -1,155 +1,85 @@
-= Resource Node Stats
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: +
-getResourceNode - Mining/Oil +
-getResourceGeyser - Geothermal Geyser +
-getResourceWell - Fracking/Resource Well +
+= Get Resource Node
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+Get a list of all resource nodes.
 
-|Name
-|Node Name
-|String
-|Output
+`getResourceNode`: Get a list of all resource nodes. +
+`getResourceDeposit`: Get a list of all resource deposits. +
+`getResourceWell`: Get a list of all resource wells. +
+`getResourceGeyser`: Get a list of all geysers.
 
-|ClassName
-|UE Class Name
-|String
-|Output
+== URL
 
-|location/x
-|X Location of Resource Node
-|Float
-|Output
+`GET http://localhost:8080/getResourceNode`
 
-|location/y
-|Y Location of Resource Node
-|Float
-|Output
+include::../_responseBody.adoc[]
 
-|location/z
-|Z Location of Resource Node
-|Float
-|Output
+| ID | String | Unique ID of the Resource Node.
+| Name | String | Name of the Resource Node.
+| ClassName | String | Class Name of the Resource Node.
+| Purity | String | Purity in a readable format: +
+`Impure` +
+`Normal` +
+`Pure`
+| EnumPurity | String | Enum Purity Value: +
+`RP_Inpure`: Impure +
+`RP_Normal`: Normal +
+`RP_Pure`: Pure +
+`RP_MAX`
+| ResourceForm | String | Resource Form of the Node. +
+`Unknown`: Resource form is unknown. +
+`Invalid`: Invalid resource form. +
+`Solid Core`: Solid resource form. +
+`Liquid Satellite`: TODO. +
+`Gas`: TODO. +
+`Heat`: TODO.
+| NodeType | String | Type of the Node. +
+`Unknown` +
+`Geyser`: TODO. +
+`Fracking Core`: TODO. +
+`Fracking Satellite`: TODO. +
+`Node`: Normal resource node.
+| Exploited | Boolean | Is the resource node occupied?
 
-|EnumPurity
-|Enum Purity of Resource Node
-|String
-|Output
-
-|Purity
-|Purity of Resource Node
-|String
-|Output
-
-|NodeType
-|Resource Node Type
-|Integer
-|Output
-
-|Exploited
-|Is the Resource being extracted
-|Boolean
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
+include::../Models/_features.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-	{
-		"Name": "Raw Quartz",
-		"ClassName": "",
-		"location":
-		{
-			"X": -24911.302734375,
-			"Y": -142186.59375,
-			"Z": 8143.46875
-		},
-		"EnumPurity": "Pure",
-		"Purity": "Pure",
-		"NodeType": "Node",
-		"Exploited": false,
-		"features":
-		{
-			"properties":
-			{
-				"name": "Raw Quartz",
-				"type": "Resource Node"
-			},
-			"geometry":
-			{
-				"coordinates":
-				{
-					"X": -24911.302734375,
-					"Y": -142186.59375,
-					"Z": 8143.46875
-				},
-				"type": "Point"
-			}
-		}
-	},
-	{
-		"Name": "Copper Ore",
-		"ClassName": "",
-		"location":
-		{
-			"X": -21028.134765625,
-			"Y": -137929.515625,
-			"Z": 10295.291015625
-		},
-		"EnumPurity": "Pure",
-		"Purity": "Pure",
-		"NodeType": "Node",
-		"Exploited": false,
-		"features":
-		{
-			"properties":
-			{
-				"name": "Copper Ore",
-				"type": "Resource Node"
-			},
-			"geometry":
-			{
-				"coordinates":
-				{
-					"X": -21028.134765625,
-					"Y": -137929.515625,
-					"Z": 10295.291015625
-				},
-				"type": "Point"
-			}
-		}
-	}
+  {
+    "ID": "BP_ResourceNode100",
+    "Name": "Crude Oil",
+    "ClassName": "Desc_LiquidOil_C",
+    "Purity": "Normal",
+    "EnumPurity": "RP_Normal",
+    "ResourceForm": "Liquid",
+    "NodeType": "Node",
+    "Exploited": false,
+    "location": {
+      "x": 178265.375,
+      "y": 206095.640625,
+      "z": -9238.5712890625,
+      "rotation": 123.25028610229492
+    },
+    "features": {
+      "properties": {
+        "name": "Crude Oil",
+        "type": "Resource Node"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": 178265.375,
+          "y": 206095.640625,
+          "z": -9238.5712890625
+        },
+        "type": "Point"
+      }
+    }
+  }
 ]
 -----------------

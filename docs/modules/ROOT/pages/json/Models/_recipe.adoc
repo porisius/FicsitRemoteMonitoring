@@ -1,0 +1,14 @@
+﻿| {depth}  ID | String | Unique ID of the Recipe.
+| {depth}  Name | String | Name of the Recipe.
+| {depth}  ClassName | String | ClassName of the Recipe.
+| {depth}  Category | String | Category of the Recipe.
+
+| {depth}  ManualDuration | Float | The manual manufacturing duration for this recipe.
+| {depth}  FactoryDuration | Float | The base manufacturing duration for this recipe.
+
+| {depth}  Events | String[] | Event when the schematic is active. Possible Events: +
+`Satisfactory Birthday` +
+`Christmas` +
+`Coffee Stain Studios Birthday` +
+`April Fools Day`
+| {depth}  ProducedIn | String[] | ClassName where the item can be produced (e.g. BP_BuildGun_C for the Build Gun).

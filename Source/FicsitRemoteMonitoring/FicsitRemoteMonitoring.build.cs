@@ -1,4 +1,5 @@
 using UnrealBuildTool;
+using System.Diagnostics;
 using System.IO;
 
 public class FicsitRemoteMonitoring : ModuleRules
@@ -51,7 +52,7 @@ public class FicsitRemoteMonitoring : ModuleRules
                 "FicsitRemoteMonitoring"
             }
         );
-
+        
         PrivateDependencyModuleNames.AddRange(new string[] { 
             "HTTP", 
             "HTTPServer"
@@ -63,15 +64,11 @@ public class FicsitRemoteMonitoring : ModuleRules
         // Add uWebSockets
         LoaduWebSockets(Target);
 
-        if (Target.Type == TargetType.Server)
-        {
-            PublicDependencyModuleNames.Add("FactoryDedicatedServer");
-        }
-
         PublicDefinitions.Add("UWS_STATICLIB"); // If you're using the static version of uWS
 
         // Enable exception handling
         bEnableExceptions = true;
+        
     }
 
     public bool LoaduWebSockets(ReadOnlyTargetRules Target)

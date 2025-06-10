@@ -2,6 +2,8 @@
 
 #include "FRM_RequestData.generated.h"
 
+enum class EInterfaceType : uint8;
+
 USTRUCT(BlueprintType)
 struct FRequestData
 {
@@ -15,4 +17,6 @@ struct FRequestData
 	FString Method = "GET";
 
 	TArray<TSharedPtr<FJsonValue>> Body;
+
+	EInterfaceType Interface;
 };

@@ -1,8 +1,18 @@
 {
-	"username": "Ficsit Remote Monitoring: Player Notification",
-	"avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
-	"embeds": [{
-		"title": "Player: {Player} is online!",
-		"footer": {"text": "{Flavor}"}
-	}]
+  "content": null,
+  "embeds": [
+    {
+      "title": "Player: {Player} is online!",
+      "color": 10932617,
+      "footer": {
+        "text": "{Flavor}"
+      },
+      "thumbnail": {
+        "url": "https://satisfactory.wiki.gg/images/thumb/a/a1/Heart_Emote.png/200px-Heart_Emote.png?3d681d"
+      }
+    }
+  ],
+  "username": "Ficsit Remote Monitoring: Player Notification",
+  "avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
+  "attachments": []
 }

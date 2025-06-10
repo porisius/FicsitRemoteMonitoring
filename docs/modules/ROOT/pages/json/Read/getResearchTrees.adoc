@@ -1,0 +1,9 @@
+﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= getResearchTrees
+
+[WARNING]
+====
+This endpoint is new and not yet documented.
+====

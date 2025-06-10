@@ -1,94 +1,55 @@
-= Power Generation/Consumption Stats
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getPower +
+= Get Power
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+Gets a list of all power circuits.
 
-|CircuitID
-|Identification number for the power circuit
-|Integer
-|Output
+== URL
 
-|PowerConsumed
-|Power consumed on selected power circuit
-|Integer
-|Output
+`GET http://localhost:8080/getPower`
 
-|PowerCapacity
-|Power capacity on selected power circuit
-|Integer
-|Output
-	
-|PowerMaxConsumed
-|Maximum Power that can be consumed on selected power circuit
-|Integer
-|Output
-	
-|BatteryDifferential
-|Amount of power in excess/deficit going into or out of the battery bank(s). Positive = Charges batteries, Negative = Drains batteries
-|Integer
-|Output
-	
-|BatteryPercent
-|Percentage of battery bank(s) charge
-|Integer
-|Output
-	
-|BatteryCapacity
-|Total capacity of battery bank(s)
-|Integer
-|Output
-	
-|BatteryTimeEmpty
-|Time (in hh:mm:ss) until Batteries are empty
-|Float
-|Output
-	
-|BatteryTimeFull
-|Time (in hh:mm:ss) until Batteries are full
-|Float
-|Output
-	
-|FuseTriggered
-|Has the fuse been triggered
-|Boolean (true/false)
-|Output
+include::../_responseBody.adoc[]
+
+| CircuitGroupID | Integer | ID of the circuit.
+| PowerProduction | Float | Power production of the circuit.
+| PowerConsumed | Float | Power consumed on power circuit.
+| PowerCapacity | Float | Power capacity on power circuit.
+| PowerMaxConsumed | Float | Maximum Power that can be consumed on power circuit.
+| BatteryInput | Float | The combined power input to all the batteries connected to this circuit. Negative values denote power output.
+| BatteryOutput | Float | The combined power output from all the batteries connected to this circuit.
+| BatteryDifferential | Float | Amount of power in excess/deficit going into or out of the batteries. Positive = Charges batteries, Negative = Drains batteries
+| BatteryPercent | Float | Percentage of batteries.
+| BatteryCapacity | Float | Total capacity of batteries.
+| BatteryTimeEmpty | String | Time until Batteries are empty. Format: Hours:Minutes:Seconds
+| BatteryTimeFull | String | Time until Batteries are full. Format: Hours:Minutes:Seconds
+| AssociatedCircuits | Integer[] | All the circuit IDs that this group owns.
+| FuseTriggered | Boolean | Has the fuse been triggered?
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
-	{
-		"CircuitID": 58,
-		"PowerCapacity": 8056.07763671875,
-		"PowerProduction": 7996.07763671875,
-		"PowerConsumed": 5760.62841796875,
-		"PowerMaxConsumed": 9260.1884765625,
-		"BatteryDifferential": 0,
-		"BatteryPercent": 100,
-		"BatteryCapacity": 2500,
-		"BatteryTimeEmpty": "00:00:00",
-		"BatteryTimeFull": "00:00:00",
-		"FuseTriggered": false
-	},
-	{
-		"CircuitID": 9,
-		"PowerCapacity": 8056.07763671875,
-		"PowerProduction": 7996.07763671875,
-		"PowerConsumed": 5760.62841796875,
-		"PowerMaxConsumed": 9260.1884765625,
-		"BatteryDifferential": 0,
-		"BatteryPercent": 100,
-		"BatteryCapacity": 2500,
-		"BatteryTimeEmpty": "00:00:00",
-		"BatteryTimeFull": "00:00:00",
-		"FuseTriggered": false
-	}
+  {
+    "CircuitGroupID": 0,
+    "PowerProduction": 0,
+    "PowerConsumed": 0,
+    "PowerCapacity": 0,
+    "PowerMaxConsumed": 100,
+    "BatteryInput": 0,
+    "BatteryOutput": 0,
+    "BatteryDifferential": 0,
+    "BatteryPercent": 0,
+    "BatteryCapacity": 0,
+    "BatteryTimeEmpty": "00:00:00",
+    "BatteryTimeFull": "00:00:00",
+    "AssociatedCircuits": [
+      9,
+      1
+    ],
+    "FuseTriggered": false
+  }
 ]
 -----------------

@@ -1,0 +1,23 @@
+﻿| {depth}  ID | String | ID of the Schematic.
+| {depth}  Name | String | Name of the Schematic.
+| {depth}  ClassName | String | ClassName of the Schematic.
+| {depth}  TechTier | Integer | The tech tier that this Schematic belongs to.
+| {depth}  Type | String | Type of the Schematic. Possible Types: +
+`Alternate` +
+`Cheat` +
+`Custom` +
+`Hard Drive` +
+`M.A.M.` +
+`Milestone` +
+`Prototype` +
+`Resource Sink` +
+`Story` +
+`Tutorial` +
+| {depth}  HasUnlocks | Boolean | Unlocks this schematic new recipes?
+| {depth}  Locked | Boolean | Is the schematic locked?
+| {depth}  Purchased | Boolean | Is Schematic Purchased?
+| {depth}  DepLocked | Boolean | Dependency Lock for Schematic.
+| {depth}  LockedTutorial | Boolean | TODO
+| {depth}  LockedPhase | Boolean | TODO
+| {depth}  Tutorial | Boolean | Is this schematic a Tutorial schematic?
+| {depth}  Recipes | Object[] | Recipes of the Schematic.
