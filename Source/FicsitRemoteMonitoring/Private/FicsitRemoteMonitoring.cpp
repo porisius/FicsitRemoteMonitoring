@@ -82,7 +82,7 @@ void AFicsitRemoteMonitoring::BeginPlay()
     // store JSONDebugMode into a local property to prevent crash while access to GetActiveConfig while the EndPlay process
     const auto FactoryConfig = FConfig_FactoryStruct::GetActiveConfig(World);
     JSONDebugMode = FactoryConfig.JSONDebugMode;
-	
+	/*
     World->GetTimerManager().SetTimer(
         TimerHandle,  // The timer handle
         this,         // The instance of the class
@@ -90,7 +90,7 @@ void AFicsitRemoteMonitoring::BeginPlay()
         HttpConfig.WebSocketPushCycle,        // Time interval in seconds
         true          // Whether to loop the timer (true = repeating)
     );
-	
+	*/
 	// Register the callback to ensure WebSocket is stopped on crash/exit
 	FCoreDelegates::OnExit.AddUObject(this, &AFicsitRemoteMonitoring::StopWebSocketServer);
 }
@@ -505,6 +505,8 @@ void AFicsitRemoteMonitoring::ProcessClientRequest(uWS::WebSocket<false, true, F
 
 void AFicsitRemoteMonitoring::PushUpdatedData() {
 
+	UE_LOG(LogHttpServer, Warning, TEXT("PushUpdatedData"));
+	
     for (auto& Elem : EndpointSubscribers) {
         FString Endpoint = Elem.Key;
         
@@ -520,6 +522,8 @@ void AFicsitRemoteMonitoring::PushUpdatedData() {
 
         FString Json;
 
+		UE_LOG(LogHttpServer, Warning, TEXT("Sending request"));
+    	
     	HandleEndpoint(Endpoint, RequestData, bSuccess, ErrorCode, Json, EInterfaceType::Socket);
 
     	FTCHARToUTF8 Converted(*Json);

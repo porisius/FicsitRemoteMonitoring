@@ -172,6 +172,7 @@ public:
 	void OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode);
 	void ProcessClientRequest(uWS::WebSocket<false, true, FWebSocketUserData>* ws, const TSharedPtr<FJsonObject>& JsonRequest);
 
+	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
 	void PushUpdatedData();
 
 	void HandleGetRequest(uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString FilePath);
