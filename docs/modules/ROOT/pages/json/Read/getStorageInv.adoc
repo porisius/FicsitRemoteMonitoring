@@ -4,8 +4,6 @@
 
 = Get Storage Inv
 
-include::../_isGetAll.adoc[]
-
 This is inventory of the world broken up by their storage containers.
 This does not include pipes/belts/factory buildings, only buildings whom purpose is to provide storage except Fluid Buffers.
 

@@ -4,8 +4,6 @@
 
 = Get World Inv
 
-include::../_isGetAll.adoc[]
-
 This is inventory of the world regardless of location.
 This does not include pipes/belts/factory buildings, only buildings whom purpose is to provide storage except Fluid Buffers.
 

@@ -7,68 +7,63 @@
 #include "../../../../../../../Source/FactoryGame/Public/Buildables/FGBuildablePipeHyper.h"
 #include "Dom/JsonValue.h"
 #include "Templates/SharedPointer.h"
-#include "../../../Public/FRM_Library.h"
+#include "../../../Public/RemoteMonitoringLibrary.h"
 
 class AFGPipeHyperStart;
 class AFGBuildableSubsystem;
 class AFGBuildablePipeHyper;
 class UFGPipeConnectionComponentBase;
 
-TArray<TSharedPtr<FJsonValue>> UHypertubes::getHyperEntrance(UObject* WorldContext) {
-
-	TArray<TSharedPtr<FJsonValue>> JHyperStartArray;
+void UHypertubes::getHyperEntrance(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+	
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 
 	TArray<AFGPipeHyperStart*> HyperStarts;
 	BuildableSubsystem->GetTypedBuildable<AFGPipeHyperStart>(HyperStarts);
 
 	for (AFGPipeHyperStart* HyperStart : HyperStarts) {
-		TSharedPtr<FJsonObject> JHypertube = UFRM_Library::CreateBuildableBaseJsonObject(HyperStart);
-		JHypertube->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(UFRM_Library::getPowerConsumptionJSON(HyperStart->GetPowerInfo())));
-		JHyperStartArray.Add(MakeShared<FJsonValueObject>(JHypertube));
+		TSharedPtr<FJsonObject> JHypertube = CreateBuildableBaseJsonObject(HyperStart);
+		JHypertube->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(getPowerConsumptionJSON(HyperStart->GetPowerInfo())));
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JHypertube));
 	}
-	return JHyperStartArray;
 }
 
-TArray<TSharedPtr<FJsonValue>> UHypertubes::getHypertube(UObject* WorldContext) {
-
-	TArray<TSharedPtr<FJsonValue>> JHypertubeArray;
+void UHypertubes::getHypertube(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+	
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 
 	TArray<AFGBuildablePipeHyper*> Hypertubes;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildablePipeHyper>(Hypertubes);
 
 	for (AFGBuildablePipeHyper* Hypertube : Hypertubes) {
-		TSharedPtr<FJsonObject> JHypertube = UFRM_Library::CreateBuildableBaseJsonObject(Hypertube);
+		TSharedPtr<FJsonObject> JHypertube = CreateBuildableBaseJsonObject(Hypertube);
 
 		UFGPipeConnectionComponentBase* ConnectionZero = Hypertube->GetConnection0();
 		UFGPipeConnectionComponentBase* ConnectionOne = Hypertube->GetConnection1();
 		
-		JHypertube->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorHyperXYZ(Hypertube, ConnectionZero)));
-		JHypertube->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorHyperXYZ(Hypertube, ConnectionOne)));
-		JHypertube->Values.Add("SplineData", MakeShared<FJsonValueArray>(UFRM_Library::SplineToJSON(Hypertube, Hypertube->GetSplinePointData())));
-		JHypertubeArray.Add(MakeShared<FJsonValueObject>(JHypertube));
+		JHypertube->Values.Add("location0", MakeShared<FJsonValueObject>(getActorHyperXYZ(Hypertube, ConnectionZero)));
+		JHypertube->Values.Add("location1", MakeShared<FJsonValueObject>(getActorHyperXYZ(Hypertube, ConnectionOne)));
+		JHypertube->Values.Add("SplineData", MakeShared<FJsonValueArray>(SplineToJSON(Hypertube, Hypertube->GetSplinePointData())));
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JHypertube));
 	}
-	return JHypertubeArray;
 }
 
-TArray<TSharedPtr<FJsonValue>> UHypertubes::getHyperJunctions(UObject* WorldContext) {
-
-	TArray<TSharedPtr<FJsonValue>> JHypertubeArray;
+void UHypertubes::getHyperJunctions(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+	
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 
 	TArray<AFGBuildablePipeHyperJunction*> Hypertubes;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildablePipeHyperJunction>(Hypertubes);
 
 	for (AFGBuildablePipeHyperJunction* Hypertube : Hypertubes) {
-		TSharedPtr<FJsonObject> JHypertube = UFRM_Library::CreateBuildableBaseJsonObject(Hypertube);
+		TSharedPtr<FJsonObject> JHypertube = CreateBuildableBaseJsonObject(Hypertube);
 
 		UFGPipeConnectionComponentBase* ConnectionZero = Hypertube->GetConnection0();
 		UFGPipeConnectionComponentBase* ConnectionOne = Hypertube->GetConnection1();
 		
-		JHypertube->Values.Add("location0", MakeShared<FJsonValueObject>(UFRM_Library::getActorHyperXYZ(Hypertube, ConnectionZero)));
-		JHypertube->Values.Add("location1", MakeShared<FJsonValueObject>(UFRM_Library::getActorHyperXYZ(Hypertube, ConnectionOne)));
-		JHypertubeArray.Add(MakeShared<FJsonValueObject>(JHypertube));
+		JHypertube->Values.Add("location0", MakeShared<FJsonValueObject>(getActorHyperXYZ(Hypertube, ConnectionZero)));
+		JHypertube->Values.Add("location1", MakeShared<FJsonValueObject>(getActorHyperXYZ(Hypertube, ConnectionOne)));
+		
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JHypertube));
 	}
-	return JHypertubeArray;
 }

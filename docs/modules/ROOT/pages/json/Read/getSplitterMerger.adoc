@@ -4,8 +4,6 @@
 
 = Get Splitters and Mergers
 
-include::../_isGetAll.adoc[]
-
 Get a list of all splitters and mergers +
 
 == URL

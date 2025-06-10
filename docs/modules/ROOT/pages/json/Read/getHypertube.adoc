@@ -3,8 +3,6 @@
 
 = Hypertubes
 
-include::../_isGetAll.adoc[]
-
 Get a list of all Hypertubes.
 
 == URL

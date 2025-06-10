@@ -4,8 +4,6 @@
 
 = Get Artifacts
 
-include::../_isGetAll.adoc[]
-
 Get a list of all Mercer Spheres and Somersloops.
 
 == URL

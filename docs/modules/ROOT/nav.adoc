@@ -18,7 +18,7 @@
 ** xref:json/authentication.adoc[Authentication]
 ** xref:json/Read/Read.adoc[Read]
 
-*** xref:json/Read/getAll.adoc[getAll]
+*** xref:json/Read/getAll.adoc[getAll - Retired]
 
 *** Chat
 **** xref:json/Read/getChatMessages.adoc[getChatMessages]

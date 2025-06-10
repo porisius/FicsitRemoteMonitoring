@@ -3,8 +3,6 @@
 
 = Get Drop Pod
 
-include::../_isGetAll.adoc[]
-
 Gets a list of all drop pods.
 
 == URL

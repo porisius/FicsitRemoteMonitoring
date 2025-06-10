@@ -4,8 +4,6 @@
 
 = Get Extractor
 
-include::../_isGetAll.adoc[]
-
 Get a list of all extractors/miners.
 
 == URL

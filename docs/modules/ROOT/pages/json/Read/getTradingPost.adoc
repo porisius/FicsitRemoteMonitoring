@@ -4,8 +4,6 @@
 
 = Get Trading Post
 
-include::../_isGetAll.adoc[]
-
 Information about the Central HUB, or as it was originally called the Trading Post.
 
 == URL

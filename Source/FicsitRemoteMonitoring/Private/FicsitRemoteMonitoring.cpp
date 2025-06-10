@@ -1,20 +1,34 @@
 #include "FicsitRemoteMonitoring.h"
 
+#include "Communication.h"
 #include "Config_DiscITStruct.h"
 #include "Config_FactoryStruct.h"
 #include "Config_HTTPStruct.h"
 #include "Config_SerialStruct.h"
+#include "Drones.h"
 #include "EngineUtils.h"
-#include "FGPowerCircuit.h"
+#include "EventsLibrary.h"
+#include "FactoryLibrary.h"
 #include "FicsitRemoteMonitoringModule.h"
 #include "Async/Async.h"
 #include "FRM_Request.h"
+#include "Hypertubes.h"
+#include "Inventory.h"
+#include "Logistics.h"
 #include "NativeHookManager.h"
 #include "NotificationLoader.h"
+#include "PlayerLibrary.h"
+#include "Research.h"
+#include "Resources.h"
+#include "Session.h"
 #include "StructuredLog.h"
+#include "SubsystemActorManager.h"
+#include "Support.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "TimerManager.h"
+#include "Trains.h"
+#include "Vehicles.h"
 #include "Engine/World.h"
 
 us_listen_socket_t* SocketListener;
@@ -68,7 +82,7 @@ void AFicsitRemoteMonitoring::BeginPlay()
     // store JSONDebugMode into a local property to prevent crash while access to GetActiveConfig while the EndPlay process
     const auto FactoryConfig = FConfig_FactoryStruct::GetActiveConfig(World);
     JSONDebugMode = FactoryConfig.JSONDebugMode;
-
+	
     World->GetTimerManager().SetTimer(
         TimerHandle,  // The timer handle
         this,         // The instance of the class
@@ -76,7 +90,7 @@ void AFicsitRemoteMonitoring::BeginPlay()
         HttpConfig.WebSocketPushCycle,        // Time interval in seconds
         true          // Whether to loop the timer (true = repeating)
     );
-
+	
 	// Register the callback to ensure WebSocket is stopped on crash/exit
 	FCoreDelegates::OnExit.AddUObject(this, &AFicsitRemoteMonitoring::StopWebSocketServer);
 }
@@ -620,7 +634,7 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
     bool bSuccess = false;
 	int32 ErrorCode = 404;
 	FString OutJson;
-    //FString OutJson = this->HandleEndpoint(World, Endpoint, RequestData, bSuccess, ErrorCode);
+
 	this->HandleEndpoint(Endpoint, RequestData, bSuccess, ErrorCode, OutJson, EInterfaceType::Web);
 
     if (bSuccess) {
@@ -650,96 +664,102 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 
 void AFicsitRemoteMonitoring::InitAPIRegistry()
 {
-	//Registering Endpoints: API Name, bGetAll, bRequireGameThread, FunctionPtr
-	RegisterEndpoint(FAPIEndpoint("GET", "getAssembler", &AFicsitRemoteMonitoring::getAssembler));
-	RegisterEndpoint(FAPIEndpoint("GET", "getBelts", &AFicsitRemoteMonitoring::getBelts).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getLifts", &AFicsitRemoteMonitoring::getLifts).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getElevators", &AFicsitRemoteMonitoring::getElevators).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getBiomassGenerator", &AFicsitRemoteMonitoring::getBiomassGenerator));
-	RegisterEndpoint(FAPIEndpoint("GET", "getBlender", &AFicsitRemoteMonitoring::getBlender));
-	RegisterEndpoint(FAPIEndpoint("GET", "getCables", &AFicsitRemoteMonitoring::getCables).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getCloudInv", &AFicsitRemoteMonitoring::getCloudInv).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getCoalGenerator", &AFicsitRemoteMonitoring::getCoalGenerator));
-	RegisterEndpoint(FAPIEndpoint("GET", "getConstructor", &AFicsitRemoteMonitoring::getConstructor));
-	RegisterEndpoint(FAPIEndpoint("GET", "getConverter", &AFicsitRemoteMonitoring::getConverter));
-	RegisterEndpoint(FAPIEndpoint("GET", "getDoggo", &AFicsitRemoteMonitoring::getDoggo).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getDrone", &AFicsitRemoteMonitoring::getDrone).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getDroneStation", &AFicsitRemoteMonitoring::getDroneStation).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getDropPod", &AFicsitRemoteMonitoring::getDropPod).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getEncoder", &AFicsitRemoteMonitoring::getEncoder).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getExplorationSink", &AFicsitRemoteMonitoring::getExplorationSink).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getExplorer", &AFicsitRemoteMonitoring::getExplorer).RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getExtractor", &AFicsitRemoteMonitoring::getExtractor).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getFactoryCart", &AFicsitRemoteMonitoring::getFactoryCart));
-	RegisterEndpoint(FAPIEndpoint("GET", "getFoundry", &AFicsitRemoteMonitoring::getFoundry));
-	RegisterEndpoint(FAPIEndpoint("GET", "getFrackingActivator", &AFicsitRemoteMonitoring::getFrackingActivator));
-	RegisterEndpoint(FAPIEndpoint("GET", "getFuelGenerator", &AFicsitRemoteMonitoring::getFuelGenerator));
-	RegisterEndpoint(FAPIEndpoint("GET", "getGeothermalGenerator", &AFicsitRemoteMonitoring::getGeothermalGenerator));
-	RegisterEndpoint(FAPIEndpoint("GET", "getHUBTerminal", &AFicsitRemoteMonitoring::getHUBTerminal).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getHyperEntrance", &AFicsitRemoteMonitoring::getHyperEntrance).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getHypertube", &AFicsitRemoteMonitoring::getHypertube).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getHyperJunctions", &AFicsitRemoteMonitoring::getHyperJunctions).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getManufacturer", &AFicsitRemoteMonitoring::getManufacturer));
-	RegisterEndpoint(FAPIEndpoint("GET", "getModList", &AFicsitRemoteMonitoring::getModList).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getNuclearGenerator", &AFicsitRemoteMonitoring::getNuclearGenerator));
-	RegisterEndpoint(FAPIEndpoint("GET", "getPackager", &AFicsitRemoteMonitoring::getPackager));
-	RegisterEndpoint(FAPIEndpoint("GET", "getParticle", &AFicsitRemoteMonitoring::getParticle));
-	RegisterEndpoint(FAPIEndpoint("GET", "getPipes", &AFicsitRemoteMonitoring::getPipes).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getPipeJunctions", &AFicsitRemoteMonitoring::getPipeJunctions).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getPlayer", &AFicsitRemoteMonitoring::getPlayer).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getPortal", &AFicsitRemoteMonitoring::getPortal).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getPower", &AFicsitRemoteMonitoring::getPower).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getPowerSlug", &AFicsitRemoteMonitoring::getPowerSlug).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getArtifacts", &AFicsitRemoteMonitoring::getArtifacts).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getPowerUsage", &AFicsitRemoteMonitoring::getPowerUsage).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getProdStats", &AFicsitRemoteMonitoring::getProdStats).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getPump", &AFicsitRemoteMonitoring::getPump).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getRadarTower", &AFicsitRemoteMonitoring::getRadarTower).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getRecipes", &AFicsitRemoteMonitoring::getRecipes).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getRefinery", &AFicsitRemoteMonitoring::getRefinery));
-	RegisterEndpoint(FAPIEndpoint("GET", "getResourceGeyser", &AFicsitRemoteMonitoring::getResourceGeyser).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getResourceDeposit", &AFicsitRemoteMonitoring::getResourceDeposit).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getResourceNode", &AFicsitRemoteMonitoring::getResourceNode).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getResourceSink", &AFicsitRemoteMonitoring::getResourceSink).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getResourceSinkBuilding", &AFicsitRemoteMonitoring::getResourceSinkBuilding).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getResourceWell", &AFicsitRemoteMonitoring::getResourceWell).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getSplitterMerger", &AFicsitRemoteMonitoring::getSplitterMerger).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getSessionInfo", &AFicsitRemoteMonitoring::getSessionInfo).GetAll().RequiresGameThread().UseFirstObject());
-	RegisterEndpoint(FAPIEndpoint("GET", "getSchematics", &AFicsitRemoteMonitoring::getSchematics).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getSinkList", &AFicsitRemoteMonitoring::getSinkList).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getSmelter", &AFicsitRemoteMonitoring::getSmelter));
-	RegisterEndpoint(FAPIEndpoint("GET", "getSpaceElevator", &AFicsitRemoteMonitoring::getSpaceElevator).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getStorageInv", &AFicsitRemoteMonitoring::getStorageInv).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getSwitches", &AFicsitRemoteMonitoring::getSwitches).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getThroughputCounter", &AFicsitRemoteMonitoring::getThroughputCounter).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getTractor", &AFicsitRemoteMonitoring::getTractor));
-	RegisterEndpoint(FAPIEndpoint("GET", "getTradingPost", &AFicsitRemoteMonitoring::getTradingPost).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getTrains", &AFicsitRemoteMonitoring::getTrains).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getTrainRails", &AFicsitRemoteMonitoring::getTrainRails).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getTrainStation", &AFicsitRemoteMonitoring::getTrainStation).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getTruck", &AFicsitRemoteMonitoring::getTruck));
-	RegisterEndpoint(FAPIEndpoint("GET", "getTruckStation", &AFicsitRemoteMonitoring::getTruckStation).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getWorldInv", &AFicsitRemoteMonitoring::getWorldInv).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getResearchTrees", &AFicsitRemoteMonitoring::getResearchTrees).GetAll().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getChatMessages", &AFicsitRemoteMonitoring::GetChatMessages).RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getItemPickups", &AFicsitRemoteMonitoring::GetItemPickups).RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getUObjectCount", &AFicsitRemoteMonitoring::getUObjectCount).GetAll().UseFirstObject());
-	RegisterEndpoint(FAPIEndpoint("GET", "getVehiclePaths", &AFicsitRemoteMonitoring::getVehiclePaths).GetAll());
+	//Registering Endpoints: API Name, bRequireGameThread, FunctionPtr
+	RegisterEndpoint(FAPIEndpoint("GET", "getAssembler", &UFactoryLibrary::getAssembler));
+	RegisterEndpoint(FAPIEndpoint("GET", "getBelts", &ULogistics::getBelts));
+	RegisterEndpoint(FAPIEndpoint("GET", "getLifts", &ULogistics::getLifts));
+	RegisterEndpoint(FAPIEndpoint("GET", "getElevators", &USupport::getElevators));
+	RegisterEndpoint(FAPIEndpoint("GET", "getBiomassGenerator", &UPower::getBiomassGenerator));
+	RegisterEndpoint(FAPIEndpoint("GET", "getBlender", &UFactoryLibrary::getBlender));
+	RegisterEndpoint(FAPIEndpoint("GET", "getCables", &UPower::getCables));
+	RegisterEndpoint(FAPIEndpoint("GET", "getCloudInv", &UInventory::getCloudInv));
+	RegisterEndpoint(FAPIEndpoint("GET", "getCoalGenerator", &UPower::getCoalGenerator));
+	RegisterEndpoint(FAPIEndpoint("GET", "getConstructor", &UFactoryLibrary::getConstructor));
+	RegisterEndpoint(FAPIEndpoint("GET", "getConverter", &UFactoryLibrary::getConverter));
+	RegisterEndpoint(FAPIEndpoint("GET", "getDoggo", &UPlayerLibrary::getDoggo).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getDrone", &UDrones::getDrone).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getDroneStation", &UDrones::getDroneStation));
+	RegisterEndpoint(FAPIEndpoint("GET", "getDropPod", &UResources::getDropPod).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getEncoder", &UFactoryLibrary::getEncoder));
+	RegisterEndpoint(FAPIEndpoint("GET", "getExplorationSink", &USession::getExplorationSink));
+	RegisterEndpoint(FAPIEndpoint("GET", "getExplorer", &UVehicles::getExplorer).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getExtractor", &UResources::getExtractor));
+	RegisterEndpoint(FAPIEndpoint("GET", "getFactoryCart", &UVehicles::getFactoryCart));
+	RegisterEndpoint(FAPIEndpoint("GET", "getFoundry", &UFactoryLibrary::getFoundry));
+	RegisterEndpoint(FAPIEndpoint("GET", "getFrackingActivator", &UResources::getFrackingActivator));
+	RegisterEndpoint(FAPIEndpoint("GET", "getFuelGenerator", &UPower::getFuelGenerator));
+	RegisterEndpoint(FAPIEndpoint("GET", "getGeothermalGenerator", &UPower::getGeothermalGenerator));
+	RegisterEndpoint(FAPIEndpoint("GET", "getHUBTerminal", &USupport::getHubTerminal).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getHyperEntrance", &UHypertubes::getHyperEntrance));
+	RegisterEndpoint(FAPIEndpoint("GET", "getHypertube", &UHypertubes::getHypertube));
+	RegisterEndpoint(FAPIEndpoint("GET", "getHyperJunctions", &UHypertubes::getHyperJunctions));
+	RegisterEndpoint(FAPIEndpoint("GET", "getManufacturer", &UFactoryLibrary::getManufacturer));
+	RegisterEndpoint(FAPIEndpoint("GET", "getModList", &USession::getModList));
+	RegisterEndpoint(FAPIEndpoint("GET", "getNuclearGenerator", &UPower::getNuclearGenerator));
+	RegisterEndpoint(FAPIEndpoint("GET", "getPackager", &UFactoryLibrary::getPackager));
+	RegisterEndpoint(FAPIEndpoint("GET", "getParticle", &UFactoryLibrary::getParticle));
+	RegisterEndpoint(FAPIEndpoint("GET", "getPipes", &ULogistics::getPipes));
+	RegisterEndpoint(FAPIEndpoint("GET", "getPipeJunctions", &ULogistics::getPipeJunctions));
+	RegisterEndpoint(FAPIEndpoint("GET", "getPlayer", &UPlayerLibrary::getPlayer).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getPortal", &USupport::getPortal));
+	RegisterEndpoint(FAPIEndpoint("GET", "getPower", &UPower::getPower));
+	RegisterEndpoint(FAPIEndpoint("GET", "getPowerSlug", &UResources::getPowerSlug).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getArtifacts", &UResearch::getArtifacts).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getPowerUsage", &UPower::getPowerUsage));
+	RegisterEndpoint(FAPIEndpoint("GET", "getProdStats", &USession::getProdStats));
+	RegisterEndpoint(FAPIEndpoint("GET", "getPump", &ULogistics::getPump));
+	RegisterEndpoint(FAPIEndpoint("GET", "getRadarTower", &USupport::getRadarTower));
+	RegisterEndpoint(FAPIEndpoint("GET", "getRecipes", &UResearch::getRecipes).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getRefinery", &UFactoryLibrary::getRefinery));
+	RegisterEndpoint(FAPIEndpoint("GET", "getResourceGeyser", &UResources::getResourceGeyser).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getResourceDeposit", &UResources::getResourceDeposit).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getResourceNode", &UResources::getResourceNode).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getResourceSink", &USession::getResourceSink));
+	RegisterEndpoint(FAPIEndpoint("GET", "getResourceSinkBuilding", &USupport::getResourceSinkBuilding));
+	RegisterEndpoint(FAPIEndpoint("GET", "getResourceWell", &UResources::getResourceWell).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getSplitterMerger", &ULogistics::getSplitterMerger));
+	RegisterEndpoint(FAPIEndpoint("GET", "getSessionInfo", &USession::getSessionInfo).RequiresGameThread().UseFirstObject());
+	RegisterEndpoint(FAPIEndpoint("GET", "getSchematics", &UResearch::getSchematics).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getSinkList", &USession::getSinkList).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getSmelter", &UFactoryLibrary::getSmelter));
+	RegisterEndpoint(FAPIEndpoint("GET", "getSpaceElevator", &USupport::getSpaceElevator));
+	RegisterEndpoint(FAPIEndpoint("GET", "getStorageInv", &UInventory::getStorageInv));
+	RegisterEndpoint(FAPIEndpoint("GET", "getSwitches", &UPower::getSwitches));
+	RegisterEndpoint(FAPIEndpoint("GET", "getThroughputCounter", &ULogistics::getThroughputCounter));
+	RegisterEndpoint(FAPIEndpoint("GET", "getTractor", &UVehicles::getTractor));
+	RegisterEndpoint(FAPIEndpoint("GET", "getTradingPost", &USupport::getTradingPost));
+	RegisterEndpoint(FAPIEndpoint("GET", "getTrains", &UTrains::getTrains));
+	RegisterEndpoint(FAPIEndpoint("GET", "getTrainRails", &UTrains::getTrainRails));
+	RegisterEndpoint(FAPIEndpoint("GET", "getTrainStation", &UTrains::getTrainStation));
+	RegisterEndpoint(FAPIEndpoint("GET", "getTruck", &UVehicles::getTruck));
+	RegisterEndpoint(FAPIEndpoint("GET", "getTruckStation", &UVehicles::getTruckStation));
+	RegisterEndpoint(FAPIEndpoint("GET", "getWorldInv", &UInventory::getWorldInv));
+	RegisterEndpoint(FAPIEndpoint("GET", "getResearchTrees", &UResearch::getResearchTrees).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getChatMessages", &UCommunication::getChatMessages).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getItemPickups", &UResources::getItemPickups).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getUObjectCount", &USession::getUObjectCount).UseFirstObject());
+	RegisterEndpoint(FAPIEndpoint("GET", "getBlueprints", &USession::getBlueprints));
+	RegisterEndpoint(FAPIEndpoint("GET", "getTrainSignals", &UTrains::getTrainSignals));
+	RegisterEndpoint(FAPIEndpoint("GET", "getVehiclePaths", &UVehicles::getVehiclePaths));
 
 	// event endpoints
-	RegisterEndpoint(FAPIEndpoint("GET", "getFallingGiftBundles", &AFicsitRemoteMonitoring::getFallingGiftBundles).GetAll().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getFallingGiftBundles", &UEventsLibrary::getFallingGiftBundles).RequiresGameThread());
 
 	//FRM API Endpoint Groups
-	RegisterEndpoint(FAPIEndpoint("GET", "getAll", &AFicsitRemoteMonitoring::getAll));
-	RegisterEndpoint(FAPIEndpoint("GET", "getFactory", &AFicsitRemoteMonitoring::getFactory).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getGenerators", &AFicsitRemoteMonitoring::getGenerators).GetAll());
-	RegisterEndpoint(FAPIEndpoint("GET", "getVehicles", &AFicsitRemoteMonitoring::getVehicles).GetAll());
+	RegisterEndpoint(FAPIEndpoint("GET", "getFactory", &UFactoryLibrary::getFactory));
+	RegisterEndpoint(FAPIEndpoint("GET", "getGenerators", &UPower::getGenerators));
+	RegisterEndpoint(FAPIEndpoint("GET", "getVehicles", &UVehicles::getVehicles));
 
 	// post/write endpoints
-	RegisterEndpoint(FAPIEndpoint("POST", "setSwitches", &AFicsitRemoteMonitoring::setSwitches).RequiresAuthentication().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("POST", "setEnabled", &AFicsitRemoteMonitoring::setEnabled).RequiresAuthentication());
-	RegisterEndpoint(FAPIEndpoint("POST", "sendChatMessage", &AFicsitRemoteMonitoring::SendChatMessage).RequiresAuthentication().RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("POST", "createPing", &AFicsitRemoteMonitoring::CreatePing).RequiresAuthentication().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("POST", "setSwitches", &UPower::setSwitches).RequiresAuthentication().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("POST", "setEnabled", &UCommunication::setEnabled).RequiresAuthentication());
+	RegisterEndpoint(FAPIEndpoint("POST", "sendChatMessage", &UCommunication::sendChatMessage).RequiresAuthentication().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("POST", "createPing", &UCommunication::createPing).RequiresAuthentication().RequiresGameThread());
+	
+
+	// API Endpoints Retired - Remove in next update after 1.4.0
+	RegisterEndpoint(FAPIEndpoint("GET", "getAll", &AFicsitRemoteMonitoring::getAll));
+	
 }
 
 FString AFicsitRemoteMonitoring::FlavorTextRandomizer(EFlavorType FlavorType) {
@@ -892,13 +912,6 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
     Response.bUseFirstObject = false;
     bSuccess = false;
     TArray<TSharedPtr<FJsonValue>> JsonArray;
-
-	/** Unable to be used for RS232, FGServerAPIManager, or even the debug command
-    if (!SocketListener) {
-        UE_LOG(LogHttpServer, Warning, TEXT("SocketListener is closed. Skipping request for endpoint '%s'."), *InEndpoint);
-        return Response;
-    }
-	*/
 	
 	TArray<FString> AvailableMethods;
     bool bEndpointFound = false;
@@ -925,13 +938,13 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
         Response.bUseFirstObject = EndpointInfo.bUseFirstObject;
 
         try {
-            if (EndpointInfo.bRequireGameThread && !IsInGameThread()) {
+            if (EndpointInfo.bRequireGameThread && RequestData.Interface != EInterfaceType::Server) {
                 FThreadSafeBool bAllocationComplete = false;
-                AsyncTask(ENamedThreads::GameThread, [this, &EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &ErrorCode, &bSuccess]() {
+                AsyncTask(ENamedThreads::GameThread, [&EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &ErrorCode, &bSuccess]() {
 					//if (SocketListener && EndpointInfo.FunctionPtr)
 					if (EndpointInfo.FunctionPtr)
 					{
-						(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
+						(EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
 						ErrorCode = 200;
 						bSuccess = true;
 					}
@@ -945,7 +958,7 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
 			//else if (SocketListener && EndpointInfo.FunctionPtr)
 			else if (EndpointInfo.FunctionPtr)
 			{
-				(this->*EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
+				(EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
 				ErrorCode = 200;
 				bSuccess = true;
 			}
@@ -987,7 +1000,6 @@ void AFicsitRemoteMonitoring::AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonA
     JsonArray.Add(MakeShared<FJsonValueObject>(JsonObject));
 }
 
-//FString AFicsitRemoteMonitoring::HandleEndpoint(UObject* WorldContext, FString InEndpoint, const FRequestData RequestData, bool& bSuccess, int32& ErrorCode)
 void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode, FString& Out_Data, EInterfaceType Interface)
 {
 	bSuccess = false;
@@ -1022,62 +1034,5 @@ void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, FRequestData Re
 	}
 }
 
-void AFicsitRemoteMonitoring::getAll(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
-{
-    TArray<TSharedPtr<FJsonValue>> JsonArray;  // The composite JSON array to hold data from each endpoint
 
-    // Loop through all registered endpoints
-    for (const FAPIEndpoint& APIEndpoint : APIEndpoints)
-    {
-        // Skip endpoints that aren't marked for inclusion in `getAll`
-        if (!APIEndpoint.bGetAll) continue;
-
-        // Prepare to collect the JSON results from this endpoint
-        bool bSuccess = false;
-        TArray<TSharedPtr<FJsonValue>> EndpointJsonValues;
-
-        if (APIEndpoint.bRequireGameThread && RequestData.Interface != EInterfaceType::Server)
-        {
-            // If the endpoint requires the GameThread, execute the call asynchronously
-            FThreadSafeBool bAllocationComplete = false;
-            AsyncTask(ENamedThreads::GameThread, [this, &APIEndpoint, WorldContext, RequestData, &EndpointJsonValues, &bAllocationComplete, &bSuccess]() {
-                (this->*APIEndpoint.FunctionPtr)(WorldContext, RequestData, EndpointJsonValues);
-                bSuccess = !EndpointJsonValues.IsEmpty();
-                bAllocationComplete = true;
-            });
-
-            // Block until completion
-            while (!bAllocationComplete) {
-                FPlatformProcess::Sleep(0.0001f);
-            }
-        }
-        else
-        {
-            // Directly invoke the endpoint function if it doesn't require the GameThread
-            (this->*APIEndpoint.FunctionPtr)(WorldContext, RequestData, EndpointJsonValues);
-            bSuccess = !EndpointJsonValues.IsEmpty();
-        }
-
-        // Create a JSON object to store the endpoint's result
-        TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
-
-        if (APIEndpoint.bUseFirstObject && EndpointJsonValues.Num() > 0)
-        {
-            // If only the first object is required, add it to the JSON object
-            TSharedPtr<FJsonObject> FirstJsonObject = EndpointJsonValues[0]->AsObject();
-            JsonObject->SetObjectField(APIEndpoint.APIName, FirstJsonObject.IsValid() ? FirstJsonObject : MakeShared<FJsonObject>());
-        }
-        else
-        {
-            // Otherwise, include the entire array of JSON values
-            JsonObject->SetArrayField(APIEndpoint.APIName, EndpointJsonValues);
-        }
-
-        // Add the constructed JSON object for this endpoint to the composite JSON array
-        JsonArray.Add(MakeShared<FJsonValueObject>(JsonObject));
-    }
-
-    // Assign the assembled JSON array to the output parameter
-    OutJsonArray = JsonArray;
-}
 
