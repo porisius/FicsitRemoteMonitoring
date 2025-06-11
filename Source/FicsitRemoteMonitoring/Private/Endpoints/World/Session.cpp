@@ -22,6 +22,7 @@ void USession::getSessionInfo(UObject* WorldContext, FRequestData RequestData, T
 
 	TSharedPtr<FJsonObject> JSessionInfo = MakeShared<FJsonObject>();
 	JSessionInfo->Values.Add("SessionName", MakeShared<FJsonValueString>(GameState->GetSessionName()));
+	JSessionInfo->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(WorldContext->GetWorld()->IsPaused()));
 	JSessionInfo->Values.Add("DayLength", MakeShared<FJsonValueNumber>(TimeOfDaySubSystem->GetDayLength()));
 	JSessionInfo->Values.Add("NightLength", MakeShared<FJsonValueNumber>(TimeOfDaySubSystem->GetNightLength()));
 	JSessionInfo->Values.Add("PassedDays", MakeShared<FJsonValueNumber>(TimeOfDaySubSystem->GetPassedDays()));
