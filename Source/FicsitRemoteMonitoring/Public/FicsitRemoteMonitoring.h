@@ -102,6 +102,7 @@ private:
 	TFuture<void> WebServer;
 	
 	bool JSONDebugMode = false;
+	bool bShouldStop = false;
 	
 	friend class UFGPowerCircuitGroup;
 
@@ -185,9 +186,6 @@ public:
 	TArray<FString> Flavor_Power;
 	TArray<FString> Flavor_Research;
 	TArray<FString> Flavor_Train;
-
-	// Timer handle for updating data
-	FTimerHandle TimerHandle;
 
 protected:
 	// Called when the game starts or when spawned
