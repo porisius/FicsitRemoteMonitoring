@@ -112,13 +112,22 @@ void UResearch::getResearchTrees(UObject* WorldContext, FRequestData RequestData
 			}
 
 			// test 1
-			auto SchematicCategory = UFGSchematic::GetSchematicCategory(NodeSchematic);
+			
+			FString Category = TEXT("N/A");
+			FString Schematic = TEXT("N/A");
 
+			if (IsValid(NodeSchematic))
+			{
+				auto SchematicCategory = UFGSchematic::GetSchematicCategory(NodeSchematic);
+				Category = UFGSchematicCategory::GetCategoryName(SchematicCategory).ToString();
+				Schematic = UFGSchematic::GetSchematicDisplayName(NodeSchematic).ToString();
+			}
+			
 			// end result
-			JResearchNode->Values.Add("Name", MakeShared<FJsonValueString>(UFGSchematic::GetSchematicDisplayName(NodeSchematic).ToString()));
+			JResearchNode->Values.Add("Name", MakeShared<FJsonValueString>(Schematic));
 			JResearchNode->Values.Add("ClassName", MakeShared<FJsonValueString>(ResearchNode->GetName()));
 			JResearchNode->Values.Add("Description", MakeShared<FJsonValueString>(UFGSchematic::GetSchematicDescription(NodeSchematic).ToString()));
-			JResearchNode->Values.Add("Category", MakeShared<FJsonValueString>(UFGSchematicCategory::GetCategoryName(SchematicCategory).ToString()));
+			JResearchNode->Values.Add("Category", MakeShared<FJsonValueString>(Category));
 			JResearchNode->Values.Add("State", MakeShared<FJsonValueString>(State));
 			JResearchNode->Values.Add("TechTier", MakeShared<FJsonValueNumber>(UFGSchematic::GetTechTier(NodeSchematic)));
 			JResearchNode->Values.Add("TimeToComplete", MakeShared<FJsonValueNumber>(UFGSchematic::GetTimeToComplete(NodeSchematic)));
@@ -251,9 +260,15 @@ TSharedPtr<FJsonObject> UResearch::getRecipe(UObject* WorldContext, TSubclassOf<
 		JProducedInArray.Add(MakeShared<FJsonValueString>(UKismetSystemLibrary::GetDisplayName(Workshop)));
 	}
 
+	FString Category = "N/A";
+	
+	if (IsValid(UFGRecipe::GetCategory(Recipe))) {
+		Category = UFGItemCategory::GetCategoryName(UFGRecipe::GetCategory(Recipe)).ToString();
+	}
+
 	JRecipe->Values.Add("Name", MakeShared<FJsonValueString>(UFGRecipe::GetRecipeName(Recipe).ToString()));
 	JRecipe->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Recipe)));
-	JRecipe->Values.Add("Category", MakeShared<FJsonValueString>(UFGItemCategory::GetCategoryName(UFGRecipe::GetCategory(Recipe)).ToString()));
+	JRecipe->Values.Add("Category", MakeShared<FJsonValueString>(Category));
 	JRecipe->Values.Add("Events", MakeShared<FJsonValueArray>(JEventsArray));
 	JRecipe->Values.Add("Ingredients", MakeShared<FJsonValueArray>(JIngredientArray));
 	JRecipe->Values.Add("Products", MakeShared<FJsonValueArray>(JProductArray));

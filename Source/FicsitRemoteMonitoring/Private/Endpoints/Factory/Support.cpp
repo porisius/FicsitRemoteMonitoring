@@ -52,7 +52,12 @@ void USupport::getHubTerminal(UObject* WorldContext, FRequestData RequestData, T
 
 		TSharedPtr<FJsonObject> JHubTerminal = CreateBuildableBaseJsonObject(HubTerminal);
 		TSubclassOf<UFGSchematic> ActiveSchematic = SchematicManager->GetActiveSchematic();
-		FString SchematicName = UFGSchematic::GetSchematicDisplayName(ActiveSchematic).ToString();
+
+		FString SchematicName = TEXT("No Active Milestone");
+
+		if (ActiveSchematic != nullptr) {
+			SchematicName = UFGSchematic::GetSchematicDisplayName(ActiveSchematic).ToString();
+		}
 		
 		TArray<TSharedPtr<FJsonValue>> JRecipeArray;
 		TSharedPtr<FJsonObject> JSchematic;
