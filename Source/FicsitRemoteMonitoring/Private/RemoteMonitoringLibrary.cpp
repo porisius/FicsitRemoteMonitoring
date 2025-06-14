@@ -12,6 +12,7 @@
 #include "FGPipeConnectionComponent.h"
 #include "FGPowerCircuit.h"
 #include "FGPowerInfoComponent.h"
+#include "FGPowerShardDescriptor.h"
 #include "FGResourceNode.h"
 #include "FGSchematicManager.h"
 #include "FGTrainStationIdentifier.h"
@@ -268,7 +269,31 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetActorLineFeaturesJSON(FVect
 
 	return JFeatures;
 
-};
+}
+
+void URemoteMonitoringLibrary::GetOverclockingItemsFromInventory(const UFGInventoryComponent* Inventory, int32& Somersloops, int32& PowerShards)
+{
+	if (!Inventory) return;
+
+	TArray<FInventoryStack> Stacks;
+	Inventory->GetInventoryStacks(Stacks);
+	for (const FInventoryStack& Stack : Stacks)
+	{
+		TSubclassOf<UFGItemDescriptor> ItemClass = Stack.Item.GetItemClass();
+		UFGPowerShardDescriptor* PowerShardDescriptor = ItemClass->GetDefaultObject<UFGPowerShardDescriptor>();
+		if (!PowerShardDescriptor) continue;
+
+		EPowerShardType ShardType = UFGPowerShardDescriptor::GetPowerShardType(PowerShardDescriptor->GetClass());
+		if (ShardType == EPowerShardType::PST_ProductionBoost)
+		{
+			Somersloops += Stack.NumItems;
+		}
+		else if (ShardType == EPowerShardType::PST_Overclock)
+		{
+			PowerShards += Stack.NumItems;
+		}
+	}
+}
 
 FString URemoteMonitoringLibrary::APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext) {
 

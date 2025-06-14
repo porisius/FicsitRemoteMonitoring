@@ -237,10 +237,14 @@ TArray<TSharedPtr<FJsonValue>> UPower::getGenerators_Helper(UObject* WorldContex
 		AFGBuildableGeneratorFuel* GeneratorFuel = Cast<AFGBuildableGeneratorFuel>(Buildable);
 		AFGBuildableGeneratorNuclear* GeneratorNuclear = Cast<AFGBuildableGeneratorNuclear>(Buildable);
 		AFGBuildableGeneratorGeoThermal* GeneratorGeo = Cast<AFGBuildableGeneratorGeoThermal>(Buildable);
+		AFGBuildableFactory* BuildableFactory = Cast<AFGBuildableFactory>(Buildable);
 
 		UFGPowerInfoComponent* PowerInfo = Generator->GetPowerInfo();
 
 		float FuelAmount = 0;
+		int32 Somersloops = 0;
+		int32 PowerShards = 0;
+		
 		EResourceForm FuelForm;
 		FString FormString = "Geothermal";
 
@@ -248,6 +252,11 @@ TArray<TSharedPtr<FJsonValue>> UPower::getGenerators_Helper(UObject* WorldContex
 		TArray<TSharedPtr<FJsonValue>> JFuelArray;
 		TSharedPtr<FJsonObject> JSupplemental = MakeShared<FJsonObject>();
 
+		if (BuildableFactory)
+		{
+			GetOverclockingItemsFromInventory(BuildableFactory->GetPotentialInventory(), Somersloops, PowerShards);
+		}
+		
 		if (IsValid(GeneratorFuel) || IsValid(GeneratorNuclear))
 		{
 			JFuelInventory = GetInventoryJSON(GetGroupedInventoryItems(GeneratorFuel->GetFuelInventory()));
@@ -343,6 +352,8 @@ TArray<TSharedPtr<FJsonValue>> UPower::getGenerators_Helper(UObject* WorldContex
 		JGenerator->Values.Add("ProductionCapacity", MakeShared<FJsonValueNumber>(Generator->GetPowerProductionCapacity()));
 		JGenerator->Values.Add("DefaultProductionCapacity", MakeShared<FJsonValueNumber>(Generator->GetDefaultPowerProductionCapacity()));
 		JGenerator->Values.Add("PowerProductionPotential", MakeShared<FJsonValueNumber>(PotentialCapacity));
+		JGenerator->Values.Add("Somersloops", MakeShared<FJsonValueNumber>(Somersloops));
+		JGenerator->Values.Add("PowerShards", MakeShared<FJsonValueNumber>(PowerShards));
 		JGenerator->Values.Add("FuelAmount", MakeShared<FJsonValueNumber>(FuelAmount));
 		JGenerator->Values.Add("Supplement", MakeShared<FJsonValueObject>(JSupplemental));
 		JGenerator->Values.Add("NuclearWarning", MakeShared<FJsonValueString>(NuclearString));
