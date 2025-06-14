@@ -38,27 +38,7 @@ TArray<TSharedPtr<FJsonValue>> UFactoryLibrary::getFactory_Helper(UObject* World
 
 		if (const AFGBuildableFactory* BuildableFactory = Cast<AFGBuildableFactory>(Buildable))
 		{
-			if (const UFGInventoryComponent* PotentialInventory = BuildableFactory->GetPotentialInventory())
-			{
-				TArray<FInventoryStack> Stacks;
-				PotentialInventory->GetInventoryStacks(Stacks);
-				for (const FInventoryStack& Stack : Stacks)
-				{
-					TSubclassOf<UFGItemDescriptor> ItemClass = Stack.Item.GetItemClass();
-					UFGPowerShardDescriptor* PowerShardDescriptor = ItemClass->GetDefaultObject<UFGPowerShardDescriptor>();
-					if (!PowerShardDescriptor) continue;
-
-					EPowerShardType ShardType = UFGPowerShardDescriptor::GetPowerShardType(PowerShardDescriptor->GetClass());
-					if (ShardType == EPowerShardType::PST_ProductionBoost)
-					{
-						Somersloops += Stack.NumItems;
-					}
-					else if (ShardType == EPowerShardType::PST_Overclock)
-					{
-						PowerShards += Stack.NumItems;
-					}
-				}
-			}
+			GetOverclockingItemsFromInventory(BuildableFactory->GetPotentialInventory(), Somersloops, PowerShards);
 		}
 
 		if (IsValid(Manufacturer->GetCurrentRecipe())) {
