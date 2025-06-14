@@ -43,6 +43,7 @@ public:
 	static FString APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext);
 	static bool IsIntInRange(int32 Number, int32 LowerBound, int32 UpperBound);
 	static TSharedPtr<FJsonObject> GetActorLineFeaturesJSON(FVector PointOne, FVector PointTwo, FString DisplayName, FString TypeName);
+	static void GetOverclockingItemsFromInventory(const UFGInventoryComponent* Inventory, int32& Somersloops, int32& PowerShards);
 
 	static FString GetPlayerName(AFGCharacterPlayer* Character);
 
