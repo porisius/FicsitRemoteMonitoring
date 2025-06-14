@@ -5,6 +5,7 @@
 #include "Templates/SharedPointer.h"
 #include "../../RemoteMonitoringLibrary.h"
 #include "FGInventoryLibrary.h"
+#include "FGPowerShardDescriptor.h"
 #include "FGSchematicManager.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -23,8 +24,6 @@ TArray<TSharedPtr<FJsonValue>> UFactoryLibrary::getFactory_Helper(UObject* World
 	BuildableSubsystem->GetTypedBuildable(TypedBuildable, Buildables);
 	TArray<TSharedPtr<FJsonValue>> JFactoryArray;
 
-	//UE_LOGFMT(LogFRMAPI, Warning, "Initial variables configured, executing getProdStats");
-
 	for (AFGBuildable* Buildable : Buildables) {
 
 		AFGBuildableManufacturer* Manufacturer = Cast<AFGBuildableManufacturer>(Buildable);
@@ -34,8 +33,33 @@ TArray<TSharedPtr<FJsonValue>> UFactoryLibrary::getFactory_Helper(UObject* World
 		TArray<TSharedPtr<FJsonValue>> JIngredientsArray;
 
 		float Productivity = 0;
+		int32 Somersloops = 0;
+		int32 PowerShards = 0;
 
-		//UE_LOGFMT(LogFRMAPI, Warning, "Loading FGBuildable {Manufacturer} to get data.", UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetClass()));
+		if (const AFGBuildableFactory* BuildableFactory = Cast<AFGBuildableFactory>(Buildable))
+		{
+			if (const UFGInventoryComponent* PotentialInventory = BuildableFactory->GetPotentialInventory())
+			{
+				TArray<FInventoryStack> Stacks;
+				PotentialInventory->GetInventoryStacks(Stacks);
+				for (const FInventoryStack& Stack : Stacks)
+				{
+					TSubclassOf<UFGItemDescriptor> ItemClass = Stack.Item.GetItemClass();
+					UFGPowerShardDescriptor* PowerShardDescriptor = ItemClass->GetDefaultObject<UFGPowerShardDescriptor>();
+					if (!PowerShardDescriptor) continue;
+
+					EPowerShardType ShardType = UFGPowerShardDescriptor::GetPowerShardType(PowerShardDescriptor->GetClass());
+					if (ShardType == EPowerShardType::PST_ProductionBoost)
+					{
+						Somersloops += Stack.NumItems;
+					}
+					else if (ShardType == EPowerShardType::PST_Overclock)
+					{
+						PowerShards += Stack.NumItems;
+					}
+				}
+			}
+		}
 
 		if (IsValid(Manufacturer->GetCurrentRecipe())) {
 			auto CurrentRecipe = Manufacturer->GetCurrentRecipe();
@@ -110,6 +134,8 @@ TArray<TSharedPtr<FJsonValue>> UFactoryLibrary::getFactory_Helper(UObject* World
 		JFactory->Values.Add("ingredients", MakeShared<FJsonValueArray>(JIngredientsArray));
 		JFactory->Values.Add("Productivity", MakeShared<FJsonValueNumber>(Productivity * 100));
 		JFactory->Values.Add("ManuSpeed", MakeShared<FJsonValueNumber>(Manufacturer->GetCurrentPotential() * 100));
+		JFactory->Values.Add("Somersloops", MakeShared<FJsonValueNumber>(Somersloops));
+		JFactory->Values.Add("PowerShards", MakeShared<FJsonValueNumber>(PowerShards));
 		JFactory->Values.Add("IsConfigured", MakeShared<FJsonValueBoolean>(Manufacturer->IsConfigured()));
 		JFactory->Values.Add("IsProducing", MakeShared<FJsonValueBoolean>(Manufacturer->IsProducing()));
 		JFactory->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(Manufacturer->IsProductionPaused()));

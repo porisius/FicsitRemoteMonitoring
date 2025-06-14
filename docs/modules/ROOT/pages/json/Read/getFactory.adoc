@@ -49,6 +49,8 @@ include::../Models/_location.adoc[]
 | {depth}  ConsPercent | Float | Efficiency Percentage.
 
 | ManuSpeed | Float | Configured speed in % (exceeds 100 if the machine is equipped with a power slug).
+| Somersloops | Integer | Number of Somersloops in the machine.
+| PowerShards | Integer | Number of Power Shards in the machine.
 | IsConfigured | Boolean | Is a recipe configured?
 | IsProducing | Boolean | Is the building producing now?
 | IsPaused | Boolean | Is paused?
