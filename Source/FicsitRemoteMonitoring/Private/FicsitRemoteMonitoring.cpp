@@ -103,10 +103,13 @@ FString AFicsitRemoteMonitoring::GenerateAuthToken(const int32 Length)
 
 void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
 {
+	if (bHasRunningPushDataLoop) return;
+	
 	FConfig_HTTPStruct HttpConfig = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
 
 	Async(EAsyncExecution::Thread, [this, HttpConfig]()
 	{
+		bHasRunningPushDataLoop = true;
 		UE_LOGFMT(LogHttpServer, Log, "Starting PushUpdatedData loop");
 		while (SocketRunning && !bShouldStop)
 		{
@@ -114,13 +117,12 @@ void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
 			FPlatformProcess::Sleep(HttpConfig.WebSocketPushCycle);
 		}
 		UE_LOGFMT(LogHttpServer, Log, "Stopped PushUpdatedData loop");
+		bHasRunningPushDataLoop = false;
 	});
 }
 
 void AFicsitRemoteMonitoring::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	bShouldStop = true;
-
 	// Ensure the server is stopped during normal gameplay exit
 	StopWebSocketServer();
 	Super::EndPlay(EndPlayReason);
@@ -128,6 +130,8 @@ void AFicsitRemoteMonitoring::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AFicsitRemoteMonitoring::StopWebSocketServer()
 {
+	bShouldStop = true;
+
     // Signal the WebSocket server to stop
     if (WebServer.IsValid())
     {
@@ -153,12 +157,19 @@ void AFicsitRemoteMonitoring::StopWebSocketServer()
     EndpointSubscribers.Empty();
 }
 
-void AFicsitRemoteMonitoring::StartWebSocketServer() 
+void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning) 
 {
-    UE_LOGFMT(LogHttpServer, Warning, "Initializing WebSocket Service");
+    UE_LOGFMT(LogHttpServer, Log, "Initializing WebSocket Service");
 
     if (SocketRunning)
     {
+	    if (bSkipIfRunning)
+    	{
+	    	UE_LOG(LogHttpServer, Log, TEXT("Websocket Thread is already running. Stop start process."));
+
+	    	return;
+    	}
+
         UE_LOG(LogHttpServer, Log, TEXT("Old Websocket Thread is still running, try again in 3 seconds..."));
 
         AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this]()
@@ -378,6 +389,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
                         UE_LOGFMT(LogHttpServer, Warning, "Listening on port {port}", port);
 
                     	SocketRunning = true;
+                    	bShouldStop = false;
                     	StartWebSocketPushDataLoop();
                     }
                     else {
