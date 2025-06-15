@@ -108,7 +108,7 @@ void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
 	Async(EAsyncExecution::Thread, [this, HttpConfig]()
 	{
 		UE_LOGFMT(LogHttpServer, Log, "Starting PushUpdatedData loop");
-		while (SocketRunning)
+		while (SocketRunning && !bShouldStop)
 		{
 			PushUpdatedData();
 			FPlatformProcess::Sleep(HttpConfig.WebSocketPushCycle);
@@ -119,6 +119,8 @@ void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
 
 void AFicsitRemoteMonitoring::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	bShouldStop = true;
+
 	// Ensure the server is stopped during normal gameplay exit
 	StopWebSocketServer();
 	Super::EndPlay(EndPlayReason);
