@@ -103,6 +103,7 @@ private:
 	
 	bool JSONDebugMode = false;
 	bool bShouldStop = false;
+	bool bHasRunningPushDataLoop = false;
 	
 	friend class UFGPowerCircuitGroup;
 
@@ -166,7 +167,7 @@ public:
 	void InitAPIRegistry();
 	void InitOutageNotification();
 
-	void StartWebSocketServer();
+	void StartWebSocketServer(bool bSkipIfRunning = false);
 	void StopWebSocketServer();
 
 	void OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message);

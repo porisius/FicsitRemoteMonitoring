@@ -89,17 +89,16 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 			auto config = FConfig_HTTPStruct::GetActiveConfig(WorldContext);
 			int32 Port = config.HTTP_Port;
 			
-			ModSubsystem->StartWebSocketServer();
+			UE_LOG(LogHttpServer, Log, TEXT("Chat Command: Starting HTTP Service. Port: %d"), Port);
+			ModSubsystem->StartWebSocketServer(true);
 
 			ChatReturn.Chat = FString(TEXT("HTTP Service Initiated on Port: " + FString::FromInt(Port)));
 			ChatReturn.Color = FLinearColor::Green;
 			ChatReturn.Status = EExecutionStatus::COMPLETED;
-
-			UE_LOG(LogHttpServer, Log, TEXT("HTTP Service started. Port: %d"), Port);
 		}
 		else if (arg1 == "stop") {
+			UE_LOG(LogHttpServer, Log, TEXT("Chat Command: Stopping HTTP Service."));
 			ModSubsystem->StopWebSocketServer();
-			UE_LOG(LogHttpServer, Log, TEXT("Stopping HTTP Service."));
 
 			ChatReturn.Chat = TEXT("Stopping HTTP Service.");
 			ChatReturn.Color = FLinearColor::White;
