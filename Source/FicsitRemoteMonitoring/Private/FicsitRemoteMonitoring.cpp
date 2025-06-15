@@ -83,15 +83,6 @@ void AFicsitRemoteMonitoring::BeginPlay()
     const auto FactoryConfig = FConfig_FactoryStruct::GetActiveConfig(World);
     JSONDebugMode = FactoryConfig.JSONDebugMode;
 
-	Async(EAsyncExecution::Thread, [this, HttpConfig]()
-	{
-		while (SocketRunning)
-		{
-			FPlatformProcess::Sleep(HttpConfig.WebSocketPushCycle);
-			PushUpdatedData();
-		}
-	});
-	
 	// Register the callback to ensure WebSocket is stopped on crash/exit
 	FCoreDelegates::OnExit.AddUObject(this, &AFicsitRemoteMonitoring::StopWebSocketServer);
 }
@@ -108,6 +99,22 @@ FString AFicsitRemoteMonitoring::GenerateAuthToken(const int32 Length)
 	}
 
 	return RandomString;
+}
+
+void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
+{
+	FConfig_HTTPStruct HttpConfig = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
+
+	Async(EAsyncExecution::Thread, [this, HttpConfig]()
+	{
+		UE_LOGFMT(LogHttpServer, Log, "Starting PushUpdatedData loop");
+		while (SocketRunning)
+		{
+			PushUpdatedData();
+			FPlatformProcess::Sleep(HttpConfig.WebSocketPushCycle);
+		}
+		UE_LOGFMT(LogHttpServer, Log, "Stopped PushUpdatedData loop");
+	});
 }
 
 void AFicsitRemoteMonitoring::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -360,13 +367,16 @@ void AFicsitRemoteMonitoring::StartWebSocketServer()
 
                 app.ws<FWebSocketUserData>("/*", std::move(wsBehavior));
 
-                app.listen(port, [port](us_listen_socket_t* token) {
+                app.listen(port, [this, port](us_listen_socket_t* token) {
 
                     UE_LOG(LogHttpServer, Warning, TEXT("Attempting to listen on port %d"), port);
 
                     if (token) {
                         SocketListener = token;
                         UE_LOGFMT(LogHttpServer, Warning, "Listening on port {port}", port);
+
+                    	SocketRunning = true;
+                    	StartWebSocketPushDataLoop();
                     }
                     else {
                         UE_LOGFMT(LogHttpServer, Error, "Failed to listen on port {port}", port);
