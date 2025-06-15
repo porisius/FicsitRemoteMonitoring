@@ -715,6 +715,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getHypertube", &UHypertubes::getHypertube));
 	RegisterEndpoint(FAPIEndpoint("GET", "getHyperJunctions", &UHypertubes::getHyperJunctions));
 	RegisterEndpoint(FAPIEndpoint("GET", "getManufacturer", &UFactoryLibrary::getManufacturer));
+	RegisterEndpoint(FAPIEndpoint("GET", "getMapMarkers", &USession::getMapMarkers));
 	RegisterEndpoint(FAPIEndpoint("GET", "getModList", &USession::getModList));
 	RegisterEndpoint(FAPIEndpoint("GET", "getNuclearGenerator", &UPower::getNuclearGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getPackager", &UFactoryLibrary::getPackager));
