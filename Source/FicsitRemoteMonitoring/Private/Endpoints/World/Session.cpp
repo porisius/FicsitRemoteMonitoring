@@ -6,6 +6,7 @@
 #include "FGBuildableResourceExtractor.h"
 #include "FGTimeSubsystem.h"
 #include "FGGameState.h"
+#include "FGMapManager.h"
 #include "FGResourceSinkSettings.h"
 #include "Runtime/Engine/Classes/Engine/GameInstance.h"
 #include "ModLoadingLibrary.h"
@@ -352,6 +353,29 @@ void USession::getBlueprints(UObject* WorldContext, FRequestData RequestData, TA
 		//JResponse->Values.Add("SubCategory", MakeShared<FJsonValueString>(BlueprintSubCategory.ToString()));
 		JResponse->Values.Add("BlueprintCost", MakeShared<FJsonValueArray>(GetInventoryJSON(BlueprintCost)));
 
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JResponse));
+	}
+}
+
+void USession::getMapMarkers(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+{
+	AFGMapManager* MapManager = AFGMapManager::Get(WorldContext);
+	TArray<FMapMarker> MapMarkers;
+	MapManager->GetMapMarkers(MapMarkers);
+	
+	for (FMapMarker MapMarker : MapMarkers) {
+		TSharedPtr<FJsonObject> JResponse = MakeShared<FJsonObject>();
+
+		JResponse->SetStringField("ID", MapMarker.MarkerGUID.ToString());
+		JResponse->SetStringField("Name", MapMarker.Name);
+		JResponse->SetObjectField("location", ConvertVectorToFJsonObject(MapMarker.Location));
+		JResponse->SetStringField("Category", MapMarker.CategoryName);
+		JResponse->SetStringField("MapMarkerType", StaticEnum<ERepresentationType>()->GetNameStringByValue((int64)MapMarker.MapMarkerType));
+		JResponse->SetNumberField("IconID", MapMarker.IconID);
+		JResponse->SetStringField("ColorSlot", LinearColorToHex(MapMarker.Color));
+		JResponse->SetNumberField("Scale", MapMarker.Scale);
+		JResponse->SetStringField("CompassViewDistance", StaticEnum<ECompassViewDistance>()->GetNameStringByValue((int64)MapMarker.CompassViewDistance));
+	
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JResponse));
 	}
 }

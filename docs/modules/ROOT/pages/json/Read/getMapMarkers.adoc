@@ -1,0 +1,91 @@
+:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Map Markers
+
+Lists all Map Markers Configured
+
+== URL
+
+`GET http://localhost:8080/getMapMarkers`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Map Marker.
+| Name | String | Name of the Map Marker.
+| Category | String | Category Name (used for custom map markers).
+| MapMarkerType | String | Enum Value of ERepresentationType (see below)
+| IconID | Integer | Icon ID used be Satisfactory
+| ColorSlot | String | Marker Color in Hex
+| Scale | Integer | Circuit ID on connection A.
+| Secondary | Integer | Circuit ID on connection B.
+| CompassViewDistance | String | Enum Value of ECompassViewDistance (see below)
+
+// location
+{set:key-name:location}
+{set:key-description:Location details of the Map Marker.}
+include::../Models/_location.adoc[]
+
+|===
+
+==== enum class ERepresentationType
+[cols="1,1"]
+|===
+|*enum*|*Name*
+|	RT_Default | Default
+|	RT_Beacon | Beacon
+|	RT_Crate | Crate
+|	RT_Hub | Hub
+|	RT_Ping | Ping
+|	RT_Player | Player
+|	RT_RadarTower | RadarTower
+|	RT_Resource | Resource
+|	RT_SpaceElevator | SpaceElevator
+|	RT_StartingPod | StartingPod
+|	RT_Train | Train
+|	RT_TrainStation | TrainStation
+|	RT_Vehicle | Vehicle
+|	RT_VehicleDockingStation | VehicleDockingStation
+|	RT_DronePort | DronePort
+|	RT_Drone | Drone
+|	RT_MapMarker | MapMarker
+|	RT_Stamp | Stamp
+|	RT_Portal | Portal
+|	RT_DeathCrate | Death Crate
+|	RT_DismantleCrate | Dismantle Crate
+|===
+
+==== enum class ECompassViewDistance
+[cols="1,1"]
+|===
+|*enum*|*Name*
+|	CVD_Off | Off
+|	CVD_Near | Near
+|	CVD_Mid | Mid
+|	CVD_Far | Far
+|	CVD_Always | Always
+|===
+
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "005D3A16411EC0870F5E5DA981AE9A33",
+    "Name": "Current Copper Project - 3600",
+    "location": {
+      "x": 153154,
+      "y": 10067,
+      "z": 15425
+    },
+    "Category": "",
+    "MapMarkerType": "RT_MapMarker",
+    "IconID": 350,
+    "ColorSlot": "666667FF",
+    "Scale": 1,
+    "CompassViewDistance": "CVD_Off"
+  }
+]
+-----------------
