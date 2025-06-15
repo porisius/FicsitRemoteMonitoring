@@ -85,7 +85,7 @@ void AFicsitRemoteMonitoring::BeginPlay()
 
 	Async(EAsyncExecution::Thread, [this, HttpConfig]()
 	{
-		while (!bShouldStop)
+		while (SocketRunning)
 		{
 			FPlatformProcess::Sleep(HttpConfig.WebSocketPushCycle);
 			PushUpdatedData();
@@ -112,9 +112,6 @@ FString AFicsitRemoteMonitoring::GenerateAuthToken(const int32 Length)
 
 void AFicsitRemoteMonitoring::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-    // clear the timer
-	bShouldStop = true;
-
 	// Ensure the server is stopped during normal gameplay exit
 	StopWebSocketServer();
 	Super::EndPlay(EndPlayReason);

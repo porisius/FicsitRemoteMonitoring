@@ -102,7 +102,6 @@ private:
 	TFuture<void> WebServer;
 	
 	bool JSONDebugMode = false;
-	bool bShouldStop = false;
 	
 	friend class UFGPowerCircuitGroup;
 
