@@ -758,6 +758,8 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getResearchTrees", &UResearch::getResearchTrees).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getChatMessages", &UCommunication::getChatMessages).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getItemPickups", &UResources::getItemPickups).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getUnlockItems", &UResources::getUnlockItems).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getTapes", &UResources::getTapes));
 	RegisterEndpoint(FAPIEndpoint("GET", "getUObjectCount", &USession::getUObjectCount).UseFirstObject());
 	RegisterEndpoint(FAPIEndpoint("GET", "getBlueprints", &USession::getBlueprints));
 	RegisterEndpoint(FAPIEndpoint("GET", "getTrainSignals", &UTrains::getTrainSignals));

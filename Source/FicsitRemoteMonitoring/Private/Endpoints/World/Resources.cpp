@@ -9,6 +9,15 @@
 #include "FGBuildableFrackingActivator.h"
 #include "FGItemPickup.h"
 #include "FGDropPod.h"
+#include "FGPlayerCustomizationDesc.h"
+#include "FGTapeData.h"
+#include "FGUnlock.h"
+#include "FGUnlockCustomization.h"
+#include "FGUnlockPickup.h"
+#include "FGUnlockSubsystem.h"
+#include "FGUnlockTape.h"
+#include "FicsitRemoteMonitoringModule.h"
+#include "StructuredLog.h"
 
 void UResources::getItemPickups(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
 {
@@ -32,6 +41,112 @@ void UResources::getItemPickups(UObject* WorldContext, FRequestData RequestData,
 				"Item Pickup"
 			)
 		));
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JItem));
+	}
+}
+
+void UResources::getUnlockItems(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+{
+	TArray<AActor*> FoundActors;
+
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGUnlockPickup::StaticClass(), FoundActors);
+	for (AActor* FoundActor : FoundActors)
+	{
+		AFGUnlockPickup* UnlockPickup = Cast<AFGUnlockPickup>(FoundActor);
+		if (!UnlockPickup) continue;
+
+		TSubclassOf<UFGSchematic> Schematic = UnlockPickup->mSchematic;
+		TArray<UFGUnlock*> Unlocks = UFGSchematic::GetUnlocks(Schematic);
+
+		FString Displayname;
+		FString TypeName;
+		
+		TArray<TSharedPtr<FJsonValue>> JUnlocks;
+		for (UFGUnlock* Unlock : Unlocks)
+		{
+			TSharedPtr<FJsonObject> JUnlock = MakeShared<FJsonObject>();
+			if (UFGUnlockCustomization* Customization = Cast<UFGUnlockCustomization>(Unlock))
+			{
+				if (!Customization) continue;
+				
+				if (UFGUnlockCustomization* UnlockCustomization = Cast<UFGUnlockCustomization>(Unlock))
+				{
+					if (!UnlockCustomization) continue;
+					
+					for (TSubclassOf<UFGPlayerCustomizationDesc> PlayerCustomization : UnlockCustomization->GetCustomizationDescriptors())
+					{
+						if (!PlayerCustomization) continue;
+
+						Displayname = UKismetSystemLibrary::GetDisplayName(PlayerCustomization);
+						TypeName = TEXT("Player Customization");
+						JUnlock->Values.Add("Name", MakeShared<FJsonValueString>(Displayname));
+						JUnlock->Values.Add("ClassName", MakeShared<FJsonValueString>(PlayerCustomization->GetName()));
+						JUnlock->Values.Add("Description", MakeShared<FJsonValueString>(PlayerCustomization->GetDescription()));
+						JUnlocks.Add(MakeShared<FJsonValueObject>(JUnlock));
+					}
+				}
+			}
+
+			if (UFGUnlockTape* UnlockTape = Cast<UFGUnlockTape>(Unlock))
+			{
+				if (!UnlockTape) continue;
+				for (TSubclassOf<UFGTapeData> TapeDataClass : UnlockTape->mTapeUnlocks)
+				{
+					if (!TapeDataClass) continue;
+					
+					UFGTapeData* TapeObject = TapeDataClass->GetDefaultObject<UFGTapeData>();
+
+					Displayname = (TapeObject->mTitle).ToString();
+					TypeName = TEXT("Cassette Tape");
+					
+					JUnlock->Values.Add("Name", MakeShared<FJsonValueString>(Displayname));
+					JUnlock->Values.Add("ClassName", MakeShared<FJsonValueString>(TapeDataClass->GetName()));
+					JUnlocks.Add(MakeShared<FJsonValueObject>(JUnlock));
+				}
+			}
+		}
+		
+		TSharedPtr<FJsonObject> JItem = CreateBaseJsonObject(FoundActor);
+		JItem->Values.Add("Name", MakeShared<FJsonValueString>(UnlockPickup->GetName()));
+		JItem->Values.Add("ClassName", MakeShared<FJsonValueString>(UnlockPickup->GetName()));
+		JItem->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(UnlockPickup)));
+		JItem->Values.Add("Unlocks", MakeShared<FJsonValueArray>(JUnlocks));
+		JItem->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(
+				UnlockPickup,
+				Displayname,
+				TypeName
+			)
+		));
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JItem));
+	}
+}
+
+void UResources::getTapes(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+{
+	AFGUnlockSubsystem* UnlockSubsystem = AFGUnlockSubsystem::Get(WorldContext->GetWorld());
+	TArray<TSubclassOf<UFGTapeData>> UnlockedTapes;
+	
+	UnlockSubsystem->GetUnlockedTapes(UnlockedTapes);
+	
+	for (TSubclassOf<UFGTapeData> UnlockedTape : UnlockedTapes)
+	{
+		UFGTapeData* Tape = UnlockedTape->GetDefaultObject<UFGTapeData>();
+		if (!Tape) continue;
+		
+		TArray<TSharedPtr<FJsonValue>> Songs;
+		for (FSongData SongData : Tape->GetPlaylist(UnlockedTape))
+		{
+			TSharedPtr<FJsonObject> JSong = MakeShared<FJsonObject>();
+			JSong->Values.Add("SongName", MakeShared<FJsonValueString>(SongData.SongName.ToString()));
+			JSong->Values.Add("ArtistName", MakeShared<FJsonValueString>(SongData.ArtistName.ToString()));
+			Songs.Add(MakeShared<FJsonValueObject>(JSong));
+		}
+		
+		TSharedPtr<FJsonObject> JItem = CreateBaseJsonObject(UnlockedTape);
+		JItem->Values.Add("Name", MakeShared<FJsonValueString>((Tape->mTitle).ToString()));
+		JItem->Values.Add("ClassName", MakeShared<FJsonValueString>(UnlockedTape->GetName()));
+		JItem->Values.Add("Songs", MakeShared<FJsonValueArray>(Songs));
+
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JItem));
 	}
 }

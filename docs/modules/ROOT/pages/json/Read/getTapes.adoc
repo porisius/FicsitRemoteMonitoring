@@ -1,0 +1,56 @@
+:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Tapes
+
+Get information about the Song Tapes.
+
+== URL
+
+`GET http://localhost:8080/getTapes`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Tape.
+| Name | String | Name of the Tape.
+| ClassName | String | ClassName of the Tape.
+| Songs | Object | Object of the Tape's Song Playlist.
+| {depth}  SongName | String | Name of the Song in the Playlist.
+| {depth}  ArtistName | String | ClassName of the Song in the Playlist.
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "Tape_WorstOfGoat_C",
+    "Name": "Worst of Goat Simulator",
+    "ClassName": "Tape_WorstOfGoat_C",
+    "Songs": [
+      {
+        "SongName": "Desert Chill",
+        "ArtistName": "GSTFS"
+      },
+      {
+        "SongName": "Goat Chill",
+        "ArtistName": "GSTFS"
+      },
+      {
+        "SongName": "Goat Storm",
+        "ArtistName": "GSTFS"
+      },
+      {
+        "SongName": "Goatshire",
+        "ArtistName": "GSTFS"
+      },
+      {
+        "SongName": "Waste Of Space",
+        "ArtistName": "GSTFS"
+      }
+    ]
+  }
+]
+-----------------
