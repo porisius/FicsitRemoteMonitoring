@@ -98,6 +98,14 @@ void UResources::getExtractor(UObject* WorldContext, FRequestData RequestData, T
 		FString ItemName = TEXT("Desc_Null");
 		FString ItemClassName = TEXT("Desc_Null");
 
+		int32 Somersloops = 0;
+		int32 PowerShards = 0;
+
+		if (const AFGBuildableFactory* BuildableFactory = Cast<AFGBuildableFactory>(Extractor))
+		{
+			GetOverclockingItemsFromInventory(BuildableFactory->GetPotentialInventory(), Somersloops, PowerShards);
+		}
+
 		TScriptInterface<IFGExtractableResourceInterface> ResourceClass = Extractor->GetExtractableResource();
 		if (ResourceClass != nullptr) {
 			TSubclassOf<UFGResourceDescriptor> ItemClass = ResourceClass->GetResourceClass();
@@ -120,6 +128,8 @@ void UResources::getExtractor(UObject* WorldContext, FRequestData RequestData, T
 		JExtractor->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(ItemClassName));
 		JExtractor->Values.Add("production", MakeShared<FJsonValueArray>(JProductArray));
 		JExtractor->Values.Add("ManuSpeed", MakeShared<FJsonValueNumber>(Extractor->GetCurrentPotential() * 100));
+		JExtractor->Values.Add("Somersloops", MakeShared<FJsonValueNumber>(Somersloops));
+		JExtractor->Values.Add("PowerShards", MakeShared<FJsonValueNumber>(PowerShards));
 		JExtractor->Values.Add("IsConfigured", MakeShared<FJsonValueBoolean>(Extractor->IsConfigured()));
 		JExtractor->Values.Add("IsProducing", MakeShared<FJsonValueBoolean>(Extractor->IsProducing()));
 		JExtractor->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(Extractor->IsProductionPaused()));
