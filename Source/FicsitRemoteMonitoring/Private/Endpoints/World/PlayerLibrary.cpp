@@ -30,6 +30,7 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 		JPlayer->Values.Add("ClassName", MakeShared<FJsonValueString>(Player->GetClass()->GetName()));
 		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(Player))); 
 		//JPlayer->Values.Add("PlayerID", MakeShared<FJsonValueString>(PlayerState->GetUserID()));
+		JPlayer->Values.Add("Speed", MakeShared<FJsonValueNumber>(PlayerCharacter->GetVelocity().Length() * 0.036));
 		JPlayer->Values.Add("Online", MakeShared<FJsonValueBoolean>(PlayerCharacter->IsPlayerOnline()));
 		JPlayer->Values.Add("PlayerHP", MakeShared<FJsonValueNumber>(PlayerCharacter->GetHealthComponent()->GetCurrentHealth()));
 		JPlayer->Values.Add("Dead", MakeShared<FJsonValueBoolean>(PlayerCharacter->GetHealthComponent()->IsDead()));
