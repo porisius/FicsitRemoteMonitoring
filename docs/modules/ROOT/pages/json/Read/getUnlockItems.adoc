@@ -1,0 +1,99 @@
+:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get item that unlock song tapes and player helmets and customizations.
+
+Gets a list of unlockable actors.
+
+== URL
+
+`GET http://localhost:8080/getUnlockItems`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Unlockable Actor.
+| Name | String | Name of the Unlockable Actor.
+| ClassName | String | ClassName of the Unlockable Actor.
+| Unlocks | Object | Object of the Unlockables.
+| {depth}  Name | String | Name of the Unlockable.
+| {depth}  ClassName | String | ClassName of the Unlockable.
+
+// location
+{set:key-name:location}
+{set:key-description:Location details of the Unlockable Actor.}
+include::../Models/_location.adoc[]
+
+// features
+include::../Models/_features.adoc[]
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "BP_TapePickup3",
+    "Name": "BP_TapePickup3",
+    "ClassName": "BP_TapePickup3",
+    "location": {
+      "x": -125140,
+      "y": 168530,
+      "z": -6120,
+      "rotation": 350.000427246094
+    },
+    "Unlocks": [
+      {
+        "Name": "Deep Rock Galactic",
+        "ClassName": "Tape_DeepRockGalactic_C"
+      }
+    ],
+    "features": {
+      "properties": {
+        "name": "Deep Rock Galactic",
+        "type": "Cassette Tape"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -125140,
+          "y": 168530,
+          "z": -6120
+        },
+        "type": "Point"
+      }
+    }
+  },
+  {
+    "ID": "BP_UnlockPickup_Customization_C_UAID_40B076DF2F796CF701_1075566000",
+    "Name": "BP_UnlockPickup_Customization_C_UAID_40B076DF2F796CF701_1075566000",
+    "ClassName": "BP_UnlockPickup_Customization_C_UAID_40B076DF2F796CF701_1075566000",
+    "location": {
+      "x": -160356,
+      "y": 66416,
+      "z": 3980,
+      "rotation": 203.846278676476
+    },
+    "Unlocks": [
+      {
+        "Name": "Desc_Helmet_Beta_C",
+        "ClassName": "Desc_Helmet_Beta_C",
+        "Description": "Desc_Helmet_Beta_C"
+      }
+    ],
+    "features": {
+      "properties": {
+        "name": "Desc_Helmet_Beta_C",
+        "type": "Player Customization"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -160356,
+          "y": 66416,
+          "z": 3980
+        },
+        "type": "Point"
+      }
+    }
+  }
+]
+-----------------
