@@ -3,6 +3,7 @@
 #include "PlayerLibrary.h"
 
 #include "FGCharacterPlayer.h"
+#include "FGCreatureSubsystem.h"
 #include "FicsitRemoteMonitoring.h"
 #include "RemoteMonitoringLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -65,5 +66,30 @@ void UPlayerLibrary::getDoggo(UObject* WorldContext, FRequestData RequestData, T
 		JDoggo->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(Doggo, DisplayName, TEXT("Lizard Doggo"))));
 
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JDoggo));
+	};
+};
+
+void UPlayerLibrary::getCreatures(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+
+	AFGCreatureSubsystem* CreatureSubsystem = AFGCreatureSubsystem::Get(WorldContext->GetWorld());
+	TArray<AFGCreature*> Creatures = CreatureSubsystem->GetAllCreatures();
+	
+	for (AFGCreature* Creature : Creatures) {
+
+		TSharedPtr<FJsonObject> JCreature = CreateBaseJsonObject(Creature);
+		FString ClassName = UKismetSystemLibrary::GetClassDisplayName(Creature->GetClass());
+		
+		TSharedPtr<FJsonObject> JRoaming = MakeShared<FJsonObject>();
+		JRoaming->SetNumberField("MinRoaming", Creature->GetRoamingDistance().Min);
+		JRoaming->SetNumberField("MaxRoaming", Creature->GetRoamingDistance().Max);
+		
+		JCreature->SetStringField("ClassName", ClassName);
+		JCreature->SetObjectField("Roaming", JRoaming);
+		JCreature->SetNumberField("SpawnDistance", Creature->GetSpawnDistance());
+		JCreature->SetStringField("State", StaticEnum<ECreatureState>()->GetNameStringByValue((int64)Creature->GetCurrentBehaviorState()));
+		JCreature->SetObjectField("location", getActorJSON(Creature));
+		JCreature->SetObjectField("features", getActorFeaturesJSON(Creature, ClassName, ClassName));
+
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JCreature));
 	};
 };
