@@ -12,4 +12,5 @@ class FICSITREMOTEMONITORING_API UPlayerLibrary : public URemoteMonitoringLibrar
 public:
 	static void getPlayer(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray);
 	static void getDoggo(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray);
+	static void getCreatures(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray);
 };
