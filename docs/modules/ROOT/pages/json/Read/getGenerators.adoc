@@ -11,205 +11,59 @@ getFuelGenerator only retrieves Fuel Generators +
 getNuclearGenerator only retrieves Nuclear Power Plants +
 getGeothermalGenerator only retrieves Geothermal Generator +
 
-[cols="2,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+include::../_responseBody.adoc[]
 
-|Name
-|Type of Generator
-|String
-|Output
+| ID | String | Unique ID of the Factory Building.
+| Name | String | Name of the Factory Building.
+| ClassName | String | ClassName of the Factory Building.
 
-|ClassName
-|UE Class Name
-|String
-|Output
+// location fields
+{set:key-name:location}
+{set:key-description:Location details of the Factory Building.}
+include::../Models/_location.adoc[]
 
-|location/x
-|X Location of Generator
-|Float
-|Output
+| CircuitID | Integer | Connected Circuit Number
+| BaseProd | Float | Base Power Production
+| DynamicProdCapacity | Float | Production Capacity
+| DynamicProdDemandFactor | Float | Production Demand Factor
+| RegulatedDemandProd | Float | Regulated Production
+| IsFullBlast | Boolean | Generator Running at Full Blast
+| CanStart | Boolean | Can Generator Start
+| ProdPowerComsumption | Float | Produced Power being Consumed
+| CurrentPotential | Float | Speed Potential (Power Slug)
+| ProductionCapacity | Float | Production Capacity
+| DefaultProductionCapacity | Float | Default Production Capacity
+| PowerProductionPotential | Float | Max Current Power Potential
+| FuelAmount | Float | Fuel Inventory
 
-|location/y
-|Y Location of Generator
-|Float
-|Output
+| Supplement | Object | Supplemental Fuel Object
+| {depth}  Name | String | Supplement Resource Used (usually water)
+| {depth}  ClassName | String | UE Class Name
+| {depth}  CurrentConsumed | Float | Rate of Supplement Consumption
+| {depth}  MaxConsumed | Float | Max Rate of Supplement Consumption
+| {depth}  PercentFull | Float | Inventory Used of Supplement Storage (in %)
 
-|location/z
-|Z Location of Generator
-|Float
-|Output
+| FuelResource | Float | Fuel Type in Inventory
+| NuclearWarning | String | Nuclear Power System Alarm (Nuclear Reactors Only)
+| GeoMinPower | Float | Minimium Power Generated (Geothermal Generators Only)
+| GeoMaxPower | Float | Maximium Power Generated (Geothermal Generators Only)
 
-|location/Rotation
-|Compass Heading of Generator
-|Float
-|Output
+| AvailableFuel | Object | Available Fuel Object
+| {depth}  Name | String | Acceptable Fuel
+| {depth}  ClassName | String | UE Class Name
+| {depth}  EnergyValue | String | Energy Value of Fuel Used in calculations (MW for Potential / (Energy Value Adjusted by Form) * 60)
 
-|CircuitID
-|Connected Circuit Number
-|Integer
-|Output
+| WasteInventory | Object | Waste Inventory Object
+| {depth}  Name | String | Nuclear Waste Inventory
+| {depth}  ClassName | String | UE Class Name
+| {depth}  Amount | Integer | Amount of Waste in Generator
 
-|BaseProd
-|Base Power Production
-|Float
-|Output
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
 
-|DynamicProdCapacity
-|Production Capacity
-|Float
-|Output
-
-|DynamicProdDemandFactor
-|Production Demand Factor
-|Float
-|Output
-
-|RegulatedDemandProd
-|Regulated Production
-|Float
-|Output
-
-|IsFullBlast
-|Generator Running at Full Blast
-|Boolean
-|Output
-
-|CanStart
-|Can Generator Start
-|Boolean
-|Output
-
-|ProdPowerComsumption
-|Produced Power being Consumed
-|Float
-|Output
-
-|CurrentPotential
-|Speed Potenial (Power SLug)
-|Float
-|Output
-
-|ProductionCapacity
-|Production Capacity
-|Float
-|Output
-
-|DefaultProductionCapacity
-|Default Production Capacity
-|Float
-|Output
-
-|PowerProductionPotential
-|Max Current Power Potential
-|Float
-|Output
-
-|FuelAmount
-|Fuel Inventory
-|Float
-|Output
-
-|Supplement\Name
-|Supplement Resource Used (usually water)
-|String
-|Output
-
-|Supplement\ClassName
-|UE Class Name
-|String
-|Output
-
-|Supplement\CurrentConsumed
-|Rate of Supplement Consumption
-|Float
-|Output
-
-|Supplement\MaxConsumed
-|Max Rate of Supplement Consumption
-|Float
-|Output
-
-|Supplement\PercentFull
-|Inventory Used of Supplement Storage (in %)
-|Float
-|Output
-
-|FuelResource
-|Fuel Type in Inventory
-|Float
-|Output
-
-|NuclearWarning
-|Nuclear Power System Alarm (Nuclear Reactors Only)
-|String
-|Output
-
-|GeoMinPower
-|Minimium Power Generated (Geothermal Generators Only)
-|Float
-|Output
-
-|GeoMaxPower
-|Maximium Power Generated (Geothermal Generators Only)
-|Float
-|Output
-
-|AvailableFuel/Name
-|Acceptable Fuel
-|String
-|Output
-
-|AvailableFuel/ClassName
-|UE Class Name
-|String
-|Output
-
-|AvailableFuel/EnergyValue
-|Energy Value of Fuel Used in calculations (MW for Potential / (Energy Value Adjusted by Form) * 60)
-|String
-|Output
-
-|WasteInventory/Name
-|Nuclear Waste Inventory
-|String
-|Output
-
-|WasteInventory/ClassName
-|UE Class Name
-|String
-|Output
-
-|WasteInventory/Amount
-|Amount of Waste in Generator
-|Integer
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
+// features fields
+include::../Models/_features.adoc[]
 |===
 
 Example:
