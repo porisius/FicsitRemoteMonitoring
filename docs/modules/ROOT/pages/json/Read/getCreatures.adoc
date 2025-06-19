@@ -1,0 +1,110 @@
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Creatures
+
+Gets a list of all Creatures.
+
+== URL
+
+`GET http://localhost:8080/getCreatures`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Creature.
+| ClassName | String | ClassName of the Creature.
+
+{set:key-name:location}
+{set:key-description:Location details of the Creature.}
+include::../Models/_location.adoc[]
+
+| Spawn Distance | Float | Creature's Spawn Distance
+| State | enum String | Creature's Spawn Distance (See below ECreatureState)
+
+| Roaming | Object | Creature Roaming Object
+| {depth}  MinRoaming | Float | Max Roaming Radius
+| {depth}  MaxRoaming | Float | Max Roaming Radius
+
+// features
+include::../Models/_features.adoc[]
+
+==== enum class ECreatureState
+[cols="1,1"]
+|===
+|*enum*|*Name*
+|	RT_Default | Default
+|	CS_Roam | Roaming
+|	CS_Alert | Alerted
+|	CS_Fight | In Combat
+|	CS_Flee | Fleeing
+|	CS_Investigate | Investigating
+|===
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "Char_Hog_C_2147466694",
+    "ClassName": "Char_Hog_C",
+    "Roaming": {
+      "MinRoaming": 500,
+      "MaxRoaming": 1000
+    },
+    "SpawnDistance": 10000,
+    "State": "CS_Default",
+    "location": {
+      "x": -109600.786401125,
+      "y": 219064.349969713,
+      "z": 720.205171512911,
+      "rotation": 132.556407928467
+    },
+    "features": {
+      "properties": {
+        "name": "Char_Hog_C",
+        "type": "Char_Hog_C"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -109600.786401125,
+          "y": 219064.349969713,
+          "z": 720.205171512911
+        },
+        "type": "Point"
+      }
+    }
+  },
+  {
+    "ID": "Char_SpaceGiraffe_C_2147475977",
+    "ClassName": "Char_SpaceGiraffe_C",
+    "Roaming": {
+      "MinRoaming": 1000,
+      "MaxRoaming": 6000
+    },
+    "SpawnDistance": 20000,
+    "State": "CS_Default",
+    "location": {
+      "x": -102999.879346438,
+      "y": 205214.50708689,
+      "z": 1110.40994600986,
+      "rotation": 0.438751220703068
+    },
+    "features": {
+      "properties": {
+        "name": "Char_SpaceGiraffe_C",
+        "type": "Char_SpaceGiraffe_C"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -102999.879346438,
+          "y": 205214.50708689,
+          "z": 1110.40994600986
+        },
+        "type": "Point"
+      }
+    }
+  }
+]
+-----------------
