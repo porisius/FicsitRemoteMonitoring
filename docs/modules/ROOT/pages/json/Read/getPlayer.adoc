@@ -20,6 +20,7 @@ include::../_responseBody.adoc[]
 include::../Models/_location.adoc[]
 
 | PlayerHP | Float | HP of the Player.
+| Speed | Float | Speed of the Player.
 | Online | Boolean | Is the player online?
 | Dead | Boolean | Is the player dead?
 
