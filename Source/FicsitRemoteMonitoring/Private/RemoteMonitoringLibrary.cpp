@@ -612,6 +612,7 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getPowerConsumptionJSON(UFGPow
 	TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
 	int32 CircuitGroupID = -1;
 	int32 CircuitID = -1;
+	bool FuseTriggered = false;
 	float PowerConsumed = 0;
 	float MaxPowerConsumed = 0;
 
@@ -620,13 +621,15 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getPowerConsumptionJSON(UFGPow
 		if (IsValid(PowerCircuit)) {
 			CircuitGroupID = PowerCircuit->GetCircuitGroupID();
 			CircuitID = PowerCircuit->GetCircuitID();
+			FuseTriggered = PowerCircuit->IsFuseTriggered();
 			PowerConsumed = PowerInfo->GetActualConsumption();
 			MaxPowerConsumed = PowerInfo->GetMaximumTargetConsumption();
 		}
 	}
-
+	
 	JCircuit->Values.Add("CircuitGroupID", MakeShared<FJsonValueNumber>(CircuitGroupID));
 	JCircuit->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
+	JCircuit->Values.Add("FuseTriggered", MakeShared<FJsonValueBoolean>(FuseTriggered));
 	JCircuit->Values.Add("PowerConsumed", MakeShared<FJsonValueNumber>(PowerConsumed));
 	JCircuit->Values.Add("MaxPowerConsumed", MakeShared<FJsonValueNumber>(MaxPowerConsumed));
 
