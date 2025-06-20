@@ -138,7 +138,8 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 				FormString = "Out of Fuel";
 			};
 
-			const FString VehiclePathName = GetPathNameForTargetList(VehicleInfo->GetTargetList());
+			AFGDrivingTargetList* TargetList = VehicleInfo->GetTargetList();
+			const FString VehiclePathName = GetPathNameForTargetList(TargetList);
 
 			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(WheeledVehicle->mDisplayName.ToString()));
 			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(WheeledVehicle->GetClass())));
@@ -153,7 +154,7 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 			JVehicle->Values.Add("FollowingPath", MakeShared<FJsonValueBoolean>(WheeledVehicle->IsFollowingAPath()));
 			JVehicle->Values.Add("Autopilot", MakeShared<FJsonValueBoolean>(WheeledVehicle->IsSelfDriving()));
 			JVehicle->Values.Add("HasFuel", MakeShared<FJsonValueBoolean>(WheeledVehicle->HasFuel()));
-			JVehicle->Values.Add("HasFuelForRoundtrip", MakeShared<FJsonValueBoolean>(WheeledVehicle->HasFuelForRoundtrip()));
+			JVehicle->Values.Add("HasFuelForRoundtrip", MakeShared<FJsonValueBoolean>(TargetList ? WheeledVehicle->HasFuelForRoundtrip() : true));
 			JVehicle->Values.Add("TotalFuelEnergy", MakeShared<FJsonValueNumber>(WheeledVehicle->GetTotalFuelEnergy()));
 			JVehicle->Values.Add("MaxFuelEnergy", MakeShared<FJsonValueNumber>(WheeledVehicle->GetMaxFuelEnergy()));
 			JVehicle->Values.Add("Inventory", MakeShared<FJsonValueArray>(Inventory));
