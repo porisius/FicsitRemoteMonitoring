@@ -313,6 +313,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 
 			            	if (!FJsonSerializer::Deserialize(Reader, JsonValue) || !JsonValue.IsValid())
 			            	{
+			            		UE_LOG(LogHttpServer, Error, TEXT("Invalid JSON or failed to deserialize"));
 			            		return UFRM_RequestLibrary::SendErrorMessage(res, "400 Bad Request", FString("Invalid Request Body"));
 			            	}
 
@@ -330,6 +331,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 							}
 			            	else
 			            	{
+			            		UE_LOG(LogHttpServer, Error, TEXT("Invalid JSON Array or Object"));
 			            		return UFRM_RequestLibrary::SendErrorMessage(res, "400 Bad Request", FString("Invalid Request Body"));
 			            	}
 
