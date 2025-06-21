@@ -5,6 +5,8 @@
 #include "Dom/JsonObject.h"
 #include "Dom/JsonValue.h"
 #include "FRM_RequestData.h"
+#include "SessionSettingsManager.h"
+#include "Components/SplineComponent.h"
 #include "RemoteMonitoringLibrary.generated.h"
 
 struct FSplinePointData;
@@ -26,7 +28,7 @@ public:
 	static TSharedPtr<FJsonObject> getActorPipeXYZ(AFGBuildable* BeltPipe, UFGPipeConnectionComponent* ConnectionComponent);
 	static TSharedPtr<FJsonObject> getActorHyperXYZ(AFGBuildable* HyperTube, UFGPipeConnectionComponentBase* ConnectionComponent);
 	static TSharedPtr<FJsonObject> getActorFeaturesJSON(AActor* Actor, FString DisplayName, FString TypeName);
-	static TArray<TSharedPtr<FJsonValue>> SplineToJSON(AActor* Buildable, TArray<FSplinePointData> SplineData);
+	static TArray<TSharedPtr<FJsonValue>> SplineToJSON(USplineComponent* SplineComp, float SampleDistance);
 	static TMap<TSubclassOf<UFGItemDescriptor>, int32> GetGroupedInventoryItems(const UFGInventoryComponent* Inventory);
 	static TMap<TSubclassOf<UFGItemDescriptor>, int32> GetGroupedInventoryItems(const TArray<FInventoryStack>& InventoryStacks);
 	static void GetGroupedInventoryItems(const TArray<FInventoryStack>& InventoryStacks, TMap<TSubclassOf<UFGItemDescriptor>, int32>& InventoryItems);

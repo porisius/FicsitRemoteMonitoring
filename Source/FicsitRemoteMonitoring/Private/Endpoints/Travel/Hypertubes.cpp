@@ -31,7 +31,9 @@ void UHypertubes::getHyperEntrance(UObject* WorldContext, FRequestData RequestDa
 void UHypertubes::getHypertube(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 	
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-
+	USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
+	float SampleDistance = SessionSettings->GetFloatOptionValue("FicsitRemoteMonitoring.General.SplineSampleDistance");
+	
 	TArray<AFGBuildablePipeHyper*> Hypertubes;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildablePipeHyper>(Hypertubes);
 
@@ -43,7 +45,7 @@ void UHypertubes::getHypertube(UObject* WorldContext, FRequestData RequestData, 
 		
 		JHypertube->Values.Add("location0", MakeShared<FJsonValueObject>(getActorHyperXYZ(Hypertube, ConnectionZero)));
 		JHypertube->Values.Add("location1", MakeShared<FJsonValueObject>(getActorHyperXYZ(Hypertube, ConnectionOne)));
-		JHypertube->Values.Add("SplineData", MakeShared<FJsonValueArray>(SplineToJSON(Hypertube, Hypertube->GetSplinePointData())));
+		JHypertube->Values.Add("SplineData", MakeShared<FJsonValueArray>(SplineToJSON(Hypertube->GetSplineComponent(), SampleDistance)));
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JHypertube));
 	}
 }
