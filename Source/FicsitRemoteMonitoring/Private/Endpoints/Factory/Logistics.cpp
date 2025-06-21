@@ -1,5 +1,6 @@
 ﻿#include "Logistics.h"
 
+#include "FGBuildableConveyorBelt.h"
 #include "FGBuildableConveyorMonitor.h"
 #include "FGBuildableMergerPriority.h"
 #include "FGBuildablePipeline.h"
@@ -21,6 +22,8 @@ class UFGFactoryConnectionComponent;
 
 TArray<TSharedPtr<FJsonValue>> ULogistics::getBelts_Helper(UObject* WorldContext, bool IsBelt) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
+	float SampleDistance = SessionSettings->GetFloatOptionValue("FicsitRemoteMonitoring.General.SplineSampleDistance");
 
 	TArray<AFGBuildableConveyorBase*> Conveyors;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableConveyorBase>(Conveyors);
@@ -38,7 +41,7 @@ TArray<TSharedPtr<FJsonValue>> ULogistics::getBelts_Helper(UObject* WorldContext
 		if (!Conveyor->GetIsConveyorLift())
 		{
 			AFGBuildableConveyorBelt* ConveyorBelt = Cast<AFGBuildableConveyorBelt>(Conveyor);
-			JConveyor->Values.Add("SplineData", MakeShared<FJsonValueArray>(SplineToJSON(ConveyorBelt, ConveyorBelt->GetSplinePointData())));
+			JConveyor->Values.Add("SplineData", MakeShared<FJsonValueArray>(SplineToJSON(ConveyorBelt->GetSplineComponent(), SampleDistance)));
 		};
 		
 		JConveyor->Values.Add("location0", MakeShared<FJsonValueObject>(getActorFactoryCompXYZ(Conveyor, ConnectionZero)));
@@ -176,6 +179,8 @@ void ULogistics::getSplitterMerger(UObject* WorldContext, FRequestData RequestDa
 
 void ULogistics::getPipes(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
+	float SampleDistance = SessionSettings->GetFloatOptionValue("FicsitRemoteMonitoring.General.SplineSampleDistance");
 
 	TArray<AFGBuildablePipeline*> Pipes;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildablePipeline>(Pipes);
@@ -188,7 +193,7 @@ void ULogistics::getPipes(UObject* WorldContext, FRequestData RequestData, TArra
 		UFGPipeConnectionComponent* ConnectionOne = Pipe->GetPipeConnection1();
 
 		JPipe->Values.Add("SplineData", MakeShared<FJsonValueArray>(
-			SplineToJSON(Pipe, Pipe->GetSplinePointData())
+			SplineToJSON(Pipe->GetSplineComponent(), SampleDistance)
 		));
 		
 		JPipe->Values.Add("location0", MakeShared<FJsonValueObject>(getActorPipeXYZ(Pipe, ConnectionZero)));

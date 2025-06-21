@@ -284,6 +284,8 @@ void UTrains::getTrainStation(UObject* WorldContext, FRequestData RequestData, T
 
 void UTrains::getTrainRails(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
+	float SampleDistance = SessionSettings->GetFloatOptionValue("FicsitRemoteMonitoring.General.SplineSampleDistance");
 
 	TArray<AFGBuildableRailroadTrack*> RailroadTracks;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableRailroadTrack>(RailroadTracks);
@@ -300,7 +302,7 @@ void UTrains::getTrainRails(UObject* WorldContext, FRequestData RequestData, TAr
 		FVector PointZero = ConnectionZero->GetConnectorLocation();
 		FVector PointOne = ConnectionOne->GetConnectorLocation();
 		
-		JRailroadTrack->Values.Add("SplineData", MakeShared<FJsonValueArray>(SplineToJSON(RailroadTrack, RailroadTrack->GetSplinePointData())));
+		JRailroadTrack->Values.Add("SplineData", MakeShared<FJsonValueArray>(SplineToJSON(RailroadTrack->GetSplineComponent(), SampleDistance)));
 		JRailroadTrack->Values.Add("location0", MakeShared<FJsonValueObject>(ConvertVectorToFJsonObject(ConnectionZero->GetConnectorLocation())));
 		JRailroadTrack->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
 		JRailroadTrack->Values.Add("location1", MakeShared<FJsonValueObject>(ConvertVectorToFJsonObject(ConnectionOne->GetConnectorLocation())));

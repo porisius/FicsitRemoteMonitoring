@@ -143,22 +143,23 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::FBoxToJson(AFGBuildable* Build
 
 	return Json;
 }
-TArray<TSharedPtr<FJsonValue>> URemoteMonitoringLibrary::SplineToJSON(AActor* Buildable, TArray<FSplinePointData> SplineData)
+
+TArray<TSharedPtr<FJsonValue>> URemoteMonitoringLibrary::SplineToJSON(USplineComponent* SplineComp, float SampleDistance)
 {
 	TArray<TSharedPtr<FJsonValue>> JSpineArray;
-	for (FSplinePointData Spline : SplineData)
+	
+	const float SplineLength = SplineComp->GetSplineLength();
+	
+	for (float Distance = 0.f; Distance <= SplineLength; Distance += SampleDistance)
 	{
-		TSharedPtr<FJsonObject> Json = MakeShared<FJsonObject>();
-		
-		const long double actorX = Buildable->GetActorLocation().X;
-		const long double actorY = Buildable->GetActorLocation().Y;
-		const long double actorZ = Buildable->GetActorLocation().Z;
-					
-		Json->SetNumberField("x", actorX + Spline.Location.X);
-		Json->SetNumberField("y", actorY + Spline.Location.Y);
-		Json->SetNumberField("z", actorZ + Spline.Location.Z);
+		FVector Position = SplineComp->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World);
 
-		JSpineArray.Add(MakeShared<FJsonValueObject>(Json));
+		TSharedPtr<FJsonObject> PointJson = MakeShareable(new FJsonObject);
+		PointJson->SetNumberField(TEXT("x"), Position.X);
+		PointJson->SetNumberField(TEXT("y"), Position.Y);
+		PointJson->SetNumberField(TEXT("z"), Position.Z);
+
+		JSpineArray.Add(MakeShareable(new FJsonValueObject(PointJson)));
 	}
 
 	return JSpineArray;

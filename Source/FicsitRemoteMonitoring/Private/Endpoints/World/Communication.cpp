@@ -245,3 +245,41 @@ void UCommunication::setEnabled(UObject* WorldContext, FRequestData RequestData,
 		}
 	}
 };
+
+void UCommunication::setModSetting(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+{
+	if (RequestData.Body.Num() == 0) return;
+	
+	for (const auto& BodyObject : RequestData.Body)
+	{
+		auto JsonObject = BodyObject->AsObject();
+
+		// check if SplineSampleDistance is present in this json object
+		if (!JsonObject->HasField("SplineSampleDistance"))
+		{
+			const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("Missing field status.");
+			OutJsonArray.Add(MakeShared<FJsonValueObject>(JResponse));
+			continue;
+		}
+
+		float SplineSampleDistance = 0.f;
+		if (!JsonObject->TryGetNumberField("SplineSampleDistance", SplineSampleDistance))
+		{
+			const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("SplineSampleDistance is invalid. Requires float/integer");
+			OutJsonArray.Add(MakeShared<FJsonValueObject>(JResponse));
+			continue;
+		}
+
+		UE_LOG(LogTemp, Warning, TEXT("SplineSampleDistance: %f"), SplineSampleDistance);
+
+		const FString& cvar = "FicsitRemoteMonitoring.General.SplineSampleDistance";
+		
+		USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
+		SessionSettings->SetFloatOptionValue(cvar, SplineSampleDistance);
+
+		TSharedPtr<FJsonObject> JChatMessage = MakeShared<FJsonObject>();
+		JChatMessage->Values.Add("IsSent", MakeShared<FJsonValueBoolean>(true));
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JChatMessage));
+		
+	}
+};
