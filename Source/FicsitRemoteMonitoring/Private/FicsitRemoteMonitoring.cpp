@@ -780,6 +780,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("POST", "setEnabled", &UCommunication::setEnabled).RequiresAuthentication());
 	RegisterEndpoint(FAPIEndpoint("POST", "sendChatMessage", &UCommunication::sendChatMessage).RequiresAuthentication().RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("POST", "createPing", &UCommunication::createPing).RequiresAuthentication().RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("POST", "setModSetting", &UCommunication::setModSetting).RequiresAuthentication().RequiresGameThread());
 	
 
 	// API Endpoints Retired - Remove in next update after 1.4.0
