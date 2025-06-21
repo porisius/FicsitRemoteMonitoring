@@ -20,6 +20,10 @@ include::../Models/_location.adoc[]
 | Opened | Boolean | Is Drop Pod opened?
 | Looted | Boolean | Is Drop Pod looted?
 
+// Loot Inventory items
+| RequiredItem | Object | Loot Inventory of the Drop Pod.
+include::../Models/_inventoryItem.adoc[]
+
 // inventory items
 | RequiredItem | Object | Required Item to open the Drop Pod.
 include::../Models/_inventoryItem.adoc[]
