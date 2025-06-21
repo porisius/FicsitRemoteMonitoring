@@ -2,151 +2,82 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-API Endpoint: getTrains +
+`GET http://localhost:8080/getTrains`
 
-[cols="1,2,1,1"]
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Factory Building.
+| Name | String | Name of the Factory Building.
+| ClassName | String | ClassName of the Factory Building.
+
+// location fields
+{set:key-name:location}
+{set:key-description:Location details of the HUB.}
+include::../Models/_location.adoc[]
+
+| TotalMass | Float | Total mass of Train
+| PayloadMass | Float | Payload Mass for Train
+| MaxPayloadMass | Float | Maximium Payload Mass for Train
+| ForwardSpeed | Float | Speed in km/h
+| ThrottlePercent | Float | Train's Throttle Setting
+| TrainStation | String | Current or Next Stop for Train
+| Derailed | Boolean | Is Derailed
+| PendingDerail | Boolean | |Has Pending Collision (Name taken from the Object in Unreal)
+| Status | String | Status of Train
+
+| TimeTable | Object | JSON Object for Train Consists of for Attached Train Cars/Engines
+| {depth}  StationName | String | Name of the Train Station in Timetable
+
+| TimeTableIndex | Integer | Next Stop Index of TimeTable Object
+| SelfDriving | enum String | Error codes for the self driving locomotives (See below ESelfDrivingLocomotiveError)
+| Docking | enum String | Docked state (See below ETrainDockingState)
+| Path | enum String | Error codes for the extended path finding diagnostics (See below EPathDiagnosticsError)
+
+| Vehicles | Object | JSON Object for Attached Train Cars/Engines
+| {depth}  Name | String | Name of the FGRailroadVehicle
+| {depth}  ClassName | String | UE Class Name
+| {depth}  TotalMass | Float | Total mass of FGRailroadVehicle
+| {depth}  PayloadMass | Float | Payload Mass for FGRailroadVehicle
+| {depth}  MaxPayloadMass | Float | Maximium Payload Mass for FGRailroadVehicle
+
+// features fields
+include::../Models/_features.adoc[]
+
+// power info fields
+include::../Models/_powerInfo.adoc[]
+
+==== enum class ESelfDrivingLocomotiveError
+[cols="1,1"]
 |===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+|*enum*|*Name*
+! SDLE_NoError | No Error
+! SDLE_NoPower | No Power
+! SDLE_NoTimeTable | No Time Table
+! SDLE_InvalidNextStop | Invalid Next Stop
+! SDLE_InvalidLocomotivePlacement | Invalid Locomotive Placement
+! SDLE_NoPath | No Path
+! SDLE_StationUnreachable | Station Unreachable
+! SDLE_StationUnreachableWithSignals | Station Unreachable With Signals
+! SDLE_LongWaitAtSignal | Long Wait At Signal
+|===
 
-|Name
-|Name of the train
-|String
-|Output
+==== enum class ETrainDockingState
+[cols="1,1"]
+|===
+|*enum*|*Name*
+! TDS_None | None
+! TDS_ReadyToDock | Ready To Dock
+! TDS_Docked | Docked
+|===
 
-|ClassName
-|UE Class Name
-|String
-|Output
-
-|location/x
-|X Location of Train
-|Float
-|Output
-
-|location/y
-|Y Location of Train
-|Float
-|Output
-
-|location/z
-|Z Location of Train
-|Float
-|Output
-
-|location/Rotation
-|Compass Heading of Train
-|Float
-|Output
-
-|ForwardSpeed
-|Speed in km/h
-|Float
-|Output
-
-|TotalMass
-|Total mass of Train
-|Float
-|Output
-
-|PayloadMass
-|Payload Mass for Train
-|Float
-|Output
-
-|MaxPayloadMass
-|Maximium Payload Mass for Train
-|Float
-|Output
-
-|TrainLength
-|Number of FGRailroadVehicles in train
-|Integar
-|Output
-
-|TrainConsist/Name
-|Name of the FGRailroadVehicle
-|String
-|Output
-
-|TrainConsist/ClassName
-|UE Class Name
-|String
-|Output
-
-|TrainConsist/TotalMass
-|Total mass of FGRailroadVehicle
-|Float
-|Output
-
-|TrainConsist/PayloadMass
-|Payload Mass for FGRailroadVehicle
-|Float
-|Output
-
-|TrainConsist/MaxPayloadMass
-|Maximium Payload Mass for FGRailroadVehicle
-|Float
-|Output
-
-|PowerConsumed
-|Power used by train
-|Float
-|Output
-
-|TrainStation
-|Current or Next Stop for Train
-|String
-|Output
-
-|ThrottlePercent
-|Train's Throttle Setting
-|Float
-|Output
-
-|Derailed
-|Is Derailed
-|Boolean
-|Output
-
-|PendingDerail
-|Has Pending Collision (Name taken from the Object in Unreal)
-|Boolean
-|Output
-
-|Status
-|Status of Train
-|String
-|Output
-
-|TimeTable/StationName
-|Name of Stations in Train's Timetable
-|String
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
+==== enum class EPathDiagnosticsError
+[cols="1,1"]
+|===
+|*enum*|*Name*
+! PDE_NoError | No Error
+! PDE_StationUnreachable | Station Unreachable
+! PDE_StationUnreachableWithSignals| Station Unreachable With Signals
+|===
 
 |===
 
@@ -154,51 +85,140 @@ Example:
 [source,json]
 -----------------
 [
- [
-	{
-		"Name": "Caterium Choo",
-		"location":
-		{
-			"x": -40870.9765625,
-			"y": -134480.453125,
-			"z": 8189.84228515625,
-			"rotation": 280
-		},
-		"ForwardSpeed": 14.194183349609375,
-		"TotalMass": 300000,
-		"PayloadMass": 0,
-		"PowerConsumed": 25,
-		"TrainStation": "Quickwire Central",
-		"ThrottlePercent": 0,
-		"Derailed": false,
-		"PendingDerail": false,
-		"Status": "Self-Driving",
-		"TimeTable": [
-			{
-				"StationName": "Caterium Ore"
-			},
-			{
-				"StationName": "Quickwire Central"
-			}
-		],
-		"features":
-		{
-			"properties":
-			{
-				"name": "Caterium Choo",
-				"type": "Train"
-			},
-			"geometry":
-			{
-				"coordinates":
-				{
-					"X": -40870.9765625,
-					"Y": -134480.453125,
-					"Z": 8189.84228515625
-				},
-				"type": "Point"
-			}
-		}
-	}
+{
+    "ID": "BP_Train_C_2147339037",
+    "Name": "Train",
+    "ClassName": "BP_Train_C",
+    "location": {
+      "x": -92400,
+      "y": 231600.211763382,
+      "z": 21100.01171875,
+      "rotation": 0
+    },
+    "TotalMass": 330000,
+    "PayloadMass": 0,
+    "MaxPayloadMass": 70000,
+    "ForwardSpeed": 0,
+    "ThrottlePercent": 0,
+    "TrainStation": "No Station",
+    "Derailed": false,
+    "PendingDerail": false,
+    "Status": "Self-Driving",
+    "TimeTable": [],
+    "TimeTableIndex": 0,
+    "SelfDriving": "SDLE_NoError",
+    "Docking": "TDS_Docked",
+    "Path": "PDE_NoError",
+    "Vehicles": [
+      {
+        "Name": "Electric Locomotive",
+        "ClassName": "BP_Locomotive_C",
+        "TotalMass": 300000,
+        "PayloadMass": 0,
+        "MaxPayloadMass": 0,
+        "Inventory": []
+      },
+      {
+        "Name": "Freight Car",
+        "ClassName": "BP_FreightWagon_C",
+        "TotalMass": 30000,
+        "PayloadMass": 0,
+        "MaxPayloadMass": 70000,
+        "Inventory": []
+      }
+    ],
+    "features": {
+      "properties": {
+        "name": "Train",
+        "type": "Train"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "type": "Point"
+      }
+    },
+    "PowerInfo": {
+      "CircuitGroupID": -1,
+      "CircuitID": -1,
+      "FuseTriggered": false,
+      "PowerConsumed": 0,
+      "MaxPowerConsumed": 0
+    }
+  },
+  {
+    "ID": "BP_Train_C_2147308631",
+    "Name": "Auto Movable Train",
+    "ClassName": "BP_Train_C",
+    "location": {
+      "x": -97000,
+      "y": 240073.151762784,
+      "z": 21100.0035679349,
+      "rotation": 0
+    },
+    "TotalMass": 330000,
+    "PayloadMass": 0,
+    "MaxPayloadMass": 70000,
+    "ForwardSpeed": 14.3403563232422,
+    "ThrottlePercent": 52.4868354797363,
+    "TrainStation": "Unloading",
+    "Derailed": false,
+    "PendingDerail": false,
+    "Status": "Self-Driving",
+    "TimeTable": [
+      {
+        "StationName": "Unloading"
+      },
+      {
+        "StationName": "Loading"
+      }
+    ],
+    "TimeTableIndex": 0,
+    "SelfDriving": "SDLE_NoError",
+    "Docking": "TDS_None",
+    "Path": "PDE_NoError",
+    "Vehicles": [
+      {
+        "Name": "Electric Locomotive",
+        "ClassName": "BP_Locomotive_C",
+        "TotalMass": 300000,
+        "PayloadMass": 0,
+        "MaxPayloadMass": 0,
+        "Inventory": []
+      },
+      {
+        "Name": "Freight Car",
+        "ClassName": "BP_FreightWagon_C",
+        "TotalMass": 30000,
+        "PayloadMass": 0,
+        "MaxPayloadMass": 70000,
+        "Inventory": []
+      }
+    ],
+    "features": {
+      "properties": {
+        "name": "Auto Movable Train",
+        "type": "Train"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "type": "Point"
+      }
+    },
+    "PowerInfo": {
+      "CircuitGroupID": 16,
+      "CircuitID": 9,
+      "FuseTriggered": false,
+      "PowerConsumed": 69.3305740356445,
+      "MaxPowerConsumed": 110
+    }
+  }
 ]
 -----------------
