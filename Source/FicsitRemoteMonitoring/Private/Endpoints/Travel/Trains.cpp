@@ -130,6 +130,8 @@ void UTrains::getTrains(UObject* WorldContext, FRequestData RequestData, TArray<
 			case ETrainStatus::TS_Derailed:			FormString = "Derailed";
 		};
 
+		FTrainAtcData AutoTrainControl = Train->mAtcData;
+		
 		JTrain->Values.Add("Name", MakeShared<FJsonValueString>(Train->GetTrainName().ToString()));
 		JTrain->Values.Add("ClassName", MakeShared<FJsonValueString>(Train->GetClass()->GetName()));
 		JTrain->Values.Add("location", MakeShared<FJsonValueObject>(TrainLocation));
@@ -144,6 +146,9 @@ void UTrains::getTrains(UObject* WorldContext, FRequestData RequestData, TArray<
 		JTrain->Values.Add("Status", MakeShared<FJsonValueString>(FormString));
 		JTrain->Values.Add("TimeTable", MakeShared<FJsonValueArray>(JTimetableArray));
 		JTrain->Values.Add("TimeTableIndex", MakeShared<FJsonValueNumber>(StopIndex));
+		JTrain->Values.Add("SelfDriving", MakeShared<FJsonValueString>(StaticEnum<ESelfDrivingLocomotiveError>()->GetNameStringByValue((int64)Train->mSelfDrivingError)));
+		JTrain->Values.Add("Docking", MakeShared<FJsonValueString>(StaticEnum<ETrainDockingState>()->GetNameStringByValue((int64)Train->GetDockingState())));
+		JTrain->Values.Add("Path", MakeShared<FJsonValueString>(StaticEnum<EPathDiagnosticsError>()->GetNameStringByValue((int64)AutoTrainControl.PathDiagnosticsError)));
 		JTrain->Values.Add("Vehicles", MakeShared<FJsonValueArray>(JRailcarsArray));
 		JTrain->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(Train, Train->GetTrainName().ToString(), "Train")));
 		JTrain->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(getPowerConsumptionJSON(PowerInfo)));
