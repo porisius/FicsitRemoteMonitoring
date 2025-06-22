@@ -72,12 +72,16 @@
 | Vehicles | xref:json/Read/getVehiclePaths.adoc[getVehiclePaths] | No | Gets a list of all vehicle paths.
 | Vehicles | xref:json/Read/getVehicles.adoc[getVehicles] | No | Gets a list of all vehicles (tractors, trucks, trains, factory carts, etc.).
 
-| World | xref:json/Read/getDropPod.adoc[getDropPod] | Yes | Gets a list of all drop pods.
-| World | xref:json/Read/getPowerSlug.adoc[getPowerSlug] | Yes | Gets a list of all streamed power slugs.
-| World | xref:json/Read/getSchematics.adoc[getSchematics] | Yes | Gets a list of all schematics.
-| World | xref:json/Read/getRecipes.adoc[getRecipes] | Yes | Gets a list of all recipes.
+| World | xref:json/Read/getCreatures.adoc[getCreatures] | No | Gets a list of all creatures.
 | World | xref:json/Read/getDoggo.adoc[getDoggo] | Yes | Gets a list of all tamed doggos.
+| World | xref:json/Read/getDropPod.adoc[getDropPod] | Yes | Gets a list of all drop pods.
+| World | xref:json/Read/getMapMarkers.adoc[getMapMarkers] | No | Gets a list of all map markers.
+| World | xref:json/Read/getPowerSlug.adoc[getPowerSlug] | Yes | Gets a list of all streamed power slugs.
 | World | xref:json/Read/getProdStats.adoc[getProdStats] | No | Gets a list of the link:https://ficsit.app/mod/3tsvcG3A6gqKX1[Production Stats] Mod by Andre Aquila.
+| World | xref:json/Read/getRecipes.adoc[getRecipes] | Yes | Gets a list of all recipes.
+| World | xref:json/Read/getSchematics.adoc[getSchematics] | Yes | Gets a list of all schematics.
+| World | xref:json/Read/getTapes.adoc[getTapes] | No | Get information about the Song Tapes.
+| World | xref:json/Read/getUnlockItems.adoc[getUnlockItems] | Yes | Gets a list of unlockable actors that unlock song tapes, player helmets and customizations.
 | World | xref:json/Read/getUObjectCount.adoc[getUObjectCount] | No | Get the current UObject count and capacity.
 
 | Power | xref:json/Read/getPower.adoc[getPower] | No | Gets a list of all power circuits.
