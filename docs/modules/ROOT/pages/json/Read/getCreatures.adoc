@@ -19,7 +19,7 @@ include::../_responseBody.adoc[]
 include::../Models/_location.adoc[]
 
 | Spawn Distance | Float | Creature's Spawn Distance
-| State | String | Creature's Spawn Distance +
+| State | String | Creature's State +
 - `RT_Default`: Default +
 - `CS_Roam`: Roaming +
 - `CS_Alert`: Alerted +

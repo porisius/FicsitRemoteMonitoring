@@ -1,8 +1,12 @@
-= Resource Sink List
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
-:keywords: getSinkList
 
-API Endpoint: getSinkList +
+= Resource Sink List
+
+include::../_useGameThread.adoc[]
+
+Gets a list of all sinkable items.
+
+== URL
 
 `GET http://localhost:8080/getSinkList`
 
@@ -15,7 +19,7 @@ include::../_responseBody.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [

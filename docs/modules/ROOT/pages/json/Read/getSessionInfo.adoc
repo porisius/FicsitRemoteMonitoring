@@ -1,7 +1,13 @@
 ﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= getSessionInfo
+= Get Session Info
+
+include::../_useGameThread.adoc[]
+
+Gets information about the current session.
+
+== URL
 
 `GET http://localhost:8080/getSessionInfo`
 

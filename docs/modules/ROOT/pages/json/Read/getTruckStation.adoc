@@ -1,6 +1,18 @@
-= Vehicle Station Stats
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Truck Station
+
+Gets a list of all truck stations.
+
+== Similar
+
+[cols="1,1,1,2"]
+|===
+|Resource|Endpoint|Game Thread|Description
+| Stations | xref:json/Read/getDroneStation.adoc[getDroneStation] | No | Gets a list of all drone stations.
+| Stations | xref:json/Read/getTrainStation.adoc[getTrainStation] | No | Gets a list of all train stations.
+|===
 
 == URL
 
@@ -45,7 +57,7 @@ include::../Models/_features.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [

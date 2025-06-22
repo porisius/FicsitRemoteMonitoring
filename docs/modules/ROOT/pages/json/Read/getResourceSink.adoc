@@ -1,8 +1,13 @@
-= Resource Sink Stats
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-`GET http://localhost:8080/getResourceSink`
+= Get Resource/Exploration Sink
+
+Gets a statistic about the resource/exploration sink.
+
+== URL
+
+`GET http://localhost:8080/getResourceSink` +
 `GET http://localhost:8080/getExplorationSink`
 
 include::../_responseBody.adoc[]
@@ -11,15 +16,15 @@ include::../_responseBody.adoc[]
 | NumCoupon | Integer | Number of Coupons in the Sink
 | Percent | Float | Percent of Progress towards next coupon
 
-| GraphPoints | Object | Graph Points Object
+| GraphPoints | Object[] | Graph Points Object
 | {depth}  Index | Integer | Graph Index Point
 | {depth}  Value | Integer | Value/Min of Points Earned
 
-| PointsToCoupon | Integer64 | Points Until Next Coupons
-| TotalPoints | Integer64 | Total Number of Points Accrued
+| PointsToCoupon | Integer | Points Until Next Coupons
+| TotalPoints | Integer | Total Number of Points Accrued
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [

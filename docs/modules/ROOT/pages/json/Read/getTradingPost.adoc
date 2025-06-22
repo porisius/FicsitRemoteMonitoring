@@ -34,7 +34,7 @@ include::../Models/_boundingBox.adoc[]
 // features fields
 include::../Models/_features.adoc[]
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
