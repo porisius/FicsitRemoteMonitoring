@@ -21,7 +21,7 @@ include::../_requestBody.adoc[]
 
 | ID | String | Yes | ID of the (Priority) Power Switch
 | name | String | No | Switch Name
-| priority | Integar | No | Priority Group (0-8). +
+| priority | Integer | No | Priority Group (0-8). +
 *It only works for Priority Power Switches.*
 | status | Boolean | No | Switch Status (true = Enabled, false = Disabled).
 |===
@@ -30,7 +30,7 @@ include::../_responseBody.adoc[]
 
 | ID | String | ID of the (Priority) Power Switch
 | Name | String | Updated Name.
-| Priority | Integar | Updated Priority.
+| Priority | Integer | Updated Priority.
 | Status | Boolean | Updated Status (true = Enabled, false = Disabled).
 |===
 

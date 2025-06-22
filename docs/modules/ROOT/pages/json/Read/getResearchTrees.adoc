@@ -19,8 +19,8 @@ include::../_responseBody.adoc[]
 | {depth}  Cost | Object | Train Loading/Unloading Platforms and Stations Inventory
 | {depth}    Name | String | Name of the item.
 | {depth}    ClassName | String | Class Name of the item.
-| {depth}    Amount | Integar | Amount of the item.
-| {depth}    MaxAmount | Integar | Stack size of the item.
+| {depth}    Amount | Integer | Amount of the item.
+| {depth}    MaxAmount | Integer | Stack size of the item.
 
 | {depth}  UnhiddenBy | Object | Research Node(s) that reveal this Research Node Coordinates Object
 | {depth}    x | Integer | x Coordinate in M.A.M. of research node
