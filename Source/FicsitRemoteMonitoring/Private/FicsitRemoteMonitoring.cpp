@@ -586,6 +586,10 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
     	ContentType = "image/avif";
     	IsBinary = true;
     }
+    else if (Extension == "woff2") {
+    	ContentType = "font/woff2";
+    	IsBinary = true;
+    }
     else {
         ContentType = "text/plain";  // Default to plain text for unknown files
     }
