@@ -131,4 +131,4 @@
 
 *** World
 **** xref:json/Write/createPing.adoc[createPing]
-**** xref:json/Write/setModSetting.adoc[createPing]
+**** xref:json/Write/setModSetting.adoc[setModSetting]
