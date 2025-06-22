@@ -1,18 +1,21 @@
-= Train Stats 
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Trains 
+
+== URL
 
 `GET http://localhost:8080/getTrains`
 
 include::../_responseBody.adoc[]
 
-| ID | String | Unique ID of the Factory Building.
-| Name | String | Name of the Factory Building.
-| ClassName | String | ClassName of the Factory Building.
+| ID | String | Unique ID of the Train.
+| Name | String | Name of the Train.
+| ClassName | String | ClassName of the Train.
 
 // location fields
 {set:key-name:location}
-{set:key-description:Location details of the HUB.}
+{set:key-description:Location details of the Train.}
 include::../Models/_location.adoc[]
 
 | TotalMass | Float | Total mass of Train
@@ -22,14 +25,14 @@ include::../Models/_location.adoc[]
 | ThrottlePercent | Float | Train's Throttle Setting
 | TrainStation | String | Current or Next Stop for Train
 | Derailed | Boolean | Is Derailed
-| PendingDerail | Boolean | |Has Pending Collision (Name taken from the Object in Unreal)
+| PendingDerail | Boolean | Has Pending Collision (Name taken from the Object in Unreal)
 | Status | String | Status of Train
 
-| TimeTable | Object | JSON Object for Train Consists of for Attached Train Cars/Engines
+| TimeTable | Object[] | JSON Object for Train Consists of for Attached Train Cars/Engines
 | {depth}  StationName | String | Name of the Train Station in Timetable
 
 | TimeTableIndex | Integer | Next Stop Index of TimeTable Object
-| SelfDriving | enum String | Error codes for the self driving locomotives +
+| SelfDriving | String | Error codes for the self driving locomotives +
 - `SDLE_NoError`: No Error +
 - `SDLE_NoPower`: No Power +
 - `SDLE_NoTimeTable`: No Time Table +
@@ -40,12 +43,12 @@ include::../Models/_location.adoc[]
 - `SDLE_StationUnreachableWithSignals`: Station Unreachable With Signals +
 - `SDLE_LongWaitAtSignal`: Long Wait At Signal
 
-| Docking | enum String | Docked state (See below ETrainDockingState) +
+| Docking | String | Docked state (See below ETrainDockingState) +
 - `TDS_None`: None +
 - `TDS_ReadyToDock`: Ready To Dock +
 - `TDS_Docked`: Docked
 
-| Path | enum String | Error codes for the extended path finding diagnostics +
+| Path | String | Error codes for the extended path finding diagnostics +
 - `PDE_NoError`: No Error +
 - `PDE_StationUnreachable`: Station Unreachable +
 - `PDE_StationUnreachableWithSignals`: Station Unreachable With Signals
@@ -57,11 +60,11 @@ include::../Models/_location.adoc[]
 | {depth}  PayloadMass | Float | Payload Mass for FGRailroadVehicle
 | {depth}  MaxPayloadMass | Float | Maximium Payload Mass for FGRailroadVehicle
 
-// features fields
-include::../Models/_features.adoc[]
-
 // power info fields
 include::../Models/_powerInfo.adoc[]
+
+// features fields
+include::../Models/_features.adoc[]
 
 |===
 
@@ -69,7 +72,7 @@ Example:
 [source,json]
 -----------------
 [
-{
+  {
     "ID": "BP_Train_C_2147339037",
     "Name": "Train",
     "ClassName": "BP_Train_C",
