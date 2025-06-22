@@ -1,9 +1,11 @@
 ﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= Portal Information
+= Get Portal
 
-:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+Gets a list of all portals.
+
+== URL
 
 `GET http://localhost:8080/getPortal`
 
@@ -24,9 +26,6 @@ include::../Models/_colorSlot.adoc[]
 // bounding box
 {set:key-name:BoundingBox}
 include::../Models/_boundingBox.adoc[]
-
-
-
 
 include::../Models/_features.adoc[]
 

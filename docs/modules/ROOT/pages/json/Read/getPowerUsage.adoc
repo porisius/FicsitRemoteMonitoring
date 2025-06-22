@@ -1,7 +1,11 @@
 ﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= getPowerUsage
+= Get Power Usage
+
+Gets a list of buildings with power usage.
+
+== URL
 
 `GET http://localhost:8080/getPowerUsage`
 
@@ -15,6 +19,7 @@ include::../_responseBody.adoc[]
 {set:key-name:location}
 {set:key-description:Location details of the Factory Building.}
 include::../Models/_location.adoc[]
+
 // power info fields
 include::../Models/_powerInfo.adoc[]
 

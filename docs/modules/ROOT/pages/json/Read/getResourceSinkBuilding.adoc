@@ -1,7 +1,11 @@
 ﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= getResourceSinkBuilding
+= Get Resource Sink Building
+
+Gets a list of all resource sinks.
+
+== URL
 
 `GET http://localhost:8080/getResourceSinkBuilding`
 
