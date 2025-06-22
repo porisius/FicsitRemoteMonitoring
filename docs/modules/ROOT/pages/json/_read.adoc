@@ -50,8 +50,8 @@
 | Resource Nodes | xref:json/Read/getResourceNode.adoc[getResourceGeyser] | Yes | Gets a list of all geysers.
 | Resource Nodes | xref:json/Read/getResourceNode.adoc[getResourceWell] | Yes | Gets a list of all resource ore nodes, geysers and fracking satellites,
 
-| Session | xref:json/Read/getSessionInfo.adoc[getSessionInfo] | Yes | Gets statistics about the current session.
-| Session | xref:json/Read/getSessionInfo.adoc[getResearchTrees] | Yes | Gets a list of all MAM research trees.
+| Session | xref:json/Read/getSessionInfo.adoc[getSessionInfo] | Yes | Gets information about the current session.
+| Session | xref:json/Read/getResearchTrees.adoc[getResearchTrees] | Yes | Gets a list of all MAM research trees.
 | Session | xref:json/Read/getPlayer.adoc[getPlayer] | Yes | Gets a list of all players.
 | Session | xref:json/Read/getModList.adoc[getModList] | No | Gets a list of all installed mods.
 
