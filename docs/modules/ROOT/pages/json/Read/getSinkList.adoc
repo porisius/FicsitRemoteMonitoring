@@ -1,6 +1,6 @@
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-= Resource Sink List
+= Get Sink List
 
 include::../_useGameThread.adoc[]
 
