@@ -1,11 +1,16 @@
-= Production Stats by Andre Aquila of Aquila Industrial
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-Production Stats by Andre Aquila of Aquila Industrial +
-Production Stats Mod: https://ficsit.app/mod/3tsvcG3A6gqKX1
+= Get Prod Stats
 
-Note: If the item is not part of factory's/extractor's configuration (to be produced/consumed/extracted), it will not be displayed.
+Gets a list of the link:https://ficsit.app/mod/3tsvcG3A6gqKX1[Production Stats] Mod by Andre Aquila.
+
+[NOTE]
+====
+If the item is not part of factory's/extractor's configuration (to be produced/consumed/extracted), it will not be displayed.
+====
+
+== URL
 
 `GET http://localhost:8080/getProdStats`
 
@@ -24,7 +29,7 @@ include::../_responseBody.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [

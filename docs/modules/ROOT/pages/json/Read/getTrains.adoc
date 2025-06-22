@@ -68,7 +68,7 @@ include::../Models/_features.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [

@@ -1,13 +1,16 @@
-= Vehicles Stats
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
 
-API Endpoint: getVehicles +
-Vehicles Stats +
+= Get Vehicles
 
-getExplorer only retrieves Explorers +
-getTractor only retrieves Tractors +
-getTruck only retrieves Trucks +
+Gets a list of all vehicles (tractors, trucks, trains, factory carts, etc.).
+
+`getExplorer` only retrieves Explorers +
+`getTractor` only retrieves Tractors +
+`getTruck` only retrieves Trucks +
+`getFactoryCart` only retrieves Factory Carts
+
+== URL
 
 `GET http://localhost:8080/getVehicles`
 
@@ -36,7 +39,7 @@ include::../Models/_features.adoc[]
 
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [

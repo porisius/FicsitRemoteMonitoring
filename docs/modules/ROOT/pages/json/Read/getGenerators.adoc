@@ -1,6 +1,7 @@
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-= Get Power Generator Information
+= Get Power Generators
+
 Get a list of all power generating buildings.
 
 getBiomassGenerator only retrieves Biomass Generators +
@@ -13,13 +14,13 @@ getGeothermalGenerator only retrieves Geothermal Generator +
 
 include::../_responseBody.adoc[]
 
-| ID | String | Unique ID of the Factory Building.
-| Name | String | Name of the Factory Building.
-| ClassName | String | ClassName of the Factory Building.
+| ID | String | Unique ID of the Generator.
+| Name | String | Name of the Generator.
+| ClassName | String | ClassName of the Generator.
 
 // location fields
 {set:key-name:location}
-{set:key-description:Location details of the Factory Building.}
+{set:key-description:Location details of the Generator.}
 include::../Models/_location.adoc[]
 
 | CircuitID | Integer | Connected Circuit Number
@@ -66,7 +67,7 @@ include::../Models/_boundingBox.adoc[]
 include::../Models/_features.adoc[]
 |===
 
-Example:
+== Example Response
 [source,json]
 -----------------
 [
