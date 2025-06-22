@@ -2,11 +2,11 @@
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= setModSetting
+= Set Mod Setting
 
 include::../_requiresAuthentication.adoc[]
 
-Changes Fiscit Remote Monitoring Mod General Settings
+Changes Fiscit Remote Monitoring Mod General Settings.
 
 == URL
 
@@ -14,16 +14,20 @@ Changes Fiscit Remote Monitoring Mod General Settings
 
 include::../_requestBody.adoc[]
 
-| <Mod Session Setting Name> | <Data Type for Setting>
+| <Mod Setting Name> | <Data Type for Setting> | True | New Value for the given setting.
+|===
 
-Current Supported Settings
-| SplineSampleDistance | Float
+== Supported Settings
 
+[cols="1,1,3"]
+|===
+| *Setting Name* | *Type* | *Description*
+| SplineSampleDistance | Float | Determines the accuracy of `SplineData` in Endpoints.
 |===
 
 include::../_responseBody.adoc[]
 
-| IsSent | Boolean | If the message passed all checks and was sent.
+| IsSent | Boolean | Mod setting has been applied.
 |===
 
 == Example Request
