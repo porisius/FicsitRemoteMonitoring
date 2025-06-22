@@ -29,9 +29,9 @@ include::../Models/_location.adoc[]
 
 // PriorityMerger (if applicable)
 | PriorityMerger | Object[] | Shows priority of input from 0-2, with 0 being the lowest priority and 2 being the highest
-| {depth}  Center | Integar | Center Input of Priority Merger
-| {depth}  Right | Integar | Right Input of Priority Merger
-| {depth}  Left | Integar | Left Input of Priority Merger
+| {depth}  Center | Integer | Center Input of Priority Merger
+| {depth}  Right | Integer | Right Input of Priority Merger
+| {depth}  Left | Integer | Left Input of Priority Merger
 
 // color slot/swatch
 {set:key-name:ColorSlot}
