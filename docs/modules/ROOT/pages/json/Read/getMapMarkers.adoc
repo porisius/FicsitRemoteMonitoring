@@ -15,12 +15,38 @@ include::../_responseBody.adoc[]
 | ID | String | Unique ID of the Map Marker.
 | Name | String | Name of the Map Marker.
 | Category | String | Category Name (used for custom map markers).
-| MapMarkerType | String | Enum Value of ERepresentationType (see below)
-| IconID | Integer | Icon ID used be Satisfactory
+| MapMarkerType | String | Enum Value of ERepresentationType +
+- `RT_Default`: Default +
+- `RT_Beacon`: Beacon +
+- `RT_Crate`: Crate +
+- `RT_Hub`: Hub +
+- `RT_Ping`: Ping +
+- `RT_Player`: Player +
+- `RT_RadarTower`: Radar Tower +
+- `RT_Resource`: Resource +
+- `RT_SpaceElevator`: Space Elevator +
+- `RT_StartingPod`: Starting Pod +
+- `RT_Train`: Train +
+- `RT_TrainStation`: Train Station +
+- `RT_Vehicle`: Vehicle +
+- `RT_VehicleDockingStation`: Vehicle Docking Station +
+- `RT_DronePort`: DronePort +
+- `RT_Drone`: Drone +
+- `RT_MapMarker`: Map Marker +
+- `RT_Stamp`: Stamp +
+- `RT_Portal`: Portal +
+- `RT_DeathCrate`: Death Crate +
+- `RT_DismantleCrate`: Dismantle Crate
+
+| IconID | Integer | Icon ID used in Satisfactory
 | ColorSlot | String | Marker Color in Hex
-| Scale | Integer | Circuit ID on connection A.
-| Secondary | Integer | Circuit ID on connection B.
-| CompassViewDistance | String | Enum Value of ECompassViewDistance (see below)
+| Scale | Integer | Map Marker Scale.
+| CompassViewDistance | String | Enum Value of ECompassViewDistance +
+- `CVD_Off`: Off +
+- `CVD_Near`: Near +
+- `CVD_Mid`: Mid +
+- `CVD_Far`: Far +
+- `CVD_Always`: Always
 
 // location
 {set:key-name:location}
@@ -28,45 +54,6 @@ include::../_responseBody.adoc[]
 include::../Models/_location.adoc[]
 
 |===
-
-==== enum class ERepresentationType
-[cols="1,1"]
-|===
-|*enum*|*Name*
-|	RT_Default | Default
-|	RT_Beacon | Beacon
-|	RT_Crate | Crate
-|	RT_Hub | Hub
-|	RT_Ping | Ping
-|	RT_Player | Player
-|	RT_RadarTower | RadarTower
-|	RT_Resource | Resource
-|	RT_SpaceElevator | SpaceElevator
-|	RT_StartingPod | StartingPod
-|	RT_Train | Train
-|	RT_TrainStation | TrainStation
-|	RT_Vehicle | Vehicle
-|	RT_VehicleDockingStation | VehicleDockingStation
-|	RT_DronePort | DronePort
-|	RT_Drone | Drone
-|	RT_MapMarker | MapMarker
-|	RT_Stamp | Stamp
-|	RT_Portal | Portal
-|	RT_DeathCrate | Death Crate
-|	RT_DismantleCrate | Dismantle Crate
-|===
-
-==== enum class ECompassViewDistance
-[cols="1,1"]
-|===
-|*enum*|*Name*
-|	CVD_Off | Off
-|	CVD_Near | Near
-|	CVD_Mid | Mid
-|	CVD_Far | Far
-|	CVD_Always | Always
-|===
-
 
 == Example Response
 [source,json]

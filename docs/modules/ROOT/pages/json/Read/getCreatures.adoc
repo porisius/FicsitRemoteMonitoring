@@ -19,7 +19,13 @@ include::../_responseBody.adoc[]
 include::../Models/_location.adoc[]
 
 | Spawn Distance | Float | Creature's Spawn Distance
-| State | enum String | Creature's Spawn Distance (See below ECreatureState)
+| State | enum String | Creature's Spawn Distance +
+- `RT_Default`: Default +
+- `CS_Roam`: Roaming +
+- `CS_Alert`: Alerted +
+- `CS_Fight`: In Combat +
+- `CS_Flee`: Fleeing +
+- `CS_Investigate`: Investigating
 
 | Roaming | Object | Creature Roaming Object
 | {depth}  MinRoaming | Float | Max Roaming Radius
@@ -27,18 +33,6 @@ include::../Models/_location.adoc[]
 
 // features
 include::../Models/_features.adoc[]
-
-==== enum class ECreatureState
-[cols="1,1"]
-|===
-|*enum*|*Name*
-|	RT_Default | Default
-|	CS_Roam | Roaming
-|	CS_Alert | Alerted
-|	CS_Fight | In Combat
-|	CS_Flee | Fleeing
-|	CS_Investigate | Investigating
-|===
 
 |===
 
