@@ -2,65 +2,25 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-API Endpoint: getProdStats +
 Production Stats by Andre Aquila of Aquila Industrial +
 Production Stats Mod: https://ficsit.app/mod/3tsvcG3A6gqKX1
 
-Note: If the item is not being produced or extracted, it will not be displayed.
+Note: If the item is not part of factory's/extractor's configuration (to be produced/consumed/extracted), it will not be displayed.
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+`GET http://localhost:8080/getProdStats`
 
-|Name
-|Name of the item mined/extracted/produced
-|String
-|Output
+include::../_responseBody.adoc[]
 
-|ClassName
-|UE Class Name
-|String
-|Output
-
-|ProdPerMin
-|Production/Consumption per minute (Format: P: Actual/Max /min - C: Actual/Max /min)
-|String
-|Output
-
-|ProdPercent
-|Efficiency percentage produced
-|Float
-|Output
-
-|ConsPercent
-|Efficiency percentage Consumed
-|Float
-|Output
-
-|CurrentProd
-|Current production
-|Float
-|Output
-
-|MaxProd
-|Maximum production based on machines
-|Float
-|Output
-
-|CurrentConsumed
-|Current consumption
-|Float
-|Output
-
-|MaxConsumed
-|Maximum consumption based on machines
-|Float
-|Output
-
-|Type
-|Denotes how item is transferred. Item on belt, or fluid/gas on pipe
-|String
-|Output
+| Name | String | Name of the Item.
+| ClassName | String | Class Name of the Item.
+| ProdPerMin | String | Production/Consumption per minute (Format: P: Actual/Max /min - C: Actual/Max /min)
+| ProdPercent | Float | Efficiency percentage produced
+| ConsPercent | Float | Efficiency percentage Consumed
+| CurrentProd | Float | Current production
+| MaxProd | Float | Maximum production based on machines
+| CurrentConsumed | Float | Current consumption
+| MaxConsumed | Float | Maximum consumption based on machines
+| Type | String | Denotes how item is transferred. Item on belt, or fluid/gas on pipe
 
 |===
 

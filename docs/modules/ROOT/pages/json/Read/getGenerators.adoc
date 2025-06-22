@@ -1,15 +1,15 @@
-= Power Generation Stats
-
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-API Endpoint: getGenerators +
-Power Generation Stats +
+= Get Power Generator Information
+Get a list of all power generating buildings.
 
 getBiomassGenerator only retrieves Biomass Generators +
 getCoalGenerator only retrieves Coal Generators +
 getFuelGenerator only retrieves Fuel Generators +
 getNuclearGenerator only retrieves Nuclear Power Plants +
 getGeothermalGenerator only retrieves Geothermal Generator +
+
+== URL
 
 include::../_responseBody.adoc[]
 

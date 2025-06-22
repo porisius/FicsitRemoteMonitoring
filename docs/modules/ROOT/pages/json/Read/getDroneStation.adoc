@@ -24,7 +24,7 @@ include::../Models/_colorSlot.adoc[]
 include::../Models/_boundingBox.adoc[]
 
 {set:key-name:location}
-{set:key-description:Location details of the Drone.}
+{set:key-description:Location details of the Drone Station.}
 include::../Models/_location.adoc[]
 
 | InputInventory | Object[] | List of items in the input inventory.

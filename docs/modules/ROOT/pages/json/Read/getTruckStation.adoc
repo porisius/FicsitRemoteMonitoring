@@ -2,131 +2,46 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-API Endpoint: getTruckStation +
+== URL
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+`GET http://localhost:8080/getTruckStation`
 
-|Name
-|Name of Vehicle Station
-|String
-|Output
+include::../_responseBody.adoc[]
 
-|ClassName
-|UE Class Name
-|String
-|Output
+| ID | String | Unique ID of the Truck Station.
+| Name | String | Name of the Truck Station.
+| ClassName | String | ClassName of the Truck Station.
 
-|location/x
-|X Location of Station
-|Float
-|Output
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
 
-|location/y
-|Y Location of Station
-|Float
-|Output
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
 
-|location/z
-|Z Location of Station
-|Float
-|Output
+{set:key-name:location}
+{set:key-description:Location details of the Truck Station.}
+include::../Models/_location.adoc[]
 
-|location/Rotation
-|Compass Heading of Station
-|Float
-|Output
+| DockVehicleCount | Integer | # of vehicles docked
+| LoadMode | String | Load/Unload Mode Set
+| TransferRate | Float | Rate of item stacks transferred
+| MaxTransferRate | Float | Combined Max Stacks/Sec for All Vehicles at station
+| StationStatus | String | Status of Station (Idle/Loading/Unloading)
+| FuelRate | Float | Amount of fuel used per vehicle
 
-|DockVehicleCount
-|# of vehicles docked
-|Integer
-|Output
+| Inventory | Object[] | List of items in the inventory.
+include::../Models/_inventoryItem.adoc[]
 
-|LoadMode
-|Load/Unload Mode Set
-|String
-|Output
+| FuelInventory | Object[] | List of items in the fuel inventory.
+include::../Models/_inventoryItem.adoc[]
 
-|TransferRate
-|Rate of item stacks transferred
-|Float
-|Output
+// power info fields
+include::../Models/_powerInfo.adoc[]
 
-|MaxTransferRate
-|Combined Max Stacks/Sec for All Vehicles at station
-|Float
-|Output
-
-|StationStatus
-|Status of Station (Idle/Loading/Unloading)
-|String
-|Output
-
-|FuelRate
-|Amount of fuel used per vehicle
-|String
-|Output
-
-|StationActivity
-|Transferring/Idle
-|String
-|Output
-
-|Storage/Name
-|Name
-|String
-|Output
-
-|Storage/ClassName
-|UE Class Name
-|String
-|Output
-
-|Storage/Amount
-|Amount of items
-|Integar
-|Output
-
-|Fuel/Name
-|Name
-|String
-|Output
-
-|Fuel/ClassName
-|UE Class Name
-|String
-|Output
-
-|Fuel/Amount
-|Amount of items
-|Integar
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
+// features
+include::../Models/_features.adoc[]
 
 |===
 
@@ -134,44 +49,75 @@ Example:
 [source,json]
 -----------------
 [
-   {
-      "ID": 0,
-      "Name": "Truck Station",
-      "ClassName": "Build_TruckStation_C_2147429525",
-      "location":
-      {
-         "x": -87597.640625,
-         "y": -120560.0078125,
-         "z": -977.898193359375,
-         "rotation": 270
+  {
+    "ID": "Build_TruckStation_C_2147108415",
+    "Name": "Truck Station",
+    "ClassName": "Build_TruckStation_C",
+    "location": {
+      "x": 137500,
+      "y": 222000,
+      "z": -4899.98885664623,
+      "rotation": 90
+    },
+    "BoundingBox": {
+      "min": {
+        "x": 136900,
+        "y": 220700,
+        "z": -4899.98885664623
       },
-      "DockVehicleCount": 0,
-      "LoadMode": "Loading",
-      "TransferRate": 0,
-      "MaxTransferRate": 0,
-      "StationStatus": 4,
-      "FuelRate": 0,
-      "StationActivity": "Idle",
-      "Storage": [],
-      "Inventory": [],
-      "features":
-      {
-         "properties":
-         {
-            "name": "Truck Station",
-            "type": "Truck Station"
-         },
-         "geometry":
-         {
-            "coordinates":
-            {
-               "X": -87597.640625,
-               "Y": -120560.0078125,
-               "Z": -977.898193359375
-            },
-            "type": "Point"
-         }
+      "max": {
+        "x": 138600,
+        "y": 222200,
+        "z": -3654.98885664623
       }
-   }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "DockVehicleCount": 0,
+    "LoadMode": "Idle",
+    "TransferRate": 0,
+    "MaxTransferRate": 0,
+    "StationStatus": "Error",
+    "FuelRate": 0,
+    "Inventory": [
+      {
+        "Name": "Encased Industrial Beam",
+        "ClassName": "Desc_SteelPlateReinforced_C",
+        "Amount": 54,
+        "MaxAmount": 100
+      }
+    ],
+    "FuelInventory": [
+      {
+        "Name": "Solid Biofuel",
+        "ClassName": "Desc_Biofuel_C",
+        "Amount": 171,
+        "MaxAmount": 200
+      }
+    ],
+    "features": {
+      "properties": {
+        "name": "Truck Station",
+        "type": "Truck Station"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": 137500,
+          "y": 222000,
+          "z": -4899.98885664623
+        },
+        "type": "Point"
+      }
+    },
+    "PowerInfo": {
+      "CircuitGroupID": -1,
+      "CircuitID": -1,
+      "FuseTriggered": false,
+      "PowerConsumed": 0,
+      "MaxPowerConsumed": 0
+    }
+  }
 ]
 -----------------

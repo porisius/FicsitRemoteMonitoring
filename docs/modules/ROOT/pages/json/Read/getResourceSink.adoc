@@ -2,42 +2,21 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-API Endpoint: getResourceSink / getExplorationSink +
+`GET http://localhost:8080/getResourceSink`
+`GET http://localhost:8080/getExplorationSink`
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+include::../_responseBody.adoc[]
 
-|Name
-|A.W.E.S.O.M.E.
-|String
-|Output
+| Name | String | A.W.E.S.O.M.E.
+| NumCoupon | Integer | Number of Coupons in the Sink
+| Percent | Float | Percent of Progress towards next coupon
 
-|NumCoupon
-|Number of Coupons in the Sink
-|Integer
-|Output
+| GraphPoints | Object | Graph Points Object
+| {depth}  Index | Integer | Graph Index Point
+| {depth}  Value | Integer | Value/Min of Points Earned
 
-|Percent
-|Percent of Progress towards next coupon
-|Float
-|Output
-
-|GraphPoints/Value
-|Value/Min of Points Earned
-|Integer
-|Output
-
-|PointsToCoupon
-|Points Until Next Coupons
-|Integer64
-|Output
-
-|TotalPoints
-|Total Number of Points Accrued
-|Integer64
-|Output
-
+| PointsToCoupon | Integer64 | Points Until Next Coupons
+| TotalPoints | Integer64 | Total Number of Points Accrued
 |===
 
 Example:

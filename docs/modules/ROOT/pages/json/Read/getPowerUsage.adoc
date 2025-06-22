@@ -3,7 +3,62 @@
 
 = getPowerUsage
 
-[WARNING]
-====
-This endpoint is new and not yet documented.
-====
+`GET http://localhost:8080/getPowerUsage`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Factory Building.
+| Name | String | Name of the Factory Building.
+| ClassName | String | ClassName of the Factory Building.
+
+// location fields
+{set:key-name:location}
+{set:key-description:Location details of the Factory Building.}
+include::../Models/_location.adoc[]
+// power info fields
+include::../Models/_powerInfo.adoc[]
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+ {
+    "ID": "Build_OilRefinery_C_2147345255",
+    "Name": "Refinery",
+    "ClassName": "Build_OilRefinery_C",
+    "location": {
+      "x": 151500,
+      "y": 214300,
+      "z": -7499.9814453125,
+      "rotation": 90
+    },
+    "PowerInfo": {
+      "CircuitGroupID": -1,
+      "CircuitID": -1,
+      "FuseTriggered": false,
+      "PowerConsumed": 0,
+      "MaxPowerConsumed": 0
+    }
+  },
+  {
+    "ID": "Build_OilRefinery_C_2147345106",
+    "Name": "Refinery",
+    "ClassName": "Build_OilRefinery_C",
+    "location": {
+      "x": 150500,
+      "y": 214300,
+      "z": -7499.9814453125,
+      "rotation": 90
+    },
+    "PowerInfo": {
+      "CircuitGroupID": -1,
+      "CircuitID": -1,
+      "FuseTriggered": false,
+      "PowerConsumed": 0,
+      "MaxPowerConsumed": 0
+    }
+  }
+]
+-----------------

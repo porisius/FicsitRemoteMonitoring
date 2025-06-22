@@ -1,9 +1,108 @@
 ﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= getPortal
+= Portal Information
 
-[WARNING]
-====
-This endpoint is new and not yet documented.
-====
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+
+`GET http://localhost:8080/getPortal`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Portal.
+| Name | String | Name of the Portal.
+| ClassName | String | ClassName of the Portal.
+
+{set:key-name:location}
+{set:key-description:Location details of the Portal.}
+include::../Models/_location.adoc[]
+
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
+
+
+
+include::../Models/_features.adoc[]
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "Build_Portal_C_2147455423",
+    "Name": "Main Portal",
+    "ClassName": "Build_Portal_C",
+    "location": {
+      "x": -65200,
+      "y": 240100,
+      "z": 21100,
+      "rotation": 90
+    },
+    "BoundingBox": {
+      "min": {
+        "x": -65600,
+        "y": 239700,
+        "z": 21100
+      },
+      "max": {
+        "x": -64800,
+        "y": 240500,
+        "z": 22300
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "C800BD00",
+      "SecondaryColor": "C800BD00"
+    },
+    "PowerInfo": {
+      "CircuitGroupID": -1,
+      "CircuitID": -1,
+      "FuseTriggered": false,
+      "PowerConsumed": 0,
+      "MaxPowerConsumed": 0
+    }
+  },
+  {
+    "ID": "Build_PortalSatellite_C_2147245145",
+    "Name": "Satellite Portal",
+    "ClassName": "Build_PortalSatellite_C",
+    "location": {
+      "x": -64700,
+      "y": 262000,
+      "z": 21100,
+      "rotation": 90
+    },
+    "BoundingBox": {
+      "min": {
+        "x": -65100,
+        "y": 261600,
+        "z": 21100
+      },
+      "max": {
+        "x": -64300,
+        "y": 262400,
+        "z": 22100
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "C800BD00",
+      "SecondaryColor": "C800BD00"
+    },
+    "PowerInfo": {
+      "CircuitGroupID": -1,
+      "CircuitID": -1,
+      "FuseTriggered": false,
+      "PowerConsumed": 0,
+      "MaxPowerConsumed": 0
+    }
+  }
+]
+-----------------

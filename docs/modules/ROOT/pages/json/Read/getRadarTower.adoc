@@ -2,86 +2,74 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-API Endpoint: getRadarTower +
+`GET http://localhost:8080/getRadarTower`
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+include::../_responseBody.adoc[]
 
-|Name
-|Tower Name
-|String
-|Output
+| ID | String | Unique ID of the Space Elevator.
+| Name | String | Name of the Space Elevator.
+| ClassName | String | ClassName of the Space Elevator.
 
-|ClassName
-|UE Class Name
-|String
-|Output
+{set:key-name:location}
+{set:key-description:Location details of the Space Elevator.}
+include::../Models/_location.adoc[]
 
-|location/x
-|X Location of Slug
-|Float
-|Output
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
 
-|location/y
-|Y Location of Slug
-|Float
-|Output
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
 
-|location/z
-|Z Location of Slug
-|Float
-|Output
+| RevealRadius | Integer | Radar Tower Scan Radius
+| RevealType | String | Reveal Type +
+- `FOWRT_None`: None +
+- `FOWRT_Static` : Static +
+- `FOWRT_StaticNoGradient`: Static No Gradient +
+- `FOWRT_Dynamic`: Dynamic
 
-|location/Rotation
-|Compass Heading of Slug
-|Float
-|Output
+| ScannedResourceNodes | Object | Scanned Resource Nodes Object
+| {depth}  ID | String | Unique ID of the Resource Node.
+| {depth}  Name | String | Name of the Resource Node.
+| {depth}  ClassName | String | Class Name of the Resource Node.
+| {depth}  Purity | String | Purity in a readable format: +
+`Impure` +
+`Normal` +
+`Pure`
+| {depth}  EnumPurity | String | Enum Purity Value: +
+`RP_Inpure`: Impure +
+`RP_Normal`: Normal +
+`RP_Pure`: Pure +
+`RP_MAX`
+| {depth}  ResourceForm | String | Resource Form of the Node. +
+`Unknown`: Resource form is unknown. +
+`Invalid`: Invalid resource form. +
+`Solid Core`: Solid resource form. +
+`Liquid Satellite`: TODO. +
+`Gas`: TODO. +
+`Heat`: TODO.
+| {depth}  NodeType | String | Type of the Node. +
+`Unknown` +
+`Geyser`: TODO. +
+`Fracking Core`: TODO. +
+`Fracking Satellite`: TODO. +
+`Node`: Normal resource node.
+| {depth}  Exploited | Boolean | Is the resource node occupied?
 
-|Fauna/Name
-|Fauna's Name
-|String
-|Output
+{set:key-name:Fauna}
+{set:key-description:Fauna Scanned.}
+include::../Models/_radarTower.adoc[]
 
-|Fauna/ClassName
-|UE Class Name
-|String
-|Output
+{set:key-name:Signal}
+{set:key-description:Signals Scanned.}
+include::../Models/_radarTower.adoc[]
 
-|Fauna/Remaining
-|Fauna Remaining
-|Integer
-|Output
+{set:key-name:Flora}
+{set:key-description:Flora Scanned.}
+include::../Models/_radarTower.adoc[]
 
-|Signal/Name
-|Name of Object scanned
-|String
-|Output
-
-|Signal/ClassName
-|UE Class Name
-|String
-|Output
-
-|Signal/Remaining
-|Signal Remaining
-|Integer
-|Output
-
-|Flora/Name
-|Flora's Name
-|String
-|Output
-
-|Flora/ClassName
-|UE Class Name
-|String
-|Output
-
-|Flora/Remaining
-|Flora Remaining
-|Integer
-|Output
+include::../Models/_features.adoc[]
 
 |===
 
@@ -89,134 +77,1085 @@ Example:
 [source,json]
 -----------------
 [
-	{
-		"Name": "Radar Tower",
-		"ClassName": "Build_RadarTower_C_2147374116",
-		"location":
-		{
-			"X": -64181.77734375,
-			"Y": -138709.890625,
-			"Z": 10639.4453125
-		},
-		"Fauna": [
-			{
-				"Name": "Small Desert Spitter",
-				"ClassName": "Desc_SpitterDesert_Small_C",
-				"Remaining": 1
-			},
-			{
-				"Name": "Fluffy-tailed Hog",
-				"ClassName": "Desc_HogBasic_C",
-				"Remaining": 1
-			},
-			{
-				"Name": "Non-flying Birb",
-				"ClassName": "Desc_NonflyingBird_C",
-				"Remaining": 1
-			},
-			{
-				"Name": "Alpha Forest Spitter",
-				"ClassName": "Desc_SpitterForest_Alpha_C",
-				"Remaining": 1
-			},
-			{
-				"Name": "Unknown File Error #6265616e",
-				"ClassName": "Desc_SpaceGiraffe_C",
-				"Remaining": 1
-			},
-			{
-				"Name": "Lizard Doggo",
-				"ClassName": "Desc_SpaceRabbit_C",
-				"Remaining": 1
-			},
-			{
-				"Name": "Small Forest Spitter",
-				"ClassName": "Desc_SpitterForest_Small_C",
-				"Remaining": 1
-			},
-			{
-				"Name": "Alpha Stinger",
-				"ClassName": "Desc_StingerAlpha_C",
-				"Remaining": 1
-			},
-			{
-				"Name": "Small Stinger",
-				"ClassName": "Desc_StingerSmall_C",
-				"Remaining": 1
-			},
-			{
-				"Name": "Small Aquatic Spitter",
-				"ClassName": "Desc_SpitterAquatic_Small_C",
-				"Remaining": 1
-			},
-			{
-				"Name": "Alpha Hog",
-				"ClassName": "Desc_HogAlpha_C",
-				"Remaining": 1
-			},
-			{
-				"Name": "Alpha Desert Spitter",
-				"ClassName": "Desc_SpitterDesert_Alpha_C",
-				"Remaining": 1
-			}
-		],
-		"Signal": [
-			{
-				"Name": "Somersloop WIP",
-				"ClassName": "Desc_WAT1_C",
-				"Remaining": 13
-			},
-			{
-				"Name": "Blue Power Slug",
-				"ClassName": "Desc_Crystal_C",
-				"Remaining": 59
-			},
-			{
-				"Name": "Mercer Sphere WIP",
-				"ClassName": "Desc_WAT2_C",
-				"Remaining": 10
-			},
-			{
-				"Name": "Hard Drive",
-				"ClassName": "Desc_HardDrive_C",
-				"Remaining": 1
-			}
-		],
-		"Flora": [
-			{
-				"Name": "Berry Bush Plant",
-				"ClassName": "Desc_BerryBush_C",
-				"Remaining": 1
-			},
-			{
-				"Name": "Nut Bush Plant",
-				"ClassName": "Desc_NutBush_C",
-				"Remaining": 1
-			},
-			{
-				"Name": "Bacon Agaric",
-				"ClassName": "Desc_Shroom_C",
-				"Remaining": 1
-			}
-		],
-		"features":
-		{
-			"properties":
-			{
-				"name": "Radar Tower",
-				"type": "Radar Tower"
-			},
-			"geometry":
-			{
-				"coordinates":
-				{
-					"X": -64181.77734375,
-					"Y": -138709.890625,
-					"Z": 10639.4453125
-				},
-				"type": "Point"
-			}
-		}
-	}
+  {
+    "ID": "Build_RadarTower_C_2147451028",
+    "Name": "Radar Tower",
+    "ClassName": "Build_RadarTower_C",
+    "location": {
+      "x": -78600,
+      "y": 239600,
+      "z": 21100.0078125,
+      "rotation": 90
+    },
+    "BoundingBox": {
+      "min": {
+        "x": -79100,
+        "y": 239100,
+        "z": 21100.0078125
+      },
+      "max": {
+        "x": -78100,
+        "y": 240100,
+        "z": 32900.0078125
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "C800BD00",
+      "SecondaryColor": "C800BD00"
+    },
+    "RevealRadius": 100000,
+    "RevealType": "FOWRT_None",
+    "ScannedResourceNodes": [
+      {
+        "ID": "BP_ResourceNode126_6409",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Pure",
+        "EnumPurity": "RP_Pure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -96100.7109375,
+          "y": 163752.859375,
+          "z": -3734.49267578125,
+          "rotation": 120.574010848999
+        }
+      },
+      {
+        "ID": "BP_ResourceNode127",
+        "Name": "Copper Ore",
+        "ClassName": "Desc_OreCopper_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -94265.1171875,
+          "y": 165842.203125,
+          "z": -3734.83447265625,
+          "rotation": 81.1117086410523
+        }
+      },
+      {
+        "ID": "BP_ResourceNode172",
+        "Name": "SAM",
+        "ClassName": "Desc_SAM_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -24065.671875,
+          "y": 269858.09375,
+          "z": -13353.7685546875,
+          "rotation": 90
+        }
+      },
+      {
+        "ID": "BP_ResourceNode488",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": true,
+        "location": {
+          "x": -94905.46875,
+          "y": 262677.5,
+          "z": -4620.15673828125,
+          "rotation": 218.373336791992
+        }
+      },
+      {
+        "ID": "BP_ResourceNode489",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": true,
+        "location": {
+          "x": -97178.421875,
+          "y": 264232.125,
+          "z": -4625.65185546875,
+          "rotation": 216.89875793457
+        }
+      },
+      {
+        "ID": "BP_ResourceNode490",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": true,
+        "location": {
+          "x": -98579.15625,
+          "y": 265801.0625,
+          "z": -4634.9521484375,
+          "rotation": 37.3464317321777
+        }
+      },
+      {
+        "ID": "BP_ResourceNode491",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": true,
+        "location": {
+          "x": -91267.7109375,
+          "y": 253077.453125,
+          "z": -4513.923828125,
+          "rotation": 119.496767044067
+        }
+      },
+      {
+        "ID": "BP_ResourceNode492",
+        "Name": "Copper Ore",
+        "ClassName": "Desc_OreCopper_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -83962.1484375,
+          "y": 273576.625,
+          "z": -6240.13330078125,
+          "rotation": 180.643928527832
+        }
+      },
+      {
+        "ID": "BP_ResourceNode493",
+        "Name": "Copper Ore",
+        "ClassName": "Desc_OreCopper_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -83133.6328125,
+          "y": 275762.21875,
+          "z": -6264.25244140625,
+          "rotation": 1.6051406860351
+        }
+      },
+      {
+        "ID": "BP_ResourceNode494",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -36499.55859375,
+          "y": 243893.734375,
+          "z": -2502.6240234375,
+          "rotation": 47.2496223449707
+        }
+      },
+      {
+        "ID": "BP_ResourceNode495",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -35040.7265625,
+          "y": 245805.296875,
+          "z": -2504.11108398438,
+          "rotation": 246.980545043945
+        }
+      },
+      {
+        "ID": "BP_ResourceNode496",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -49077.015625,
+          "y": 231707.75,
+          "z": -3845.75170898438,
+          "rotation": 216.932991027832
+        }
+      },
+      {
+        "ID": "BP_ResourceNode497_1",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -51644.59765625,
+          "y": 229391.390625,
+          "z": -3845.75170898438,
+          "rotation": 186.252670288086
+        }
+      },
+      {
+        "ID": "BP_ResourceNode509",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -108119.9765625,
+          "y": 261059.140625,
+          "z": -4801.65771484375,
+          "rotation": 119
+        }
+      },
+      {
+        "ID": "BP_ResourceNode511",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -52587.4375,
+          "y": 264646.90625,
+          "z": -3819.65771484375,
+          "rotation": 194.000030517578
+        }
+      },
+      {
+        "ID": "BP_ResourceNode512",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -89046.078125,
+          "y": 153285.140625,
+          "z": -3019.69360351563,
+          "rotation": 270.997299194336
+        }
+      },
+      {
+        "ID": "BP_ResourceNode530",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": true,
+        "location": {
+          "x": -99586.609375,
+          "y": 267811.9375,
+          "z": -4660.72998046875,
+          "rotation": 121.604650497437
+        }
+      },
+      {
+        "ID": "BP_ResourceNode531",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": true,
+        "location": {
+          "x": -93267.109375,
+          "y": 254146.171875,
+          "z": -4509.763671875,
+          "rotation": 119.496767044067
+        }
+      },
+      {
+        "ID": "BP_ResourceNode532",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -94006.5703125,
+          "y": 268116.21875,
+          "z": -3127.72631835938,
+          "rotation": 327.927864074707
+        }
+      },
+      {
+        "ID": "BP_ResourceNode533",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -92372.078125,
+          "y": 266081.84375,
+          "z": -3125.04418945313,
+          "rotation": 82.3318786621094
+        }
+      },
+      {
+        "ID": "BP_ResourceNode534",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -55951.41015625,
+          "y": 271564.90625,
+          "z": -3776.69995117188,
+          "rotation": 38.9972114562988
+        }
+      },
+      {
+        "ID": "BP_ResourceNode537",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -60453.41796875,
+          "y": 141695.671875,
+          "z": 8416.7841796875,
+          "rotation": 107.722736358643
+        }
+      },
+      {
+        "ID": "BP_ResourceNode538",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -41928.3203125,
+          "y": 206907.640625,
+          "z": -2228.23291015625,
+          "rotation": 260.732040405273
+        }
+      },
+      {
+        "ID": "BP_ResourceNode539",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -43940.1640625,
+          "y": 207992.46875,
+          "z": -2228.23291015625,
+          "rotation": 9.90340423583984
+        }
+      },
+      {
+        "ID": "BP_ResourceNode540",
+        "Name": "Copper Ore",
+        "ClassName": "Desc_OreCopper_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -33328.18359375,
+          "y": 231626.15625,
+          "z": -1394.35034179688,
+          "rotation": 344.327598571777
+        }
+      },
+      {
+        "ID": "BP_ResourceNode543",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": 571.7421875,
+          "y": 283802.09375,
+          "z": -1139.76220703125,
+          "rotation": 316.650833129883
+        }
+      },
+      {
+        "ID": "BP_ResourceNode544",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -1126.05541992188,
+          "y": 285301.25,
+          "z": -1139.76220703125,
+          "rotation": 224.822601318359
+        }
+      },
+      {
+        "ID": "BP_ResourceNode545",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -44922.046875,
+          "y": 302273.5625,
+          "z": -2573.1181640625,
+          "rotation": 281.262298583984
+        }
+      },
+      {
+        "ID": "BP_ResourceNode546",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -50406.52734375,
+          "y": 302870.71875,
+          "z": -2583.33325195313,
+          "rotation": 130.172386169434
+        }
+      },
+      {
+        "ID": "BP_ResourceNode547",
+        "Name": "Copper Ore",
+        "ClassName": "Desc_OreCopper_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -21265.08984375,
+          "y": 283147.75,
+          "z": -2531.189453125,
+          "rotation": 20.726203918457
+        }
+      },
+      {
+        "ID": "BP_ResourceNode548",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": 3998.15234375,
+          "y": 271120.625,
+          "z": -4107.96337890625,
+          "rotation": 335.601425170898
+        }
+      },
+      {
+        "ID": "BP_ResourceNode549",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": 4127.76953125,
+          "y": 273241.8125,
+          "z": -4107.96337890625,
+          "rotation": 235.568801879883
+        }
+      },
+      {
+        "ID": "BP_ResourceNode550",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": 16091.8359375,
+          "y": 264153.125,
+          "z": -3854.17993164063,
+          "rotation": 235.568801879883
+        }
+      },
+      {
+        "ID": "BP_ResourceNode551",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -54100.9609375,
+          "y": 229417.015625,
+          "z": -3845.75170898438,
+          "rotation": 186.252670288086
+        }
+      },
+      {
+        "ID": "BP_ResourceNode553",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -41301.40625,
+          "y": 288558.03125,
+          "z": -2575.56982421875,
+          "rotation": 269.813629150391
+        }
+      },
+      {
+        "ID": "BP_ResourceNode554",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -37142.07421875,
+          "y": 201538.15625,
+          "z": -3066.4609375,
+          "rotation": 260.732040405273
+        }
+      },
+      {
+        "ID": "BP_ResourceNode555",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -62536.7734375,
+          "y": 228042.59375,
+          "z": -3279.111328125,
+          "rotation": 26.4375381469727
+        }
+      },
+      {
+        "ID": "BP_ResourceNode556",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -110521.765625,
+          "y": 249721.671875,
+          "z": -5379.68408203125,
+          "rotation": 119.496767044067
+        }
+      },
+      {
+        "ID": "BP_ResourceNode557",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -94477.421875,
+          "y": 228243.265625,
+          "z": -2399.37133789063,
+          "rotation": 142.890140533447
+        }
+      },
+      {
+        "ID": "BP_ResourceNode558",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -8996.6376953125,
+          "y": 293512.3125,
+          "z": -2527.24780273438,
+          "rotation": 307.456329345703
+        }
+      },
+      {
+        "ID": "BP_ResourceNode571",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Pure",
+        "EnumPurity": "RP_Pure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -53615.42578125,
+          "y": 160375.5625,
+          "z": 3355.88989257813,
+          "rotation": 128.283767700195
+        }
+      },
+      {
+        "ID": "BP_ResourceNode575",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Pure",
+        "EnumPurity": "RP_Pure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -80089.1875,
+          "y": 204746.5,
+          "z": 1544.53076171875,
+          "rotation": 128.281681060791
+        }
+      },
+      {
+        "ID": "BP_ResourceNode577",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -55693.16796875,
+          "y": 194370.484375,
+          "z": -2557.02758789063,
+          "rotation": 234.593353271484
+        }
+      },
+      {
+        "ID": "BP_ResourceNode578",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -57161.0625,
+          "y": 192772.703125,
+          "z": -2513.37255859375,
+          "rotation": 143.989948272705
+        }
+      },
+      {
+        "ID": "BP_ResourceNode579",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -58919.39453125,
+          "y": 195892.9375,
+          "z": -2195.56787109375,
+          "rotation": 119.111419677734
+        }
+      },
+      {
+        "ID": "BP_ResourceNode580",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -61757.26953125,
+          "y": 194633.71875,
+          "z": -2042.01000976563,
+          "rotation": 303.447845458984
+        }
+      },
+      {
+        "ID": "BP_ResourceNode584",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -8700.84765625,
+          "y": 283439.625,
+          "z": -1137.01342773438,
+          "rotation": 335.442649841309
+        }
+      },
+      {
+        "ID": "BP_ResourceNode585",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -10233.544921875,
+          "y": 291034.90625,
+          "z": -2475.65258789063,
+          "rotation": 211.684181213379
+        }
+      },
+      {
+        "ID": "BP_ResourceNode586",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -43321.69140625,
+          "y": 239553.46875,
+          "z": -3850.86108398438,
+          "rotation": 319.334991455078
+        }
+      },
+      {
+        "ID": "BP_ResourceNode587",
+        "Name": "Coal",
+        "ClassName": "Desc_Coal_C",
+        "Purity": "Pure",
+        "EnumPurity": "RP_Pure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -66076.53125,
+          "y": 296870.71875,
+          "z": -6102.42578125,
+          "rotation": 130.18567276001
+        }
+      },
+      {
+        "ID": "BP_ResourceNode591",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -47534.35546875,
+          "y": 289606.59375,
+          "z": -2526.47924804688,
+          "rotation": 221.776580810547
+        }
+      },
+      {
+        "ID": "BP_ResourceNode592",
+        "Name": "Iron Ore",
+        "ClassName": "Desc_OreIron_C",
+        "Purity": "Impure",
+        "EnumPurity": "RP_Inpure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -50101.90234375,
+          "y": 284478.03125,
+          "z": -2614.76391601563,
+          "rotation": 119.496767044067
+        }
+      },
+      {
+        "ID": "BP_ResourceNode593",
+        "Name": "Copper Ore",
+        "ClassName": "Desc_OreCopper_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -28703.16796875,
+          "y": 198210.484375,
+          "z": -1997.02758789063,
+          "rotation": 234.593353271484
+        }
+      },
+      {
+        "ID": "BP_ResourceNode68_2514",
+        "Name": "Copper Ore",
+        "ClassName": "Desc_OreCopper_C",
+        "Purity": "Normal",
+        "EnumPurity": "RP_Normal",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -36771.38671875,
+          "y": 296778.96875,
+          "z": -2366.04614257813,
+          "rotation": 126.424407958984
+        }
+      },
+      {
+        "ID": "BP_ResourceNode70_3132",
+        "Name": "Caterium Ore",
+        "ClassName": "Desc_OreGold_C",
+        "Purity": "Pure",
+        "EnumPurity": "RP_Pure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -131573.671875,
+          "y": 227253.09375,
+          "z": -787.024047851563,
+          "rotation": 90.1395541131496
+        }
+      },
+      {
+        "ID": "BP_ResourceNode71_UAID_40B076DF2F797CDB01_1695622247",
+        "Name": "Sulfur",
+        "ClassName": "Desc_Sulfur_C",
+        "Purity": "Pure",
+        "EnumPurity": "RP_Pure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -145043.575489432,
+          "y": 165965.15924226,
+          "z": 12698.50422546,
+          "rotation": 64.8376738834314
+        }
+      },
+      {
+        "ID": "BP_ResourceNode72_998",
+        "Name": "Caterium Ore",
+        "ClassName": "Desc_OreGold_C",
+        "Purity": "Pure",
+        "EnumPurity": "RP_Pure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -92343.3359375,
+          "y": 281605.875,
+          "z": -4620.49560546875,
+          "rotation": 117.784275054932
+        }
+      },
+      {
+        "ID": "BP_ResourceNode84",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Pure",
+        "EnumPurity": "RP_Pure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -156728.53125,
+          "y": 202159.609375,
+          "z": 961.458129882813,
+          "rotation": 93.4073264598846
+        }
+      },
+      {
+        "ID": "BP_ResourceNode85",
+        "Name": "Limestone",
+        "ClassName": "Desc_Stone_C",
+        "Purity": "Pure",
+        "EnumPurity": "RP_Pure",
+        "ResourceForm": "Solid",
+        "NodeType": "Node",
+        "Exploited": false,
+        "location": {
+          "x": -151152.171875,
+          "y": 184381,
+          "z": 978.070007324219,
+          "rotation": 118.675312042236
+        }
+      }
+    ],
+    "Fauna": [
+      {
+        "Name": "Fluffy-Tailed Hog",
+        "ClassName": "Desc_HogBasic_C",
+        "Amount": 1
+      },
+      {
+        "Name": "Flightless Birb",
+        "ClassName": "Desc_NonflyingBird_C",
+        "Amount": 1
+      },
+      {
+        "Name": "Small Forest Spitter",
+        "ClassName": "Desc_SpitterForest_Small_C",
+        "Amount": 1
+      },
+      {
+        "Name": "Unknown File Error #6265616e",
+        "ClassName": "Desc_SpaceGiraffe_C",
+        "Amount": 1
+      },
+      {
+        "Name": "Small Stinger",
+        "ClassName": "Desc_StingerSmall_C",
+        "Amount": 1
+      },
+      {
+        "Name": "Small Aquatic Spitter",
+        "ClassName": "Desc_SpitterAquatic_Small_C",
+        "Amount": 1
+      },
+      {
+        "Name": "Lizard Doggo",
+        "ClassName": "Desc_SpaceRabbit_C",
+        "Amount": 1
+      },
+      {
+        "Name": "Alpha Hog",
+        "ClassName": "Desc_HogAlpha_C",
+        "Amount": 1
+      },
+      {
+        "Name": "Small Desert Spitter",
+        "ClassName": "Desc_SpitterDesert_Small_C",
+        "Amount": 1
+      },
+      {
+        "Name": "Alpha Stinger",
+        "ClassName": "Desc_StingerAlpha_C",
+        "Amount": 1
+      }
+    ],
+    "Signal": [
+      {
+        "Name": "Somersloop",
+        "ClassName": "Desc_WAT1_C",
+        "Amount": 6
+      },
+      {
+        "Name": "Mercer Sphere",
+        "ClassName": "Desc_WAT2_C",
+        "Amount": 14
+      },
+      {
+        "Name": "Blue Power Slug",
+        "ClassName": "Desc_Crystal_C",
+        "Amount": 57
+      },
+      {
+        "Name": "Hard Drive",
+        "ClassName": "Desc_HardDrive_C",
+        "Amount": 5
+      }
+    ],
+    "Flora": [
+      {
+        "Name": "Berry Bush Plant",
+        "ClassName": "Desc_BerryBush_C",
+        "Amount": 1
+      },
+      {
+        "Name": "Bacon Agaric",
+        "ClassName": "Desc_Shroom_C",
+        "Amount": 1
+      },
+      {
+        "Name": "Nut Bush Plant",
+        "ClassName": "Desc_NutBush_C",
+        "Amount": 1
+      }
+    ],
+    "features": {
+      "properties": {
+        "name": "Radar Tower",
+        "type": "Radar Tower"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -78600,
+          "y": 239600,
+          "z": 21100.0078125
+        },
+        "type": "Point"
+      }
+    }
+  }
 ]
 -----------------

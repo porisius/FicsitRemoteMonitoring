@@ -1,0 +1,7 @@
+﻿| {key-name} | Object | {key-description}
+| {depth}  Name | Float | {key-name}'s Name
+| {depth}  ClassName | Float | {key-name}'s UE Class Name
+| {depth}  Remaining | Float | {key-name}'s Remaining
+
+{set:key-name!:}
+{set:key-description!:}

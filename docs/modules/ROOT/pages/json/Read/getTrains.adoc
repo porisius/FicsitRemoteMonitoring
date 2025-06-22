@@ -29,9 +29,26 @@ include::../Models/_location.adoc[]
 | {depth}  StationName | String | Name of the Train Station in Timetable
 
 | TimeTableIndex | Integer | Next Stop Index of TimeTable Object
-| SelfDriving | enum String | Error codes for the self driving locomotives (See below ESelfDrivingLocomotiveError)
-| Docking | enum String | Docked state (See below ETrainDockingState)
-| Path | enum String | Error codes for the extended path finding diagnostics (See below EPathDiagnosticsError)
+| SelfDriving | enum String | Error codes for the self driving locomotives +
+- `SDLE_NoError`: No Error +
+- `SDLE_NoPower`: No Power +
+- `SDLE_NoTimeTable`: No Time Table +
+- `SDLE_InvalidNextStop`: Invalid Next Stop +
+- `SDLE_InvalidLocomotivePlacement`: Invalid Locomotive Placement +
+- `SDLE_NoPath`: No Path +
+- `SDLE_StationUnreachable`: Station Unreachable +
+- `SDLE_StationUnreachableWithSignals`: Station Unreachable With Signals +
+- `SDLE_LongWaitAtSignal`: Long Wait At Signal
+
+| Docking | enum String | Docked state (See below ETrainDockingState) +
+- `TDS_None`: None +
+- `TDS_ReadyToDock`: Ready To Dock +
+- `TDS_Docked`: Docked
+
+| Path | enum String | Error codes for the extended path finding diagnostics +
+- `PDE_NoError`: No Error +
+- `PDE_StationUnreachable`: Station Unreachable +
+- `PDE_StationUnreachableWithSignals`: Station Unreachable With Signals
 
 | Vehicles | Object | JSON Object for Attached Train Cars/Engines
 | {depth}  Name | String | Name of the FGRailroadVehicle
@@ -45,39 +62,6 @@ include::../Models/_features.adoc[]
 
 // power info fields
 include::../Models/_powerInfo.adoc[]
-
-==== enum class ESelfDrivingLocomotiveError
-[cols="1,1"]
-|===
-|*enum*|*Name*
-! SDLE_NoError | No Error
-! SDLE_NoPower | No Power
-! SDLE_NoTimeTable | No Time Table
-! SDLE_InvalidNextStop | Invalid Next Stop
-! SDLE_InvalidLocomotivePlacement | Invalid Locomotive Placement
-! SDLE_NoPath | No Path
-! SDLE_StationUnreachable | Station Unreachable
-! SDLE_StationUnreachableWithSignals | Station Unreachable With Signals
-! SDLE_LongWaitAtSignal | Long Wait At Signal
-|===
-
-==== enum class ETrainDockingState
-[cols="1,1"]
-|===
-|*enum*|*Name*
-! TDS_None | None
-! TDS_ReadyToDock | Ready To Dock
-! TDS_Docked | Docked
-|===
-
-==== enum class EPathDiagnosticsError
-[cols="1,1"]
-|===
-|*enum*|*Name*
-! PDE_NoError | No Error
-! PDE_StationUnreachable | Station Unreachable
-! PDE_StationUnreachableWithSignals| Station Unreachable With Signals
-|===
 
 |===
 

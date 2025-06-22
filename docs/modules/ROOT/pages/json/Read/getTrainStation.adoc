@@ -2,96 +2,58 @@
 
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 
-API Endpoint: getTrainStation +
+== URL
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+`GET http://localhost:8080/getTrainStation`
 
-|Name
-|Name of the Station
-|Integer
-|Output
+include::../_responseBody.adoc[]
 
-|ClassName
-|UE Class Name
-|String
-|Output
+| ID | String | Unique ID of the Train Station.
+| Name | String | Name of the Train Station.
+| ClassName | String | ClassName of the Train Station.
 
-|location/x
-|X Location of Station
-|Float
-|Output
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
 
-|location/y
-|Y Location of Station
-|Float
-|Output
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
 
-|location/z
-|Z Location of Station
-|Float
-|Output
+{set:key-name:location}
+{set:key-description:Location details of the Train Station.}
+include::../Models/_location.adoc[]
 
-|location/Rotation
-|Compass Heading of Station
-|Float
-|Output
+| TransferRate | Float | Rate of solid items transferring at the station
+| InflowRate | Float | Rate of fluids incoming to the station
+| OutflowRate | FLoat | Rate of fluids outgoing from the station
+| CargoInventory | Object | Train Loading/Unloading Platforms and Stations
+| {depth}  ID | String | Unique ID of the Train Station.
+| {depth}  Name | String | Name of the Train Station.
+| {depth}  ClassName | String | ClassName of the Train Station.
+| {depth}  TransferRate | String | Load/Unload Mode Set
+| {depth}  InflowRate | String | Idle/Loading/Unloading
+| {depth}  OutflowRate | String | Status of Station (Idle/Loading/Unloading)
+| {depth}  LoadMode | String | Load/Unload Mode Set
+| {depth}  LoadingStatus | String | Idle/Loading/Unloading
+| {depth}  DockingStatus | String | Status of Station (Idle/Loading/Unloading)
+| {depth}  PowerInfo | Object | Power Information Object.
+| {depth}    CircuitGroupID | Integar | The group this circuit belongs too. (-1 = not connected)
+| {depth}    CircuitID | Integar | This circuit's unique identifier. (-1 = not connected)
+| {depth}    FuseTriggered | Boolean | Has the fuse tripped?
+| {depth}    PowerConsumed | Float | Current power consumption.
+| {depth}    MaxPowerConsumed | Float | Current maximum power consumption.
+| {depth}  Inventory | Object | Train Loading/Unloading Platforms and Stations Inventory
+| {depth}    Name | String | Name of the item.
+| {depth}    ClassName | String | Class Name of the item.
+| {depth}    Amount | Integar | Amount of the item.
+| {depth}    MaxAmount | Integar | Stack size of the item.
 
-|TransferRate
-|Rate of solid items transferring at the station
-|Float
-|Output
+// power info fields
+include::../Models/_powerInfo.adoc[]
 
-|InflowRate
-|Rate of fluids incoming to the station
-|Float
-|Output
-
-|OutflowRate
-|Rate of fluids outgoing from the station
-|Float
-|Output
-
-|LoadMode
-|Load/Unload Mode Set
-|String
-|Output
-
-|LoadingStatus
-|Idle/Loading/Unloading
-|String
-|Output
-
-|DockingStatus
-|Status of Station (Idle/Loading/Unloading)
-|String
-|Output
-
-|features/properties/name
-|Type of name being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/properties/type
-|Type of item being marked (Player, Train Track(WIP), Notable Building, etc)
-|String
-|Output
-
-|features/geometry/name
-|GeoJSON name of map marking (Point, Line, Circle, etc)
-|String
-|Output
-
-|features/geometry/coordinates
-|X,Y,Z for map marking
-|[Float, Float, Float]
-|Output
-
-|features/geometry/type
-|GeoJSON type of map marking (Point, Line, Circle, etc)
-|String
-|Output
+// features
+include::../Models/_features.adoc[]
 
 |===
 
@@ -99,39 +61,172 @@ Example:
 [source,json]
 -----------------
 [
-   {
-      "Name": "Caterium Ore",
-      "location":
-      {
-         "x": -15742.4189453125,
-         "y": -110549.765625,
-         "z": 10589.841796875,
-         "rotation": 100
+  {
+    "ID": "Build_TrainStation_C_2147110294",
+    "Name": "Yokohama",
+    "ClassName": "Build_TrainStation_C",
+    "location": {
+      "x": 141900,
+      "y": 222200,
+      "z": -4899.98275421746,
+      "rotation": 180
+    },
+    "BoundingBox": {
+      "min": {
+        "x": 141100,
+        "y": 220500,
+        "z": -4899.98275421746
       },
-      "TransferRate": 5.4957275390625,
-      "InflowRate": 0,
-      "OutflowRate": 0,
-      "LoadingMode": "Loading",
-      "LoadingStatus": "Loading",
-      "DockingStatus": 2,
-      "features":
-      {
-         "properties":
-         {
-            "name": "Caterium Ore",
-            "type": "Train"
-         },
-         "geometry":
-         {
-            "coordinates":
-            {
-               "X": 0,
-               "Y": 0,
-               "Z": 0
-            },
-            "type": "Point"
-         }
+      "max": {
+        "x": 142700,
+        "y": 223900,
+        "z": -2799.98275421746
       }
-   }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "TransferRate": 0,
+    "InflowRate": 9.46994018554688,
+    "OutflowRate": 0,
+    "CargoInventory": [
+      {
+        "ID": "Build_TrainDockingStation_C_2147110032",
+        "Name": "Freight Platform",
+        "ClassName": "Build_TrainDockingStation_C",
+        "location": {
+          "x": 141900,
+          "y": 223800,
+          "z": -4900,
+          "rotation": 0
+        },
+        "BoundingBox": {
+          "min": {
+            "x": 141100,
+            "y": 222100,
+            "z": -4900
+          },
+          "max": {
+            "x": 142700,
+            "y": 225500,
+            "z": -2900
+          }
+        },
+        "ColorSlot": {
+          "PrimaryColor": "FA954900",
+          "SecondaryColor": "5F668C00"
+        },
+        "PowerInfo": {
+          "CircuitGroupID": 0,
+          "CircuitID": 5,
+          "FuseTriggered": false,
+          "PowerConsumed": 0.100000001490116,
+          "MaxPowerConsumed": 50
+        },
+        "TransferRate": 0,
+        "InflowRate": 0,
+        "OutflowRate": 0,
+        "LoadingMode": "Loading",
+        "LoadingStatus": "Idle",
+        "DockingStatus": "None",
+        "Inventory": [
+          {
+            "Name": "Modular Frame",
+            "ClassName": "Desc_ModularFrame_C",
+            "Amount": 40,
+            "MaxAmount": 50
+          },
+          {
+            "Name": "Iron Plate",
+            "ClassName": "Desc_IronPlate_C",
+            "Amount": 6,
+            "MaxAmount": 200
+          },
+          {
+            "Name": "Radio Control Unit",
+            "ClassName": "Desc_ModularFrameLightweight_C",
+            "Amount": 46,
+            "MaxAmount": 50
+          },
+          {
+            "Name": "Computer",
+            "ClassName": "Desc_Computer_C",
+            "Amount": 50,
+            "MaxAmount": 50
+          }
+        ]
+      },
+      {
+        "ID": "Build_TrainDockingStationLiquid_C_2147109692",
+        "Name": "Fluid Freight Platform",
+        "ClassName": "Build_TrainDockingStationLiquid_C",
+        "location": {
+          "x": 141900,
+          "y": 225400,
+          "z": -4900,
+          "rotation": 180
+        },
+        "BoundingBox": {
+          "min": {
+            "x": 141100,
+            "y": 223700,
+            "z": -4900
+          },
+          "max": {
+            "x": 142700,
+            "y": 227100,
+            "z": -2900
+          }
+        },
+        "ColorSlot": {
+          "PrimaryColor": "FA954900",
+          "SecondaryColor": "5F668C00"
+        },
+        "PowerInfo": {
+          "CircuitGroupID": 0,
+          "CircuitID": 5,
+          "FuseTriggered": false,
+          "PowerConsumed": 0.100000001490116,
+          "MaxPowerConsumed": 50
+        },
+        "TransferRate": 0,
+        "InflowRate": 9.46994018554688,
+        "OutflowRate": 0,
+        "LoadingMode": "Loading",
+        "LoadingStatus": "Idle",
+        "DockingStatus": "None",
+        "Inventory": [
+          {
+            "Name": "Nitrogen Gas",
+            "ClassName": "Desc_NitrogenGas_C",
+            "Amount": 878.619995117188,
+            "MaxAmount": 50
+          }
+        ]
+      }
+    ],
+    "features": {
+      "properties": {
+        "name": "Yokohama",
+        "type": "Train Station"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "type": "Point"
+      }
+    },
+    "PowerInfo": {
+      "CircuitGroupID": 0,
+      "CircuitID": 5,
+      "FuseTriggered": false,
+      "PowerConsumed": 0.100000001490116,
+      "MaxPowerConsumed": 50
+    }
+  }
 ]
 -----------------
