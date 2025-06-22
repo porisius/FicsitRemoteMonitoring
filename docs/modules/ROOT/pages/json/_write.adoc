@@ -10,5 +10,6 @@
 | Factory | xref:json/Write/setSwitches.adoc[setSwitches] | Yes | Updates settings of a power switch (Name, Status, Priority).
 
 | World | xref:json/Write/createPing.adoc[createPing] | Yes | Creates a world ping.
+| World | xref:json/Write/setModSetting.adoc[setModSetting] | Yes | Update a mod setting.
 
 |===
