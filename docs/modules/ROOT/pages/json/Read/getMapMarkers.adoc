@@ -4,7 +4,9 @@
 
 = Get Map Markers
 
-Lists all Map Markers Configured
+include::../_useGameThread.adoc[]
+
+Lists all Map Markers Configured.
 
 == URL
 

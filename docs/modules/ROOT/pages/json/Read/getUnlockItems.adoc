@@ -2,9 +2,11 @@
 :url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
-= Get item that unlock song tapes and player helmets and customizations.
+= Get Unlock Items
 
-Gets a list of unlockable actors.
+include::../_useGameThread.adoc[]
+
+Gets a list of unlockable actors that unlock song tapes, player helmets and customizations.
 
 == URL
 
