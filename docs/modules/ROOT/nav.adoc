@@ -104,12 +104,16 @@
 
 *** World
 **** xref:json/Read/getArtifacts.adoc[getArtifacts]
+**** xref:json/Read/getCreatures.adoc[getCreatures]
 **** xref:json/Read/getDoggo.adoc[getDoggo]
 **** xref:json/Read/getDropPod.adoc[getDropPod]
+**** xref:json/Read/getMapMarkers.adoc[getMapMarkers]
 **** xref:json/Read/getPowerSlug.adoc[getPowerSlug]
 **** xref:json/Read/getProdStats.adoc[getProdStats]
 **** xref:json/Read/getRecipes.adoc[getRecipes]
 **** xref:json/Read/getSchematics.adoc[getSchematics]
+**** xref:json/Read/getTapes.adoc[getTapes]
+**** xref:json/Read/getUnlockItems.adoc[getUnlockItems]
 **** xref:json/Read/getUObjectCount.adoc[getUObjectCount]
 
 *** Power
@@ -127,3 +131,4 @@
 
 *** World
 **** xref:json/Write/createPing.adoc[createPing]
+**** xref:json/Write/setModSetting.adoc[createPing]

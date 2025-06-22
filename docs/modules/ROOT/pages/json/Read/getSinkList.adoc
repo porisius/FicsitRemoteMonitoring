@@ -4,29 +4,14 @@
 
 API Endpoint: getSinkList +
 
-[cols="1,2,1,1"]
-|===
-|JSON/JSON Group: |Info: |Data Type: |Input/Output:
+`GET http://localhost:8080/getSinkList`
 
-|Name
-|Item Name
-|String
-|Output
+include::../_responseBody.adoc[]
 
-|ClassName
-|UE Class Name
-|String
-|Output
-
-|Points
-|Number of Points Earned
-|Integer
-|Output
-
-|PointsOverride
-|Override for AWESOME Sink Point (Game takes higher of the two)
-|Integer
-|Output
+| Name | String | Item Name
+| ClassName | String | UE Class Name
+| Points | Integer | Number of Points Earned
+| PointsOverride | Integer | Override for AWESOME Sink Point (Game takes higher of the two)
 
 |===
 

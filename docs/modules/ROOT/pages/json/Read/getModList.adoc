@@ -19,7 +19,7 @@ include::../_responseBody.adoc[]
 | SupportURL | String | Support URL of the Mod.
 | CreatedBy | String | Author of the Mod.
 | RemoteVersionRange | String | Acceptable Version Range of other client/server mod versions.
-| RequiredOnRemote | Boolean | Is the Mod required on the server?
+| RequiredOnRemote | Boolean | Is the Mod required on both the server and client
 |===
 
 == Example Response

@@ -3,7 +3,38 @@
 
 = getSessionInfo
 
-[WARNING]
-====
-This endpoint is new and not yet documented.
-====
+`GET http://localhost:8080/getSessionInfo`
+
+include::../_responseBody.adoc[]
+
+| SessionName | String | Save Name currently running.
+| IsPaused | Boolean | Is the game currently paused (effective on dedicated servers).
+| DayLength | Integer | Save Name currently running.
+| NightLength | Integer | Save Name currently running.
+| PassedDays | Integer | Save Name currently running.
+| NumberOfDaysSinceLastDeath | Integer | Number Of Days Since Last Death.
+| Hours | Integer | Save Name currently running.
+| Minutes | Integer | Save Name currently running.
+| Seconds | Float | Save Name currently running.
+| IsDay | Boolean | Save Name currently running.
+| TotalPlayDuration | Integer | Duration in Seconds.
+| TotalPlayDurationText | String | Duration in Hours:Minutes:Seconds.
+
+== Example Response
+[source,json]
+-----------------
+{
+  "SessionName": "1.1-Save",
+  "IsPaused": false,
+  "DayLength": 50,
+  "NightLength": 10,
+  "PassedDays": 1306,
+  "NumberOfDaysSinceLastDeath": 235,
+  "Hours": 15,
+  "Minutes": 26,
+  "Seconds": 14.97265625,
+  "IsDay": true,
+  "TotalPlayDuration": 4685136,
+  "TotalPlayDurationText": "1301:25:36"
+}
+-----------------
