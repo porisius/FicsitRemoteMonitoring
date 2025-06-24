@@ -1,0 +1,196 @@
+:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Resource Wells
+
+Get a list of all Resource Well Pressurizers. 
+
+== URL
+
+`GET http://localhost:8080/getFrackingActivator`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Pressurizers.
+| Name | String | Name of the Pressurizers.
+| ClassName | String | ClassName of the Pressurizers.
+
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
+| Recipe | String | Name of the Recipe.
+| RecipeClassName | String | ClassName of the Recipe.
+
+// production
+| production | Object[] | Items that are produced.
+include::../Models/_inventoryItem.adoc[]
+| {depth}  CurrentProd | Float | Current produced items per minute.
+| {depth}  MaxProd | Float | Maximum produced items per minutes.
+| {depth}  ProdPercent | Float | Current Efficiency of the extractor.
+
+// satellite
+| Satellites | Object[] | Satellites Node Production.
+include::../Models/_inventoryItem.adoc[]
+| {depth}  CurrentProd | Float | Current produced items per minute.
+| {depth}  MaxProd | Float | Maximum produced items per minutes.
+| {depth}  ProdPercent | Float | Current Efficiency of the extractor.
+
+| ConnectedExtractors | Integer | Number of Connected Nodes associated to Resource Well
+| SatelliteNodes | Integer | Number of Nodes associated to Resource Well.
+
+// other fields
+| ManuSpeed | Float | Configured speed in % (exceeds 100 if the extractor is equipped with a power slug).
+| IsConfigured | Boolean | Is extractor configured?
+| IsProducing | Boolean | Is extractor producing items?
+| IsPaused | Boolean | Is extractor paused?
+
+// location fields
+{set:key-name:location}
+{set:key-description:Location details of the Extractor.}
+include::../Models/_location.adoc[]
+
+// power info
+include::../Models/_powerInfo.adoc[]
+
+// features fields
+include::../Models/_features.adoc[]
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "Build_FrackingSmasher_C_2147322695",
+    "Name": "Resource Well Pressurizer",
+    "ClassName": "Build_FrackingSmasher_C",
+    "location": {
+      "x": 268155.625,
+      "y": 112797.5859375,
+      "z": 63.5120391845703,
+      "rotation": 110.000000566211
+    },
+    "BoundingBox": {
+      "min": {
+        "x": 267405.625,
+        "y": 112047.5859375,
+        "z": 63.5120391845703
+      },
+      "max": {
+        "x": 268905.625,
+        "y": 113547.5859375,
+        "z": 2313.51203918457
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "Recipe": "Crude Oil",
+    "RecipeClassName": "Desc_LiquidOil_C",
+    "ManuSpeed": 100,
+    "Somersloops": 0,
+    "PowerShards": 0,
+    "production": [
+      {
+        "Name": "Crude Oil",
+        "ClassName": "Desc_LiquidOil_C",
+        "Amount": 300,
+        "MaxAmount": 300,
+        "CurrentProd": 0,
+        "MaxProd": 179.999984741211,
+        "ProdPercent": 0
+      }
+    ],
+    "Satellites": [
+      {
+        "Name": "Crude Oil",
+        "ClassName": "Desc_LiquidOil_C",
+        "Amount": 50,
+        "MaxAmount": 50,
+        "CurrentProd": 0,
+        "MaxProd": 29.9999980926514,
+        "ProdPercent": 0
+      },
+      {
+        "Name": "Crude Oil",
+        "ClassName": "Desc_LiquidOil_C",
+        "Amount": 50,
+        "MaxAmount": 50,
+        "CurrentProd": 0,
+        "MaxProd": 29.9999980926514,
+        "ProdPercent": 0
+      },
+      {
+        "Name": "Crude Oil",
+        "ClassName": "Desc_LiquidOil_C",
+        "Amount": 50,
+        "MaxAmount": 50,
+        "CurrentProd": 0,
+        "MaxProd": 29.9999980926514,
+        "ProdPercent": 0
+      },
+      {
+        "Name": "Crude Oil",
+        "ClassName": "Desc_LiquidOil_C",
+        "Amount": 50,
+        "MaxAmount": 50,
+        "CurrentProd": 0,
+        "MaxProd": 29.9999980926514,
+        "ProdPercent": 0
+      },
+      {
+        "Name": "Crude Oil",
+        "ClassName": "Desc_LiquidOil_C",
+        "Amount": 50,
+        "MaxAmount": 50,
+        "CurrentProd": 0,
+        "MaxProd": 29.9999980926514,
+        "ProdPercent": 0
+      },
+      {
+        "Name": "Crude Oil",
+        "ClassName": "Desc_LiquidOil_C",
+        "Amount": 50,
+        "MaxAmount": 50,
+        "CurrentProd": 0,
+        "MaxProd": 29.9999980926514,
+        "ProdPercent": 0
+      }
+    ],
+    "ConnectedExtractors": 6,
+    "SatelliteNodes": 6,
+    "IsConfigured": true,
+    "IsProducing": true,
+    "IsPaused": false,
+    "PowerInfo": {
+      "CircuitGroupID": 0,
+      "CircuitID": 5,
+      "FuseTriggered": false,
+      "PowerConsumed": 150,
+      "MaxPowerConsumed": 150
+    },
+    "features": {
+      "properties": {
+        "name": "Resource Well Pressurizer",
+        "type": "Resource Well Pressurizer"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": 268155.625,
+          "y": 112797.5859375,
+          "z": 63.5120391845703
+        },
+        "type": "Point"
+      }
+    }
+  }
+]
+-----------------
