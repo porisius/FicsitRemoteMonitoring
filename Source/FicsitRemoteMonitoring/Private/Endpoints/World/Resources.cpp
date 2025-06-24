@@ -1,4 +1,4 @@
-﻿#include "Resources.h"
+#include "Resources.h"
 
 #include "FGBuildableSubsystem.h"
 #include "FGBuildableResourceExtractor.h"
@@ -17,7 +17,6 @@
 #include "FGUnlockSubsystem.h"
 #include "FGUnlockTape.h"
 #include "FicsitRemoteMonitoringModule.h"
-#include "StructuredLog.h"
 
 void UResources::getItemPickups(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
 {
@@ -226,13 +225,13 @@ void UResources::getExtractor(UObject* WorldContext, FRequestData RequestData, T
 			TSubclassOf<UFGResourceDescriptor> ItemClass = ResourceClass->GetResourceClass();
 			ItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
 			ItemClassName = UKismetSystemLibrary::GetClassDisplayName(ItemClass);
-			const float MaxProd = Extractor->GetExtractionPerMinute();
+			float MaxProd = Extractor->GetExtractionPerMinute();
 			const float Productivity = Extractor->GetProductivity();
 			const UFGInventoryComponent* ExtractorInventory = Extractor->GetOutputInventory();
 
 			float CurrentProd = Productivity * MaxProd;
 
-			TSharedPtr<FJsonObject> JProduct = GetItemValueObject(ResourceClass->GetResourceClass(), ExtractorInventory->GetNumItems(ItemClass));
+			TSharedPtr<FJsonObject> JProduct = GetItemValueObject(ResourceClass->GetResourceClass(), ExtractorInventory->GetNumItems(ItemClass), Extractor->GetFluidInventoryStackSizeScalar());
 			JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
 			JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
 			JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>(100 * UKismetMathLibrary::SafeDivide(CurrentProd, MaxProd)));
