@@ -236,7 +236,8 @@ void UTrains::getTrainStation(UObject* WorldContext, FRequestData RequestData, T
 			FString StatusString = "Empty Platform";
 
 			TMap<TSubclassOf<UFGItemDescriptor>, int32> TrainPlatformInventory;
-
+			float FluidStackSize = 1.0f;
+			
 			if (AFGBuildableTrainPlatformCargo* TrainPlatformCargo = Cast<AFGBuildableTrainPlatformCargo>(TrainPlatform)) {
 				CargoTransferRate = TrainPlatformCargo->GetCurrentItemTransferRate();
 				CargoInFlowRate = TrainPlatformCargo->GetInflowRate();
@@ -250,6 +251,8 @@ void UTrains::getTrainStation(UObject* WorldContext, FRequestData RequestData, T
 				LoadingStatus = TrainPlatformCargo->IsLoadUnloading() ? LoadMode : FString("Idle");
 
 				StatusString = DockingStatusToString(TrainPlatformCargo->GetDockingStatus());
+
+				FluidStackSize = TrainPlatformCargo->GetFluidInventoryStackSizeScalar();
 				
 				// get train platform inventory
 				TrainPlatformInventory = GetGroupedInventoryItems(TrainPlatformCargo->GetInventory());
@@ -264,7 +267,7 @@ void UTrains::getTrainStation(UObject* WorldContext, FRequestData RequestData, T
 			JTrainPlatform->Values.Add("LoadingMode", MakeShared<FJsonValueString>(LoadMode));
 			JTrainPlatform->Values.Add("LoadingStatus", MakeShared<FJsonValueString>(LoadingStatus));
 			JTrainPlatform->Values.Add("DockingStatus", MakeShared<FJsonValueString>(StatusString));
-			JTrainPlatform->Values.Add("Inventory", MakeShared<FJsonValueArray>(GetInventoryJSON(TrainPlatformInventory)));
+			JTrainPlatform->Values.Add("Inventory", MakeShared<FJsonValueArray>(GetInventoryJSON(TrainPlatformInventory, FluidStackSize)));
 
 			JTrainPlatformArray.Add(MakeShared<FJsonValueObject>(JTrainPlatform));
 		}
