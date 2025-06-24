@@ -27,7 +27,7 @@
 | Factory | xref:json/Read/getPump.adoc[getPump] | No | Gets a list of all pumps.
 | Factory | xref:json/Read/getTrainRails.adoc[getTrainRails] | No | Gets a list of all railways.
 | Factory | xref:json/Read/getExtractor.adoc[getExtractor] | Yes | Gets a list of all miners.
-| Factory | xref:json/Read/getExtractor.adoc[getFrackingActivator] | Yes | Gets a list of all fracking activators.
+| Factory | xref:json/Read/getFrackingActivator.adoc[getFrackingActivator] | Yes | Gets a list of all fracking activators.
 | Factory | xref:json/Read/getPortal.adoc[getPortal] | No | Gets a list of all portals.
 | Factory | xref:json/Read/getRadarTower.adoc[getRadarTower] | No | Gets a list of all radar towers.
 | Factory | xref:json/Read/getResourceSinkBuilding.adoc[getResourceSinkBuilding] | No | Gets a list of all resource sinks.
