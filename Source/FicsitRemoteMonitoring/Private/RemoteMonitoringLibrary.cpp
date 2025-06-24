@@ -363,17 +363,17 @@ void URemoteMonitoringLibrary::GetGroupedInventoryItems(const TArray<FInventoryS
 	}
 }
 
-TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetItemValueObject(const FItemAmount Item)
+TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetItemValueObject(const FItemAmount Item, float StackSizeMuliplier)
 {
-	return GetItemValueObject(Item.ItemClass, Item.Amount);
+	return GetItemValueObject(Item.ItemClass, Item.Amount, StackSizeMuliplier);
 }
 
-TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetItemValueObject(const FInventoryStack& Item)
+TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetItemValueObject(const FInventoryStack& Item, float StackSizeMuliplier)
 {
-	return GetItemValueObject(Item.Item.GetItemClass(), Item.NumItems);
+	return GetItemValueObject(Item.Item.GetItemClass(), Item.NumItems, StackSizeMuliplier);
 }
 
-TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetItemValueObject(const TSubclassOf<UFGItemDescriptor>& Item, const int Amount)
+TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetItemValueObject(const TSubclassOf<UFGItemDescriptor>& Item, const int Amount, float StackSizeMuliplier)
 {
 	TSharedPtr<FJsonObject> JItem = MakeShared<FJsonObject>();
 
@@ -383,18 +383,18 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetItemValueObject(const TSubc
 		UFGInventoryLibrary::GetAmountConvertedByForm(Amount, UFGItemDescriptor::GetForm(Item))
 	));
 	JItem->Values.Add("MaxAmount", MakeShared<FJsonValueNumber>(
-		UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetStackSize(Item), UFGItemDescriptor::GetForm(Item))
+		UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetStackSize(Item) * StackSizeMuliplier, UFGItemDescriptor::GetForm(Item) )
 	));
 
 	return JItem;
 }
 
-TArray<TSharedPtr<FJsonValue>> URemoteMonitoringLibrary::GetInventoryJSON(const TArray<FItemAmount>& Items)
+TArray<TSharedPtr<FJsonValue>> URemoteMonitoringLibrary::GetInventoryJSON(const TArray<FItemAmount>& Items, float StackSizeMuliplier)
 {
 	TArray<TSharedPtr<FJsonValue>> JInventoryArray;
 
 	for (const auto Item : Items) {
-		JInventoryArray.Add(MakeShared<FJsonValueObject>(GetItemValueObject(Item.ItemClass, Item.Amount)));
+		JInventoryArray.Add(MakeShared<FJsonValueObject>(GetItemValueObject(Item.ItemClass, Item.Amount, StackSizeMuliplier)));
 	}
 
 	return JInventoryArray;
@@ -487,12 +487,12 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetSchematicJson(AFicsitRemote
 	return JSchematic;
 }
 
-TArray<TSharedPtr<FJsonValue>> URemoteMonitoringLibrary::GetInventoryJSON(const TMap<TSubclassOf<UFGItemDescriptor>, int32>& Items)
+TArray<TSharedPtr<FJsonValue>> URemoteMonitoringLibrary::GetInventoryJSON(const TMap<TSubclassOf<UFGItemDescriptor>, int32>& Items, float StackSizeMuliplier)
 {
 	TArray<TSharedPtr<FJsonValue>> JInventoryArray;
 
 	for (const TPair<TSubclassOf<UFGItemDescriptor>, int32> Item : Items) {
-		JInventoryArray.Add(MakeShared<FJsonValueObject>(GetItemValueObject(Item.Key, Item.Value)));
+		JInventoryArray.Add(MakeShared<FJsonValueObject>(GetItemValueObject(Item.Key, Item.Value, StackSizeMuliplier)));
 	}
 
 	return JInventoryArray;

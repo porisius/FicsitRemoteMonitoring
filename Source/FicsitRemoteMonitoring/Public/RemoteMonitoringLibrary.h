@@ -33,12 +33,12 @@ public:
 	static TMap<TSubclassOf<UFGItemDescriptor>, int32> GetGroupedInventoryItems(const TArray<FInventoryStack>& InventoryStacks);
 	static void GetGroupedInventoryItems(const TArray<FInventoryStack>& InventoryStacks, TMap<TSubclassOf<UFGItemDescriptor>, int32>& InventoryItems);
 	static void GetGroupedInventoryItems(const UFGInventoryComponent* Inventory, TMap<TSubclassOf<UFGItemDescriptor>, int32>& InventoryItems);
-	static TArray<TSharedPtr<FJsonValue>> GetInventoryJSON(const TMap<TSubclassOf<UFGItemDescriptor>, int32>& Items);
-	static TArray<TSharedPtr<FJsonValue>> GetInventoryJSON(const TArray<FItemAmount>& Items);
+	static TArray<TSharedPtr<FJsonValue>> GetInventoryJSON(const TMap<TSubclassOf<UFGItemDescriptor>, int32>& Items, float StackSizeMuliplier = 1.0f);
+	static TArray<TSharedPtr<FJsonValue>> GetInventoryJSON(const TArray<FItemAmount>& Items, float StackSizeMuliplier = 1.0f);
 	static TSharedPtr<FJsonObject> GetSchematicJson(AFicsitRemoteMonitoring* ModSubsystem, UObject* WorldContext, TSubclassOf<UFGSchematic> Schematic);
-	static TSharedPtr<FJsonObject> GetItemValueObject(const TSubclassOf<UFGItemDescriptor>& Item, const int Amount);
-	static TSharedPtr<FJsonObject> GetItemValueObject(const FItemAmount Item);
-	static TSharedPtr<FJsonObject> GetItemValueObject(const FInventoryStack& Item);
+	static TSharedPtr<FJsonObject> GetItemValueObject(const TSubclassOf<UFGItemDescriptor>& Item, const int Amount, float StackSizeMuliplier = 1.0f);
+	static TSharedPtr<FJsonObject> GetItemValueObject(const FItemAmount Item, float StackSizeMuliplier = 1.0f);
+	static TSharedPtr<FJsonObject> GetItemValueObject(const FInventoryStack& Item, float StackSizeMuliplier = 1.0f);
 	static TSharedPtr<FJsonObject> GetResourceNodeJSON(AActor* Actor, const bool bIncludeFeatures = false);
 	static TSharedPtr<FJsonObject> CreateBaseJsonObject(const UObject* Actor);
 	static TSharedPtr<FJsonObject> CreateBuildableBaseJsonObject(AFGBuildable* Buildable);
