@@ -7,6 +7,7 @@
 #include "Dom/JsonObject.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "FGBuildableFrackingActivator.h"
+#include "FGBuildableFrackingExtractor.h"
 #include "FGItemPickup.h"
 #include "FGDropPod.h"
 #include "FGPlayerCustomizationDesc.h"
@@ -263,7 +264,92 @@ void UResources::getFrackingActivator(UObject* WorldContext, FRequestData Reques
 
 	for (AFGBuildableFrackingActivator* Fracking : FrackingActivator) {
 		TSharedPtr<FJsonObject> JFrackingActivator = CreateBuildableBaseJsonObject(Fracking);
+
+		FString ItemName = TEXT("Desc_Null");
+		FString ItemClassName = TEXT("Desc_Null");
+		int32 Somersloops = 0;
+		int32 PowerShards = 0;
+
+		TArray<TSharedPtr<FJsonValue>> JProductArray;
+		TArray<TSharedPtr<FJsonValue>> JSatelliteArray;
+		
+		TWeakObjectPtr<AFGResourceNodeFrackingCore> FrackingCore = Fracking->mCoreNode;
+		TArray<AFGResourceNodeFrackingSatellite*> FrackingSatellites;
+		FrackingCore->GetSatellites(FrackingSatellites);
+
+		float BaseNumItems = 0;
+		float BaseMaxProd = 0;
+		int ConnectedExtractors = Fracking->GetConnectedExtractorCount();
+		int SatelliteNodes = Fracking->GetSatelliteNodeCount();
+
+		for (AFGResourceNodeFrackingSatellite* FrackingSatellite : FrackingSatellites)
+		{
+			if (!IsValid(FrackingSatellite)) { continue; }
+			
+			TWeakObjectPtr<AFGBuildableFrackingExtractor> SatelliteExtractor = FrackingSatellite->GetExtractor();
+			if (!SatelliteExtractor.IsValid()) { continue; }
+			
+			TScriptInterface<IFGExtractableResourceInterface> ResourceClass = SatelliteExtractor->GetExtractableResource();
+			if (ResourceClass != nullptr) {
+				TSubclassOf<UFGResourceDescriptor> ItemClass = ResourceClass->GetResourceClass();
+				ItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
+				ItemClassName = UKismetSystemLibrary::GetClassDisplayName(ItemClass);
+				float MaxProd = SatelliteExtractor->GetExtractionPerMinute();
+				const float Productivity = SatelliteExtractor->GetProductivity();
+				const UFGInventoryComponent* ExtractorInventory = SatelliteExtractor->GetOutputInventory();
+
+				const float NumItems = ExtractorInventory->GetNumItems(ItemClass);
+				BaseNumItems += NumItems;
+				float CurrentProd = Productivity * MaxProd;
+				
+				BaseMaxProd += MaxProd;
+				
+				TSharedPtr<FJsonObject> JSatellite = GetItemValueObject(ResourceClass->GetResourceClass(), NumItems);
+				JSatellite->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
+				JSatellite->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
+				JSatellite->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>(100 * UKismetMathLibrary::SafeDivide(CurrentProd, MaxProd)));
+				JSatelliteArray.Add(MakeShared<FJsonValueObject>(JSatellite));
+			}						
+		}
+		
+		TScriptInterface<IFGExtractableResourceInterface> ResourceClass = Fracking->GetExtractableResource();
+		if (ResourceClass != nullptr) {
+			TSubclassOf<UFGResourceDescriptor> ItemClass = ResourceClass->GetResourceClass();
+			ItemName = UFGItemDescriptor::GetItemName(ItemClass).ToString();
+			ItemClassName = UKismetSystemLibrary::GetClassDisplayName(ItemClass);
+			float MaxProd = Fracking->GetPotentialExtractionPerMinute() * Fracking->GetCurrentPotential() * 100;
+			const float Productivity = Fracking->GetProductivity();
+
+			float CurrentProd = Productivity * MaxProd;
+
+			const float StackSizeMultiplier = Fracking->GetFluidInventoryStackSizeScalar() * Fracking->GetConnectedExtractorCount();
+
+			TSharedPtr<FJsonObject> JProduct = GetItemValueObject(ResourceClass->GetResourceClass(), BaseNumItems, StackSizeMultiplier);
+			JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
+			JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
+			JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>(100 * UKismetMathLibrary::SafeDivide(CurrentProd, MaxProd)));
+			JProductArray.Add(MakeShared<FJsonValueObject>(JProduct));
+		}
+
+		JFrackingActivator->Values.Add("Recipe", MakeShared<FJsonValueString>(ItemName));
+		JFrackingActivator->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(ItemClassName));
+		
+		if (const AFGBuildableFactory* BuildableFactory = Cast<AFGBuildableFactory>(Fracking))
+		{
+			GetOverclockingItemsFromInventory(BuildableFactory->GetPotentialInventory(), Somersloops, PowerShards);
+		}
+		JFrackingActivator->Values.Add("ManuSpeed", MakeShared<FJsonValueNumber>(Fracking->GetCurrentPotential() * 100));
+		JFrackingActivator->Values.Add("Somersloops", MakeShared<FJsonValueNumber>(Somersloops));
+		JFrackingActivator->Values.Add("PowerShards", MakeShared<FJsonValueNumber>(PowerShards));
+		JFrackingActivator->Values.Add("production", MakeShared<FJsonValueArray>(JProductArray));
+		JFrackingActivator->Values.Add("Satellites", MakeShared<FJsonValueArray>(JSatelliteArray));
+		JFrackingActivator->Values.Add("ConnectedExtractors", MakeShared<FJsonValueNumber>(ConnectedExtractors));
+		JFrackingActivator->Values.Add("SatelliteNodes", MakeShared<FJsonValueNumber>(SatelliteNodes));	
+		JFrackingActivator->Values.Add("IsConfigured", MakeShared<FJsonValueBoolean>(Fracking->IsConfigured()));
+		JFrackingActivator->Values.Add("IsProducing", MakeShared<FJsonValueBoolean>(Fracking->IsProducing()));
+		JFrackingActivator->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(Fracking->IsProductionPaused()));
 		JFrackingActivator->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(getPowerConsumptionJSON(Fracking->GetPowerInfo())));
+		JFrackingActivator->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(Cast<AActor>(Fracking), Fracking->mDisplayName.ToString(), Fracking->mDisplayName.ToString())));
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JFrackingActivator));
 	}
 }
