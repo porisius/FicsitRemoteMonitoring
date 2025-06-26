@@ -15,7 +15,7 @@ Creates a world ping.
 
 == URL
 
-`GET http://localhost:8080/createPing`
+`POST http://localhost:8080/createPing`
 
 include::../_requestBody.adoc[]
 

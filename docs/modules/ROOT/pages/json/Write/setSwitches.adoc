@@ -10,7 +10,7 @@ Updates a (Priority) Power Switch.
 
 == URL
 
-`GET http://localhost:8080/setSwitches`
+`POST http://localhost:8080/setSwitches`
 
 All fields are optional, but you must specify at least one field.
 
