@@ -10,7 +10,7 @@ Changes Fiscit Remote Monitoring Mod General Settings.
 
 == URL
 
-`GET http://localhost:8080/setModSetting`
+`POST http://localhost:8080/setModSetting`
 
 include::../_requestBody.adoc[]
 

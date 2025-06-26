@@ -10,7 +10,7 @@ Sends a chat message to all players.
 
 == URL
 
-`GET http://localhost:8080/sendChatMessage`
+`POST http://localhost:8080/sendChatMessage`
 
 include::../_requestBody.adoc[]
 
