@@ -7,8 +7,10 @@
 struct FItemAmount;
 
 void UInventory::getStorageInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
-		
-	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
+
+	if (!IsValid(WorldContext) || !IsValid(WorldContext->GetWorld())) {
+		return;
+	}
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 	TArray<AFGBuildableStorage*> StorageContainers;
@@ -31,7 +33,9 @@ void UInventory::getStorageInv(UObject* WorldContext, FRequestData RequestData, 
 
 void UInventory::getWorldInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 
-	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
+	if (!IsValid(WorldContext) || !IsValid(WorldContext->GetWorld())) {
+		return;
+	}
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 	TArray<AFGBuildableStorage*> StorageContainers;
@@ -49,7 +53,9 @@ void UInventory::getWorldInv(UObject* WorldContext, FRequestData RequestData, TA
 
 void UInventory::getCloudInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
 {
-	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
+	if (!IsValid(WorldContext) || !IsValid(WorldContext->GetWorld())) {
+		return;
+	}
 
 	AFGCentralStorageSubsystem* CloudSubsystem = AFGCentralStorageSubsystem::Get(WorldContext->GetWorld());
 	TArray<FItemAmount> CloudInventory;
