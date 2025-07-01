@@ -392,7 +392,6 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 
                     	SocketRunning = true;
                     	bShouldStop = false;
-                    	StartWebSocketPushDataLoop();
                     }
                     else {
                         UE_LOGFMT(LogHttpServer, Error, "Failed to listen on port {port}", port);
@@ -491,15 +490,20 @@ void AFicsitRemoteMonitoring::ProcessClientRequest(uWS::WebSocket<false, true, F
 
             if (Action == "subscribe")
             {
+            	
                 if (!EndpointSubscribers.Contains(Endpoint)) {
                     EndpointSubscribers.Add(Endpoint, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>());
                 }
+
+				if (!bHasRunningPushDataLoop) {
+					StartWebSocketPushDataLoop();
+				}
 
                 EndpointSubscribers[Endpoint].Add(ws);
 
                 UE_LOG(LogHttpServer, Warning, TEXT("Client subscribed to endpoint: %s"), *Endpoint);
             }
-            else if (Action == "unsubscribe")
+            else if (Action == "unsubscribe" && EndpointSubscribers.Contains(Endpoint))
             {
                 EndpointSubscribers[Endpoint].Remove(ws);
                 UE_LOG(LogHttpServer, Warning, TEXT("Client unsubscribed from endpoint: %s"), *Endpoint);
@@ -513,6 +517,10 @@ void AFicsitRemoteMonitoring::ProcessClientRequest(uWS::WebSocket<false, true, F
             if (!EndpointSubscribers.Contains(Endpoint)) {
                 EndpointSubscribers.Add(Endpoint, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>());
             }
+
+			if (!bHasRunningPushDataLoop) {
+				StartWebSocketPushDataLoop();
+			}
 
             EndpointSubscribers[Endpoint].Add(ws);
 
