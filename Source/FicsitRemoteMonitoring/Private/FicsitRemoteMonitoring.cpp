@@ -948,7 +948,7 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
 	TArray<FString> AvailableMethods;
     bool bEndpointFound = false;
 
-	if (!IsValid(WorldContext))
+	if (!IsValid(WorldContext) || !IsValid(WorldContext->GetWorld()))
 	{
 		UE_LOG(LogHttpServer, Warning, TEXT("Blocked API call: World not ready."));
 		ErrorCode = 503;
