@@ -52,7 +52,7 @@ Please make sure to read the [Contributing Guide](https://github.com/porisius/Fi
 [![Andre Aquila](https://img.shields.io/badge/Andre%20Aquila-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800)](https://discordapp.com/users/294943551605702667)
 [![Badger](https://img.shields.io/badge/Badger-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800)](https://discordapp.com/users/186896287856197633)
 [![BLAndrew575](https://img.shields.io/badge/BLAndrew575-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800)](https://discordapp.com/users/509759568037937152)
-[![VOID](https://img.shields.io/badge/VOID-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800)](https://discordapp.com/users/212243828831289344)
+[![Bread-Chan](https://img.shields.io/badge/VOID-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800)](https://discordapp.com/users/212243828831289344)
 [![FeatheredToast](https://img.shields.io/badge/FeatheredToast-232634?style=for-the-badge&logo=discord&logoColor=232634&color=F2C800)](https://discordapp.com/users/130401633564753920)
 
 ## A Heartfelt Thank You
