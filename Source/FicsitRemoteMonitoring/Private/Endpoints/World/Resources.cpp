@@ -185,11 +185,14 @@ void UResources::getDropPod(UObject* WorldContext, FRequestData RequestData, TAr
 	for (AActor* FoundActor : FoundActors) {
 		AFGDropPod* DropPod = Cast<AFGDropPod>(FoundActor);
 		FFGDropPodUnlockCost DropPodCost = DropPod->GetUnlockCost();
+		
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> StorageInventory = GetGroupedInventoryItems(DropPod->GetLootInventory());
 
 		TSharedPtr<FJsonObject> JDropPod = CreateBaseJsonObject(FoundActor);
 		JDropPod->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(DropPod)));
 		JDropPod->Values.Add("Opened", MakeShared<FJsonValueBoolean>(DropPod->HasBeenOpened()));
 		JDropPod->Values.Add("Looted", MakeShared<FJsonValueBoolean>(DropPod->HasBeenLooted()));
+		JDropPod->Values.Add("Inventory", MakeShared<FJsonValueArray>(GetInventoryJSON(StorageInventory)));
 		JDropPod->Values.Add("RequiredItem", MakeShared<FJsonValueObject>(GetItemValueObject(DropPodCost.ItemCost)));
 		JDropPod->Values.Add("RequiredPower", MakeShared<FJsonValueNumber>(DropPodCost.PowerConsumption));
 		JDropPod->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(DropPod, "Drop Pod", "Drop Pod")));
