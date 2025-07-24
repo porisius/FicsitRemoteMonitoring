@@ -536,7 +536,9 @@ void AFicsitRemoteMonitoring::ProcessClientRequest(uWS::WebSocket<false, true, F
 
 void AFicsitRemoteMonitoring::PushUpdatedData() {
 
-    for (auto& Elem : EndpointSubscribers) {
+	TMap<FString, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>> SubscribersSnapshot = EndpointSubscribers;
+
+	for (auto& Elem : SubscribersSnapshot) {
         FString Endpoint = Elem.Key;
         
         if (Elem.Value.Num() == 0) {
