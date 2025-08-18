@@ -2,7 +2,9 @@
 #include "FGCentralStorageSubsystem.h"
 #include "FGBuildableSubsystem.h"
 #include "FGBuildableStorage.h"
+#include "FGCrate.h"
 #include "FGItemDescriptor.h"
+#include "Kismet/GameplayStatics.h"
 
 struct FItemAmount;
 
@@ -30,6 +32,26 @@ void UInventory::getStorageInv(UObject* WorldContext, FRequestData RequestData, 
 
 	};
 };
+
+void UInventory::getCrateInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+	
+	TArray<AActor*> FoundActors;
+
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGCrate::StaticClass(), FoundActors);
+	for (AActor* CrateActor : FoundActors) {
+		TSharedPtr<FJsonObject> JStorage = CreateBaseJsonObject(CrateActor);
+
+		AFGCrate* DeathCrate = Cast<AFGCrate>(CrateActor);
+		
+		// get inventory
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> StorageInventory = GetGroupedInventoryItems(DeathCrate->GetInventory());
+
+		JStorage->Values.Add("Inventory", MakeShared<FJsonValueArray>(GetInventoryJSON(StorageInventory)));
+		JStorage->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(DeathCrate, DeathCrate->GetFName().ToString(), TEXT("Storage Container"))));
+
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JStorage));
+	}		
+}
 
 void UInventory::getWorldInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 
