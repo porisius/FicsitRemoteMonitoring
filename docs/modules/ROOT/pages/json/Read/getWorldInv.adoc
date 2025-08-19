@@ -13,6 +13,7 @@ This does not include pipes/belts/factory buildings, only buildings whom purpose
 |===
 |Resource|Endpoint|Description
 | Inventory | xref:json/Read/getCloudInv.adoc[getCloudInv] | Gets a list of the cloud inventory.
+| Inventory | xref:json/Read/getCrateInv.adoc[getCrateInv] | Gets a list of all crate inventories.
 | Inventory | xref:json/Read/getStorageInv.adoc[getStorageInv] | Gets a list of all storage inventories.
 |===
 

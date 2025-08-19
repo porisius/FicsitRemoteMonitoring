@@ -11,6 +11,7 @@ This is inventory of the dimensional depot.
 [cols="1,1,2"]
 |===
 |Resource|Endpoint|Description
+| Inventory | xref:json/Read/getCrateInv.adoc[getCrateInv] | Gets a list of all crate inventories.
 | Inventory | xref:json/Read/getStorageInv.adoc[getStorageInv] | Gets a list of all storage inventories.
 | Inventory | xref:json/Read/getWorldInv.adoc[getWorldInv] | Gets a list of the world inventory.
 |===
