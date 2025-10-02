@@ -112,6 +112,8 @@ TArray<TSharedPtr<FJsonValue>> UFactoryLibrary::getFactory_Helper(UObject* World
 		JFactory->Values.Add("RecipeClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Manufacturer->GetCurrentRecipe())));
 		JFactory->Values.Add("production", MakeShared<FJsonValueArray>(JProductArray));
 		JFactory->Values.Add("ingredients", MakeShared<FJsonValueArray>(JIngredientsArray));
+		JFactory->Values.Add("InputInventory", MakeShared<FJsonValueArray>(GetInventoryJSON(GetGroupedInventoryItems(Manufacturer->GetInputInventory()))));
+		JFactory->Values.Add("OutputInventory", MakeShared<FJsonValueArray>(GetInventoryJSON(GetGroupedInventoryItems(Manufacturer->GetOutputInventory()))));
 		JFactory->Values.Add("Productivity", MakeShared<FJsonValueNumber>(Productivity * 100));
 		JFactory->Values.Add("ManuSpeed", MakeShared<FJsonValueNumber>(Manufacturer->GetCurrentPotential() * 100));
 		JFactory->Values.Add("Somersloops", MakeShared<FJsonValueNumber>(Somersloops));
