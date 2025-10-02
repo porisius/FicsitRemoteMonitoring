@@ -49,13 +49,11 @@ include::../Models/_location.adoc[]
 | {depth}  ConsPercent | Float | Efficiency Percentage.
 
 // input inventory
-{set:inventory-name:InputInventory}
-{set:inventory-description:A list of items in the input inventory.}
+| InputInventory | Object[] | A list of items in the input inventory.
 include::../Models/_inventoryItem.adoc[]
 
 // output inventory
-{set:inventory-name:OutputInventory}
-{set:inventory-description:A list of items in the output inventory.}
+| OutputInventory | Object[] | A list of items in the output inventory.
 include::../Models/_inventoryItem.adoc[]
 
 | ManuSpeed | Float | Configured speed in % (exceeds 100 if the machine is equipped with a power slug).
