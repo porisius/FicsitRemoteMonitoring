@@ -650,6 +650,14 @@ FString URemoteMonitoringLibrary::GetPlayerName(AFGCharacterPlayer* Character)
 		return Character->mPlayerNames[0].PlayerName;
 	}
 
+	APlayerState* PlayerState = Character->GetPlayerState();
+	FString PlayerName = PlayerState->GetPlayerName();
+
+	if (!PlayerName.IsEmpty() || !(PlayerName == " "))
+	{
+		return PlayerName;
+	}
+	
 	return "";
 }
 
