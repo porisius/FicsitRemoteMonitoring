@@ -640,7 +640,7 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getPowerConsumptionJSON(UFGPow
 FString URemoteMonitoringLibrary::GetPlayerName(AFGCharacterPlayer* Character)
 {
 	FString CachedPlayerName = Character->GetCachedPlayerName();
-	if (!CachedPlayerName.IsEmpty())
+	if (!CachedPlayerName.IsEmpty() || !(CachedPlayerName == " "))
 	{
 		return CachedPlayerName;
 	}
