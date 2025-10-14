@@ -24,6 +24,9 @@ include::../_responseBody.adoc[]
 {set:key-description:Location details of the Vehicle.}
 include::../Models/_location.adoc[]
 
+| PathName | String | Name of Saved Path Assigned
+| Status | String | Vehicle Status
+| Driver | String | Player Name of Vehicle Driver
 | ForwardSpeed | Float | Current Speed in km/h
 | CurrentGear | Integer | Transmission Gear
 | EngineRPM | Integer | RPM of Engine
@@ -53,9 +56,13 @@ include::../Models/_features.adoc[]
       "z": -904.133544921875,
       "rotation": 313
     },
-    "ForwardSpeed": 0,
-    "CurrentGear": 0,
-    "EngineRPM": 0,
+    "PathName": "Test Path",
+    "Status": "Operational",
+    "Driver": "porisius",
+    "CurrentGear": 1,
+    "ForwardSpeed": 11.1579312744141,
+    "EngineRPM": 2244.17504882813,
+    "ThrottlePercent": 0.400730907917023,
     "Airborne": false,
     "AutoPilot": false,
     "Storage": [
@@ -77,8 +84,6 @@ include::../Models/_features.adoc[]
         "Amount": 199
       }
     ],
-    "ThrottlePercent": 0,
-    "PathName": "",
     "FollowingPath": false,
     "features":
     {
