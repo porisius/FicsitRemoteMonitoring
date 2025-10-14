@@ -106,6 +106,14 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 				FuelInventory.Add(MakeShared<FJsonValueObject>(JVehicleFuel));
 			}
 
+			AFGCharacterPlayer* PlayerCharacter = WheeledVehicle->GetDriver();
+			FString PlayerName = "";
+			
+			if (IsValid(PlayerCharacter))
+			{
+				PlayerName = GetPlayerName(PlayerCharacter);
+			}
+
 			// get vehicle inventory
 			UFGInventoryComponent* VehicleInventory = WheeledVehicle->GetStorageInventory();
 			TArray<TSharedPtr<FJsonValue>> Inventory;
@@ -146,6 +154,7 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(WheeledVehicle)));
 			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>(VehiclePathName));
 			JVehicle->Values.Add("Status", MakeShared<FJsonValueString>(FormString));
+			JVehicle->Values.Add("Driver", MakeShared<FJsonValueString>(PlayerName));
 			JVehicle->Values.Add("CurrentGear", MakeShared<FJsonValueNumber>(VehicleMovement->GetCurrentGear()));
 			JVehicle->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(VehicleMovement->GetForwardSpeed() * 0.036));
 			JVehicle->Values.Add("EngineRPM", MakeShared<FJsonValueNumber>(VehicleMovement->GetEngineRotationSpeed()));
