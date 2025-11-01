@@ -21,6 +21,7 @@
 #include "Research.h"
 #include "StructuredLog.h"
 #include "Components/SplineComponent.h"
+#include "GameFramework/PlayerState.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getActorJSON(AActor* Actor) {
@@ -640,7 +641,7 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getPowerConsumptionJSON(UFGPow
 FString URemoteMonitoringLibrary::GetPlayerName(AFGCharacterPlayer* Character)
 {
 	FString CachedPlayerName = Character->GetCachedPlayerName();
-	if (!CachedPlayerName.IsEmpty())
+	if (!CachedPlayerName.IsEmpty() && CachedPlayerName != " ")
 	{
 		return CachedPlayerName;
 	}
@@ -650,6 +651,19 @@ FString URemoteMonitoringLibrary::GetPlayerName(AFGCharacterPlayer* Character)
 		return Character->mPlayerNames[0].PlayerName;
 	}
 
+	const APlayerState* PlayerState = Character->GetPlayerState();
+	if (!IsValid(PlayerState))
+	{
+		return "";
+	}
+
+	FString PlayerName = PlayerState->GetPlayerName();
+
+	if (!PlayerName.IsEmpty() && PlayerName != " ")
+	{
+		return PlayerName;
+	}
+	
 	return "";
 }
 
