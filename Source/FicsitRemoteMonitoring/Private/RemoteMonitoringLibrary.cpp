@@ -21,6 +21,7 @@
 #include "Research.h"
 #include "StructuredLog.h"
 #include "Components/SplineComponent.h"
+#include "GameFramework/PlayerState.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getActorJSON(AActor* Actor) {
@@ -650,10 +651,15 @@ FString URemoteMonitoringLibrary::GetPlayerName(AFGCharacterPlayer* Character)
 		return Character->mPlayerNames[0].PlayerName;
 	}
 
-	APlayerState* PlayerState = Character->GetPlayerState();
+	const APlayerState* PlayerState = Character->GetPlayerState();
+	if (!IsValid(PlayerState))
+	{
+		return "";
+	}
+
 	FString PlayerName = PlayerState->GetPlayerName();
 
-	if (!PlayerName.IsEmpty() || !(PlayerName == " "))
+	if (!PlayerName.IsEmpty() || PlayerName != " ")
 	{
 		return PlayerName;
 	}
