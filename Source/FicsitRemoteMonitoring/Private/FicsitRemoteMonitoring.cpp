@@ -713,13 +713,14 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getCoalGenerator", &UPower::getCoalGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getConstructor", &UFactoryLibrary::getConstructor));
 	RegisterEndpoint(FAPIEndpoint("GET", "getConverter", &UFactoryLibrary::getConverter));
+	RegisterEndpoint(FAPIEndpoint("GET", "getCrateInv", &UInventory::getCrateInv).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getDoggo", &UPlayerLibrary::getDoggo).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getDrone", &UDrones::getDrone).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getDroneStation", &UDrones::getDroneStation));
 	RegisterEndpoint(FAPIEndpoint("GET", "getDropPod", &UResources::getDropPod).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getEncoder", &UFactoryLibrary::getEncoder));
 	RegisterEndpoint(FAPIEndpoint("GET", "getExplorationSink", &USession::getExplorationSink));
-	RegisterEndpoint(FAPIEndpoint("GET", "getExplorer", &UVehicles::getExplorer).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getExplorer", &UVehicles::getExplorer));
 	RegisterEndpoint(FAPIEndpoint("GET", "getExtractor", &UResources::getExtractor));
 	RegisterEndpoint(FAPIEndpoint("GET", "getFactoryCart", &UVehicles::getFactoryCart));
 	RegisterEndpoint(FAPIEndpoint("GET", "getFoundry", &UFactoryLibrary::getFoundry));

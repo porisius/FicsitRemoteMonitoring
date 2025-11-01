@@ -2,7 +2,9 @@
 #include "FGCentralStorageSubsystem.h"
 #include "FGBuildableSubsystem.h"
 #include "FGBuildableStorage.h"
+#include "FGCrate.h"
 #include "FGItemDescriptor.h"
+#include "Kismet/GameplayStatics.h"
 
 struct FItemAmount;
 
@@ -30,6 +32,43 @@ void UInventory::getStorageInv(UObject* WorldContext, FRequestData RequestData, 
 
 	};
 };
+
+void UInventory::getCrateInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+	
+	TArray<AActor*> FoundActors;
+
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGCrate::StaticClass(), FoundActors);
+	for (AActor* CrateActor : FoundActors) {
+		TSharedPtr<FJsonObject> JStorage = CreateBaseJsonObject(CrateActor);
+
+		AFGCrate* GameCrate = Cast<AFGCrate>(CrateActor);
+		
+		// get inventory
+		TMap<TSubclassOf<UFGItemDescriptor>, int32> StorageInventory = GetGroupedInventoryItems(GameCrate->GetInventory());
+
+		FString CrateType;
+		switch (GameCrate->GetCrateType())
+		{
+			case EFGCrateType::CT_DeathCrate:
+				CrateType = TEXT("Death Crate");
+				break;
+			case EFGCrateType::CT_DismantleCrate:
+				CrateType = TEXT("Dismantle Crate");
+				break;
+			case EFGCrateType::CT_None:
+				CrateType = TEXT("None");
+				break;
+			default:
+				CrateType = TEXT("Unknown");
+		}
+		
+		JStorage->Values.Add("Type", MakeShared<FJsonValueString>(CrateType));
+		JStorage->Values.Add("Inventory", MakeShared<FJsonValueArray>(GetInventoryJSON(StorageInventory)));
+		JStorage->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(GameCrate, GameCrate->GetFName().ToString(), TEXT("Storage Container"))));
+
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JStorage));
+	}		
+}
 
 void UInventory::getWorldInv(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 

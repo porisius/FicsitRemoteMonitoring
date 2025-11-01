@@ -1,0 +1,285 @@
+:doctype: book
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Crate Inv
+
+This is inventory of the world in Dismantle and Death Crates.
+
+== Similar
+
+[cols="1,1,2"]
+|===
+|Resource|Endpoint|Description
+| Inventory | xref:json/Read/getCloudInv.adoc[getCloudInv] | Gets a list of the cloud inventory.
+| Inventory | xref:json/Read/getStorageInv.adoc[getStorageInv] | Gets a list of the cloud inventory.
+| Inventory | xref:json/Read/getWorldInv.adoc[getWorldInv] | Gets a list of the world inventory.
+|===
+
+== URL
+
+`GET http://localhost:8080/getCrateInv`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Crate.
+| Name | String | Name of the Crate.
+| ClassName | String | Class Name of the Crate.
+
+{set:key-name:location}
+{set:key-description:Location details of the Crate.}
+include::../Models/_location.adoc[]
+
+// Crate Type
+| Type | String | Type of Crate (Dismantle / Death).
+
+// inventory items
+| Inventory | Object[] | List of items in the Crate.
+include::../Models/_inventoryItem.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
+// features
+include::../Models/_features.adoc[]
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "BP_Crate_C_2147442464",
+    "Type": "Dismantle Crate",
+    "Inventory": [
+      {
+        "Name": "Steel Beam",
+        "ClassName": "Desc_SteelPlate_C",
+        "Amount": 480,
+        "MaxAmount": 200
+      },
+      {
+        "Name": "Quickwire",
+        "ClassName": "Desc_HighSpeedWire_C",
+        "Amount": 24500,
+        "MaxAmount": 500
+      },
+      {
+        "Name": "Cable",
+        "ClassName": "Desc_Cable_C",
+        "Amount": 2,
+        "MaxAmount": 200
+      },
+      {
+        "Name": "Steel Pipe",
+        "ClassName": "Desc_SteelPipe_C",
+        "Amount": 9680,
+        "MaxAmount": 200
+      },
+      {
+        "Name": "SAM Fluctuator",
+        "ClassName": "Desc_SAMFluctuator_C",
+        "Amount": 40,
+        "MaxAmount": 100
+      },
+      {
+        "Name": "Modular Frame",
+        "ClassName": "Desc_ModularFrame_C",
+        "Amount": 40,
+        "MaxAmount": 50
+      },
+      {
+        "Name": "Wire",
+        "ClassName": "Desc_Wire_C",
+        "Amount": 400,
+        "MaxAmount": 500
+      }
+    ],
+    "features": {
+      "properties": {
+        "name": "BP_Crate_C_2147442464",
+        "type": "Storage Container"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -254413.805999231,
+          "y": -45175.8094001678,
+          "z": -199.981778010312
+        },
+        "type": "Point"
+      }
+    }
+  },
+  {
+    "ID": "BP_Crate_C_2147437731",
+    "Type": "Death Crate",
+    "Inventory": [
+      {
+        "Name": "Bacon Agaric",
+        "ClassName": "Desc_Shroom_C",
+        "Amount": 2,
+        "MaxAmount": 50
+      },
+      {
+        "Name": "Hard Drive",
+        "ClassName": "Desc_HardDrive_C",
+        "Amount": 14,
+        "MaxAmount": 100
+      },
+      {
+        "Name": "Mercer Sphere",
+        "ClassName": "Desc_WAT2_C",
+        "Amount": 93,
+        "MaxAmount": 50
+      },
+      {
+        "Name": "Somersloop",
+        "ClassName": "Desc_WAT1_C",
+        "Amount": 37,
+        "MaxAmount": 50
+      },
+      {
+        "Name": "Iron Rebar",
+        "ClassName": "Desc_SpikedRebar_C",
+        "Amount": 2,
+        "MaxAmount": 100
+      },
+      {
+        "Name": "Nobelisk",
+        "ClassName": "Desc_NobeliskExplosive_C",
+        "Amount": 51,
+        "MaxAmount": 50
+      },
+      {
+        "Name": "Hatcher Remains",
+        "ClassName": "Desc_HatcherParts_C",
+        "Amount": 2,
+        "MaxAmount": 50
+      },
+      {
+        "Name": "Leaves",
+        "ClassName": "Desc_Leaves_C",
+        "Amount": 827,
+        "MaxAmount": 500
+      },
+      {
+        "Name": "Steel Beam",
+        "ClassName": "Desc_SteelPlate_C",
+        "Amount": 9400,
+        "MaxAmount": 200
+      },
+      {
+        "Name": "Jetpack",
+        "ClassName": "BP_EquipmentDescriptorJetPack_C",
+        "Amount": 1,
+        "MaxAmount": 1
+      },
+      {
+        "Name": "Wood",
+        "ClassName": "Desc_Wood_C",
+        "Amount": 86,
+        "MaxAmount": 200
+      },
+      {
+        "Name": "Parachute",
+        "ClassName": "Desc_Parachute_C",
+        "Amount": 1,
+        "MaxAmount": 1
+      },
+      {
+        "Name": "Steel Pipe",
+        "ClassName": "Desc_SteelPipe_C",
+        "Amount": 200,
+        "MaxAmount": 200
+      },
+      {
+        "Name": "Computer",
+        "ClassName": "Desc_Computer_C",
+        "Amount": 2,
+        "MaxAmount": 50
+      },
+      {
+        "Name": "Sulfur",
+        "ClassName": "Desc_Sulfur_C",
+        "Amount": 35,
+        "MaxAmount": 100
+      },
+      {
+        "Name": "Crystal Oscillator",
+        "ClassName": "Desc_CrystalOscillator_C",
+        "Amount": 5,
+        "MaxAmount": 100
+      },
+      {
+        "Name": "Radio Control Unit",
+        "ClassName": "Desc_ModularFrameLightweight_C",
+        "Amount": 50,
+        "MaxAmount": 50
+      },
+      {
+        "Name": "Portable Miner",
+        "ClassName": "BP_ItemDescriptorPortableMiner_C",
+        "Amount": 9,
+        "MaxAmount": 50
+      },
+      {
+        "Name": "Circuit Board",
+        "ClassName": "Desc_CircuitBoard_C",
+        "Amount": 15,
+        "MaxAmount": 200
+      },
+      {
+        "Name": "Boombox",
+        "ClassName": "Desc_BoomBox_C",
+        "Amount": 1,
+        "MaxAmount": 1
+      },
+      {
+        "Name": "Iron Rod",
+        "ClassName": "Desc_IronRod_C",
+        "Amount": 3,
+        "MaxAmount": 200
+      },
+      {
+        "Name": "Power Shard",
+        "ClassName": "Desc_CrystalShard_C",
+        "Amount": 53,
+        "MaxAmount": 100
+      },
+      {
+        "Name": "Encased Industrial Beam",
+        "ClassName": "Desc_SteelPlateReinforced_C",
+        "Amount": 162,
+        "MaxAmount": 100
+      },
+      {
+        "Name": "Alclad Aluminum Sheet",
+        "ClassName": "Desc_AluminumPlate_C",
+        "Amount": 31,
+        "MaxAmount": 200
+      },
+      {
+        "Name": "Wire",
+        "ClassName": "Desc_Wire_C",
+        "Amount": 459,
+        "MaxAmount": 500
+      }
+    ],
+    "features": {
+      "properties": {
+        "name": "BP_Crate_C_2147437731",
+        "type": "Storage Container"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -254933.420286891,
+          "y": -45437.1272555383,
+          "z": -400.014457075869
+        },
+        "type": "Point"
+      }
+    }
+  }
+]
+-----------------
