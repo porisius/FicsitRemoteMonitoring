@@ -171,7 +171,7 @@ void USupport::getElevators(UObject* WorldContext, FRequestData RequestData, TAr
 		for (AFGCharacterPlayer* OccupyingCharacter : OccupyingCharacters )
 		{
 			TSharedPtr<FJsonObject> JOccupyingCharacter = CreateBaseJsonObject(OccupyingCharacter);
-			JOccupyingCharacter->Values.Add("Name", MakeShared<FJsonValueString>(GetPlayerName(OccupyingCharacter)));
+			JOccupyingCharacter->Values.Add("Name", MakeShared<FJsonValueString>(GetPlayerName(WorldContext, OccupyingCharacter)));
 			JOccupyingCharacters.Add(MakeShared<FJsonValueObject>(JOccupyingCharacter));
 		}
 

@@ -5,6 +5,7 @@
 #include "FGCharacterPlayer.h"
 #include "FGCreatureSubsystem.h"
 #include "FicsitRemoteMonitoring.h"
+#include "FicsitRemoteMonitoringModule.h"
 #include "RemoteMonitoringLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -24,8 +25,8 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 		TMap<TSubclassOf<UFGItemDescriptor>, int32> PlayerInventory = GetGroupedInventoryItems(InventoryStacks);
 
 		//TODO: Find way to get player's name when they are offline
-		FString PlayerName = GetPlayerName(PlayerCharacter);
-
+		FString PlayerName = GetPlayerName(WorldContext, PlayerCharacter);
+		
 		JPlayer->Values.Add("Name", MakeShared<FJsonValueString>(PlayerName));
 		JPlayer->Values.Add("ClassName", MakeShared<FJsonValueString>(Player->GetClass()->GetName()));
 		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(Player))); 

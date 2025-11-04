@@ -10,6 +10,7 @@
 #include "FGFactoryConnectionComponent.h"
 #include "FGInventoryLibrary.h"
 #include "FGPipeConnectionComponent.h"
+#include "FGPlayerState.h"
 #include "FGPowerCircuit.h"
 #include "FGPowerInfoComponent.h"
 #include "FGPowerShardDescriptor.h"
@@ -638,10 +639,12 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getPowerConsumptionJSON(UFGPow
 	return JCircuit;
 };
 
-FString URemoteMonitoringLibrary::GetPlayerName(AFGCharacterPlayer* Character)
+FString URemoteMonitoringLibrary::GetPlayerName(UObject* WorldContext, AFGCharacterPlayer* Character)
 {
+	FString PlayerName = "";
+
 	FString CachedPlayerName = Character->GetCachedPlayerName();
-	if (!CachedPlayerName.IsEmpty() && CachedPlayerName != " ")
+	if (!CachedPlayerName.IsEmpty())
 	{
 		return CachedPlayerName;
 	}
@@ -650,21 +653,31 @@ FString URemoteMonitoringLibrary::GetPlayerName(AFGCharacterPlayer* Character)
 	{
 		return Character->mPlayerNames[0].PlayerName;
 	}
+	
+	if (IsGarbageCollecting() || !IsInGameThread()) {
+		FThreadSafeBool bAllocationComplete = false;
+		AsyncTask(ENamedThreads::GameThread, [WorldContext, Character, &bAllocationComplete, &PlayerName]() {
+			AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
+			fgcheck(ModSubsystem);
 
-	const APlayerState* PlayerState = Character->GetPlayerState();
-	if (!IsValid(PlayerState))
-	{
-		return "";
+			ModSubsystem->PlayerName_BIE(Character, PlayerName);
+			
+			bAllocationComplete = true;
+		});
+
+		while (!bAllocationComplete) {
+			FPlatformProcess::Sleep(0.0001f);
+		}
 	}
-
-	FString PlayerName = PlayerState->GetPlayerName();
-
-	if (!PlayerName.IsEmpty() && PlayerName != " ")
+	else
 	{
-		return PlayerName;
+		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
+		fgcheck(ModSubsystem);
+
+		ModSubsystem->PlayerName_BIE(Character, PlayerName);
 	}
 	
-	return "";
+	return PlayerName;
 }
 
 TSharedPtr<FJsonValueArray> URemoteMonitoringLibrary::GetSplineVector(TArray<FSplinePointData> SplinePointDatas)

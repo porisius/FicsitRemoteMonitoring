@@ -47,7 +47,7 @@ public:
 	static TSharedPtr<FJsonObject> GetActorLineFeaturesJSON(FVector PointOne, FVector PointTwo, FString DisplayName, FString TypeName);
 	static void GetOverclockingItemsFromInventory(const UFGInventoryComponent* Inventory, int32& Somersloops, int32& PowerShards);
 
-	static FString GetPlayerName(AFGCharacterPlayer* Character);
+	static FString GetPlayerName(UObject* WorldContext,AFGCharacterPlayer* Character);
 
 	static double SafeDivide_Double(double Numerator, double Denominator)
 	{

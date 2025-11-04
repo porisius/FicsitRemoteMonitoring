@@ -111,7 +111,7 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 			
 			if (IsValid(PlayerCharacter))
 			{
-				PlayerName = GetPlayerName(PlayerCharacter);
+				PlayerName = GetPlayerName(WorldContext, PlayerCharacter);
 			}
 
 			// get vehicle inventory
