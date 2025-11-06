@@ -73,11 +73,15 @@ void UVehicles::getTruckStation(UObject* WorldContext, FRequestData RequestData,
 };
 
 TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldContext, UClass* VehicleClass) {
+	TArray<TSharedPtr<FJsonValue>> JVehicleArray;
+	if (!VehicleClass)
+	{
+		return JVehicleArray;
+	}
 	
 	AFGVehicleSubsystem* VehicleSubsystem = AFGVehicleSubsystem::Get(WorldContext);
 	TArray<AFGWheeledVehicleInfo*> VehicleInfos = VehicleSubsystem->mWheeledVehicles;
 	TArray<AFGSavedWheeledVehiclePath*> SavedPaths = VehicleSubsystem->mSavedPaths;
-	TArray<TSharedPtr<FJsonValue>> JVehicleArray;
 
 	for (AFGWheeledVehicleInfo* VehicleInfo : VehicleInfos) {
 
