@@ -640,6 +640,11 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getPowerConsumptionJSON(UFGPow
 
 FString URemoteMonitoringLibrary::GetPlayerName(AFGCharacterPlayer* Character)
 {
+	if (!IsValid(Character))
+	{
+		return "";
+	}
+	
 	FString CachedPlayerName = Character->GetCachedPlayerName();
 	if (!CachedPlayerName.IsEmpty() && CachedPlayerName != " ")
 	{
@@ -648,7 +653,14 @@ FString URemoteMonitoringLibrary::GetPlayerName(AFGCharacterPlayer* Character)
 
 	if (Character->mPlayerNames.Num())
 	{
-		return Character->mPlayerNames[0].PlayerName;
+		for (const FServiceNameAndPlayerName PossibleName : Character->mPlayerNames)
+		{
+			FString PlayerName = PossibleName.PlayerName;
+			if (!PlayerName.IsEmpty() && PlayerName != " ")
+			{
+				return PlayerName;
+			}
+		}
 	}
 
 	const APlayerState* PlayerState = Character->GetPlayerState();
