@@ -653,7 +653,7 @@ FString URemoteMonitoringLibrary::GetPlayerName(AFGCharacterPlayer* Character)
 
 	if (Character->mPlayerNames.Num())
 	{
-		for (const FServiceNameAndPlayerName PossibleName : Character->mPlayerNames)
+		for (const FServiceNameAndPlayerName& PossibleName : Character->mPlayerNames)
 		{
 			FString PlayerName = PossibleName.PlayerName;
 			if (!PlayerName.IsEmpty() && PlayerName != " ")
