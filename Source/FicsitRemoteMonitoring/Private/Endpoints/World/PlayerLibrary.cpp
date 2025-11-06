@@ -3,6 +3,7 @@
 #include "PlayerLibrary.h"
 
 #include "FGCharacterPlayer.h"
+#include "FGPlayerState.h"
 #include "FGCreatureSubsystem.h"
 #include "FicsitRemoteMonitoring.h"
 #include "RemoteMonitoringLibrary.h"
@@ -12,20 +13,23 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 
 	TArray<AActor*> FoundActors;
 
-	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGCharacterPlayer::StaticClass(), FoundActors);
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), AFGPlayerState::StaticClass(), FoundActors);
 	for (AActor* Player : FoundActors) {
 		TSharedPtr<FJsonObject> JPlayer = CreateBaseJsonObject(Player);
-
+		
+		AFGPlayerState* PlayerState = Cast<AFGPlayerState>(Player);
 		AFGCharacterPlayer* PlayerCharacter = Cast<AFGCharacterPlayer>(Player);
-
+		
 		// get player inventory
 		TArray<FInventoryStack> InventoryStacks;
 		PlayerCharacter->GetInventory()->GetInventoryStacks(InventoryStacks);
 		TMap<TSubclassOf<UFGItemDescriptor>, int32> PlayerInventory = GetGroupedInventoryItems(InventoryStacks);
 
+		FString PlayerName = PlayerState->GetUserName();
+		
 		//TODO: Find way to get player's name when they are offline
-		FString PlayerName = GetPlayerName(PlayerCharacter);
-
+		//FString PlayerName = GetPlayerName(WorldContext, PlayerCharacter);
+		
 		JPlayer->Values.Add("Name", MakeShared<FJsonValueString>(PlayerName));
 		JPlayer->Values.Add("ClassName", MakeShared<FJsonValueString>(Player->GetClass()->GetName()));
 		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(Player))); 
