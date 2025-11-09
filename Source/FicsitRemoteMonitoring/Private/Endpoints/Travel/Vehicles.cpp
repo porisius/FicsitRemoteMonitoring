@@ -1,6 +1,9 @@
 #include "Vehicles.h"
 
 #include "FGBuildableDockingStation.h"
+#include "FGCharacterPlayer.h"
+#include "FGPlayerController.h"
+#include "FGPlayerState.h"
 #include "FGTargetPointLinkedList.h"
 #include "FGWheeledVehicleInfo.h"
 #include "RemoteMonitoringLibrary.h"
@@ -110,14 +113,37 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 				FuelInventory.Add(MakeShared<FJsonValueObject>(JVehicleFuel));
 			}
 
-			AFGCharacterPlayer* PlayerCharacter = WheeledVehicle->GetDriver();
+			const AFGCharacterPlayer* PlayerCharacter = WheeledVehicle->GetDriver();
+			const AController* Controller = WheeledVehicle->GetController();
 			FString PlayerName = "";
-			
-			if (IsValid(PlayerCharacter))
+						
+			if (IsValid(PlayerCharacter) && IsValid(Controller))
 			{
-				PlayerName = GetPlayerName(PlayerCharacter);
-			}
+				
+				if (const APlayerState* PlayerState = Controller->PlayerState)
+				{
+					// Check possessed pawn
+					if (!PlayerState && Controller->GetPawn())
+					{
+						PlayerState = Controller->GetPawn()->GetPlayerState();
+					}
 
+					// Check driver if vehicle
+					if (!PlayerState)
+					{
+						if (const AFGVehicle* Vehicle = Cast<AFGVehicle>(Controller->GetPawn()))
+						{
+							if (const AFGCharacterPlayer* Driver = Vehicle->GetDriver())
+							{
+								PlayerState = Driver->GetPlayerState();
+							}
+						}
+					}
+
+					PlayerName = PlayerState->GetPlayerName();
+				}
+			}
+			
 			// get vehicle inventory
 			UFGInventoryComponent* VehicleInventory = WheeledVehicle->GetStorageInventory();
 			TArray<TSharedPtr<FJsonValue>> Inventory;
