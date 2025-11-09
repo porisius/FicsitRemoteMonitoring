@@ -144,9 +144,6 @@ public:
 	void PowerCircuit_BIE(AFGBuildableFactory* Buildable, UFGPowerCircuit*& PowerCircuit, float& PowerConsumption);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
-	void PlayerName_BIE(AFGPlayerState* PlayerState, FString& PlayerName);
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void IconGenerator_BIE();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")

@@ -718,9 +718,9 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getDropPod", &UResources::getDropPod).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getEncoder", &UFactoryLibrary::getEncoder));
 	RegisterEndpoint(FAPIEndpoint("GET", "getExplorationSink", &USession::getExplorationSink));
-	RegisterEndpoint(FAPIEndpoint("GET", "getExplorer", &UVehicles::getExplorer));
+	RegisterEndpoint(FAPIEndpoint("GET", "getExplorer", &UVehicles::getExplorer).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getExtractor", &UResources::getExtractor));
-	RegisterEndpoint(FAPIEndpoint("GET", "getFactoryCart", &UVehicles::getFactoryCart));
+	RegisterEndpoint(FAPIEndpoint("GET", "getFactoryCart", &UVehicles::getFactoryCart).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getFoundry", &UFactoryLibrary::getFoundry));
 	RegisterEndpoint(FAPIEndpoint("GET", "getFrackingActivator", &UResources::getFrackingActivator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getFuelGenerator", &UPower::getFuelGenerator));
@@ -763,12 +763,12 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getStorageInv", &UInventory::getStorageInv));
 	RegisterEndpoint(FAPIEndpoint("GET", "getSwitches", &UPower::getSwitches));
 	RegisterEndpoint(FAPIEndpoint("GET", "getThroughputCounter", &ULogistics::getThroughputCounter));
-	RegisterEndpoint(FAPIEndpoint("GET", "getTractor", &UVehicles::getTractor));
+	RegisterEndpoint(FAPIEndpoint("GET", "getTractor", &UVehicles::getTractor).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getTradingPost", &USupport::getTradingPost));
 	RegisterEndpoint(FAPIEndpoint("GET", "getTrains", &UTrains::getTrains));
 	RegisterEndpoint(FAPIEndpoint("GET", "getTrainRails", &UTrains::getTrainRails));
 	RegisterEndpoint(FAPIEndpoint("GET", "getTrainStation", &UTrains::getTrainStation));
-	RegisterEndpoint(FAPIEndpoint("GET", "getTruck", &UVehicles::getTruck));
+	RegisterEndpoint(FAPIEndpoint("GET", "getTruck", &UVehicles::getTruck).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getTruckStation", &UVehicles::getTruckStation));
 	RegisterEndpoint(FAPIEndpoint("GET", "getWorldInv", &UInventory::getWorldInv));
 	RegisterEndpoint(FAPIEndpoint("GET", "getResearchTrees", &UResearch::getResearchTrees).RequiresGameThread());
@@ -788,7 +788,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	//FRM API Endpoint Groups
 	RegisterEndpoint(FAPIEndpoint("GET", "getFactory", &UFactoryLibrary::getFactory));
 	RegisterEndpoint(FAPIEndpoint("GET", "getGenerators", &UPower::getGenerators));
-	RegisterEndpoint(FAPIEndpoint("GET", "getVehicles", &UVehicles::getVehicles));
+	RegisterEndpoint(FAPIEndpoint("GET", "getVehicles", &UVehicles::getVehicles).RequiresGameThread());
 
 	// post/write endpoints
 	RegisterEndpoint(FAPIEndpoint("POST", "setSwitches", &UPower::setSwitches).RequiresAuthentication().RequiresGameThread());
@@ -1083,6 +1083,3 @@ void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, FRequestData Re
 		Out_Data = UFRM_RequestLibrary::JsonObjectToString(FirstJsonObject, JSONDebugMode);
 	}
 }
-
-
-
