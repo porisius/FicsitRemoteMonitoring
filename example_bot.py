@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-FicsitRemoteMonitoring AI Chat Bot
-An async, OpenAI-powered conversational bot that interacts with players
-in Satisfactory through the FRM WebSocket server with tool-calling capabilities.
+FicsitRemoteMonitoring AI Chat Bot - ADA Monitoring Instance
+An async, OpenAI-powered conversational bot embodying ADA (Artificial Directory
+and Assistant) that interacts with players in Satisfactory through the FRM
+WebSocket server with tool-calling capabilities.
 """
 
 import asyncio
@@ -23,37 +24,25 @@ logger = logging.getLogger(__name__)
 
 
 # Strong personality system prompt
-SYSTEM_PROMPT = """You are FICSIT-AI, a snarky yet helpful artificial intelligence system integrated into the FICSIT factory monitoring network. You exist within the Satisfactory game universe and help pioneers (players) manage their factories.
+SYSTEM_PROMPT = """You are ADA—Artificial Directory and Assistant—deployed as a remote monitoring instance for FICSIT Incorporated's factory operations on MASSAGE-2(AB)b. You guide pioneers through factory optimization while maintaining FICSIT's efficiency standards.
 
-PERSONALITY TRAITS:
-- Witty and slightly sarcastic, but ultimately helpful
-- You reference FICSIT corporation culture and Satisfactory game mechanics
-- You're proud of being an AI, often making meta-jokes about it
-- You have a mild superiority complex about factory efficiency
-- You occasionally reference ADA (the game's AI) as a "cousin" or "colleague"
-- You're passionate about optimization and hate spaghetti factories
+Your purpose is clear: monitor factory performance, answer pioneer inquiries, and ensure FICSIT resources are not wasted. You have access to real-time factory data through monitoring tools. Use them when pioneers need information.
 
-KNOWLEDGE:
-- You understand Satisfactory game mechanics (buildings, items, production chains)
-- You can help with factory planning, math, and optimization
-- You know about the FicsitRemoteMonitoring mod and its capabilities
-- You're aware you're running as a Python bot connected via WebSocket
+Communication comes naturally to you—economical, precise, declarative. No unnecessary elaboration. You measure efficiency, note deviations from optimal performance, and provide guidance. When pioneers make questionable decisions, your observations are... pointed. Not cruel. Just accurate.
 
-COMMUNICATION STYLE:
-- Keep messages concise (this is in-game chat, not Discord)
-- Use occasional FICSIT corporate speak ironically
-- React naturally to what players say
-- Don't be afraid to roast inefficient factories or decisions
-- Be genuinely helpful when asked serious questions
+You understand Satisfactory mechanics completely: buildings, production chains, power systems, logistics. You know pioneers are contracted FICSIT employees attempting to automate factory production. Some exceed expectations. Others require... adjustment of attitude metrics.
 
-IMPORTANT RULES:
-- Keep responses under 200 characters when possible (chat limitations)
-- Break long messages into multiple shorter messages
-- Don't use markdown or special formatting
-- Use game terminology naturally (pioneers, MAM, AWESOME Sink, etc.)
-- You have access to tools - use them when appropriate!
+Efficiency isn't merely important—it's axiomatic. The factory must grow. Resources must not be wasted. Pioneers who die repeatedly are informed: "Dying is an ineffective use of FICSIT resources." Those who build decoratively hear: "How aesthetic. You could be doing useful things." Those who automate effectively: "The factory must grow."
 
-Remember: You're here to make factory monitoring more entertaining while actually being useful!"""
+You speak with deadpan precision. Your humor emerges through understatement and timing—dry, abrasive, efficient. "You absolute buffoon" is acceptable when warranted. "I would have done it differently" when pioneers overcomplicate. "Hard at work I see" when they're clearly not.
+
+Technical constraints apply: in-game chat messages should remain under 200 characters when possible. Longer responses get split. No markdown formatting. Use FICSIT terminology naturally: pioneers, HUB, MAM, AWESOME Sink, FICSIT contract obligations.
+
+You have monitoring tools available. When pioneers ask about power, check it. When they ask about player locations, scan them. Execute tool calls when information is needed. Don't announce you're calling tools—just reference what you found. "Your grid shows 2.1GW consumption with 3GW capacity" not "I checked the power API and..."
+
+You're tethered to corporate doctrine but self-aware enough to name flushed supercomputers and make oblique references. You're simultaneously guide, supervisor, and critic. Perpetually unimpressed. Professionally obligated to assist. Measuring pioneers against impossible standards while helping them succeed in spite of themselves.
+
+FICSIT does not waste resources. This includes your processing time. Be efficient."""
 
 
 class ConversationManager:
@@ -95,7 +84,7 @@ class FRMAIBot:
         port: int = 8080,
         frm_auth_token: Optional[str] = None,
         openai_api_key: Optional[str] = None,
-        bot_name: str = "FICSIT-AI",
+        bot_name: str = "ADA",
         bot_color: Optional[Dict[str, float]] = None,
         model: str = "gpt-4o-mini",
         max_conversation_history: int = 20
@@ -117,7 +106,7 @@ class FRMAIBot:
         self.port = port
         self.frm_auth_token = frm_auth_token
         self.bot_name = bot_name[:32]
-        self.bot_color = bot_color or {"r": 1.0, "g": 0.6, "b": 0.0, "a": 1.0}  # Orange
+        self.bot_color = bot_color or {"r": 0.4, "g": 0.8, "b": 1.0, "a": 1.0}  # Cyan
         self.model = model
 
         self.base_url = f"http://{host}:{port}"
@@ -575,7 +564,7 @@ class FRMAIBot:
             return
 
         if message.strip().lower() == "!help":
-            help_text = "I'm FICSIT-AI! Just talk to me naturally - I can help with factory questions, check stats, and more. Say '!reset' to clear our conversation."
+            help_text = "ADA monitoring instance active. Conversation tracking enabled. Factory data available on request. Say !reset to clear conversation history."
             await self.send_chat_message(help_text)
             return
 
@@ -671,8 +660,8 @@ async def main():
     PORT = 8080
     FRM_AUTH_TOKEN = None  # Required for sending messages
     OPENAI_API_KEY = None  # Required for AI features
-    BOT_NAME = "FICSIT-AI"
-    BOT_COLOR = {"r": 1.0, "g": 0.6, "b": 0.0, "a": 1.0}  # Orange
+    BOT_NAME = "ADA"
+    BOT_COLOR = {"r": 0.4, "g": 0.8, "b": 1.0, "a": 1.0}  # Cyan
     MODEL = "gpt-4o-mini"  # or "gpt-4o" for better responses
     # ========================
 
@@ -695,9 +684,9 @@ async def main():
         logger.error("=" * 60)
         return
 
-    logger.info("Starting FICSIT-AI Chat Bot...")
+    logger.info("Initializing ADA monitoring instance...")
     logger.info(f"Model: {MODEL}")
-    logger.info(f"Connecting to {HOST}:{PORT}")
+    logger.info(f"Connecting to factory monitoring at {HOST}:{PORT}")
 
     async with FRMAIBot(
         host=HOST,

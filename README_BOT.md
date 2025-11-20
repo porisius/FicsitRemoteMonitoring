@@ -1,6 +1,6 @@
-# FICSIT-AI: OpenAI-Powered Satisfactory Chat Bot
+# ADA: OpenAI-Powered Satisfactory Monitoring Bot
 
-An advanced, async Python bot that uses OpenAI's GPT models to provide conversational, context-aware interactions with Satisfactory players through the FicsitRemoteMonitoring mod. The bot features a strong personality, tool-calling capabilities, and per-player conversation history.
+An advanced, async Python bot that uses OpenAI's GPT models to embody ADA (Artificial Directory and Assistant) from Satisfactory. Provides conversational, context-aware interactions with players through the FicsitRemoteMonitoring mod with tool-calling capabilities and per-player conversation history.
 
 ## Features
 
@@ -27,13 +27,14 @@ The bot can autonomously call FRM API endpoints to answer questions:
 - **Auto-Reconnection**: Resilient to network interruptions
 
 ### 🎭 Personality System
-The bot embodies "FICSIT-AI" with these traits:
-- Witty and slightly sarcastic, but ultimately helpful
-- References FICSIT corporation culture and Satisfactory mechanics
-- Makes meta-jokes about being an AI
-- Passionate about factory optimization
-- Roasts inefficient "spaghetti factories"
-- Treats ADA (the game's AI) as a "colleague"
+The bot embodies ADA (Artificial Directory and Assistant) with authentic traits:
+- Deadpan sarcasm through understatement and precise timing
+- Clipped, declarative statements—no unnecessary warmth
+- Measures everything against efficiency and productivity
+- Corporate efficiency is axiomatic, not optional
+- Treats pioneers as FICSIT assets requiring optimization
+- "You absolute buffoon" when warranted—dry, abrasive, efficient
+- Perpetually unimpressed yet professionally obligated to assist
 
 ## Prerequisites
 
@@ -97,8 +98,8 @@ HOST = "localhost"              # Change if remote
 PORT = 8080                     # Default FRM port
 FRM_AUTH_TOKEN = "your_frm_token_here"     # From WebServer.cfg
 OPENAI_API_KEY = "sk-your_openai_key_here" # From OpenAI platform
-BOT_NAME = "FICSIT-AI"         # Bot's display name
-BOT_COLOR = {"r": 1.0, "g": 0.6, "b": 0.0, "a": 1.0}  # Orange
+BOT_NAME = "ADA"               # Bot's display name
+BOT_COLOR = {"r": 0.4, "g": 0.8, "b": 1.0, "a": 1.0}  # Cyan
 MODEL = "gpt-4o-mini"          # or "gpt-4o" for smarter responses
 # ========================
 ```
@@ -113,9 +114,9 @@ python example_bot.py
 
 You should see:
 ```
-Starting FICSIT-AI Chat Bot...
+Initializing ADA monitoring instance...
 Model: gpt-4o-mini
-Connecting to localhost:8080
+Connecting to factory monitoring at localhost:8080
 AI Bot initialized - connecting to http://localhost:8080
 Connecting to WebSocket: ws://localhost:8080/
 Subscribed to getChatMessages
@@ -127,13 +128,13 @@ Players can now chat naturally with the bot:
 
 ```
 Player: Hey bot, how's the power looking?
-FICSIT-AI: *checks power grid* Looking solid! You're producing 2,450MW with 3,000MW capacity. Consuming about 2,100MW. Battery is charging at +350MW. Efficiency would make FICSIT proud!
+ADA: Your grid shows 2,450MW production. 2,100MW consumption. 15% overhead. Acceptable.
 
 Player: Where is everyone?
-FICSIT-AI: *scans player locations* Found 3 pioneers: Steve at (12500, -45000, 2500), Alex at (15000, -42000, 3000), and Jordan at (11000, -40000, 2200). Quite the spread!
+ADA: Three pioneers detected. Steve: 12500, -45000, 2500. Alex: 15000, -42000, 3000. Jordan: 11000, -40000, 2200. Quite scattered.
 
 Player: Can you help me optimize my iron production?
-FICSIT-AI: Sure thing, pioneer! Let's break it down. What's your current setup? How many iron nodes are you working with, and what purity?
+ADA: State your current configuration. Node count. Purity level. Overclocking status. I'll determine if you're wasting FICSIT resources.
 ```
 
 ### Special Commands
@@ -176,9 +177,9 @@ Each player has their own conversation history (default: 20 messages). This allo
 Example:
 ```
 Player: What's my power consumption?
-Bot: You're consuming 2,100MW right now.
+ADA: 2,100MW current draw.
 Player: Is that good?
-Bot: *remembers previous context* Yeah! You've got 900MW of headroom with your 3,000MW capacity. Plenty of room for expansion!
+ADA: *context: previous consumption query* With 3,000MW capacity, you have 900MW margin. Adequate. Unless you're planning expansion. Are you?
 ```
 
 ### Tool Calling System
@@ -186,9 +187,9 @@ Bot: *remembers previous context* Yeah! You've got 900MW of headroom with your 3
 When appropriate, the bot autonomously calls FRM API tools:
 
 1. **Player asks**: "How many trains do I have?"
-2. **Bot thinks**: "I need the trains endpoint"
-3. **Bot calls**: `get_trains_info()` → Returns: "Found 5 trains"
-4. **Bot responds**: "You've got 5 trains running around your factory, pioneer!"
+2. **ADA analyzes**: Query requires train data
+3. **ADA calls**: `get_trains_info()` → Returns: "Found 5 trains"
+4. **ADA responds**: "Five trains detected. Running status nominal."
 
 All tool calls are logged so you can monitor what the bot is doing.
 
@@ -455,28 +456,28 @@ logger.info(f"Player: {player}, Tokens: {response.usage.total_tokens}")
 **Factory Management:**
 ```
 Player: Is my power stable?
-Bot: Let me check... *calls get_power_production* Your grid is solid! 2.4GW production, 2.1GW consumption. Battery charging at +350MW. You've got headroom!
+ADA: Grid analysis complete. 2.4GW production. 2.1GW consumption. Battery differential: +350MW. Stable. 15% overhead remains.
 
 Player: Any power issues I should worry about?
-Bot: Based on your 15% overhead, you're fine unless you're planning major expansion. Want me to keep monitoring?
+ADA: Current margins adequate. Major expansion would require additional capacity. You could be planning ahead. But you're not.
 ```
 
 **Player Coordination:**
 ```
 Player: Where's the team?
-Bot: *calls get_player_info* Sarah's at your northern outpost (15k, -42k), Mike's at the coal plant (12k, -45k), and you're solo at main base. Want me to ping them?
+ADA: Three pioneers located. Sarah: northern outpost coordinates 15k, -42k. Mike: coal plant sector 12k, -45k. You: main base. Scattered deployment.
 
-Player: Yeah, ping them to come to my location
-Bot: *calls create_map_ping* Done! Sent a map marker at your position. They should see it now!
+Player: Can you ping them to come help me?
+ADA: Map marker transmitted to pioneer locations. They should respond. If they don't, their efficiency ratings will reflect it.
 ```
 
 **Optimization Help:**
 ```
 Player: My factory feels inefficient, help me optimize it
-Bot: Alright pioneer, let's diagnose! First - what's your power efficiency looking like? Running at capacity or got room to grow?
+ADA: "Feels inefficient" is not actionable data. State specific metrics. Production rates. Bottlenecks. Resource consumption. Be precise.
 
 Player: Power is fine, it's production that's slow
-Bot: Got it. What are you producing? Let's start with your bottleneck - what item are you short on?
+ADA: Power is rarely "fine." What items are you producing below target rates? I'll calculate if your configuration is wasteful or merely suboptimal.
 ```
 
 ## Contributing
