@@ -38,15 +38,22 @@ public:
 
     void Save(UWorld* World)
     {
+        if (!World) return;
+    
+        UGameInstance* GameInstance = World->GetGameInstance();
+        if (!GameInstance) return;
+        
+        UConfigManager* ConfigManager = GameInstance->GetSubsystem<UConfigManager>();
+        if (!ConfigManager) return;
+        
         FConfigId ConfigId{"FicsitRemoteMonitoring", "WebServer"};
-        UConfigManager* ConfigManager = World->GetGameInstance()->GetSubsystem<UConfigManager>();
         UConfigPropertySection* ConfigurationRootSection = ConfigManager->GetConfigurationRootSection(ConfigId);
-
+        if (!ConfigurationRootSection) return;
+        
         if (ConfigurationRootSection->SectionProperties.Contains("Authentication_Token"))
         {
             Cast<UConfigPropertyString>(ConfigurationRootSection->SectionProperties["Authentication_Token"])->Value = Authentication_Token;
         }
-
         ConfigManager->MarkConfigurationDirty(ConfigId);
     }
 };
