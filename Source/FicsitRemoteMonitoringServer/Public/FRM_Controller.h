@@ -1,37 +1,35 @@
 ﻿#pragma once
 
-#include "FGDSSharedTypes.h"
-#include "FactoryDedicatedServer/Public/Controller/FGServerControllerBase.h"
-
+#include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include "FGServerAPIDataTypes.h"
 #include "FRM_Controller.generated.h"
 
-class UWorld;
+// Forward declarations
+struct FFGServerErrorResponse;
 struct FFGFileResponseWrapper;
-class AFicsitRemoteMonitoring;
-class UFGUserSetting;
-struct FFGRequestHandlerContextWrapper;
-struct FFGServerJoinDataResponse;
-class UFGServerSubsystem;
-
-enum class EInterfaceType : uint8;
+class UFicsitRemoteMonitoring;
 
 UCLASS()
-class FICSITREMOTEMONITORINGSERVER_API UFRM_Controller : public UFGServerControllerBase
+class FICSITREMOTEMONITORINGSERVER_API UFRM_Controller : public UObject
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
+    UFUNCTION()
+    FFGServerErrorResponse Handler_Frm(
+        FFGFileResponseWrapper& OutFileResponse,
+        FFGRequestHandlerContextWrapper RequestContext,
+        FString Endpoint,
+        FString Data
+    );
 
-	UPROPERTY()
-	UWorld* World;
-	
-	UPROPERTY()
-	AFicsitRemoteMonitoring* ModSubsystem;
+    void SetModSubsystem(UFicsitRemoteMonitoring* InModSubsystem);
+    void SetAuthToken(const FString& InAuthToken);
 
-	UPROPERTY()
-	FString AuthToken;
-	
-	UFUNCTION( FGServerRequestHandler, FGServerRequestPrivilegeLevel = "NotAuthenticated" )
-	FFGServerErrorResponse Handler_Frm(FFGFileResponseWrapper& OutFileResponse, const FFGRequestHandlerContextWrapper& RequestContext);
-	
+private:
+    UPROPERTY()
+    UFicsitRemoteMonitoring* ModSubsystem;
+
+    FString AuthToken;
 };
