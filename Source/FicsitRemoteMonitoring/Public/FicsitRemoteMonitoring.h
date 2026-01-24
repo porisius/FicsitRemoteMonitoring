@@ -104,6 +104,8 @@ private:
 	bool JSONDebugMode = false;
 	bool bShouldStop = false;
 	bool bHasRunningPushDataLoop = false;
+
+	FString AuthenticationToken;
 	
 	friend class UFGPowerCircuitGroup;
 
@@ -111,6 +113,9 @@ public:
 
 	AFicsitRemoteMonitoring();
 	virtual ~AFicsitRemoteMonitoring();
+
+	void SetAuthToken(const FString& Token);
+	FString GetAuthToken() const { return AuthenticationToken; }
 
 	friend class UFGServerSubsystem;
 	friend class UFGServerAPIManager;

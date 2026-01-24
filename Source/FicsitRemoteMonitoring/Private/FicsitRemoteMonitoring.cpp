@@ -10,6 +10,7 @@
 #include "EventsLibrary.h"
 #include "FactoryLibrary.h"
 #include "FicsitRemoteMonitoringModule.h"
+#include "FRMConfigInitSubsystem.h"
 #include "Async/Async.h"
 #include "FRM_Request.h"
 #include "Hypertubes.h"
@@ -59,46 +60,46 @@ void AFicsitRemoteMonitoring::BeginPlay()
 {
 	Super::BeginPlay();
 
-    // Load FRM's API Endpoints
-    InitAPIRegistry();
+	// Load FRM's API Endpoints
+	InitAPIRegistry();
 
-    // get config structs
-    auto HttpConfig = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
-    auto SerialConfig = FConfig_SerialStruct::GetActiveConfig(GetWorld());
-
-    if (HttpConfig.Web_Autostart) { StartWebSocketServer(); }
-    if (SerialConfig.COM_Autostart) { InitSerialDevice(); }
-
-    UWorld* World = GetWorld();
-
-	// generate new authentication token if no token is available
-	if (HttpConfig.Authentication_Token.IsEmpty())
+	// Get our config subsystem
+	auto ConfigSubsystem = GetGameInstance()->GetSubsystem<UFRMConfigInitSubsystem>();
+	if (ConfigSubsystem)
 	{
-		HttpConfig.Authentication_Token = GenerateAuthToken(32);
-		UE_LOG(LogHttpServer, Warning, TEXT("Authentication Token not set, generated a new token: %s"), *HttpConfig.Authentication_Token);
-		HttpConfig.Save(World);
+		SetAuthToken(ConfigSubsystem->GetAuthenticationToken());
 	}
-	
-    // store JSONDebugMode into a local property to prevent crash while access to GetActiveConfig while the EndPlay process
-    const auto FactoryConfig = FConfig_FactoryStruct::GetActiveConfig(World);
-    JSONDebugMode = FactoryConfig.JSONDebugMode;
+
+	if (!ConfigSubsystem)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[AFicsitRemoteMonitoring] Config subsystem missing!"));
+		return;
+	}
+
+	// Use cached config values from the subsystem
+	const auto& HttpConfig = ConfigSubsystem->GetHttpConfig();
+	const auto& SerialConfig = ConfigSubsystem->GetSerialConfig();
+	const auto& FactoryConfig = ConfigSubsystem->GetFactoryConfig();
+
+	// Save locally
+	JSONDebugMode = FactoryConfig.JSONDebugMode;
+
+	// Start services based on config
+	if (HttpConfig.Web_Autostart)
+	{
+		StartWebSocketServer();
+	}
+
+	if (SerialConfig.COM_Autostart)
+	{
+		InitSerialDevice();
+	}
+
+	// Store token for use in auth checks
+	SetAuthToken(ConfigSubsystem->GetAuthenticationToken());
 
 	// Register the callback to ensure WebSocket is stopped on crash/exit
 	FCoreDelegates::OnExit.AddUObject(this, &AFicsitRemoteMonitoring::StopWebSocketServer);
-}
-
-FString AFicsitRemoteMonitoring::GenerateAuthToken(const int32 Length)
-{
-	const FString Characters = TEXT("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
-	const int32 CharactersCount = Characters.Len();
-
-	FString RandomString;
-	for (int32 i = 0; i < Length; ++i)
-	{
-		RandomString.AppendChar(Characters[FMath::RandRange(0, CharactersCount - 1)]);
-	}
-
-	return RandomString;
 }
 
 void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
@@ -1082,4 +1083,9 @@ void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, FRequestData Re
 		TSharedPtr<FJsonObject> FirstJsonObject = JsonValues[0]->AsObject();
 		Out_Data = UFRM_RequestLibrary::JsonObjectToString(FirstJsonObject, JSONDebugMode);
 	}
+}
+
+void AFicsitRemoteMonitoring::SetAuthToken(const FString& Token)
+{
+	AuthenticationToken = Token;
 }
