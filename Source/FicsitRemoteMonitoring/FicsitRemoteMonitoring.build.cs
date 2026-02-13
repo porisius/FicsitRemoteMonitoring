@@ -97,8 +97,8 @@ public class FicsitRemoteMonitoring : ModuleRules
             });
         }
 
-        RuntimeDependencies.Add(Path.Combine(LibrariesPath, "zlib1.dll"));
-        RuntimeDependencies.Add(Path.Combine(LibrariesPath, "uv.dll"));
+        RuntimeDependencies.Add("$(BinaryOutputDir)/uv.dll", Path.Combine(LibrariesPath, "uv.dll"));
+        RuntimeDependencies.Add("$(BinaryOutputDir)/zlib1.dll", Path.Combine(LibrariesPath, "zlib1.dll"));
 
         CopyToBinaries(Path.Combine(LibrariesPath, "zlib1.dll"), Target);
         CopyToBinaries(Path.Combine(LibrariesPath, "uv.dll"), Target);
