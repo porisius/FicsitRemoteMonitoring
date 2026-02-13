@@ -1,5 +1,6 @@
 #include "FRMConfigInitSubsystem.h"
 #include "Configuration/ConfigManager.h"
+#include "ConfigPropertyString.h"
 #include "Engine/Engine.h"
 
 void UFRMConfigInitSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -23,7 +24,7 @@ void UFRMConfigInitSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     if (HttpConfig.Authentication_Token.IsEmpty())
     {
         HttpConfig.Authentication_Token = GenerateAuthToken(32);
-        HttpConfig.Save(GetWorld());
+        SaveHttpAuthToken(ConfigManager);
 
         UE_LOG(LogTemp, Log, TEXT("[FRMConfigInitSubsystem] Generated and saved new token: %s"), *HttpConfig.Authentication_Token);
     }
@@ -33,6 +34,28 @@ void UFRMConfigInitSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     }
 
     AuthenticationToken = HttpConfig.Authentication_Token;
+}
+
+void UFRMConfigInitSubsystem::SaveHttpAuthToken(UConfigManager* ConfigManager)
+{
+    FConfigId ConfigId{ "FicsitRemoteMonitoring", "WebServer" };
+
+    UConfigPropertySection* ConfigurationRootSection = ConfigManager->GetConfigurationRootSection(ConfigId);
+    if (!ConfigurationRootSection)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("[FRMConfigInitSubsystem] ConfigurationRootSection is null."));
+        return;
+    }
+
+    if (ConfigurationRootSection->SectionProperties.Contains("Authentication_Token"))
+    {
+        if (UConfigPropertyString* AuthTokenProperty = Cast<UConfigPropertyString>(ConfigurationRootSection->SectionProperties["Authentication_Token"]))
+        {
+            AuthTokenProperty->Value = HttpConfig.Authentication_Token;
+        }
+    }
+
+    ConfigManager->MarkConfigurationDirty(ConfigId);
 }
 
 FString UFRMConfigInitSubsystem::GenerateAuthToken(const int32 Length)

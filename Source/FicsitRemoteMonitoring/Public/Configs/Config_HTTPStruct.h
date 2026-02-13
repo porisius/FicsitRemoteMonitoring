@@ -35,19 +35,5 @@ public:
         }
         return ConfigStruct;
     }
-
-    void Save(UWorld* World)
-    {
-        FConfigId ConfigId{"FicsitRemoteMonitoring", "WebServer"};
-        UConfigManager* ConfigManager = World->GetGameInstance()->GetSubsystem<UConfigManager>();
-        UConfigPropertySection* ConfigurationRootSection = ConfigManager->GetConfigurationRootSection(ConfigId);
-
-        if (ConfigurationRootSection->SectionProperties.Contains("Authentication_Token"))
-        {
-            Cast<UConfigPropertyString>(ConfigurationRootSection->SectionProperties["Authentication_Token"])->Value = Authentication_Token;
-        }
-
-        ConfigManager->MarkConfigurationDirty(ConfigId);
-    }
 };
 

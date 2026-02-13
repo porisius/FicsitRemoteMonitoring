@@ -7,6 +7,8 @@
 #include "Config_FactoryStruct.h"
 #include "FRMConfigInitSubsystem.generated.h"
 
+class UConfigManager;
+
 UCLASS()
 class FICSITREMOTEMONITORING_API UFRMConfigInitSubsystem : public UGameInstanceSubsystem
 {
@@ -30,4 +32,5 @@ private:
     FConfig_FactoryStruct FactoryConfig;
 
     FString GenerateAuthToken(int32 Length);
+    void SaveHttpAuthToken(UConfigManager* ConfigManager);
 };
