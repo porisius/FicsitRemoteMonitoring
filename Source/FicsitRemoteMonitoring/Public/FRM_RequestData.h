@@ -10,13 +10,13 @@ struct FRequestData
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Request Data")
-	TMap<FString, FString> QueryParams;
+	TMap<FString, FString> QueryParams{};
 
 	bool bIsAuthorized = false;
 	
 	FString Method = "GET";
 
-	TArray<TSharedPtr<FJsonValue>> Body;
+	TArray<TSharedPtr<FJsonValue>> Body{};
 
-	EInterfaceType Interface;
+	EInterfaceType Interface{};
 };

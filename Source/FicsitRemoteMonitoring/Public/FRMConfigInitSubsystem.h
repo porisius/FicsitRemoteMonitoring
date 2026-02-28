@@ -25,11 +25,11 @@ public:
     const FConfig_FactoryStruct& GetFactoryConfig() const { return FactoryConfig; }
 
 private:
-    FString AuthenticationToken;
+    FString AuthenticationToken{};
 
-    FConfig_HTTPStruct HttpConfig;
-    FConfig_SerialStruct SerialConfig;
-    FConfig_FactoryStruct FactoryConfig;
+    FConfig_HTTPStruct HttpConfig{};
+    FConfig_SerialStruct SerialConfig{};
+    FConfig_FactoryStruct FactoryConfig{};
 
     FString GenerateAuthToken(int32 Length);
     void SaveHttpAuthToken(UConfigManager* ConfigManager);
