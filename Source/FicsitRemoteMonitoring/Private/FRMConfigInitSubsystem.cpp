@@ -3,6 +3,8 @@
 #include "ConfigPropertyString.h"
 #include "Engine/Engine.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogFRMConfigInitSubsystem, Log, All);
+
 void UFRMConfigInitSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
@@ -10,7 +12,7 @@ void UFRMConfigInitSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     UConfigManager* ConfigManager = GetGameInstance()->GetSubsystem<UConfigManager>();
     if (!ConfigManager)
     {
-        UE_LOG(LogTemp, Error, TEXT("[FRMConfigInitSubsystem] ConfigManager missing."));
+        UE_LOG(LogFRMConfigInitSubsystem, Error, TEXT("ConfigManager missing."));
         return;
     }
 
@@ -26,11 +28,11 @@ void UFRMConfigInitSubsystem::Initialize(FSubsystemCollectionBase& Collection)
         HttpConfig.Authentication_Token = GenerateAuthToken(32);
         SaveHttpAuthToken(ConfigManager);
 
-        UE_LOG(LogTemp, Log, TEXT("[FRMConfigInitSubsystem] Generated and saved new token: %s"), *HttpConfig.Authentication_Token);
+        UE_LOG(LogFRMConfigInitSubsystem, Log, TEXT("Generated and saved new token: %s"), *HttpConfig.Authentication_Token);
     }
     else
     {
-        UE_LOG(LogTemp, Log, TEXT("[FRMConfigInitSubsystem] Token already exists."));
+        UE_LOG(LogFRMConfigInitSubsystem, Log, TEXT("Token already exists."));
     }
 
     AuthenticationToken = HttpConfig.Authentication_Token;
@@ -43,7 +45,7 @@ void UFRMConfigInitSubsystem::SaveHttpAuthToken(UConfigManager* ConfigManager)
     UConfigPropertySection* ConfigurationRootSection = ConfigManager->GetConfigurationRootSection(ConfigId);
     if (!ConfigurationRootSection)
     {
-        UE_LOG(LogTemp, Warning, TEXT("[FRMConfigInitSubsystem] ConfigurationRootSection is null."));
+        UE_LOG(LogFRMConfigInitSubsystem, Warning, TEXT("ConfigurationRootSection is null."));
         return;
     }
 
