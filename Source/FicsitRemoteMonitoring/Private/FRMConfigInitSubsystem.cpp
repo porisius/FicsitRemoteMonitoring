@@ -62,7 +62,7 @@ FString UFRMConfigInitSubsystem::GenerateAuthToken(const int32 Length)
     const FString Characters = TEXT("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
     const int32 CharactersCount = Characters.Len();
 
-    FString RandomString;
+	FString RandomString{};
     for (int32 i = 0; i < Length; ++i)
     {
         RandomString.AppendChar(Characters[FMath::RandRange(0, CharactersCount - 1)]);
