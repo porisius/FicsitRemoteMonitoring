@@ -49,12 +49,9 @@ void UFRMConfigInitSubsystem::SaveHttpAuthToken(UConfigManager* ConfigManager)
         return;
     }
 
-    if (ConfigurationRootSection->SectionProperties.Contains("Authentication_Token"))
+    if (UConfigPropertyString* AuthTokenProperty = Cast<UConfigPropertyString>(ConfigurationRootSection->SectionProperties.FindRef("Authentication_Token")))
     {
-        if (UConfigPropertyString* AuthTokenProperty = Cast<UConfigPropertyString>(ConfigurationRootSection->SectionProperties["Authentication_Token"]))
-        {
-            AuthTokenProperty->Value = HttpConfig.Authentication_Token;
-        }
+        AuthTokenProperty->Value = HttpConfig.Authentication_Token;
     }
 
     ConfigManager->MarkConfigurationDirty(ConfigId);
