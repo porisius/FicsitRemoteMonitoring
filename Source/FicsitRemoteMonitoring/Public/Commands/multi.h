@@ -11,13 +11,13 @@ struct FChatReturn
 public:
 	
 	UPROPERTY(BlueprintReadWrite, Category = "Ficsit Remote Monitoring")
-	FString Chat;
+	FString Chat{};
 
 	UPROPERTY(BlueprintReadWrite, Category = "Ficsit Remote Monitoring")
-	FLinearColor Color;
+	FLinearColor Color{};
 
 	UPROPERTY(BlueprintReadWrite, Category = "Ficsit Remote Monitoring")
-	EExecutionStatus Status;
+	EExecutionStatus Status{};
 };
 
 UCLASS()

@@ -12,7 +12,7 @@ class FICSITREMOTEMONITORINGSERVER_API AFicsitRemoteMonitoringServer : public AM
 public:
 	
 	UPROPERTY()
-	UFRM_Controller* Controller;
+	UFRM_Controller* Controller{};
 
 protected:
 	// Called when the game starts or when spawned

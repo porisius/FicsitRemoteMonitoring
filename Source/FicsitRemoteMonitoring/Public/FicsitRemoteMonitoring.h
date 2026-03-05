@@ -16,14 +16,14 @@ THIRD_PARTY_INCLUDES_END
 
 struct FWebSocketUserData {
 	// Add any fields here you want to track for each WebSocket client
-	int32 ClientID;
-	FString ClientName;
+	int32 ClientID{};
+	FString ClientName{};
 };
 
 struct FClientInfo
 {
-	FString SubscribedEndpoints;  // Keep track of all endpoints that have been subscribed
-	TArray<uWS::WebSocket<false, true, FWebSocketUserData>*> Client;  // Add the third template argument for USERDATA
+	FString SubscribedEndpoints{};  // Keep track of all endpoints that have been subscribed
+	TArray<uWS::WebSocket<false, true, FWebSocketUserData>*> Client{};  // Add the third template argument for USERDATA
 };
 
 UENUM( BlueprintType )
@@ -44,7 +44,7 @@ struct FAPIEndpoint {
 	GENERATED_BODY()  // Required for USTRUCT
 
 	UPROPERTY()
-	FString APIName;
+	FString APIName{};
 
 	UPROPERTY()
 	FString Method = "GET";
@@ -59,7 +59,7 @@ struct FAPIEndpoint {
 	bool bRequiresAuthentication = false;
 
 	// Function pointer to the endpoint handler (not a UPROPERTY because function pointers aren’t supported by UPROPERTY)
-	FEndpointFunction FunctionPtr;
+	FEndpointFunction FunctionPtr{};
 
 	FAPIEndpoint(const FString& InMethod = "GET", const FString& InAPIName = "", const FEndpointFunction InFunctionPtr = nullptr)
 		: APIName(InAPIName),
@@ -88,8 +88,8 @@ struct FCallEndpointResponse
 {
 	GENERATED_BODY()
 
-	TArray<TSharedPtr<FJsonValue>> JsonValues;
-	bool bUseFirstObject;
+	TArray<TSharedPtr<FJsonValue>> JsonValues{};
+	bool bUseFirstObject{};
 };
 
 UCLASS()
@@ -99,13 +99,13 @@ class FICSITREMOTEMONITORING_API AFicsitRemoteMonitoring : public AModSubsystem
 
 private:
 
-	TFuture<void> WebServer;
+	TFuture<void> WebServer{};
 	
 	bool JSONDebugMode = false;
 	bool bShouldStop = false;
 	bool bHasRunningPushDataLoop = false;
 
-	FString AuthenticationToken;
+	FString AuthenticationToken{};
 	
 	friend class UFGPowerCircuitGroup;
 
@@ -155,11 +155,11 @@ public:
 	void ResearchTreeNodeUnlockData_BIE(UFGResearchTreeNode* ResearchTreeNode, TArray<FIntPoint>& Parents, TArray<FIntPoint>& UnhiddenBy, FIntPoint& Coordinates);
 
 	// Array of API endpoints
-	TArray<FAPIEndpoint> APIEndpoints;
+	TArray<FAPIEndpoint> APIEndpoints{};
 
-	TMap<FString, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>> EndpointSubscribers;
+	TMap<FString, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>> EndpointSubscribers{};
 
-	TSet<uWS::WebSocket<false, true, FWebSocketUserData>*> ConnectedClients; 
+	TSet<uWS::WebSocket<false, true, FWebSocketUserData>*> ConnectedClients{};
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void InitSerialDevice();
@@ -183,12 +183,12 @@ public:
 	void AddResponseHeaders(uWS::HttpResponse<false>* res, bool bIncludeContentType);
 	void AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonArray, const FString& ErrorMessage);
 	
-	TArray<FString> Flavor_Battery;
-	TArray<FString> Flavor_Doggo;
-	TArray<FString> Flavor_Player;
-	TArray<FString> Flavor_Power;
-	TArray<FString> Flavor_Research;
-	TArray<FString> Flavor_Train;
+	TArray<FString> Flavor_Battery{};
+	TArray<FString> Flavor_Doggo{};
+	TArray<FString> Flavor_Player{};
+	TArray<FString> Flavor_Power{};
+	TArray<FString> Flavor_Research{};
+	TArray<FString> Flavor_Train{};
 
 protected:
 	// Called when the game starts or when spawned
@@ -200,7 +200,7 @@ protected:
 public:
 
 	// Store the APIName for later use in the function
-	FString StoredAPIName;
+	FString StoredAPIName{};
 	
 	static void getAll(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
 	{

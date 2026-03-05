@@ -23,13 +23,13 @@ class FICSITREMOTEMONITORINGSERVER_API UFRM_Controller : public UFGServerControl
 public:
 
 	UPROPERTY()
-	UWorld* World;
+	UWorld* World{};
 	
 	UPROPERTY()
-	AFicsitRemoteMonitoring* ModSubsystem;
+	AFicsitRemoteMonitoring* ModSubsystem{};
 
 	UPROPERTY()
-	FString AuthToken;
+	FString AuthToken{};
 	
 	UFUNCTION( FGServerRequestHandler, FGServerRequestPrivilegeLevel = "NotAuthenticated" )
 	FFGServerErrorResponse Handler_Frm(FFGFileResponseWrapper& OutFileResponse, const FFGRequestHandlerContextWrapper& RequestContext);

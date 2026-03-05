@@ -28,6 +28,7 @@ FFGServerErrorResponse UFRM_Controller::Handler_Frm(FFGFileResponseWrapper& OutF
 	bool bSuccess = false;
 	int32 ErrorCode = 200;
 
+	/* If this does not build, add `friend class UFRM_Controller;` inside `class FFGRequestHandlerContext` in `FGServerAPIManager.h` */
 	TSharedPtr<FJsonObject> JsonBody = RequestContext.RequestHandlerContext->RawJsonBody;
 	TMap<FString, TArray<FString>> RequestHeaders = RequestContext.RequestHandlerContext->RequestHeaders;
 
