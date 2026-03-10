@@ -65,33 +65,27 @@ void AFicsitRemoteMonitoring::BeginPlay()
 	InitAPIRegistry();
 
 	// Get our config subsystem
-	auto ConfigSubsystem = GetGameInstance()->GetSubsystem<UFRMConfigInitSubsystem>();
-	if (ConfigSubsystem)
+	USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
+	if (SessionSettings)
 	{
 		SetAuthToken(ConfigSubsystem->GetAuthenticationToken());
 	}
 
-	if (!ConfigSubsystem)
+	if (!SessionSettings)
 	{
-		UE_LOG(LogTemp, Error, TEXT("[AFicsitRemoteMonitoring] Config subsystem missing!"));
+		UE_LOG(LogTemp, Error, TEXT("[AFicsitRemoteMonitoring] SessionSettings missing!"));
 		return;
 	}
 
-	// Use cached config values from the subsystem
-	const auto& HttpConfig = ConfigSubsystem->GetHttpConfig();
-	const auto& SerialConfig = ConfigSubsystem->GetSerialConfig();
-	const auto& FactoryConfig = ConfigSubsystem->GetFactoryConfig();
-
-	// Save locally
-	JSONDebugMode = FactoryConfig.JSONDebugMode;
+	USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
 
 	// Start services based on config
-	if (HttpConfig.Web_Autostart)
+	if (SessionSettings->GetBoolOptionValue("FicsitRemoteMonitoring.uWS.Autostart")
 	{
 		StartWebSocketServer();
 	}
 
-	if (SerialConfig.COM_Autostart)
+	if (SessionSettings->GetBoolOptionValue("FicsitRemoteMonitoring.Serial.Autostart")
 	{
 		InitSerialDevice();
 	}
