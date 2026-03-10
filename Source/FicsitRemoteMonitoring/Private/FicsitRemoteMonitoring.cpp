@@ -65,11 +65,7 @@ void AFicsitRemoteMonitoring::BeginPlay()
 	InitAPIRegistry();
 
 	// Get our config subsystem
-	USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
-	if (SessionSettings)
-	{
-		SetAuthToken(ConfigSubsystem->GetAuthenticationToken());
-	}
+	USessionSettingsManager* SessionSettings = this->GetWorld()->GetSubsystem<USessionSettingsManager>();
 
 	if (!SessionSettings)
 	{
@@ -77,21 +73,21 @@ void AFicsitRemoteMonitoring::BeginPlay()
 		return;
 	}
 
-	USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
-
 	// Start services based on config
-	if (SessionSettings->GetBoolOptionValue("FicsitRemoteMonitoring.uWS.Autostart")
+	if (SessionSettings->GetBoolOptionValue("FicsitRemoteMonitoring.uWS.Autostart"))
 	{
 		StartWebSocketServer();
 	}
 
-	if (SessionSettings->GetBoolOptionValue("FicsitRemoteMonitoring.Serial.Autostart")
+	if (SessionSettings->GetBoolOptionValue("FicsitRemoteMonitoring.Serial.Autostart"))
 	{
 		InitSerialDevice();
 	}
 
+	FString AuthToken = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.AuthenticationToken").TrimStartAndEnd();
+	
 	// Store token for use in auth checks
-	SetAuthToken(ConfigSubsystem->GetAuthenticationToken());
+	SetAuthToken(AuthToken);	
 
 	// Register the callback to ensure WebSocket is stopped on crash/exit
 	FCoreDelegates::OnExit.AddUObject(this, &AFicsitRemoteMonitoring::StopWebSocketServer);
