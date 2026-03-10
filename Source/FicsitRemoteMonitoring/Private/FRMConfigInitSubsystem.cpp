@@ -1,6 +1,8 @@
 #include "FRMConfigInitSubsystem.h"
 #include "Configuration/ConfigManager.h"
 #include "ConfigPropertyString.h"
+#include "SessionSettingsManager.h"
+#include "SMLOptionsLibrary.h"
 #include "Engine/Engine.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFRMConfigInitSubsystem, Log, All);
@@ -9,33 +11,28 @@ void UFRMConfigInitSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
 
-    UConfigManager* ConfigManager = GetGameInstance()->GetSubsystem<UConfigManager>();
-    if (!ConfigManager)
+    USessionSettingsManager* SessionSettings = GetWorld()->GetSubsystem<USessionSettingsManager>();
+    if (!SessionSettings)
     {
-        UE_LOG(LogFRMConfigInitSubsystem, Error, TEXT("ConfigManager missing."));
+        UE_LOG(LogFRMConfigInitSubsystem, Error, TEXT("SessionSettingsManager missing."));
         return;
     }
+                	
+	FString AuthToken = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.AuthenticationToken").TrimStartAndEnd();
 
-    ConfigManager->ReloadModConfigurations();
-
-    // Now config is loaded and safe to read/write
-    HttpConfig = FConfig_HTTPStruct::GetActiveConfig(this);
-    SerialConfig = FConfig_SerialStruct::GetActiveConfig(this);
-    FactoryConfig = FConfig_FactoryStruct::GetActiveConfig(this);
-
-    if (HttpConfig.Authentication_Token.IsEmpty())
+    if (AuthToken.IsEmpty())
     {
-        HttpConfig.Authentication_Token = GenerateAuthToken(32);
-        SaveHttpAuthToken(ConfigManager);
+        AuthToken = GenerateAuthToken(32);
+        USMLOptionsLibrary::SetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.AuthenticationToken", AuthToken);
 
-        UE_LOG(LogFRMConfigInitSubsystem, Log, TEXT("Generated and saved new token: %s"), *HttpConfig.Authentication_Token);
+        UE_LOG(LogFRMConfigInitSubsystem, Log, TEXT("Generated and saved new token: %s"), *AuthToken);
     }
     else
     {
         UE_LOG(LogFRMConfigInitSubsystem, Log, TEXT("Token already exists."));
     }
 
-    AuthenticationToken = HttpConfig.Authentication_Token;
+    AuthenticationToken = AuthToken;
 }
 
 void UFRMConfigInitSubsystem::SaveHttpAuthToken(UConfigManager* ConfigManager)

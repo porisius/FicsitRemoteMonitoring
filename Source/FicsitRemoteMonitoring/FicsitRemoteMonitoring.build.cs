@@ -49,7 +49,8 @@ public class FicsitRemoteMonitoring : ModuleRules
                 "Chaos", 
                 "ChaosVehiclesCore", "ChaosVehicles", "ChaosSolverEngine",
                 "HTTP",
-                "FicsitRemoteMonitoring"
+                "FicsitRemoteMonitoring",
+                "FactoryDedicatedServer"
             }
         );
         

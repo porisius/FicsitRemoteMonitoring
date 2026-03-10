@@ -7,6 +7,8 @@
 #include "FRM_Request.h"
 #include "NotificationLoader.h"
 #include "StructuredLog.h"
+#include "SessionSettings/SessionSettingsManager.h"
+#include "Settings/SMLOptionsLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommandSender* Sender, TArray<FString> Arguments) {
@@ -85,9 +87,18 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 
 		FString arg1 = Arguments[1].ToLower();
 
+		USessionSettingsManager* SessionSettings = GetWorld()->GetSubsystem<USessionSettingsManager>();
+		FString HttpPort = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.Port").TrimStartAndEnd();
+		
+		if (!HttpPort.IsNumeric()) {
+		
+			ChatReturn.Chat = TEXT("Invalid Port Config. Port must be a number.");
+			return ChatReturn;
+		}
+		
+		int32 Port = FCString::Atoi(*HttpPort);
+		
 		if (arg1 == "start") {
-			auto config = FConfig_HTTPStruct::GetActiveConfig(WorldContext);
-			int32 Port = config.HTTP_Port;
 			
 			UE_LOG(LogHttpServer, Log, TEXT("Chat Command: Starting HTTP Service. Port: %d"), Port);
 			ModSubsystem->StartWebSocketServer(true);
@@ -118,11 +129,11 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 		FString arg1 = Arguments[1].ToLower();
 
 		if (arg1 == "start") {
-			auto config = FConfig_SerialStruct::GetActiveConfig(WorldContext);
-			FString Port = config.COM_Port;
+			ModSubsystem->InitSerialDevice();
 
-			ModSubsystem->StartWebSocketServer();
-
+			USessionSettingsManager* SessionSettings = GetWorld()->GetSubsystem<USessionSettingsManager>();
+			FString Port = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.Serial.Port").TrimStartAndEnd();
+			
 			ChatReturn.Chat = FString(TEXT("Serial/RS232 Service Initiated on Port: " + Port));
 			ChatReturn.Color = FLinearColor::Green;
 			ChatReturn.Status = EExecutionStatus::COMPLETED;
@@ -130,7 +141,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 			UE_LOGFMT(LogHttpServer, Log, "Serial/RS232 Service started. Port: {Port}");
 		}
 		else if (arg1 == "stop") {
-			ModSubsystem->StopWebSocketServer();
+			ModSubsystem->StopSerialDevice();
 			UE_LOG(LogHttpServer, Log, TEXT("Stopping Serial/RS232 Service."));
 
 			ChatReturn.Chat = TEXT("Stopping Serial/RS232 Service.");
