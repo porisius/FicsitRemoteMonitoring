@@ -164,6 +164,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void InitSerialDevice();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
+	void StopSerialDevice();
+
 	void HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString Endpoint, FRequestData RequestData);
 
 	void InitAPIRegistry();

@@ -22,6 +22,7 @@
 #include "Research.h"
 #include "Resources.h"
 #include "Session.h"
+#include "SMLOptionsLibrary.h"
 #include "StructuredLog.h"
 #include "SubsystemActorManager.h"
 #include "Support.h"
@@ -106,16 +107,26 @@ void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
 {
 	if (bHasRunningPushDataLoop) return;
 	
-	FConfig_HTTPStruct HttpConfig = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
+	USessionSettingsManager* SessionSettings = GetWorld()->GetSubsystem<USessionSettingsManager>();
 
-	Async(EAsyncExecution::Thread, [this, HttpConfig]()
+	Async(EAsyncExecution::Thread, [this, SessionSettings]()
 	{
 		bHasRunningPushDataLoop = true;
 		UE_LOGFMT(LogHttpServer, Log, "Starting PushUpdatedData loop");
 		while (SocketRunning && !bShouldStop)
 		{
+			FString WSPushCycle = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.PushCycle").TrimStartAndEnd();
+			
+			if (!WSPushCycle.IsNumeric()) {			
+				UE_LOGFMT(LogHttpServer, Log, "Invalid Push Cycle Config. Push Cycle must be a number.");
+				bShouldStop = true;
+				return;
+			}
+			
+			int32 PushCycle = FCString::Atoi(*WSPushCycle);
+
 			PushUpdatedData();
-			FPlatformProcess::Sleep(HttpConfig.WebSocketPushCycle);
+			FPlatformProcess::Sleep(PushCycle);
 		}
 		UE_LOGFMT(LogHttpServer, Log, "Stopped PushUpdatedData loop");
 		bHasRunningPushDataLoop = false;
@@ -192,21 +203,31 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             try {
                 auto app = uWS::App();
                 auto World = GetWorld();
-                auto config = FConfig_HTTPStruct::GetActiveConfig(World);
+
+            	USessionSettingsManager* SessionSettings = GetWorld()->GetSubsystem<USessionSettingsManager>();
+				FString HttpPort = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.Port").TrimStartAndEnd();
+            	FString Root = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.Root").TrimStartAndEnd();
+            	FString AuthenticationToken = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.AuthenticationToken").TrimStartAndEnd();
+            	
+				if (!HttpPort.IsNumeric()) {
+						
+					UE_LOG(LogHttpServer, Log, TEXT("Invalid Port Config. Port must be a number."));
+					return;
+				}
+						
+				int32 port = FCString::Atoi(*HttpPort);
 
                 FString ModPath = FPaths::ProjectModsDir() + "FicsitRemoteMonitoring/";
                 FString IconsPath = ModPath + "Icons";
                 FString UIPath;
 
-                if (config.Web_Root.IsEmpty()) {
+                if (Root.IsEmpty()) {
                     UIPath = ModPath + "www";
                 }
                 else
                 {
-                    UIPath = config.Web_Root;
+                    UIPath = Root;
                 };
-
-                int port = config.HTTP_Port;
 
                 // Define WebSocket behavior
                 uWS::App::WebSocketBehavior<FWebSocketUserData> wsBehavior;
@@ -279,7 +300,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                 	UFRM_RequestLibrary::SendErrorJson(res, "404 Not Found", "");
                 });
 
-                app.get("/api/:APIEndpoint", [this, World, config](auto* res, auto* req) {
+                app.get("/api/:APIEndpoint", [this, World, AuthenticationToken](auto* res, auto* req) {
                     std::string url(req->getParameter("APIEndpoint"));
                     FString Endpoint = FString(url.c_str());
 
@@ -287,7 +308,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                     //UE_LOGFMT(LogHttpServer, Log, "Request URL: {0}", Endpoint);
 
                 	FRequestData RequestData;
-                	RequestData.bIsAuthorized = IsAuthorizedRequest(req, config.Authentication_Token);
+                	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthenticationToken);
                     HandleApiRequest(World, res, req, Endpoint, RequestData);
                 });
 
@@ -299,12 +320,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             		res->end();
             	});
             	
-            	app.post("/*", [this, World, config](auto* res, uWS::HttpRequest* req)
+            	app.post("/*", [this, World, AuthenticationToken](auto* res, uWS::HttpRequest* req)
             	{
 		            const std::string URL(req->getUrl().begin(), req->getUrl().end());
 					FString RelativePath = FString(URL.c_str()).Mid(1);
 
-            		res->onData([this, res, req, World, RelativePath, config](const std::string_view data, bool)
+            		res->onData([this, res, req, World, RelativePath, AuthenticationToken](const std::string_view data, bool)
             		{
 			            try
 			            {
@@ -320,7 +341,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 
 			            	FRequestData RequestData;
 			            	RequestData.Method = "POST";
-			            	RequestData.bIsAuthorized = IsAuthorizedRequest(req, config.Authentication_Token);
+			            	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthenticationToken);
 			            	
 			            	if (JsonValue->Type == EJson::Array)
 			            	{
@@ -348,7 +369,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             		res->onAborted([]() {});
             	});
 
-                app.get("/*", [this, UIPath, World, config](auto* res, uWS::HttpRequest* req) {
+                app.get("/*", [this, UIPath, World, AuthenticationToken](auto* res, uWS::HttpRequest* req) {
                     if (!res) return;
 
                     std::string url(req->getUrl().begin(), req->getUrl().end());
@@ -376,7 +397,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                     }
                     else {
                     	FRequestData RequestData;
-                    	RequestData.bIsAuthorized = IsAuthorizedRequest(req, config.Authentication_Token);
+                    	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthenticationToken);
                         HandleApiRequest(World, res, req, RelativePath, RequestData);
                     }
                 });
@@ -818,7 +839,6 @@ FString AFicsitRemoteMonitoring::FlavorTextRandomizer(EFlavorType FlavorType) {
 	TArray<FString> PositiveArray;
 				
 	auto config = FConfig_DiscITStruct::GetActiveConfig(World);
-
 
 	JsonPath = config.OutageJSON;
 
