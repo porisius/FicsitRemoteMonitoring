@@ -2,7 +2,7 @@
 
 #include "FGServerAPIManager.h"
 #include "FGServerSubsystem.h"
-#include "SMLOptionsLibrary.h"
+#include "../../FicsitRemoteMonitoring/Public/Libraries/FRMConfigManager.h"
 #include "../../FicsitRemoteMonitoring/Public/FicsitRemoteMonitoring.h"
 
 class UFGServerSubsystem;
@@ -19,8 +19,8 @@ void AFicsitRemoteMonitoringServer::BeginPlay()
 	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(World);
 	this->Controller->ModSubsystem = ModSubsystem;
 
-	USessionSettingsManager* SessionSettings = GetWorld()->GetSubsystem<USessionSettingsManager>();
-	FString AuthToken = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.AuthenticationToken").TrimStartAndEnd();
+	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+
 	this->Controller->AuthToken = AuthToken;
 	
 	if (World == nullptr)

@@ -7,8 +7,7 @@
 #include "FRM_Request.h"
 #include "NotificationLoader.h"
 #include "StructuredLog.h"
-#include "SessionSettings/SessionSettingsManager.h"
-#include "Settings/SMLOptionsLibrary.h"
+#include "Libraries/Validation.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommandSender* Sender, TArray<FString> Arguments) {
@@ -78,7 +77,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 		return ChatReturn;
 	}
 	
-	if (command == "http") {
+	if (command == "http" || command == "uws") {
 		ChatReturn.Chat = TEXT("Usage: /frm http <start/stop>");
 
 		if (argumentsNum < 2) {
@@ -87,16 +86,17 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 
 		FString arg1 = Arguments[1].ToLower();
 
-		USessionSettingsManager* SessionSettings = GetWorld()->GetSubsystem<USessionSettingsManager>();
-		FString HttpPort = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.Port").TrimStartAndEnd();
-		
-		if (!HttpPort.IsNumeric()) {
-		
-			ChatReturn.Chat = TEXT("Invalid Port Config. Port must be a number.");
-			return ChatReturn;
+		const int32 Port = UFRMConfigManager::FRM_GetConfigOrDefault<int32>(TEXT("uWS.Port"), 8080);
+
+		FString Reason;
+		if (!UFRMValidation::IsTcpPortAvailable(Port, Reason))
+		{
+			UE_LOG(LogHttpServer, Error, TEXT("Port %d unavailable: %s"), Port, *Reason);
+
+			ChatReturn.Chat = FString(TEXT("Port " + FString::FromInt(Port) + "Unavailable. Reason: " + *Reason));
+			ChatReturn.Color = FLinearColor::Red;
+			ChatReturn.Status = EExecutionStatus::COMPLETED;
 		}
-		
-		int32 Port = FCString::Atoi(*HttpPort);
 		
 		if (arg1 == "start") {
 			
@@ -131,8 +131,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 		if (arg1 == "start") {
 			ModSubsystem->InitSerialDevice();
 
-			USessionSettingsManager* SessionSettings = GetWorld()->GetSubsystem<USessionSettingsManager>();
-			FString Port = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.Serial.Port").TrimStartAndEnd();
+			const FString Port = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("Serial.Port"), "COM3").TrimStartAndEnd();
 			
 			ChatReturn.Chat = FString(TEXT("Serial/RS232 Service Initiated on Port: " + Port));
 			ChatReturn.Color = FLinearColor::Green;

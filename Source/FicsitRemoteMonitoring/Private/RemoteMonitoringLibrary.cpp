@@ -301,10 +301,8 @@ void URemoteMonitoringLibrary::GetOverclockingItemsFromInventory(const UFGInvent
 FString URemoteMonitoringLibrary::APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext) {
 
 	FString Write{};
-
-	USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
 	
-	if (SessionSettings->GetBoolOptionValue("FicsitRemoteMonitoring.uWS.JSONDebug")) {
+	if (UFRMConfigManager::FRM_GetConfigOrDefault<bool>(TEXT("Debug.JSONDebug"), false)) {
 		const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write);
 		FJsonSerializer::Serialize(JSONArray, JsonWriter);
 	} else {

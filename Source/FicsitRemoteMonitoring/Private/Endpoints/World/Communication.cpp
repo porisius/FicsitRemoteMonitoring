@@ -270,12 +270,9 @@ void UCommunication::setModSetting(UObject* WorldContext, FRequestData RequestDa
 			continue;
 		}
 
-		UE_LOG(LogTemp, Warning, TEXT("SplineSampleDistance: %f"), SplineSampleDistance);
+		UE_LOG(LogFRMAPI, Warning, TEXT("SplineSampleDistance: %f"), SplineSampleDistance);
 
-		const FString& cvar = "FicsitRemoteMonitoring.General.SplineSampleDistance";
-		
-		USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
-		SessionSettings->SetFloatOptionValue(cvar, SplineSampleDistance);
+		UFRMConfigManager::FRM_SetConfigFromInput(TEXT("General.SplineSampleDistance"), FString::SanitizeFloat(SplineSampleDistance), false);
 
 		TSharedPtr<FJsonObject> JChatMessage = MakeShared<FJsonObject>();
 		JChatMessage->Values.Add("IsSent", MakeShared<FJsonValueBoolean>(true));

@@ -32,6 +32,7 @@
 #include "Trains.h"
 #include "Vehicles.h"
 #include "Engine/World.h"
+#include "Libraries/Validation.h"
 
 us_listen_socket_t* SocketListener;
 bool SocketRunning = false;
@@ -64,30 +65,20 @@ void AFicsitRemoteMonitoring::BeginPlay()
 	// Load FRM's API Endpoints
 	InitAPIRegistry();
 
-	// Get our config subsystem
-	USessionSettingsManager* SessionSettings = this->GetWorld()->GetSubsystem<USessionSettingsManager>();
+	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+	
+	// Store token for use in auth checks
+	SetAuthToken(AuthToken);
 
-	if (!SessionSettings)
-	{
-		UE_LOG(LogTemp, Error, TEXT("[AFicsitRemoteMonitoring] SessionSettings missing!"));
-		return;
-	}
-
-	// Start services based on config
-	if (SessionSettings->GetBoolOptionValue("FicsitRemoteMonitoring.uWS.Autostart"))
+	if (UFRMConfigManager::FRM_GetConfigOrDefault<bool>(TEXT("uWS.Autostart"), false))
 	{
 		StartWebSocketServer();
 	}
-
-	if (SessionSettings->GetBoolOptionValue("FicsitRemoteMonitoring.Serial.Autostart"))
+	
+	if (UFRMConfigManager::FRM_GetConfigOrDefault<bool>(TEXT("Serial.Autostart"), false))
 	{
 		InitSerialDevice();
 	}
-
-	FString AuthToken = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.AuthenticationToken").TrimStartAndEnd();
-	
-	// Store token for use in auth checks
-	SetAuthToken(AuthToken);	
 
 	// Register the callback to ensure WebSocket is stopped on crash/exit
 	FCoreDelegates::OnExit.AddUObject(this, &AFicsitRemoteMonitoring::StopWebSocketServer);
@@ -97,23 +88,13 @@ void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
 {
 	if (bHasRunningPushDataLoop) return;
 	
-	USessionSettingsManager* SessionSettings = GetWorld()->GetSubsystem<USessionSettingsManager>();
-
-	Async(EAsyncExecution::Thread, [this, SessionSettings]()
+	Async(EAsyncExecution::Thread, [this]()
 	{
 		bHasRunningPushDataLoop = true;
 		UE_LOGFMT(LogHttpServer, Log, "Starting PushUpdatedData loop");
 		while (SocketRunning && !bShouldStop)
 		{
-			FString WSPushCycle = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.PushCycle").TrimStartAndEnd();
-			
-			if (!WSPushCycle.IsNumeric()) {			
-				UE_LOGFMT(LogHttpServer, Log, "Invalid Push Cycle Config. Push Cycle must be a number.");
-				bShouldStop = true;
-				return;
-			}
-			
-			int32 PushCycle = FCString::Atoi(*WSPushCycle);
+			const float PushCycle = UFRMConfigManager::FRM_GetConfigOrDefault<float>(TEXT("uWS.PushCycle"), 5.0f);
 
 			PushUpdatedData();
 			FPlatformProcess::Sleep(PushCycle);
@@ -194,18 +175,8 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                 auto app = uWS::App();
                 auto World = GetWorld();
 
-            	USessionSettingsManager* SessionSettings = GetWorld()->GetSubsystem<USessionSettingsManager>();
-				FString HttpPort = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.Port").TrimStartAndEnd();
-            	FString Root = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.Root").TrimStartAndEnd();
-            	FString AuthenticationToken = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.AuthenticationToken").TrimStartAndEnd();
-            	
-				if (!HttpPort.IsNumeric()) {
-						
-					UE_LOG(LogHttpServer, Log, TEXT("Invalid Port Config. Port must be a number."));
-					return;
-				}
-						
-				int32 port = FCString::Atoi(*HttpPort);
+            	const int32 port = UFRMConfigManager::FRM_GetConfigOrDefault<int32>(TEXT("uWS.Port"), 8080);
+            	const FString Root = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");            	
 
                 FString ModPath = FPaths::ProjectModsDir() + "FicsitRemoteMonitoring/";
                 FString IconsPath = ModPath + "Icons";
@@ -290,15 +261,17 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                 	UFRM_RequestLibrary::SendErrorJson(res, "404 Not Found", "");
                 });
 
-                app.get("/api/:APIEndpoint", [this, World, AuthenticationToken](auto* res, auto* req) {
+                app.get("/api/:APIEndpoint", [this, World](auto* res, auto* req) {
                     std::string url(req->getParameter("APIEndpoint"));
                     FString Endpoint = FString(url.c_str());
 
                     // Log the request URL
                     //UE_LOGFMT(LogHttpServer, Log, "Request URL: {0}", Endpoint);
 
+                	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+
                 	FRequestData RequestData;
-                	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthenticationToken);
+                	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
                     HandleApiRequest(World, res, req, Endpoint, RequestData);
                 });
 
@@ -310,12 +283,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             		res->end();
             	});
             	
-            	app.post("/*", [this, World, AuthenticationToken](auto* res, uWS::HttpRequest* req)
+            	app.post("/*", [this, World](auto* res, uWS::HttpRequest* req)
             	{
 		            const std::string URL(req->getUrl().begin(), req->getUrl().end());
 					FString RelativePath = FString(URL.c_str()).Mid(1);
 
-            		res->onData([this, res, req, World, RelativePath, AuthenticationToken](const std::string_view data, bool)
+            		res->onData([this, res, req, World, RelativePath](const std::string_view data, bool)
             		{
 			            try
 			            {
@@ -329,9 +302,11 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 			            		return UFRM_RequestLibrary::SendErrorMessage(res, "400 Bad Request", FString("Invalid Request Body"));
 			            	}
 
+			            	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+			            	
 			            	FRequestData RequestData;
 			            	RequestData.Method = "POST";
-			            	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthenticationToken);
+			            	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
 			            	
 			            	if (JsonValue->Type == EJson::Array)
 			            	{
@@ -359,10 +334,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             		res->onAborted([]() {});
             	});
 
-                app.get("/*", [this, UIPath, World, AuthenticationToken](auto* res, uWS::HttpRequest* req) {
+                app.get("/*", [this, UIPath, World](auto* res, uWS::HttpRequest* req) {
                     if (!res) return;
 
                     std::string url(req->getUrl().begin(), req->getUrl().end());
+
+                	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
                     
                     bool bFileExists = false;
                     // Remove initial '/'
@@ -387,7 +364,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                     }
                     else {
                     	FRequestData RequestData;
-                    	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthenticationToken);
+                    	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
                         HandleApiRequest(World, res, req, RelativePath, RequestData);
                     }
                 });
@@ -398,7 +375,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 
                     UE_LOG(LogHttpServer, Warning, TEXT("Attempting to listen on port %d"), port);
 
-                    if (token) {
+                	FString Reason;
+                	if (!UFRMValidation::IsTcpPortAvailable(port, Reason))
+                	{
+                		UE_LOG(LogHttpServer, Error, TEXT("Port %d unavailable: %s"), port, *Reason);
+                	}
+                	else if (token) {
                         SocketListener = token;
                         UE_LOGFMT(LogHttpServer, Warning, "Listening on port {port}", port);
 

@@ -31,8 +31,7 @@ void UHypertubes::getHyperEntrance(UObject* WorldContext, FRequestData RequestDa
 void UHypertubes::getHypertube(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 	
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
-	float SampleDistance = SessionSettings->GetFloatOptionValue("FicsitRemoteMonitoring.General.SplineSampleDistance");
+	const float SampleDistance = UFRMConfigManager::FRM_GetConfigOrDefault<float>(TEXT("General.SplineSampleDistance"), 75.0f);
 	
 	TArray<AFGBuildablePipeHyper*> Hypertubes;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildablePipeHyper>(Hypertubes);
