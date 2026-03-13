@@ -5,8 +5,8 @@
 #include "Dom/JsonObject.h"
 #include "Dom/JsonValue.h"
 #include "FRM_RequestData.h"
-#include "SessionSettingsManager.h"
 #include "Components/SplineComponent.h"
+#include "Libraries/FRMConfigManager.h"
 #include "RemoteMonitoringLibrary.generated.h"
 
 struct FSplinePointData;

@@ -44,6 +44,8 @@ public class FicsitRemoteMonitoring : ModuleRules
                 "InputCore",
                 "Json",
                 "JsonUtilities",
+                "Sockets",
+                "Networking",
                 "FactoryGame",
                 "SML", 
                 "Chaos", 

@@ -32,5 +32,4 @@ private:
     FConfig_FactoryStruct FactoryConfig{};
 
     FString GenerateAuthToken(int32 Length);
-    void SaveHttpAuthToken(UConfigManager* ConfigManager);
 };

@@ -1,9 +1,11 @@
 #include "FRMConfigInitSubsystem.h"
 #include "Configuration/ConfigManager.h"
 #include "ConfigPropertyString.h"
+#include "FGGameUserSettings.h"
 #include "SessionSettingsManager.h"
 #include "SMLOptionsLibrary.h"
 #include "Engine/Engine.h"
+#include "Libraries/FRMConfigManager.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFRMConfigInitSubsystem, Log, All);
 
@@ -17,13 +19,16 @@ void UFRMConfigInitSubsystem::Initialize(FSubsystemCollectionBase& Collection)
         UE_LOG(LogFRMConfigInitSubsystem, Error, TEXT("SessionSettingsManager missing."));
         return;
     }
-                	
-	FString AuthToken = USMLOptionsLibrary::GetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.AuthenticationToken").TrimStartAndEnd();
+
+    const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");
 
     if (AuthToken.IsEmpty())
     {
-        AuthToken = GenerateAuthToken(32);
-        USMLOptionsLibrary::SetStringOptionValue(SessionSettings, "FicsitRemoteMonitoring.uWS.AuthenticationToken", AuthToken);
+        if (!UFRMConfigManager::FRM_SetConfigFromInput(TEXT("uWS.AuthenticationToken"), GenerateAuthToken(32), false))
+        {
+            UE_LOG(LogFRMConfigInitSubsystem, Warning, TEXT("Failed to apply setting"));
+            return;
+        }
 
         UE_LOG(LogFRMConfigInitSubsystem, Log, TEXT("Generated and saved new token: %s"), *AuthToken);
     }
@@ -33,25 +38,7 @@ void UFRMConfigInitSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     }
 
     AuthenticationToken = AuthToken;
-}
-
-void UFRMConfigInitSubsystem::SaveHttpAuthToken(UConfigManager* ConfigManager)
-{
-    FConfigId ConfigId{ "FicsitRemoteMonitoring", "WebServer" };
-
-    UConfigPropertySection* ConfigurationRootSection = ConfigManager->GetConfigurationRootSection(ConfigId);
-    if (!ConfigurationRootSection)
-    {
-        UE_LOG(LogFRMConfigInitSubsystem, Warning, TEXT("ConfigurationRootSection is null."));
-        return;
-    }
-
-    if (UConfigPropertyString* AuthTokenProperty = Cast<UConfigPropertyString>(ConfigurationRootSection->SectionProperties.FindRef("Authentication_Token")))
-    {
-        AuthTokenProperty->Value = HttpConfig.Authentication_Token;
-    }
-
-    ConfigManager->MarkConfigurationDirty(ConfigId);
+    
 }
 
 FString UFRMConfigInitSubsystem::GenerateAuthToken(const int32 Length)
