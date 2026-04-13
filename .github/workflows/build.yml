@@ -67,18 +67,18 @@ jobs:
 
       - name: Cleanup Archive and Output Folders
         run: |
-          cmd /c "rmdir /s /q C:\workspace\Archive\LinuxServer"
-          cmd /c "rmdir /s /q C:\workspace\Archive\WindowsServer"
-          cmd /c "rmdir /s /q C:\workspace\Archive\Windows"
-          cmd /c "del /s /q C:\workspace\Output\*"
+          cmd /c "rmdir /s /q C:\workspace\Archive\FicsitRemoteMonitoring\LinuxServer"
+          cmd /c "rmdir /s /q C:\workspace\Archive\FicsitRemoteMonitoring\WindowsServer"
+          cmd /c "rmdir /s /q C:\workspace\Archive\FicsitRemoteMonitoring\Windows"
+          cmd /c "del /s /q C:\workspace\Output\FicsitRemoteMonitoring\*"
 
       - name: Extract Combined Archive
-        run: 7z x C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip -oC:\workspace\Archive
+        run: 7z x C:\SatisfactoryModLoader\Saved\ArchivedPlugins\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip -oC:\workspace\Archive\FicsitRemoteMonitoring
 
       - name: Copy DLLs to Windows/WindowsServer Builds
         run: |
-          Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" C:\workspace\Archive\Windows\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
-          Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" C:\workspace\Archive\WindowsServer\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
+          Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" C:\workspace\Archive\FicsitRemoteMonitoring\Windows\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
+          Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" C:\workspace\Archive\FicsitRemoteMonitoring\WindowsServer\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Upload artifacts - UnrealAutomationTool Logs
         uses: actions/upload-artifact@master
@@ -92,33 +92,33 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Client Build
-          path: C:/workspace/Archive/Windows/*
+          path: C:/workspace/Archive/FicsitRemoteMonitoring/Windows/*
 
       - name: Archive Windows Server Build Artifact
         if: ${{ github.event.pull_request || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Windows Server Build
-          path: C:/workspace/Archive/WindowsServer/*
+          path: C:/workspace/Archive/FicsitRemoteMonitoring/WindowsServer/*
 
       - name: Archive Linux Server Build Artifact
         if: ${{ github.event.pull_request || github.ref == 'refs/heads/dev' }}
         uses: actions/upload-artifact@v4
         with:
           name: Linux Server Build
-          path: C:/workspace/Archive/LinuxServer/*
+          path: C:/workspace/Archive/FicsitRemoteMonitoring/LinuxServer/*
 
       - name: Compress Archives for Release
         if: github.ref == 'refs/heads/main'
         run: |
-          7z a C:\workspace\Output\FicsitRemoteMonitoring.zip C:\workspace\Archive\*
-          7z a C:\workspace\Output\FicsitRemoteMonitoring-Windows.zip C:\workspace\Archive\Windows\*
-          7z a C:\workspace\Output\FicsitRemoteMonitoring-WindowsServer.zip C:\workspace\Archive\WindowsServer\*
-          7z a C:\workspace\Output\FicsitRemoteMonitoring-LinuxServer.zip C:\workspace\Archive\LinuxServer\*
+          7z a C:\workspace\Output\FicsitRemoteMonitoring\FicsitRemoteMonitoring.zip C:\workspace\Archive\FicsitRemoteMonitoring\*
+          7z a C:\workspace\Output\FicsitRemoteMonitoring\FicsitRemoteMonitoring-Windows.zip C:\workspace\Archive\FicsitRemoteMonitoring\Windows\*
+          7z a C:\workspace\Output\FicsitRemoteMonitoring\FicsitRemoteMonitoring-WindowsServer.zip C:\workspace\Archive\FicsitRemoteMonitoring\WindowsServer\*
+          7z a C:\workspace\Output\FicsitRemoteMonitoring\FicsitRemoteMonitoring-LinuxServer.zip C:\workspace\Archive\FicsitRemoteMonitoring\LinuxServer\*
 
       - name: Release
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v1
         with:
-          files: C:/workspace/Output/*
+          files: C:/workspace/Output/FicsitRemoteMonitoring/*
           tag_name: "${{ steps.uPlugin.outputs.SemVersion }}-${{ github.run_number }}"
