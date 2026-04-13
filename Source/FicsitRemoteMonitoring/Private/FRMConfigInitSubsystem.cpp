@@ -13,13 +13,6 @@ void UFRMConfigInitSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
 
-    USessionSettingsManager* SessionSettings = GetWorld()->GetSubsystem<USessionSettingsManager>();
-    if (!SessionSettings)
-    {
-        UE_LOG(LogFRMConfigInitSubsystem, Error, TEXT("SessionSettingsManager missing."));
-        return;
-    }
-
     const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");
 
     if (AuthToken.IsEmpty())

@@ -5,6 +5,7 @@
 #include "Config_FactoryStruct.h"
 #include "Config_HTTPStruct.h"
 #include "Config_SerialStruct.h"
+#include "Runtime/Core/Public/Logging/LogCategory.h"
 #include "Drones.h"
 #include "EngineUtils.h"
 #include "EventsLibrary.h"
@@ -65,11 +66,23 @@ void AFicsitRemoteMonitoring::BeginPlay()
 	// Load FRM's API Endpoints
 	InitAPIRegistry();
 
-	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
-	
-	// Store token for use in auth checks
-	SetAuthToken(AuthToken);
+	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");
 
+	if (AuthToken.IsEmpty())
+	{
+		if (!UFRMConfigManager::FRM_SetConfigFromInput(TEXT("uWS.AuthenticationToken"), GenerateAuthToken(32), false))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Failed to apply setting"));
+			return;
+		}
+
+		UE_LOG(LogTemp, Log, TEXT("Generated and saved new token: %s"), *AuthToken);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("Token already exists."));
+	}
+	
 	if (UFRMConfigManager::FRM_GetConfigOrDefault<bool>(TEXT("uWS.Autostart"), false))
 	{
 		StartWebSocketServer();
@@ -643,6 +656,20 @@ bool AFicsitRemoteMonitoring::IsAuthorizedRequest(uWS::HttpRequest* req, FString
 	return AuthorizationHeader == RequiredToken;
 }
 
+FString AFicsitRemoteMonitoring::GenerateAuthToken(const int32 Length)
+{
+	const FString Characters = TEXT("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+	const int32 CharactersCount = Characters.Len();
+
+	FString RandomString{};
+	for (int32 i = 0; i < Length; ++i)
+	{
+		RandomString.AppendChar(Characters[FMath::RandRange(0, CharactersCount - 1)]);
+	}
+
+	return RandomString;
+}
+
 void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString Endpoint, FRequestData RequestData)
 {
 	// Parse all query parameters
@@ -1075,9 +1102,4 @@ void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, FRequestData Re
 		TSharedPtr<FJsonObject> FirstJsonObject = JsonValues[0]->AsObject();
 		Out_Data = UFRM_RequestLibrary::JsonObjectToString(FirstJsonObject, JSONDebugMode);
 	}
-}
-
-void AFicsitRemoteMonitoring::SetAuthToken(const FString& Token)
-{
-	AuthenticationToken = Token;
 }

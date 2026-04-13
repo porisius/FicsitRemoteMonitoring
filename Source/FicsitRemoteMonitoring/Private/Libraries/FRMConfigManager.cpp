@@ -28,8 +28,6 @@ bool UFRMConfigManager::FRM_GetStoredConfigType(const FString& StrID, EVariantTy
 
 bool UFRMConfigManager::FRM_GetExpectedConfigType(const FString& StrID, EVariantTypes& OutType)
 {
-	// Explicit schema for known settings.
-	// This avoids being trapped by previously mis-saved string values like "9090".
 	if (StrID == TEXT("uWS.Port"))
 	{
 		OutType = EVariantTypes::Int32;
@@ -39,12 +37,6 @@ bool UFRMConfigManager::FRM_GetExpectedConfigType(const FString& StrID, EVariant
 	if (StrID == TEXT("uWS.PushCycle"))
 	{
 		OutType = EVariantTypes::Float;
-		return true;
-	}
-
-	if (StrID == TEXT("uWS.Enabled"))
-	{
-		OutType = EVariantTypes::Bool;
 		return true;
 	}
 

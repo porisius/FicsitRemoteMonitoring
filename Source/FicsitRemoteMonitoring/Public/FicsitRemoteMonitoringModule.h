@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
+#include "Runtime/Core/Public/Logging/LogCategory.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogHttpServer, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(LogWSServer, Log, All);

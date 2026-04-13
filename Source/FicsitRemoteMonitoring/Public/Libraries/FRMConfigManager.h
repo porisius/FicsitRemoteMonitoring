@@ -5,7 +5,6 @@
 #include "Misc/Variant.h"
 #include <type_traits>
 #include "FGGameUserSettings.h"
-#include "../FicsitRemoteMonitoringModule.h"
 #include "FRMConfigManager.generated.h"
 
 class UFGGameUserSettings;
