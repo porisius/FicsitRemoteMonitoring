@@ -22,8 +22,8 @@ class UFGFactoryConnectionComponent;
 
 TArray<TSharedPtr<FJsonValue>> ULogistics::getBelts_Helper(UObject* WorldContext, bool IsBelt) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
-	float SampleDistance = SessionSettings->GetFloatOptionValue("FicsitRemoteMonitoring.General.SplineSampleDistance");
+
+	const float SampleDistance = UFRMConfigManager::FRM_GetConfigOrDefault<float>(TEXT("General.SplineSampleDistance"), 75.0f);
 
 	TArray<AFGBuildableConveyorBase*> Conveyors;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableConveyorBase>(Conveyors);
@@ -179,8 +179,7 @@ void ULogistics::getSplitterMerger(UObject* WorldContext, FRequestData RequestDa
 
 void ULogistics::getPipes(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
-	float SampleDistance = SessionSettings->GetFloatOptionValue("FicsitRemoteMonitoring.General.SplineSampleDistance");
+	const float SampleDistance = UFRMConfigManager::FRM_GetConfigOrDefault<float>(TEXT("General.SplineSampleDistance"), 75.0f);
 
 	TArray<AFGBuildablePipeline*> Pipes;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildablePipeline>(Pipes);

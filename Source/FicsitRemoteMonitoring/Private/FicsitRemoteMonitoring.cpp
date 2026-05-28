@@ -5,6 +5,7 @@
 #include "Config_FactoryStruct.h"
 #include "Config_HTTPStruct.h"
 #include "Config_SerialStruct.h"
+#include "Runtime/Core/Public/Logging/LogCategory.h"
 #include "Drones.h"
 #include "EngineUtils.h"
 #include "EventsLibrary.h"
@@ -22,6 +23,7 @@
 #include "Research.h"
 #include "Resources.h"
 #include "Session.h"
+#include "SMLOptionsLibrary.h"
 #include "StructuredLog.h"
 #include "SubsystemActorManager.h"
 #include "Support.h"
@@ -31,6 +33,7 @@
 #include "Trains.h"
 #include "Vehicles.h"
 #include "Engine/World.h"
+#include "Libraries/Validation.h"
 
 us_listen_socket_t* SocketListener;
 bool SocketRunning = false;
@@ -63,40 +66,32 @@ void AFicsitRemoteMonitoring::BeginPlay()
 	// Load FRM's API Endpoints
 	InitAPIRegistry();
 
-	// Get our config subsystem
-	auto ConfigSubsystem = GetGameInstance()->GetSubsystem<UFRMConfigInitSubsystem>();
-	if (ConfigSubsystem)
+	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");
+
+	if (AuthToken.IsEmpty())
 	{
-		SetAuthToken(ConfigSubsystem->GetAuthenticationToken());
-	}
+		if (!UFRMConfigManager::FRM_SetConfigFromInput(TEXT("uWS.AuthenticationToken"), GenerateAuthToken(32), false))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Failed to apply setting"));
+			return;
+		}
 
-	if (!ConfigSubsystem)
+		UE_LOG(LogTemp, Log, TEXT("Generated and saved new token: %s"), *AuthToken);
+	}
+	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("[AFicsitRemoteMonitoring] Config subsystem missing!"));
-		return;
+		UE_LOG(LogTemp, Log, TEXT("Token already exists."));
 	}
-
-	// Use cached config values from the subsystem
-	const auto& HttpConfig = ConfigSubsystem->GetHttpConfig();
-	const auto& SerialConfig = ConfigSubsystem->GetSerialConfig();
-	const auto& FactoryConfig = ConfigSubsystem->GetFactoryConfig();
-
-	// Save locally
-	JSONDebugMode = FactoryConfig.JSONDebugMode;
-
-	// Start services based on config
-	if (HttpConfig.Web_Autostart)
+	
+	if (UFRMConfigManager::FRM_GetConfigOrDefault<bool>(TEXT("uWS.Autostart"), false))
 	{
 		StartWebSocketServer();
 	}
-
-	if (SerialConfig.COM_Autostart)
+	
+	if (UFRMConfigManager::FRM_GetConfigOrDefault<bool>(TEXT("Serial.Autostart"), false))
 	{
 		InitSerialDevice();
 	}
-
-	// Store token for use in auth checks
-	SetAuthToken(ConfigSubsystem->GetAuthenticationToken());
 
 	// Register the callback to ensure WebSocket is stopped on crash/exit
 	FCoreDelegates::OnExit.AddUObject(this, &AFicsitRemoteMonitoring::StopWebSocketServer);
@@ -106,16 +101,16 @@ void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
 {
 	if (bHasRunningPushDataLoop) return;
 	
-	FConfig_HTTPStruct HttpConfig = FConfig_HTTPStruct::GetActiveConfig(GetWorld());
-
-	Async(EAsyncExecution::Thread, [this, HttpConfig]()
+	Async(EAsyncExecution::Thread, [this]()
 	{
 		bHasRunningPushDataLoop = true;
 		UE_LOGFMT(LogHttpServer, Log, "Starting PushUpdatedData loop");
 		while (SocketRunning && !bShouldStop)
 		{
+			const float PushCycle = UFRMConfigManager::FRM_GetConfigOrDefault<float>(TEXT("uWS.PushCycle"), 5.0f);
+
 			PushUpdatedData();
-			FPlatformProcess::Sleep(HttpConfig.WebSocketPushCycle);
+			FPlatformProcess::Sleep(PushCycle);
 		}
 		UE_LOGFMT(LogHttpServer, Log, "Stopped PushUpdatedData loop");
 		bHasRunningPushDataLoop = false;
@@ -192,21 +187,21 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             try {
                 auto app = uWS::App();
                 auto World = GetWorld();
-                auto config = FConfig_HTTPStruct::GetActiveConfig(World);
+
+            	const int32 port = UFRMConfigManager::FRM_GetConfigOrDefault<int32>(TEXT("uWS.Port"), 8080);
+            	const FString Root = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");            	
 
                 FString ModPath = FPaths::ProjectModsDir() + "FicsitRemoteMonitoring/";
                 FString IconsPath = ModPath + "Icons";
                 FString UIPath;
 
-                if (config.Web_Root.IsEmpty()) {
+                if (Root.IsEmpty()) {
                     UIPath = ModPath + "www";
                 }
                 else
                 {
-                    UIPath = config.Web_Root;
+                    UIPath = Root;
                 };
-
-                int port = config.HTTP_Port;
 
                 // Define WebSocket behavior
                 uWS::App::WebSocketBehavior<FWebSocketUserData> wsBehavior;
@@ -279,15 +274,17 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                 	UFRM_RequestLibrary::SendErrorJson(res, "404 Not Found", "");
                 });
 
-                app.get("/api/:APIEndpoint", [this, World, config](auto* res, auto* req) {
+                app.get("/api/:APIEndpoint", [this, World](auto* res, auto* req) {
                     std::string url(req->getParameter("APIEndpoint"));
                     FString Endpoint = FString(url.c_str());
 
                     // Log the request URL
                     //UE_LOGFMT(LogHttpServer, Log, "Request URL: {0}", Endpoint);
 
+                	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+
                 	FRequestData RequestData;
-                	RequestData.bIsAuthorized = IsAuthorizedRequest(req, config.Authentication_Token);
+                	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
                     HandleApiRequest(World, res, req, Endpoint, RequestData);
                 });
 
@@ -299,12 +296,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             		res->end();
             	});
             	
-            	app.post("/*", [this, World, config](auto* res, uWS::HttpRequest* req)
+            	app.post("/*", [this, World](auto* res, uWS::HttpRequest* req)
             	{
 		            const std::string URL(req->getUrl().begin(), req->getUrl().end());
 					FString RelativePath = FString(URL.c_str()).Mid(1);
 
-            		res->onData([this, res, req, World, RelativePath, config](const std::string_view data, bool)
+            		res->onData([this, res, req, World, RelativePath](const std::string_view data, bool)
             		{
 			            try
 			            {
@@ -318,9 +315,11 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 			            		return UFRM_RequestLibrary::SendErrorMessage(res, "400 Bad Request", FString("Invalid Request Body"));
 			            	}
 
+			            	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+			            	
 			            	FRequestData RequestData;
 			            	RequestData.Method = "POST";
-			            	RequestData.bIsAuthorized = IsAuthorizedRequest(req, config.Authentication_Token);
+			            	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
 			            	
 			            	if (JsonValue->Type == EJson::Array)
 			            	{
@@ -348,10 +347,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             		res->onAborted([]() {});
             	});
 
-                app.get("/*", [this, UIPath, World, config](auto* res, uWS::HttpRequest* req) {
+                app.get("/*", [this, UIPath, World](auto* res, uWS::HttpRequest* req) {
                     if (!res) return;
 
                     std::string url(req->getUrl().begin(), req->getUrl().end());
+
+                	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
                     
                     bool bFileExists = false;
                     // Remove initial '/'
@@ -376,7 +377,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                     }
                     else {
                     	FRequestData RequestData;
-                    	RequestData.bIsAuthorized = IsAuthorizedRequest(req, config.Authentication_Token);
+                    	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
                         HandleApiRequest(World, res, req, RelativePath, RequestData);
                     }
                 });
@@ -387,7 +388,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 
                     UE_LOG(LogHttpServer, Warning, TEXT("Attempting to listen on port %d"), port);
 
-                    if (token) {
+                	FString Reason;
+                	if (!UFRMValidation::IsTcpPortAvailable(port, Reason))
+                	{
+                		UE_LOG(LogHttpServer, Error, TEXT("Port %d unavailable: %s"), port, *Reason);
+                	}
+                	else if (token) {
                         SocketListener = token;
                         UE_LOGFMT(LogHttpServer, Warning, "Listening on port {port}", port);
 
@@ -650,6 +656,20 @@ bool AFicsitRemoteMonitoring::IsAuthorizedRequest(uWS::HttpRequest* req, FString
 	return AuthorizationHeader == RequiredToken;
 }
 
+FString AFicsitRemoteMonitoring::GenerateAuthToken(const int32 Length)
+{
+	const FString Characters = TEXT("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+	const int32 CharactersCount = Characters.Len();
+
+	FString RandomString{};
+	for (int32 i = 0; i < Length; ++i)
+	{
+		RandomString.AppendChar(Characters[FMath::RandRange(0, CharactersCount - 1)]);
+	}
+
+	return RandomString;
+}
+
 void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString Endpoint, FRequestData RequestData)
 {
 	// Parse all query parameters
@@ -818,7 +838,6 @@ FString AFicsitRemoteMonitoring::FlavorTextRandomizer(EFlavorType FlavorType) {
 	TArray<FString> PositiveArray;
 				
 	auto config = FConfig_DiscITStruct::GetActiveConfig(World);
-
 
 	JsonPath = config.OutageJSON;
 
@@ -1083,9 +1102,4 @@ void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, FRequestData Re
 		TSharedPtr<FJsonObject> FirstJsonObject = JsonValues[0]->AsObject();
 		Out_Data = UFRM_RequestLibrary::JsonObjectToString(FirstJsonObject, JSONDebugMode);
 	}
-}
-
-void AFicsitRemoteMonitoring::SetAuthToken(const FString& Token)
-{
-	AuthenticationToken = Token;
 }

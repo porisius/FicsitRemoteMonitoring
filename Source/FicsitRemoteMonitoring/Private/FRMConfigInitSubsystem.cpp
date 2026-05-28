@@ -1,7 +1,11 @@
 #include "FRMConfigInitSubsystem.h"
 #include "Configuration/ConfigManager.h"
 #include "ConfigPropertyString.h"
+#include "FGGameUserSettings.h"
+#include "SessionSettingsManager.h"
+#include "SMLOptionsLibrary.h"
 #include "Engine/Engine.h"
+#include "Libraries/FRMConfigManager.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFRMConfigInitSubsystem, Log, All);
 
@@ -9,52 +13,25 @@ void UFRMConfigInitSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
 
-    UConfigManager* ConfigManager = GetGameInstance()->GetSubsystem<UConfigManager>();
-    if (!ConfigManager)
+    const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");
+
+    if (AuthToken.IsEmpty())
     {
-        UE_LOG(LogFRMConfigInitSubsystem, Error, TEXT("ConfigManager missing."));
-        return;
-    }
+        if (!UFRMConfigManager::FRM_SetConfigFromInput(TEXT("uWS.AuthenticationToken"), GenerateAuthToken(32), false))
+        {
+            UE_LOG(LogFRMConfigInitSubsystem, Warning, TEXT("Failed to apply setting"));
+            return;
+        }
 
-    ConfigManager->ReloadModConfigurations();
-
-    // Now config is loaded and safe to read/write
-    HttpConfig = FConfig_HTTPStruct::GetActiveConfig(this);
-    SerialConfig = FConfig_SerialStruct::GetActiveConfig(this);
-    FactoryConfig = FConfig_FactoryStruct::GetActiveConfig(this);
-
-    if (HttpConfig.Authentication_Token.IsEmpty())
-    {
-        HttpConfig.Authentication_Token = GenerateAuthToken(32);
-        SaveHttpAuthToken(ConfigManager);
-
-        UE_LOG(LogFRMConfigInitSubsystem, Log, TEXT("Generated and saved new token: %s"), *HttpConfig.Authentication_Token);
+        UE_LOG(LogFRMConfigInitSubsystem, Log, TEXT("Generated and saved new token: %s"), *AuthToken);
     }
     else
     {
         UE_LOG(LogFRMConfigInitSubsystem, Log, TEXT("Token already exists."));
     }
 
-    AuthenticationToken = HttpConfig.Authentication_Token;
-}
-
-void UFRMConfigInitSubsystem::SaveHttpAuthToken(UConfigManager* ConfigManager)
-{
-    FConfigId ConfigId{ "FicsitRemoteMonitoring", "WebServer" };
-
-    UConfigPropertySection* ConfigurationRootSection = ConfigManager->GetConfigurationRootSection(ConfigId);
-    if (!ConfigurationRootSection)
-    {
-        UE_LOG(LogFRMConfigInitSubsystem, Warning, TEXT("ConfigurationRootSection is null."));
-        return;
-    }
-
-    if (UConfigPropertyString* AuthTokenProperty = Cast<UConfigPropertyString>(ConfigurationRootSection->SectionProperties.FindRef("Authentication_Token")))
-    {
-        AuthTokenProperty->Value = HttpConfig.Authentication_Token;
-    }
-
-    ConfigManager->MarkConfigurationDirty(ConfigId);
+    AuthenticationToken = AuthToken;
+    
 }
 
 FString UFRMConfigInitSubsystem::GenerateAuthToken(const int32 Length)

@@ -44,12 +44,15 @@ public class FicsitRemoteMonitoring : ModuleRules
                 "InputCore",
                 "Json",
                 "JsonUtilities",
+                "Sockets",
+                "Networking",
                 "FactoryGame",
                 "SML", 
                 "Chaos", 
                 "ChaosVehiclesCore", "ChaosVehicles", "ChaosSolverEngine",
                 "HTTP",
-                "FicsitRemoteMonitoring"
+                "FicsitRemoteMonitoring",
+                "FactoryDedicatedServer"
             }
         );
         

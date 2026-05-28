@@ -7,6 +7,7 @@
 #include "FRM_Request.h"
 #include "NotificationLoader.h"
 #include "StructuredLog.h"
+#include "Libraries/Validation.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommandSender* Sender, TArray<FString> Arguments) {
@@ -76,7 +77,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 		return ChatReturn;
 	}
 	
-	if (command == "http") {
+	if (command == "http" || command == "uws") {
 		ChatReturn.Chat = TEXT("Usage: /frm http <start/stop>");
 
 		if (argumentsNum < 2) {
@@ -85,9 +86,19 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 
 		FString arg1 = Arguments[1].ToLower();
 
+		const int32 Port = UFRMConfigManager::FRM_GetConfigOrDefault<int32>(TEXT("uWS.Port"), 8080);
+
+		FString Reason;
+		if (!UFRMValidation::IsTcpPortAvailable(Port, Reason))
+		{
+			UE_LOG(LogHttpServer, Error, TEXT("Port %d unavailable: %s"), Port, *Reason);
+
+			ChatReturn.Chat = FString(TEXT("Port " + FString::FromInt(Port) + "Unavailable. Reason: " + *Reason));
+			ChatReturn.Color = FLinearColor::Red;
+			ChatReturn.Status = EExecutionStatus::COMPLETED;
+		}
+		
 		if (arg1 == "start") {
-			auto config = FConfig_HTTPStruct::GetActiveConfig(WorldContext);
-			int32 Port = config.HTTP_Port;
 			
 			UE_LOG(LogHttpServer, Log, TEXT("Chat Command: Starting HTTP Service. Port: %d"), Port);
 			ModSubsystem->StartWebSocketServer(true);
@@ -118,11 +129,10 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 		FString arg1 = Arguments[1].ToLower();
 
 		if (arg1 == "start") {
-			auto config = FConfig_SerialStruct::GetActiveConfig(WorldContext);
-			FString Port = config.COM_Port;
+			ModSubsystem->InitSerialDevice();
 
-			ModSubsystem->StartWebSocketServer();
-
+			const FString Port = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("Serial.Port"), "COM3").TrimStartAndEnd();
+			
 			ChatReturn.Chat = FString(TEXT("Serial/RS232 Service Initiated on Port: " + Port));
 			ChatReturn.Color = FLinearColor::Green;
 			ChatReturn.Status = EExecutionStatus::COMPLETED;
@@ -130,7 +140,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 			UE_LOGFMT(LogHttpServer, Log, "Serial/RS232 Service started. Port: {Port}");
 		}
 		else if (arg1 == "stop") {
-			ModSubsystem->StopWebSocketServer();
+			ModSubsystem->StopSerialDevice();
 			UE_LOG(LogHttpServer, Log, TEXT("Stopping Serial/RS232 Service."));
 
 			ChatReturn.Chat = TEXT("Stopping Serial/RS232 Service.");

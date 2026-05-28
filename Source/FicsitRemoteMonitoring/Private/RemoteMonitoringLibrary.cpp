@@ -19,6 +19,7 @@
 #include "FicsitRemoteMonitoring.h"
 #include "FicsitRemoteMonitoringModule.h"
 #include "Research.h"
+#include "SMLOptionsLibrary.h"
 #include "StructuredLog.h"
 #include "Components/SplineComponent.h"
 #include "GameFramework/PlayerState.h"
@@ -299,10 +300,9 @@ void URemoteMonitoringLibrary::GetOverclockingItemsFromInventory(const UFGInvent
 
 FString URemoteMonitoringLibrary::APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONArray, UObject* WorldContext) {
 
-	FString Write;
-	auto config = FConfig_FactoryStruct::GetActiveConfig(WorldContext);
-
-	if (config.JSONDebugMode) {
+	FString Write{};
+	
+	if (UFRMConfigManager::FRM_GetConfigOrDefault<bool>(TEXT("Debug.JSONDebug"), false)) {
 		const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write);
 		FJsonSerializer::Serialize(JSONArray, JsonWriter);
 	} else {

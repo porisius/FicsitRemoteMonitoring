@@ -114,9 +114,6 @@ public:
 	AFicsitRemoteMonitoring();
 	virtual ~AFicsitRemoteMonitoring();
 
-	void SetAuthToken(const FString& Token);
-	FString GetAuthToken() const { return AuthenticationToken; }
-
 	friend class UFGServerSubsystem;
 	friend class UFGServerAPIManager;
 
@@ -164,6 +161,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void InitSerialDevice();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
+	void StopSerialDevice();
+
 	void HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString Endpoint, FRequestData RequestData);
 
 	void InitAPIRegistry();
@@ -182,7 +182,7 @@ public:
 	bool IsAuthorizedRequest(uWS::HttpRequest* req, FString RequiredToken);
 	void AddResponseHeaders(uWS::HttpResponse<false>* res, bool bIncludeContentType);
 	void AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonArray, const FString& ErrorMessage);
-	
+		
 	TArray<FString> Flavor_Battery{};
 	TArray<FString> Flavor_Doggo{};
 	TArray<FString> Flavor_Player{};

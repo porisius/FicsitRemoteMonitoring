@@ -287,8 +287,8 @@ void UTrains::getTrainStation(UObject* WorldContext, FRequestData RequestData, T
 
 void UTrains::getTrainRails(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	USessionSettingsManager* SessionSettings = WorldContext->GetWorld()->GetSubsystem<USessionSettingsManager>();
-	float SampleDistance = SessionSettings->GetFloatOptionValue("FicsitRemoteMonitoring.General.SplineSampleDistance");
+	
+	const float SampleDistance = UFRMConfigManager::FRM_GetConfigOrDefault<float>(TEXT("General.SplineSampleDistance"), 75.0f);
 
 	TArray<AFGBuildableRailroadTrack*> RailroadTracks;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableRailroadTrack>(RailroadTracks);
