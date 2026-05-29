@@ -550,7 +550,7 @@ private:
                     if (isParsingInvalidChunkedEncoding(remainingStreamingBytes)) {
                         return {HTTP_ERROR_400_BAD_REQUEST, FULLPTR};
                     }
-                    unsigned int consumed = (length - (unsigned int) dataToConsume.length());
+                    consumed = (length - (unsigned int) dataToConsume.length());
                     data = (char *) dataToConsume.data();
                     length = (unsigned int) dataToConsume.length();
                     consumedTotal += consumed;
