@@ -61,7 +61,7 @@ void UVehicles::getTruckStation(UObject* WorldContext, FRequestData RequestData,
 		// get inventory
 		TMap<TSubclassOf<UFGItemDescriptor>, int32> Inventory = GetGroupedInventoryItems(TruckStation->GetInventory());
 
-		JTruckStation->Values.Add("DockVehicleCount", MakeShared<FJsonValueNumber>(TruckStation->GetDockingVehicleCount()));
+		//JTruckStation->Values.Add("DockVehicleCount", MakeShared<FJsonValueNumber>(TruckStation->GetDockingVehicleCount())); Broken by SF 1.2
 		JTruckStation->Values.Add("LoadMode", MakeShared<FJsonValueString>(LoadMode));
 		JTruckStation->Values.Add("TransferRate", MakeShared<FJsonValueNumber>(TruckStation->GetItemTransferRate()));
 		JTruckStation->Values.Add("MaxTransferRate", MakeShared<FJsonValueNumber>(TruckStation->GetMaximumStackTransferRate()));
@@ -84,12 +84,12 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 	}
 	
 	AFGVehicleSubsystem* VehicleSubsystem = AFGVehicleSubsystem::Get(WorldContext);
-	TArray<AFGWheeledVehicleInfo*> VehicleInfos = VehicleSubsystem->mWheeledVehicles;
-	TArray<AFGSavedWheeledVehiclePath*> SavedPaths = VehicleSubsystem->mSavedPaths;
+	TArray<AFGWheeledVehicleIdentifier*> VehicleInfos = VehicleSubsystem->GetAllVehicles();
+	//TArray<AFGSavedWheeledVehiclePath*> SavedPaths = VehicleSubsystem->mSavedPaths;
 
-	for (AFGWheeledVehicleInfo* VehicleInfo : VehicleInfos) {
+	for (AFGWheeledVehicleIdentifier* VehicleInfo : VehicleInfos) {
 
-		AFGWheeledVehicle* WheeledVehicle = VehicleInfo->GetVehicle();
+		AFGWheeledVehicle* WheeledVehicle = VehicleInfo->GetOwnerVehicle();
 		
 		if (WheeledVehicle->GetClass()->IsChildOf(VehicleClass)) {
 			//UE_LOG(LogFRMAPI, Warning, TEXT("Processing vehicle '%s'"), *Vehicle->GetName());
@@ -165,26 +165,30 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 			// get vehicle status
 			FString FormString = "Unknown";
 
-			EVehicleStatus Form = VehicleInfo->GetVehicleStatus();
-		
-			if (Form == EVehicleStatus::VS_Deadlocked) {
-				FormString = "Deadlocked";
+			switch (VehicleInfo->GetAutopilotErrorStatus())
+			{
+				case EVehicleAutopilotErrorStatus::None: FormString = "None";
+					break;
+				case EVehicleAutopilotErrorStatus::StationUnreachable: FormString = "Station Unreachable";
+					break;
+				case EVehicleAutopilotErrorStatus::NotOnPath: FormString = "Not On-Path";
+					break;
+				case EVehicleAutopilotErrorStatus::TooFewStations: FormString = "Too Few Stations";
+					break;
+				case EVehicleAutopilotErrorStatus::NoFuel: FormString = "No Fuel";
+					break;
+				case EVehicleAutopilotErrorStatus::Deadlocked: FormString = "Deadlocked";
+					break;
 			}
-			else if (Form == EVehicleStatus::VS_Operational) {
-				FormString = "Operational";
-			}
-			else if (Form == EVehicleStatus::VS_OutOfFuel) {
-				FormString = "Out of Fuel";
-			};
-
-			AFGDrivingTargetList* TargetList = VehicleInfo->GetTargetList();
-			const FString VehiclePathName = GetPathNameForTargetList(TargetList);
+			
+			//AFGDrivingTargetList* TargetList = VehicleInfo->mTargetList;
+			const FString VehiclePathName = "PathName"; //GetPathNameForTargetList(TargetList);
 
 			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(WheeledVehicle->mDisplayName.ToString()));
 			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(WheeledVehicle->GetClass())));
 			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(WheeledVehicle)));
 			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>(VehiclePathName));
-			JVehicle->Values.Add("Status", MakeShared<FJsonValueString>(FormString));
+			JVehicle->Values.Add("AutoPilotStatus", MakeShared<FJsonValueString>(FormString));
 			JVehicle->Values.Add("Driver", MakeShared<FJsonValueString>(PlayerName));
 			JVehicle->Values.Add("CurrentGear", MakeShared<FJsonValueNumber>(VehicleMovement->GetCurrentGear()));
 			JVehicle->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(VehicleMovement->GetForwardSpeed() * 0.036));
@@ -192,11 +196,11 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 			JVehicle->Values.Add("ThrottlePercent", MakeShared<FJsonValueNumber>(VehicleMovement->GetThrottleInput()));		
 			JVehicle->Values.Add("Airborne", MakeShared<FJsonValueBoolean>(VehicleMovement->IsInAir()));
 			JVehicle->Values.Add("FollowingPath", MakeShared<FJsonValueBoolean>(WheeledVehicle->IsFollowingAPath()));
-			JVehicle->Values.Add("Autopilot", MakeShared<FJsonValueBoolean>(WheeledVehicle->IsSelfDriving()));
+			JVehicle->Values.Add("Autopilot", MakeShared<FJsonValueBoolean>(WheeledVehicle->mIsLegacyAutopilotEnabled)); // To be deprecated
 			JVehicle->Values.Add("HasFuel", MakeShared<FJsonValueBoolean>(WheeledVehicle->HasFuel()));
-			JVehicle->Values.Add("HasFuelForRoundtrip", MakeShared<FJsonValueBoolean>(TargetList ? WheeledVehicle->HasFuelForRoundtrip() : true));
-			JVehicle->Values.Add("TotalFuelEnergy", MakeShared<FJsonValueNumber>(WheeledVehicle->GetTotalFuelEnergy()));
-			JVehicle->Values.Add("MaxFuelEnergy", MakeShared<FJsonValueNumber>(WheeledVehicle->GetMaxFuelEnergy()));
+			//JVehicle->Values.Add("HasFuelForRoundtrip", MakeShared<FJsonValueBoolean>(TargetList ? WheeledVehicle->HasFuelForRoundtrip() : true)); Broken by SF 1.2
+			// JVehicle->Values.Add("TotalFuelEnergy", MakeShared<FJsonValueNumber>(WheeledVehicle->GetTotalFuelEnergy())); Broken by SF 1.2
+			//JVehicle->Values.Add("MaxFuelEnergy", MakeShared<FJsonValueNumber>(WheeledVehicle->GetMaxFuelEnergy())); Broken by SF 1.2
 			JVehicle->Values.Add("Inventory", MakeShared<FJsonValueArray>(Inventory));
 			JVehicle->Values.Add("FuelInventory", MakeShared<FJsonValueArray>(FuelInventory));
 			JVehicle->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(WheeledVehicle, WheeledVehicle->mDisplayName.ToString(), WheeledVehicle->mDisplayName.ToString())));
@@ -211,40 +215,42 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 
 void UVehicles::getVehiclePaths(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
 {
-	TArray<AActor*> FoundActors;
 	
-	AFGVehicleSubsystem* VehicleSubsystem = AFGVehicleSubsystem::Get(WorldContext);
-	TArray<AFGSavedWheeledVehiclePath*> SavedPaths = VehicleSubsystem->mSavedPaths;
+	TArray<AFGVehiclePathSegment*> PathSegments;
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext);
+	BuildableSubsystem->GetTypedBuildable<AFGVehiclePathSegment>(PathSegments);
 
-	for (AFGSavedWheeledVehiclePath* SavedPath : SavedPaths) {
+	for (AFGVehiclePathSegment* PathSegment : PathSegments) {
 		
-		TSharedPtr<FJsonObject> JVehiclePath = CreateBaseJsonObject(SavedPath);
+		TSharedPtr<FJsonObject> JVehiclePath = CreateBuildableBaseJsonObject(PathSegment);
+		
+		TArray<UFGVehiclePathPreset*> PathPresets = PathSegment->GetAllowedVehicleTypes();
+		
+		TArray<TSharedPtr<FJsonValue>> JVehiclePresets;
+		
+		for (UFGVehiclePathPreset* PathPreset : PathPresets)
+		{
+			FVehiclePathValidationConfig PathValidationConfig = PathPreset->mPathValidationConfig;
+			TSoftClassPtr<AFGWheeledVehicle> SoftVehicleClass = PathValidationConfig.VehicleClass;
+			
+			TSubclassOf<AFGWheeledVehicle> VehicleClass = SoftVehicleClass.LoadSynchronous();
+			if (!VehicleClass) continue;
+			
+			TSharedPtr<FJsonObject> JVehiclePreset = MakeShared<FJsonObject>();
+			
+			JVehiclePreset->Values.Add("Name", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetDisplayName(VehicleClass)));
+			JVehiclePreset->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(VehicleClass.Get())));
 
-		AFGDrivingTargetList* DrivingTarget = SavedPath->mTargetList;
-		TSubclassOf<AFGWheeledVehicle> PathVehicleType = DrivingTarget->mVehicleType;
-		USplineComponent* VehiclePath = DrivingTarget->GetPath();
-		TArray<FSplinePointData> SplinePoints = VehiclePath->GetSplineData(ESplineCoordinateSpace::World);
+			JVehiclePresets.Add(MakeShared<FJsonValueObject>(JVehiclePreset));
+		}		
 		
-		JVehiclePath->Values.Add("Name", MakeShared<FJsonValueString>(SavedPath->mPathName));
-		JVehiclePath->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(SavedPath->GetClass())));
-		JVehiclePath->Values.Add("VehicleType", MakeShared<FJsonValueString>(PathVehicleType.GetDefaultObject()->mDisplayName.ToString()));
-		JVehiclePath->Values.Add("PathTargetLength", MakeShared<FJsonValueNumber>(DrivingTarget->CountTargets()));
-		JVehiclePath->Values.Add("PathLength", MakeShared<FJsonValueNumber>(VehiclePath->GetSplineLength()));
+		USplineComponent* PathSpline = PathSegment->GetSplineComponent();
+		TArray<FSplinePointData> SplinePoints = PathSpline->GetSplineData(ESplineCoordinateSpace::World);
+
+		JVehiclePath->Values.Add("VehicleType", MakeShared<FJsonValueArray>(JVehiclePresets));
+		JVehiclePath->Values.Add("PathLength", MakeShared<FJsonValueNumber>(PathSpline->GetSplineLength()));
 		JVehiclePath->Values.Add("PathPoints", GetSplineVector(SplinePoints));
 		
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JVehiclePath));
 	};
-}
-
-FString UVehicles::GetPathNameForTargetList(AFGDrivingTargetList* TargetList)
-{
-	if (IsValid(TargetList)) {
-		AFGVehicleSubsystem* VehicleSubsystem = AFGVehicleSubsystem::Get(TargetList);
-		for (AFGSavedWheeledVehiclePath* SavedPath : VehicleSubsystem->mSavedPaths) {
-			if (TargetList == SavedPath->mTargetList) {
-				return SavedPath->mPathName;
-			}
-		}
-	}
-	return "No Path Found";
 }

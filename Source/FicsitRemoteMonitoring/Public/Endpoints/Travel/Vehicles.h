@@ -39,7 +39,6 @@ public:
 //Helper Functions
 	
 	static TArray<TSharedPtr<FJsonValue>> getVehicles_Helper(UObject* WorldContext, UClass* VehicleClass);
-	static FString GetPathNameForTargetList(AFGDrivingTargetList* TargetList);
 
 protected: 
 	friend class AFGVehicleSubsystem;
