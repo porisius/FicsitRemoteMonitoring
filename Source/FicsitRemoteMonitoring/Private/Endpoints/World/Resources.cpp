@@ -366,7 +366,7 @@ TArray<TSharedPtr<FJsonValue>> UResources::getResourceNode_Helper(UObject* World
 		}
 		
 		TSharedPtr<FJsonObject> JResourceNode = GetResourceNodeJSON(FoundActor, true);
-		if (!JResourceNode or (JResourceNode->GetStringField("ClassName") == "")) {
+		if (!JResourceNode or (JResourceNode->GetStringField(TEXT("ClassName")) == "")) {
 			continue;
 		}
 

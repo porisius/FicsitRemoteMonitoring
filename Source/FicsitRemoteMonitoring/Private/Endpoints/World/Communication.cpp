@@ -1,4 +1,4 @@
-
+﻿
 #include "Endpoints/World/Communication.h"
 
 #include "Buildables/FGBuildableCircuitSwitch.h"
@@ -69,7 +69,7 @@ void UCommunication::createPing(UObject* WorldContext, FRequestData RequestData,
 	{
 		TSharedPtr<FJsonObject> JsonObject = BodyObject->AsObject();
 
-		if (!JsonObject->HasField("x") || !JsonObject->HasField("y") || !JsonObject->HasField("z"))
+		if (!JsonObject->HasField(TEXT("x")) || !JsonObject->HasField(TEXT("y")) || !JsonObject->HasField(TEXT("z")))
 		{
 			OutJsonArray.Add(MakeShared<FJsonValueObject>(UFRM_RequestLibrary::GenerateError("Missing field x, y or z.")));
 			continue;
@@ -77,9 +77,9 @@ void UCommunication::createPing(UObject* WorldContext, FRequestData RequestData,
 
 		FVector Location = FVector(0, 0, 0);
 
-		JsonObject->TryGetNumberField("x", Location.X);
-		JsonObject->TryGetNumberField("y", Location.Y);
-		JsonObject->TryGetNumberField("z", Location.Z);
+		JsonObject->TryGetNumberField(TEXT("x"), Location.X);
+		JsonObject->TryGetNumberField(TEXT("y"), Location.Y);
+		JsonObject->TryGetNumberField(TEXT("z"), Location.Z);
 
 		FTransform Transform;
 		Transform.SetLocation(Location);
@@ -107,7 +107,7 @@ void UCommunication::sendChatMessage(UObject* WorldContext, FRequestData Request
 		TSharedPtr<FJsonObject> JsonObject = BodyObject->AsObject();
 
 		// build error message if no message is available
-		if (!JsonObject->HasField("message"))
+		if (!JsonObject->HasField(TEXT("message")))
 		{
 			const TSharedPtr<FJsonObject> JChatMessage = UFRM_RequestLibrary::GenerateError("Missing field message.");
 			JChatMessage->Values.Add("IsSent", MakeShared<FJsonValueBoolean>(false));
@@ -119,14 +119,14 @@ void UCommunication::sendChatMessage(UObject* WorldContext, FRequestData Request
 		FString Message;
 		FString SenderName = "";
 
-		JsonObject->TryGetStringField("sender", SenderName);
-		JsonObject->TryGetStringField("message", Message);
+		JsonObject->TryGetStringField(TEXT("sender"), SenderName);
+		JsonObject->TryGetStringField(TEXT("message"), Message);
 
 		// get custom color
-		if (JsonObject->HasField("color"))
+		if (JsonObject->HasField(TEXT("color")))
 		{
 			const TSharedPtr<FJsonObject>* JsonColor;
-			JsonObject->TryGetObjectField("color", JsonColor);
+			JsonObject->TryGetObjectField(TEXT("color"), JsonColor);
 
 			// check if color is valid
 			if (!JsonColor || !JsonColor->IsValid())
@@ -142,10 +142,10 @@ void UCommunication::sendChatMessage(UObject* WorldContext, FRequestData Request
 			float g = 1.f;
 			float b = 1.f;
 			float a = 1.f;
-			JsonColor->Get()->TryGetNumberField("r", r);
-			JsonColor->Get()->TryGetNumberField("g", g);
-			JsonColor->Get()->TryGetNumberField("b", b);
-			JsonColor->Get()->TryGetNumberField("a", a);
+			JsonColor->Get()->TryGetNumberField(TEXT("r"), r);
+			JsonColor->Get()->TryGetNumberField(TEXT("g"), g);
+			JsonColor->Get()->TryGetNumberField(TEXT("b"), b);
+			JsonColor->Get()->TryGetNumberField(TEXT("a"), a);
 
 			Color = FLinearColor(r, g, b, a);
 		}
@@ -197,7 +197,7 @@ void UCommunication::setEnabled(UObject* WorldContext, FRequestData RequestData,
 		if (UFRM_RequestLibrary::TryGetStringField(JsonObject, "ID", RequestedBuildable, OutJsonArray)) continue;
 
 		// check if ID or status is present in this json object
-		if (!JsonObject->HasField("status"))
+		if (!JsonObject->HasField(TEXT("status")))
 		{
 			const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("Missing field status.");
 			JResponse->Values.Add("ID", MakeShared<FJsonValueString>(RequestedBuildable));
@@ -207,7 +207,7 @@ void UCommunication::setEnabled(UObject* WorldContext, FRequestData RequestData,
 
 		bool foundBuildable = false;
 
-		bool PowerState = JsonObject->GetBoolField("status");
+		bool PowerState = JsonObject->GetBoolField(TEXT("status"));
 		
 		for (AFGBuildableFactory* FactoryBuilding : FactoryBuildings)
 		{
@@ -259,7 +259,7 @@ void UCommunication::setModSetting(UObject* WorldContext, FRequestData RequestDa
 		auto JsonObject = BodyObject->AsObject();
 
 		// check if SplineSampleDistance is present in this json object
-		if (!JsonObject->HasField("SplineSampleDistance"))
+		if (!JsonObject->HasField(TEXT("SplineSampleDistance")))
 		{
 			const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("Missing field status.");
 			OutJsonArray.Add(MakeShared<FJsonValueObject>(JResponse));
@@ -267,7 +267,7 @@ void UCommunication::setModSetting(UObject* WorldContext, FRequestData RequestDa
 		}
 
 		float SplineSampleDistance = 0.f;
-		if (!JsonObject->TryGetNumberField("SplineSampleDistance", SplineSampleDistance))
+		if (!JsonObject->TryGetNumberField(TEXT("SplineSampleDistance"), SplineSampleDistance))
 		{
 			const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("SplineSampleDistance is invalid. Requires float/integer");
 			OutJsonArray.Add(MakeShared<FJsonValueObject>(JResponse));

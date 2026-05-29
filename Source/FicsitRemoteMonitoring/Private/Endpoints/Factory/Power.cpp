@@ -108,7 +108,7 @@ void UPower::setSwitches(UObject* WorldContext, FRequestData RequestData, TArray
 		if (UFRM_RequestLibrary::TryGetStringField(JsonObject, "ID", SwitchID, OutJsonArray)) continue;
 
 		// check if priority, status or name is present in this json object
-		if (!JsonObject->HasField("priority") && !JsonObject->HasField("status") && !JsonObject->HasField("name"))
+		if (!JsonObject->HasField(TEXT("priority")) && !JsonObject->HasField(TEXT("status")) && !JsonObject->HasField(TEXT("name")))
 		{
 			const TSharedPtr<FJsonObject> JResponse = UFRM_RequestLibrary::GenerateError("Missing field priority, name or status.");
 			JResponse->Values.Add("ID", MakeShared<FJsonValueString>(SwitchID));
@@ -120,9 +120,9 @@ void UPower::setSwitches(UObject* WorldContext, FRequestData RequestData, TArray
 		int32 Priority = -1;
 		FString Name;
 		bool bStatus;
-		JsonObject->TryGetBoolField("status", bStatus);
-		JsonObject->TryGetNumberField("priority", Priority);
-		JsonObject->TryGetStringField("name", Name);
+		JsonObject->TryGetBoolField(TEXT("status"), bStatus);
+		JsonObject->TryGetNumberField(TEXT("priority"), Priority);
+		JsonObject->TryGetStringField(TEXT("name"), Name);
 
 		bool bSuccess = false;
 		for (AFGBuildableCircuitSwitch* PowerSwitch : PowerSwitches)
@@ -133,7 +133,7 @@ void UPower::setSwitches(UObject* WorldContext, FRequestData RequestData, TArray
 				JResponse->Values.Add("ID", MakeShared<FJsonValueString>(SwitchID));
 
 				// change name
-				if (JsonObject->HasField("name"))
+				if (JsonObject->HasField(TEXT("name")))
 				{
 					PowerSwitch->SetBuildingTag_Implementation(Name);
 					PowerSwitch->SetHasBuildingTag_Implementation(Name.Len() > 0);
@@ -142,7 +142,7 @@ void UPower::setSwitches(UObject* WorldContext, FRequestData RequestData, TArray
 				}
 				
 				// toggle switch
-				if (JsonObject->HasField("status"))
+				if (JsonObject->HasField(TEXT("status")))
 				{
 					PowerSwitch->SetSwitchOn(bStatus);
 					JResponse->Values.Add("Status", MakeShared<FJsonValueBoolean>(PowerSwitch->IsSwitchOn()));
@@ -150,7 +150,7 @@ void UPower::setSwitches(UObject* WorldContext, FRequestData RequestData, TArray
 				}
 
 				// update priority
-				if (JsonObject->HasField("priority") && Priority >= 0)
+				if (JsonObject->HasField(TEXT("priority")) && Priority >= 0)
 				{
 					if (auto* PriorityPowerSwitch = Cast<AFGBuildablePriorityPowerSwitch>(PowerSwitch))
 					{

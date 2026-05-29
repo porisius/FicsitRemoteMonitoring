@@ -488,11 +488,11 @@ void AFicsitRemoteMonitoring::OnMessageReceived(uWS::WebSocket<false, true, FWeb
 
 void AFicsitRemoteMonitoring::ProcessClientRequest(uWS::WebSocket<false, true, FWebSocketUserData>* ws, const TSharedPtr<FJsonObject>& JsonRequest)
 {
-    FString Action = JsonRequest->GetStringField("action");
+    FString Action = JsonRequest->GetStringField(TEXT("action"));
     const TArray<TSharedPtr<FJsonValue>>* EndpointsArray;
     FString Endpoint;
 
-    if (JsonRequest->TryGetArrayField("endpoints", EndpointsArray))
+    if (JsonRequest->TryGetArrayField(TEXT("endpoints"), EndpointsArray))
     {
         for (const TSharedPtr<FJsonValue>& EndpointValue : *EndpointsArray)
         {
@@ -520,7 +520,7 @@ void AFicsitRemoteMonitoring::ProcessClientRequest(uWS::WebSocket<false, true, F
             }
         }
     }
-    else if (JsonRequest->TryGetStringField("endpoints", Endpoint)) {
+    else if (JsonRequest->TryGetStringField(TEXT("endpoints"), Endpoint)) {
 
         if (Action == "subscribe")
         {
@@ -852,14 +852,14 @@ FString AFicsitRemoteMonitoring::FlavorTextRandomizer(EFlavorType FlavorType) {
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(WebhookJson);
 	FJsonSerializer::Deserialize(Reader, FlavorJson);
 
-	FlavorJson->TryGetStringArrayField("Any", FlavorArray);
-	FlavorJson->TryGetStringArrayField("Detrimental", DetrimentalArray);
-	FlavorJson->TryGetStringArrayField("Positive", PositiveArray);
+	FlavorJson->TryGetStringArrayField(TEXT("Any"), FlavorArray);
+	FlavorJson->TryGetStringArrayField(TEXT("Detrimental"), DetrimentalArray);
+	FlavorJson->TryGetStringArrayField(TEXT("Positive"), PositiveArray);
 
 	switch (FlavorType)
 	{
 		case EFlavorType::Battery:
-			if (FlavorJson->TryGetStringArrayField("Battery", BufferArray))
+			if (FlavorJson->TryGetStringArrayField(TEXT("Battery"), BufferArray))
 			{
 				FlavorArray.Append(BufferArray);
 				FlavorArray.Append(DetrimentalArray);
@@ -867,7 +867,7 @@ FString AFicsitRemoteMonitoring::FlavorTextRandomizer(EFlavorType FlavorType) {
 			break;
 		
 		case EFlavorType::Power:
-			if (FlavorJson->TryGetStringArrayField("Power", BufferArray))
+			if (FlavorJson->TryGetStringArrayField(TEXT("Power"), BufferArray))
 			{
 				FlavorArray.Append(BufferArray);
 				FlavorArray.Append(DetrimentalArray);
@@ -875,7 +875,7 @@ FString AFicsitRemoteMonitoring::FlavorTextRandomizer(EFlavorType FlavorType) {
 			break;
 		
 		case EFlavorType::Train:
-			if (FlavorJson->TryGetStringArrayField("Train", BufferArray))
+			if (FlavorJson->TryGetStringArrayField(TEXT("Train"), BufferArray))
 			{
 				FlavorArray.Append(BufferArray);
 				FlavorArray.Append(DetrimentalArray);
@@ -883,7 +883,7 @@ FString AFicsitRemoteMonitoring::FlavorTextRandomizer(EFlavorType FlavorType) {
 			break;
 		
 		case EFlavorType::Doggo:
-			if (FlavorJson->TryGetStringArrayField("Doggo", BufferArray))
+			if (FlavorJson->TryGetStringArrayField(TEXT("Doggo"), BufferArray))
 			{
 				FlavorArray.Append(BufferArray);
 				FlavorArray.Append(PositiveArray);
@@ -891,7 +891,7 @@ FString AFicsitRemoteMonitoring::FlavorTextRandomizer(EFlavorType FlavorType) {
 			break;
 		
 		case EFlavorType::Player:
-			if (FlavorJson->TryGetStringArrayField("Player", BufferArray))
+			if (FlavorJson->TryGetStringArrayField(TEXT("Player"), BufferArray))
 			{
 				FlavorArray.Append(BufferArray);
 				FlavorArray.Append(PositiveArray);
@@ -899,7 +899,7 @@ FString AFicsitRemoteMonitoring::FlavorTextRandomizer(EFlavorType FlavorType) {
 			break;
 		
 		case EFlavorType::Research:
-			if (FlavorJson->TryGetStringArrayField("Research", BufferArray))
+			if (FlavorJson->TryGetStringArrayField(TEXT("Research"), BufferArray))
 			{
 				FlavorArray.Append(BufferArray);
 				FlavorArray.Append(PositiveArray);
