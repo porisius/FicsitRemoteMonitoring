@@ -1,9 +1,6 @@
 #include "FRMConfigInitSubsystem.h"
 #include "Configuration/ConfigManager.h"
-#include "ConfigPropertyString.h"
 #include "FGGameUserSettings.h"
-#include "SessionSettingsManager.h"
-#include "SMLOptionsLibrary.h"
 #include "Engine/Engine.h"
 #include "Libraries/FRMConfigManager.h"
 
@@ -13,11 +10,11 @@ void UFRMConfigInitSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
 
-    const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");
+    const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");
 
     if (AuthToken.IsEmpty())
     {
-        if (!UFRMConfigManager::FRM_SetConfigFromInput(TEXT("uWS.AuthenticationToken"), GenerateAuthToken(32), false))
+        if (!UFRMConfigManager::SetConfigFromInput(TEXT("uWS.AuthenticationToken"), GenerateAuthToken(32), false))
         {
             UE_LOG(LogFRMConfigInitSubsystem, Warning, TEXT("Failed to apply setting"));
             return;
