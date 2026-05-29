@@ -278,9 +278,6 @@ void USession::getProdStats(UObject* WorldContext, FRequestData RequestData, TAr
 			else if (Form == EResourceForm::RF_GAS) {
 				FormString = "Gas";
 			}
-			else if (Form == EResourceForm::RF_HEAT) {
-				FormString = "Heat";
-			}
 			else if (Form == EResourceForm::RF_INVALID) {
 				FormString = "Invalid";
 			}

@@ -299,8 +299,6 @@ TArray<TSharedPtr<FJsonValue>> UPower::getGenerators_Helper(UObject* WorldContex
 					break;
 				case EResourceForm::RF_GAS		:	FormString = TEXT("Gas");
 					break;
-				case EResourceForm::RF_HEAT		:	FormString = TEXT("Heat");
-					break;
 				case EResourceForm::RF_INVALID	:	FormString = TEXT("Geothermal");
 					break;
 				case EResourceForm::RF_LAST_ENUM:	FormString = TEXT("Unknown");

@@ -567,7 +567,6 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetResourceNodeJSON(AActor* Ac
 		case EResourceForm::RF_SOLID: ResourceForm = TEXT("Solid"); break;
 		case EResourceForm::RF_LIQUID: ResourceForm = TEXT("Liquid"); break;
 		case EResourceForm::RF_GAS: ResourceForm = TEXT("Gas"); break;
-		case EResourceForm::RF_HEAT: ResourceForm = TEXT("Heat"); break;
 	}
 
 	// get resource node type
