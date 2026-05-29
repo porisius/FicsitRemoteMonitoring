@@ -111,6 +111,7 @@ private:
 	FString AuthenticationToken{};
 	
 	friend class UFGPowerCircuitGroup;
+	friend class AFGRailroadSubsystem;
 
 public:
 
@@ -171,6 +172,7 @@ public:
 
 	void InitAPIRegistry();
 	void InitOutageNotification();
+	void InitTrainDerailNotification();
 
 	void StartWebSocketServer(bool bSkipIfRunning = false);
 	void StopWebSocketServer();

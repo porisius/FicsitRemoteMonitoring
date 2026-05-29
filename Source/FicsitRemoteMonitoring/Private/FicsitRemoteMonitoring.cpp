@@ -916,11 +916,58 @@ FString AFicsitRemoteMonitoring::FlavorTextRandomizer(EFlavorType FlavorType) {
 
 }
 
-void AFicsitRemoteMonitoring::InitOutageNotification() {
-	#if !WITH_EDITOR
+void AFicsitRemoteMonitoring::InitOutageNotification() {/*
+	if (!WITH_EDITOR)
+	{
+		auto World = GetWorld();
+		SUBSCRIBE_UOBJECT_METHOD_AFTER(UFGPowerCircuitGroup, OnFuseSet, [World](UFGPowerCircuitGroup* PowerGroup)
+			{
 
+				FString DefaultPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/JSON/Outage.json";
+				FString JsonPath;
+				FString WebhookJson;
+				FString Flavor;
+						
+				auto config = FConfig_DiscITStruct::GetActiveConfig(World);
+				AFicsitRemoteMonitoring* FicsitRemoteMonitoring = AFicsitRemoteMonitoring::Get(World);
+				TArray<FString> FlavorArray = FicsitRemoteMonitoring->Flavor_Power;
+
+				JsonPath = config.OutageJSON;
+
+				if (config.OutageJSON.IsEmpty()) { 
+					JsonPath = DefaultPath; 
+				}
+
+				UNotificationLoader::FileLoadString(JsonPath, WebhookJson);
+
+				if (UFGPowerCircuit* PowerCircuit = GetValid(PowerGroup->mCircuits[0])) {
+					const int32 CircuitID = PowerCircuit->GetCircuitGroupID();
+
+					int32 len = FlavorArray.Num();
+					int32 rng = UKismetMathLibrary::RandomIntegerInRange(0, len);
+					Flavor = FlavorArray[rng];
+
+					FString Circuit = FString::FromInt(CircuitID);
+
+					int32 CircuitLog = UKismetStringLibrary::ReplaceInline(WebhookJson, "CircuitID", Circuit, ESearchCase::IgnoreCase);
+					int32 FlavorLog = UKismetStringLibrary::ReplaceInline(WebhookJson, "FlavorText", Flavor, ESearchCase::IgnoreCase);
+
+
+
+				}
+
+
+			});
+	}*/
+}
+
+void AFicsitRemoteMonitoring::InitTrainDerailNotification() {
+if (!WITH_EDITOR) {
+/*
 	auto World = GetWorld();
-	SUBSCRIBE_UOBJECT_METHOD_AFTER(UFGPowerCircuitGroup, OnFuseSet, [World](UFGPowerCircuitGroup* PowerGroup)
+	
+	//	void OnCollided( AFGRailroadVehicle* ourVehicle, float ourVelocity, AFGRailroadVehicle* otherVehicle, float otherVelocity, bool shouldDerail );
+	SUBSCRIBE_METHOD_AFTER(AFGRailroadSubsystem::OnTrainsCollided, [this](AFGTrain* PriTrain, AFGTrain* SecTrain)
 		{
 
 			FString DefaultPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/JSON/Outage.json";
@@ -928,39 +975,34 @@ void AFicsitRemoteMonitoring::InitOutageNotification() {
 			FString WebhookJson;
 			FString Flavor;
 						
-			auto config = FConfig_DiscITStruct::GetActiveConfig(World);
+			auto config = FConfig_DiscITStruct::GetActiveConfig(World);			
 			AFicsitRemoteMonitoring* FicsitRemoteMonitoring = AFicsitRemoteMonitoring::Get(World);
-			TArray<FString> FlavorArray = FicsitRemoteMonitoring->Flavor_Power;
+			TArray<FString> FlavorArray = FicsitRemoteMonitoring->Flavor_Train;
 
 			JsonPath = config.OutageJSON;
 
 			if (config.OutageJSON.IsEmpty()) { 
 				JsonPath = DefaultPath; 
 			}
+		
+		this->
 
 			UNotificationLoader::FileLoadString(JsonPath, WebhookJson);
+		
+			int32 len = FlavorArray.Num();
+			int32 rng = UKismetMathLibrary::RandomIntegerInRange(0, len);
+			Flavor = FlavorArray[rng];
+		
+			auto TrainOne = PriTrain->GetTrainID();
 
-			if (UFGPowerCircuit* PowerCircuit = GetValid(PowerGroup->mCircuits[0])) {
-				const int32 CircuitID = PowerCircuit->GetCircuitGroupID();
+			//UKismetStringLibrary::ReplaceInline(WebhookJson, "CircuitID", Circuit, ESearchCase::IgnoreCase);
+			UKismetStringLibrary::ReplaceInline(WebhookJson, "FlavorText", Flavor, ESearchCase::IgnoreCase);
 
-				int32 len = FlavorArray.Num();
-				int32 rng = UKismetMathLibrary::RandomIntegerInRange(0, len);
-				Flavor = FlavorArray[rng];
+		});*/
 
-				FString Circuit = FString::FromInt(CircuitID);
-
-				int32 CircuitLog = UKismetStringLibrary::ReplaceInline(WebhookJson, "CircuitID", Circuit, ESearchCase::IgnoreCase);
-				int32 FlavorLog = UKismetStringLibrary::ReplaceInline(WebhookJson, "FlavorText", Flavor, ESearchCase::IgnoreCase);
-
-
-
-			}
-
-
-		});
-
-	#endif
+	}
 }
+
 
 void AFicsitRemoteMonitoring::RegisterEndpoint(const FAPIEndpoint& Endpoint)
 {
