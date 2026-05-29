@@ -397,7 +397,7 @@ TArray<TSharedPtr<FJsonValue>> URemoteMonitoringLibrary::GetInventoryJSON(const 
 {
 	TArray<TSharedPtr<FJsonValue>> JInventoryArray;
 
-	for (const auto Item : Items) {
+	for (const FItemAmount& Item : Items) {
 		JInventoryArray.Add(MakeShared<FJsonValueObject>(GetItemValueObject(Item.ItemClass, Item.Amount, StackSizeMuliplier)));
 	}
 
@@ -420,7 +420,7 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetSchematicJson(AFicsitRemote
 			
 	ModSubsystem->SchematicToRecipes_BIE(WorldContext, Schematic, Recipes, Purchased, HasUnlocks, LockedAny, LockedTutorial, LockedDependent, LockedPhase, Tutorial);
 
-	for (const TSubclassOf<UFGRecipe> Recipe : Recipes) {
+	for (const TSubclassOf<UFGRecipe>& Recipe : Recipes) {
 		TSharedPtr<FJsonObject> JRecipe = UResearch::getRecipe(WorldContext, Recipe);
 		JRecipeArray.Add(MakeShared<FJsonValueObject>(JRecipe));
 	}
@@ -446,6 +446,9 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetSchematicJson(AFicsitRemote
 		case ESchematicType::EST_Story: SchematicType = TEXT("Story");
 			break;
 		case ESchematicType::EST_Tutorial: SchematicType = TEXT("Tutorial");
+			break;
+		case ESchematicType::EST_Customization: SchematicType = TEXT("Customization");
+			break;
 	}
 
 	JSchematic->Values.Add("Name", MakeShared<FJsonValueString>(UFGSchematic::GetSchematicDisplayName(Schematic).ToString()));
@@ -495,7 +498,7 @@ TArray<TSharedPtr<FJsonValue>> URemoteMonitoringLibrary::GetInventoryJSON(const 
 {
 	TArray<TSharedPtr<FJsonValue>> JInventoryArray;
 
-	for (const TPair<TSubclassOf<UFGItemDescriptor>, int32> Item : Items) {
+	for (const TPair<TSubclassOf<UFGItemDescriptor>, int32>& Item : Items) {
 		JInventoryArray.Add(MakeShared<FJsonValueObject>(GetItemValueObject(Item.Key, Item.Value, StackSizeMuliplier)));
 	}
 
@@ -550,7 +553,7 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetResourceNodeJSON(AActor* Ac
 	TSharedPtr<FJsonObject> JResourceNode = CreateBaseJsonObject(Actor);
 
 	// get purity
-	const EResourcePurity ResourcePurity = ResourceNode->GetResoucePurity();
+	const EResourcePurity ResourcePurity = ResourceNode->GetResourcePurity();
 	FString Purity = TEXT("Unknown");
 	switch(ResourcePurity)
 	{
@@ -652,7 +655,7 @@ FString URemoteMonitoringLibrary::GetPlayerName(AFGCharacterPlayer* Character)
 	{
 		return CachedPlayerName;
 	}
-
+/* Broken with SF 1.2
 	if (Character->mPlayerNames.Num())
 	{
 		for (const FServiceNameAndPlayerName& PossibleName : Character->mPlayerNames)
@@ -664,7 +667,7 @@ FString URemoteMonitoringLibrary::GetPlayerName(AFGCharacterPlayer* Character)
 			}
 		}
 	}
-
+*/
 	const APlayerState* PlayerState = Character->GetPlayerState();
 	if (!IsValid(PlayerState))
 	{

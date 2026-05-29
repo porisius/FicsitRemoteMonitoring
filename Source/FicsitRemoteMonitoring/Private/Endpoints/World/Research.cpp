@@ -1,4 +1,4 @@
-#include "Endpoints/World/Research.h"
+﻿#include "Endpoints/World/Research.h"
 
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "FicsitRemoteMonitoring.h"
@@ -59,7 +59,7 @@ void UResearch::getResearchTrees(UObject* WorldContext, FRequestData RequestData
 	TArray<TSubclassOf<UFGResearchTree>> ResearchTrees;
 	ResearchManager->GetAllResearchTrees(ResearchTrees);
 
-	for (const auto ResearchTree : ResearchTrees)
+	for (const TSubclassOf<UFGResearchTree>& ResearchTree : ResearchTrees)
 	{
 		TSharedPtr<FJsonObject> JResearchTree = MakeShared<FJsonObject>();
 		TArray<TSharedPtr<FJsonValue>> JResearchNodes;
@@ -229,7 +229,7 @@ TSharedPtr<FJsonObject> UResearch::getRecipe(UObject* WorldContext, TSubclassOf<
 
 	TArray<TSharedPtr<FJsonValue>> JIngredientArray;
 
-	for (FItemAmount Ingredient : UFGRecipe::GetIngredients(Recipe)) {
+	for (FItemAmount Ingredient : UFGRecipe::GetIngredients(WorldContext, Recipe)) {
 		TSharedPtr<FJsonObject> JIngredient = GetItemValueObject(Ingredient);
 
 		const float RecipeAmount = UFGInventoryLibrary::GetAmountConvertedByForm(Ingredient.Amount, UFGItemDescriptor::GetForm(Ingredient.ItemClass));
