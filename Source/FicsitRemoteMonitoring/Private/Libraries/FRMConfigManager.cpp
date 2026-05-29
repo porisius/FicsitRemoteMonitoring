@@ -1,15 +1,15 @@
-#include "FRMConfigManager.h"
+#include "Libraries/FRMConfigManager.h"
 
 #include "Misc/Variant.h"
 
 class UFGGameUserSettings;
 
-bool UFRMConfigManager::FRM_GetStoredConfigType(const FString& StrID, EVariantTypes& OutType)
+bool UFRMConfigManager::GetStoredConfigType(const FString& StrID, EVariantTypes& OutType)
 {
 	UFGGameUserSettings* UserSettings = UFGGameUserSettings::GetFGGameUserSettings();
 	if (!UserSettings)
 	{
-		UE_LOG(LogTemp, Error, TEXT("FRM_GetStoredConfigType: UserSettings is null"));
+		UE_LOG(LogTemp, Error, TEXT("GetStoredConfigType: UserSettings is null"));
 		return false;
 	}
 
@@ -19,14 +19,14 @@ bool UFRMConfigManager::FRM_GetStoredConfigType(const FString& StrID, EVariantTy
 
 	if (OutType == EVariantTypes::Empty)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("FRM_GetStoredConfigType: Setting '%s' is empty or invalid"), *FullSettingName);
+		UE_LOG(LogTemp, Warning, TEXT("GetStoredConfigType: Setting '%s' is empty or invalid"), *FullSettingName);
 		return false;
 	}
 
 	return true;
 }
 
-bool UFRMConfigManager::FRM_GetExpectedConfigType(const FString& StrID, EVariantTypes& OutType)
+bool UFRMConfigManager::GetExpectedConfigType(const FString& StrID, EVariantTypes& OutType)
 {
 	if (StrID == TEXT("uWS.Port"))
 	{
@@ -41,10 +41,10 @@ bool UFRMConfigManager::FRM_GetExpectedConfigType(const FString& StrID, EVariant
 	}
 
 	// Fallback to whatever is currently stored.
-	return FRM_GetStoredConfigType(StrID, OutType);
+	return GetStoredConfigType(StrID, OutType);
 }
 
-bool UFRMConfigManager::FRM_ValidateConfigValue(const FString& StrID, const FVariant& InValue, FString& OutReason)
+bool UFRMConfigManager::ValidateConfigValue(const FString& StrID, const FVariant& InValue, FString& OutReason)
 {
 	OutReason.Empty();
 
@@ -121,7 +121,7 @@ bool UFRMConfigManager::FRM_ValidateConfigValue(const FString& StrID, const FVar
 	return true;
 }
 
-bool UFRMConfigManager::FRM_ParseConfigInputToVariant(
+bool UFRMConfigManager::ParseConfigInputToVariant(
 	const FString& StrID,
 	const FString& RawTextValue,
 	bool bCheckboxValue,
@@ -132,7 +132,7 @@ bool UFRMConfigManager::FRM_ParseConfigInputToVariant(
 	OutReason.Empty();
 
 	EVariantTypes ExpectedType;
-	if (!FRM_GetExpectedConfigType(StrID, ExpectedType))
+	if (!GetExpectedConfigType(StrID, ExpectedType))
 	{
 		OutReason = TEXT("Could not determine expected setting type.");
 		return false;
@@ -155,7 +155,7 @@ bool UFRMConfigManager::FRM_ParseConfigInputToVariant(
 				UE_LOG(
 					LogTemp,
 					Warning,
-					TEXT("FRM_ParseConfigInputToVariant: Failed to parse int32 from '%s' for setting '%s'"),
+					TEXT("ParseConfigInputToVariant: Failed to parse int32 from '%s' for setting '%s'"),
 					*RawTextValue,
 					*StrID
 				);
@@ -175,7 +175,7 @@ bool UFRMConfigManager::FRM_ParseConfigInputToVariant(
 				UE_LOG(
 					LogTemp,
 					Warning,
-					TEXT("FRM_ParseConfigInputToVariant: Failed to parse float from '%s' for setting '%s'"),
+					TEXT("ParseConfigInputToVariant: Failed to parse float from '%s' for setting '%s'"),
 					*RawTextValue,
 					*StrID
 				);
@@ -198,7 +198,7 @@ bool UFRMConfigManager::FRM_ParseConfigInputToVariant(
 			UE_LOG(
 				LogTemp,
 				Warning,
-				TEXT("FRM_ParseConfigInputToVariant: Unsupported variant type %d for setting '%s'"),
+				TEXT("ParseConfigInputToVariant: Unsupported variant type %d for setting '%s'"),
 				static_cast<int32>(ExpectedType),
 				*StrID
 			);
@@ -207,7 +207,7 @@ bool UFRMConfigManager::FRM_ParseConfigInputToVariant(
 	}
 }
 
-bool UFRMConfigManager::FRM_SetConfigFromInput(
+bool UFRMConfigManager::SetConfigFromInput(
 	const FString& StrID,
 	const FString& RawTextValue,
 	bool bCheckboxValue
@@ -216,18 +216,18 @@ bool UFRMConfigManager::FRM_SetConfigFromInput(
 	UFGGameUserSettings* UserSettings = UFGGameUserSettings::GetFGGameUserSettings();
 	if (!UserSettings)
 	{
-		UE_LOG(LogTemp, Error, TEXT("FRM_SetConfigFromInput: UserSettings is null"));
+		UE_LOG(LogTemp, Error, TEXT("SetConfigFromInput: UserSettings is null"));
 		return false;
 	}
 
 	FVariant ParsedVariant;
 	FString ParseReason;
-	if (!FRM_ParseConfigInputToVariant(StrID, RawTextValue, bCheckboxValue, ParsedVariant, ParseReason))
+	if (!ParseConfigInputToVariant(StrID, RawTextValue, bCheckboxValue, ParsedVariant, ParseReason))
 	{
 		UE_LOG(
 			LogTemp,
 			Warning,
-			TEXT("FRM_SetConfigFromInput: Failed to parse setting '%s': %s"),
+			TEXT("SetConfigFromInput: Failed to parse setting '%s': %s"),
 			*StrID,
 			*ParseReason
 		);
@@ -235,12 +235,12 @@ bool UFRMConfigManager::FRM_SetConfigFromInput(
 	}
 
 	FString ValidationReason;
-	if (!FRM_ValidateConfigValue(StrID, ParsedVariant, ValidationReason))
+	if (!ValidateConfigValue(StrID, ParsedVariant, ValidationReason))
 	{
 		UE_LOG(
 			LogTemp,
 			Warning,
-			TEXT("FRM_SetConfigFromInput: Validation failed for setting '%s': %s"),
+			TEXT("SetConfigFromInput: Validation failed for setting '%s': %s"),
 			*StrID,
 			*ValidationReason
 		);
@@ -253,29 +253,29 @@ bool UFRMConfigManager::FRM_SetConfigFromInput(
 	UE_LOG(
 		LogTemp,
 		Log,
-		TEXT("FRM_SetConfigFromInput: Applied setting '%s'"),
+		TEXT("SetConfigFromInput: Applied setting '%s'"),
 		*FullSettingName
 	);
 
 	return true;
 }
 
-bool UFRMConfigManager::FRM_SetConfigFromInput(const FString& StrID, float Value)
+bool UFRMConfigManager::SetConfigFromInput(const FString& StrID, float Value)
 {
-	return FRM_SetConfigFromInput(StrID, FString::SanitizeFloat(Value), false);
+	return SetConfigFromInput(StrID, FString::SanitizeFloat(Value), false);
 }
 
-bool UFRMConfigManager::FRM_SetConfigFromInput(const FString& StrID, int32 Value)
+bool UFRMConfigManager::SetConfigFromInput(const FString& StrID, int32 Value)
 {
-	return FRM_SetConfigFromInput(StrID, FString::FromInt(Value), false);
+	return SetConfigFromInput(StrID, FString::FromInt(Value), false);
 }
 
-bool UFRMConfigManager::FRM_SetConfigFromInput(const FString& StrID, bool bValue)
+bool UFRMConfigManager::SetConfigFromInput(const FString& StrID, bool bValue)
 {
-	return FRM_SetConfigFromInput(StrID, TEXT(""), bValue);
+	return SetConfigFromInput(StrID, TEXT(""), bValue);
 }
 
-bool UFRMConfigManager::FRM_SetConfigFromInput(const FString& StrID, const FString& Value)
+bool UFRMConfigManager::SetConfigFromInput(const FString& StrID, const FString& Value)
 {
-	return FRM_SetConfigFromInput(StrID, Value, false);
+	return SetConfigFromInput(StrID, Value, false);
 }

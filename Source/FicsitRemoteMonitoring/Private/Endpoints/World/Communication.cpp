@@ -1,9 +1,13 @@
-﻿#include "Communication.h"
 
-#include "FGBuildableCircuitSwitch.h"
+#include "Endpoints/World/Communication.h"
+
+#include "Buildables/FGBuildableCircuitSwitch.h"
 #include "FGChatManager.h"
 #include "FGPlayerController.h"
+#include "FicsitRemoteMonitoringModule.h"
 #include "FRM_Request.h"
+#include "Buildables/FGBuildableFactory.h"
+#include "Kismet/GameplayStatics.h"
 
 struct FChatMessageStruct;
 
@@ -272,7 +276,7 @@ void UCommunication::setModSetting(UObject* WorldContext, FRequestData RequestDa
 
 		UE_LOG(LogFRMAPI, Warning, TEXT("SplineSampleDistance: %f"), SplineSampleDistance);
 
-		UFRMConfigManager::FRM_SetConfigFromInput(TEXT("General.SplineSampleDistance"), FString::SanitizeFloat(SplineSampleDistance), false);
+		UFRMConfigManager::SetConfigFromInput(TEXT("General.SplineSampleDistance"), FString::SanitizeFloat(SplineSampleDistance), false);
 
 		TSharedPtr<FJsonObject> JChatMessage = MakeShared<FJsonObject>();
 		JChatMessage->Values.Add("IsSent", MakeShared<FJsonValueBoolean>(true));

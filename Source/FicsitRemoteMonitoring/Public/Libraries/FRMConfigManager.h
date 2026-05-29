@@ -18,12 +18,12 @@ public:
 
 	/** Gets a config value and converts it to the requested type if possible. */
 	template<typename T>
-	static bool FRM_GetConfig(const FString& StrID, T& OutValue)
+	static bool GetConfig(const FString& StrID, T& OutValue)
 	{
 		UFGGameUserSettings* UserSettings = UFGGameUserSettings::GetFGGameUserSettings();
 		if (!UserSettings)
 		{
-			UE_LOG(LogTemp, Error, TEXT("FRM_GetConfig: UserSettings is null"));
+			UE_LOG(LogTemp, Error, TEXT("GetConfig: UserSettings is null"));
 			return false;
 		}
 
@@ -141,14 +141,14 @@ public:
 				std::is_same_v<T, int32> ||
 				std::is_same_v<T, bool> ||
 				std::is_same_v<T, FString>,
-				"FRM_GetConfig only supports float, int32, bool, and FString."
+				"GetConfig only supports float, int32, bool, and FString."
 			);
 		}
 
 		UE_LOG(
 			LogTemp,
 			Warning,
-			TEXT("FRM_GetConfig: Invalid type for setting '%s'. Variant type: %d"),
+			TEXT("GetConfig: Invalid type for setting '%s'. Variant type: %d"),
 			*FullSettingName,
 			static_cast<int32>(VariantType)
 		);
@@ -158,28 +158,28 @@ public:
 
 	/** Gets a config value or returns a fallback default. */
 	template<typename T>
-	static T FRM_GetConfigOrDefault(const FString& StrID, const T& DefaultValue)
+	static T GetConfigOrDefault(const FString& StrID, const T& DefaultValue)
 	{
 		T Value = DefaultValue;
-		FRM_GetConfig(StrID, Value);
+		GetConfig(StrID, Value);
 		return Value;
 	}
 
 	/** Gets the raw current variant type of a setting. */
-	static bool FRM_GetStoredConfigType(const FString& StrID, EVariantTypes& OutType);
+	static bool GetStoredConfigType(const FString& StrID, EVariantTypes& OutType);
 
 	/** Gets the expected variant type for a known setting. Falls back to the stored type if not explicitly mapped. */
-	static bool FRM_GetExpectedConfigType(const FString& StrID, EVariantTypes& OutType);
+	static bool GetExpectedConfigType(const FString& StrID, EVariantTypes& OutType);
 
 	/** Validates a parsed variant value for a specific setting. */
-	static bool FRM_ValidateConfigValue(const FString& StrID, const FVariant& InValue, FString& OutReason);
+	static bool ValidateConfigValue(const FString& StrID, const FVariant& InValue, FString& OutReason);
 
 	/**
 	 * Converts UI input into a correctly typed FVariant for the target setting.
 	 * RawTextValue is used for String / Int32 / Float settings.
 	 * bCheckboxValue is used for Bool settings.
 	 */
-	static bool FRM_ParseConfigInputToVariant(
+	static bool ParseConfigInputToVariant(
 		const FString& StrID,
 		const FString& RawTextValue,
 		bool bCheckboxValue,
@@ -188,15 +188,15 @@ public:
 	);
 
 	/** Applies a parsed value to the setting if the input is valid. */
-	static bool FRM_SetConfigFromInput(
+	static bool SetConfigFromInput(
 		const FString& StrID,
 		const FString& RawTextValue,
 		bool bCheckboxValue
 	);
 
 	/** Convenience overloads */
-	static bool FRM_SetConfigFromInput(const FString& StrID, float Value);
-	static bool FRM_SetConfigFromInput(const FString& StrID, int32 Value);
-	static bool FRM_SetConfigFromInput(const FString& StrID, bool bValue);
-	static bool FRM_SetConfigFromInput(const FString& StrID, const FString& Value);
+	static bool SetConfigFromInput(const FString& StrID, float Value);
+	static bool SetConfigFromInput(const FString& StrID, int32 Value);
+	static bool SetConfigFromInput(const FString& StrID, bool bValue);
+	static bool SetConfigFromInput(const FString& StrID, const FString& Value);
 };

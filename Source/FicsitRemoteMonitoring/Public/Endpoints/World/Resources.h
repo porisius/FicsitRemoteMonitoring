@@ -1,10 +1,10 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "FGResourceDeposit.h"
-#include "FGResourceNode.h"
-#include "FGResourceNodeFrackingCore.h"
-#include "FGResourceNodeFrackingSatellite.h"
+#include "Resources/FGResourceDeposit.h"
+#include "Resources/FGResourceNode.h"
+#include "Resources/FGResourceNodeFrackingCore.h"
+#include "Resources/FGResourceNodeFrackingSatellite.h"
 #include "RemoteMonitoringLibrary.h"
 #include "Resources.generated.h"
 

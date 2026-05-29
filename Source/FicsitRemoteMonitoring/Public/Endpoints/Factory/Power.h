@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FGBuildableGenerator.h"
+#include "Buildables/FGBuildableGenerator.h"
 #include "RemoteMonitoringLibrary.h"
 #include "Power.generated.h"
 

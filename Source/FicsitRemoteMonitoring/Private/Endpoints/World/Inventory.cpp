@@ -1,9 +1,10 @@
-﻿#include "Inventory.h"
+﻿
+#include "Endpoints/World/Inventory.h"
+
 #include "FGCentralStorageSubsystem.h"
 #include "FGBuildableSubsystem.h"
-#include "FGBuildableStorage.h"
+#include "Buildables/FGBuildableStorage.h"
 #include "FGCrate.h"
-#include "FGItemDescriptor.h"
 #include "Kismet/GameplayStatics.h"
 
 struct FItemAmount;

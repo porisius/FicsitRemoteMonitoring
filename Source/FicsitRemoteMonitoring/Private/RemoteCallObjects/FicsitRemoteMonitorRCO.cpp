@@ -1,7 +1,7 @@
-#include "UnrealNetwork.h"
 #include "RemoteCallObjects/FicsitRemoteMonitoringRCO.h"
 
 #include "../../Public/FicsitRemoteMonitoring.h"
+#include "Net/UnrealNetwork.h"
 
 void UFicsitRemoteMonitoringRCO::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

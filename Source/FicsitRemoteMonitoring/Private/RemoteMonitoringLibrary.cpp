@@ -1,10 +1,10 @@
 #include "RemoteMonitoringLibrary.h"
 
-#include "Config_FactoryStruct.h"
-#include "Drones.h"
-#include "FGBuildableCircuitSwitch.h"
-#include "FGBuildableDroneStation.h"
-#include "FGBuildableRailroadStation.h"
+#include "Configs/Config_FactoryStruct.h"
+#include "Endpoints/Travel/Drones.h"
+#include "Buildables/FGBuildableCircuitSwitch.h"
+#include "Buildables/FGBuildableDroneStation.h"
+#include "Buildables/FGBuildableRailroadStation.h"
 #include "FGBuildableSubsystem.h"
 #include "FGCharacterPlayer.h"
 #include "FGFactoryConnectionComponent.h"
@@ -12,18 +12,21 @@
 #include "FGPipeConnectionComponent.h"
 #include "FGPowerCircuit.h"
 #include "FGPowerInfoComponent.h"
-#include "FGPowerShardDescriptor.h"
-#include "FGResourceNode.h"
+#include "Resources/FGPowerShardDescriptor.h"
+#include "Resources/FGResourceNode.h"
 #include "FGSchematicManager.h"
 #include "FGTrainStationIdentifier.h"
 #include "FicsitRemoteMonitoring.h"
 #include "FicsitRemoteMonitoringModule.h"
-#include "Research.h"
-#include "SMLOptionsLibrary.h"
-#include "StructuredLog.h"
+#include "Endpoints/World/Research.h"
+#include "Settings/SMLOptionsLibrary.h"
+#include "Logging/StructuredLog.h"
 #include "Components/SplineComponent.h"
 #include "GameFramework/PlayerState.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Policies/CondensedJsonPrintPolicy.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getActorJSON(AActor* Actor) {
 
@@ -302,7 +305,7 @@ FString URemoteMonitoringLibrary::APItoJSON(TArray<TSharedPtr<FJsonValue>> JSONA
 
 	FString Write{};
 	
-	if (UFRMConfigManager::FRM_GetConfigOrDefault<bool>(TEXT("Debug.JSONDebug"), false)) {
+	if (UFRMConfigManager::GetConfigOrDefault<bool>(TEXT("Debug.JSONDebug"), false)) {
 		const TSharedRef<TJsonWriter<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>> JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&Write);
 		FJsonSerializer::Serialize(JSONArray, JsonWriter);
 	} else {

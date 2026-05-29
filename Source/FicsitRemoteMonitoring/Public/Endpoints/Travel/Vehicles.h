@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FGWheeledVehicle.h"
+#include "WheeledVehicles/FGWheeledVehicle.h"
 #include "RemoteMonitoringLibrary.h"
 #include "Vehicles.generated.h"
 

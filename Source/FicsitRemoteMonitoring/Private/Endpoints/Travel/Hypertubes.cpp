@@ -1,13 +1,14 @@
-#include "Hypertubes.h"
 
-#include "FGBuildablePipeHyper.h"
-#include "FGBuildablePipeHyperJunction.h"
-#include "FGPipeHyperStart.h"
+#include "Endpoints/Travel/Hypertubes.h"
+
+#include "Buildables/FGBuildablePipeHyper.h"
+#include "Buildables/FGBuildablePipeHyperJunction.h"
 #include "FGFactoryConnectionComponent.h"
 #include "../../../../../../../Source/FactoryGame/Public/Buildables/FGBuildablePipeHyper.h"
 #include "Dom/JsonValue.h"
 #include "Templates/SharedPointer.h"
 #include "../../../Public/RemoteMonitoringLibrary.h"
+#include "Buildables/FGPipeHyperStart.h"
 
 class AFGPipeHyperStart;
 class AFGBuildableSubsystem;
@@ -31,7 +32,7 @@ void UHypertubes::getHyperEntrance(UObject* WorldContext, FRequestData RequestDa
 void UHypertubes::getHypertube(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 	
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	const float SampleDistance = UFRMConfigManager::FRM_GetConfigOrDefault<float>(TEXT("General.SplineSampleDistance"), 75.0f);
+	const float SampleDistance = UFRMConfigManager::GetConfigOrDefault<float>(TEXT("General.SplineSampleDistance"), 75.0f);
 	
 	TArray<AFGBuildablePipeHyper*> Hypertubes;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildablePipeHyper>(Hypertubes);

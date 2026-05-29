@@ -1,14 +1,15 @@
-#include "Vehicles.h"
+#include "Endpoints/Travel/Vehicles.h"
 
-#include "FGBuildableDockingStation.h"
+#include "Buildables/FGBuildableDockingStation.h"
 #include "FGCharacterPlayer.h"
 #include "FGPlayerController.h"
 #include "FGPlayerState.h"
-#include "FGTargetPointLinkedList.h"
-#include "FGWheeledVehicleInfo.h"
 #include "RemoteMonitoringLibrary.h"
 #include "Components/SplineComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "WheeledVehicles/FGVehiclePathPreset.h"
+#include "WheeledVehicles/FGVehicleSubsystem.h"
+#include "WheeledVehicles/FGWheeledVehicleIdentifier.h"
 
 void UVehicles::getTruckStation(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 

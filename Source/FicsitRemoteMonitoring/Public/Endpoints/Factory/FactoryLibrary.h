@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Dom/JsonValue.h"
 #include "RemoteMonitoringLibrary.h"
-#include "FGBuildableManufacturer.h"
+#include "Buildables/FGBuildableManufacturer.h"
 #include "FactoryLibrary.generated.h"
 
 struct FRequestData;

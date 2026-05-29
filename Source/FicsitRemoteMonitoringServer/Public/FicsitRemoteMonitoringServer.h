@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "FRM_Controller.h"
-#include "ModSubsystem.h"
+#include "Subsystem/ModSubsystem.h"
 #include "FicsitRemoteMonitoringServer.generated.h"
 
 UCLASS()

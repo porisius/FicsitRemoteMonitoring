@@ -19,8 +19,6 @@ public class FicsitRemoteMonitoringServer : ModuleRules
                 "Json",
                 "JsonUtilities",
                 "FactoryGame",
-                "Sockets",
-                "Networking",
                 "SML",
                 "Chaos",
                 "ChaosVehiclesCore", "ChaosVehicles", "ChaosSolverEngine",
@@ -32,8 +30,7 @@ public class FicsitRemoteMonitoringServer : ModuleRules
 
         PrivateDependencyModuleNames.AddRange(new string[] { 
             "HTTP", 
-            "HTTPServer",
-            "FicsitRemoteMonitoring"
+            "HTTPServer"
         });
         
         // Enable exception handling

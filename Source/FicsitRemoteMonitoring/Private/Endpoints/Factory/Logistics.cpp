@@ -1,10 +1,11 @@
-﻿#include "Logistics.h"
+﻿
+#include "Endpoints/Factory/Logistics.h"
 
-#include "FGBuildableConveyorBelt.h"
-#include "FGBuildableConveyorMonitor.h"
-#include "FGBuildableMergerPriority.h"
-#include "FGBuildablePipeline.h"
-#include "FGBuildableSplitterSmart.h"
+#include "Buildables/FGBuildableConveyorBelt.h"
+#include "Buildables/FGBuildableConveyorMonitor.h"
+#include "Buildables/FGBuildableMergerPriority.h"
+#include "Buildables/FGBuildablePipeline.h"
+#include "Buildables/FGBuildableSplitterSmart.h"
 #include "RemoteMonitoringLibrary.h"
 #include "Containers/Array.h"
 #include "FGPipeConnectionComponent.h"
@@ -23,7 +24,7 @@ class UFGFactoryConnectionComponent;
 TArray<TSharedPtr<FJsonValue>> ULogistics::getBelts_Helper(UObject* WorldContext, bool IsBelt) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 
-	const float SampleDistance = UFRMConfigManager::FRM_GetConfigOrDefault<float>(TEXT("General.SplineSampleDistance"), 75.0f);
+	const float SampleDistance = UFRMConfigManager::GetConfigOrDefault<float>(TEXT("General.SplineSampleDistance"), 75.0f);
 
 	TArray<AFGBuildableConveyorBase*> Conveyors;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableConveyorBase>(Conveyors);
@@ -179,7 +180,7 @@ void ULogistics::getSplitterMerger(UObject* WorldContext, FRequestData RequestDa
 
 void ULogistics::getPipes(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	const float SampleDistance = UFRMConfigManager::FRM_GetConfigOrDefault<float>(TEXT("General.SplineSampleDistance"), 75.0f);
+	const float SampleDistance = UFRMConfigManager::GetConfigOrDefault<float>(TEXT("General.SplineSampleDistance"), 75.0f);
 
 	TArray<AFGBuildablePipeline*> Pipes;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildablePipeline>(Pipes);

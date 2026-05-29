@@ -1,12 +1,12 @@
 #include "Commands/multi.h"
 
-#include "Config_HTTPStruct.h"
-#include "Config_SerialStruct.h"
+#include "Configs/Config_HTTPStruct.h"
+#include "Configs/Config_SerialStruct.h"
 #include "FicsitRemoteMonitoring.h"
 #include "FicsitRemoteMonitoringModule.h"
 #include "FRM_Request.h"
 #include "NotificationLoader.h"
-#include "StructuredLog.h"
+#include "Logging/StructuredLog.h"
 #include "Libraries/Validation.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -86,7 +86,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 
 		FString arg1 = Arguments[1].ToLower();
 
-		const int32 Port = UFRMConfigManager::FRM_GetConfigOrDefault<int32>(TEXT("uWS.Port"), 8080);
+		const int32 Port = UFRMConfigManager::GetConfigOrDefault<int32>(TEXT("uWS.Port"), 8080);
 
 		FString Reason;
 		if (!UFRMValidation::IsTcpPortAvailable(Port, Reason))
@@ -131,7 +131,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 		if (arg1 == "start") {
 			ModSubsystem->InitSerialDevice();
 
-			const FString Port = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("Serial.Port"), "COM3").TrimStartAndEnd();
+			const FString Port = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("Serial.Port"), "COM3").TrimStartAndEnd();
 			
 			ChatReturn.Chat = FString(TEXT("Serial/RS232 Service Initiated on Port: " + Port));
 			ChatReturn.Color = FLinearColor::Green;

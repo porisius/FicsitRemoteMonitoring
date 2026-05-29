@@ -2,9 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "Config_HTTPStruct.h"
-#include "Config_SerialStruct.h"
-#include "Config_FactoryStruct.h"
+#include "Configs/Config_HTTPStruct.h"
+#include "Configs/Config_SerialStruct.h"
+#include "Configs/Config_FactoryStruct.h"
 #include "FRMConfigInitSubsystem.generated.h"
 
 class UConfigManager;

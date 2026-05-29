@@ -5,6 +5,7 @@
 #include "Dom/JsonObject.h"
 #include "Dom/JsonValue.h"
 #include "FRM_RequestData.h"
+#include "SessionSettings/SessionSettingsManager.h"
 #include "Components/SplineComponent.h"
 #include "Libraries/FRMConfigManager.h"
 #include "RemoteMonitoringLibrary.generated.h"

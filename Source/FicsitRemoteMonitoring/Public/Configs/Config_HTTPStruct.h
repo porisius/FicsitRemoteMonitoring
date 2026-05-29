@@ -1,6 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "ConfigPropertyString.h"
+#include "Configuration/Properties/ConfigPropertyString.h"
 #include "Configuration/ConfigManager.h"
 #include "Engine/Engine.h"
 #include "Config_HTTPStruct.generated.h"

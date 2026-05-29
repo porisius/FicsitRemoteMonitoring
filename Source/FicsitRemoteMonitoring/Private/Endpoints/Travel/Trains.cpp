@@ -1,9 +1,10 @@
-#include "Trains.h"
 
-#include "FGBuildableRailroadSignal.h"
-#include "FGBuildableRailroadStation.h"
-#include "FGBuildableTrainPlatform.h"
-#include "FGBuildableTrainPlatformCargo.h"
+#include "Endpoints/Travel/Trains.h"
+
+#include "Buildables/FGBuildableRailroadSignal.h"
+#include "Buildables/FGBuildableRailroadStation.h"
+#include "Buildables/FGBuildableTrainPlatform.h"
+#include "Buildables/FGBuildableTrainPlatformCargo.h"
 #include "FGFreightWagon.h"
 #include "FGLocomotive.h"
 #include "FGRailroadSubsystem.h"
@@ -288,7 +289,7 @@ void UTrains::getTrainStation(UObject* WorldContext, FRequestData RequestData, T
 void UTrains::getTrainRails(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 	
-	const float SampleDistance = UFRMConfigManager::FRM_GetConfigOrDefault<float>(TEXT("General.SplineSampleDistance"), 75.0f);
+	const float SampleDistance = UFRMConfigManager::GetConfigOrDefault<float>(TEXT("General.SplineSampleDistance"), 75.0f);
 
 	TArray<AFGBuildableRailroadTrack*> RailroadTracks;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableRailroadTrack>(RailroadTracks);

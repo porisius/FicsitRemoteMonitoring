@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PlayerLibrary.h"
+#include "Endpoints/World/PlayerLibrary.h"
 
 #include "FGCharacterPlayer.h"
 #include "FGCreatureSubsystem.h"

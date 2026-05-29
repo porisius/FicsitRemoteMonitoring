@@ -6,12 +6,12 @@
 #include "../../FicsitRemoteMonitoring/Public/FicsitRemoteMonitoring.h"
 #include "../../FicsitRemoteMonitoring/Public/FRM_RequestData.h"
 #include "FicsitRemoteMonitoringServerModule.h"
-#include "HTTPSharedDataTypes.h"
-#include "FGServerAPIDataTypes.h"
 #include "FactoryDedicatedServer/Public/Controller/FGServerSaveGameController.h"
 #include "../../FicsitRemoteMonitoring/Public/FRM_Request.h"
 #include "HttpServerConstants.h"
 #include "Logging/StructuredLog.h"
+#include "Networking/FGServerAPIDataTypes.h"
+#include "Server/HTTPSharedDataTypes.h"
 
 class FFGRequestPayload;
 class FJsonValue;

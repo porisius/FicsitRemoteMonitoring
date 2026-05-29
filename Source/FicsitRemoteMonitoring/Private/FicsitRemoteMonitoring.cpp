@@ -1,39 +1,42 @@
 #include "FicsitRemoteMonitoring.h"
 
-#include "Communication.h"
-#include "Config_DiscITStruct.h"
-#include "Config_FactoryStruct.h"
-#include "Config_HTTPStruct.h"
-#include "Config_SerialStruct.h"
+#include <sstream>
+
+
 #include "Runtime/Core/Public/Logging/LogCategory.h"
-#include "Drones.h"
 #include "EngineUtils.h"
-#include "EventsLibrary.h"
-#include "FactoryLibrary.h"
+#include "FGPowerCircuit.h"
+#include "FGRailroadSubsystem.h"
 #include "FicsitRemoteMonitoringModule.h"
 #include "FRMConfigInitSubsystem.h"
 #include "Async/Async.h"
 #include "FRM_Request.h"
-#include "Hypertubes.h"
 #include "Inventory.h"
-#include "Logistics.h"
-#include "NativeHookManager.h"
 #include "NotificationLoader.h"
-#include "PlayerLibrary.h"
-#include "Research.h"
-#include "Resources.h"
-#include "Session.h"
-#include "SMLOptionsLibrary.h"
-#include "StructuredLog.h"
-#include "SubsystemActorManager.h"
-#include "Support.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "TimerManager.h"
-#include "Trains.h"
-#include "Vehicles.h"
+#include "Configs/Config_DiscITStruct.h"
+#include "Endpoints/Factory/FactoryLibrary.h"
+#include "Endpoints/Factory/Logistics.h"
+#include "Endpoints/Factory/Support.h"
+#include "Endpoints/Travel/Drones.h"
+#include "Endpoints/Travel/Hypertubes.h"
+#include "Endpoints/Travel/Trains.h"
+#include "Endpoints/Travel/Vehicles.h"
+#include "Endpoints/World/Communication.h"
+#include "Endpoints/World/EventsLibrary.h"
+#include "Endpoints/World/Inventory.h"
+#include "Endpoints/World/PlayerLibrary.h"
+#include "Endpoints/World/Research.h"
+#include "Endpoints/World/Resources.h"
+#include "Endpoints/World/Session.h"
 #include "Engine/World.h"
 #include "Libraries/Validation.h"
+#include "Misc/FileHelper.h"
+#include "Patching/NativeHookManager.h"
+#include "Serialization/JsonReader.h"
+#include "Serialization/JsonSerializer.h"
 
 us_listen_socket_t* SocketListener;
 bool SocketRunning = false;
@@ -66,11 +69,11 @@ void AFicsitRemoteMonitoring::BeginPlay()
 	// Load FRM's API Endpoints
 	InitAPIRegistry();
 
-	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");
+	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");
 
 	if (AuthToken.IsEmpty())
 	{
-		if (!UFRMConfigManager::FRM_SetConfigFromInput(TEXT("uWS.AuthenticationToken"), GenerateAuthToken(32), false))
+		if (!UFRMConfigManager::SetConfigFromInput(TEXT("uWS.AuthenticationToken"), GenerateAuthToken(32), false))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Failed to apply setting"));
 			return;
@@ -83,12 +86,12 @@ void AFicsitRemoteMonitoring::BeginPlay()
 		UE_LOG(LogTemp, Log, TEXT("Token already exists."));
 	}
 	
-	if (UFRMConfigManager::FRM_GetConfigOrDefault<bool>(TEXT("uWS.Autostart"), false))
+	if (UFRMConfigManager::GetConfigOrDefault<bool>(TEXT("uWS.Autostart"), false))
 	{
 		StartWebSocketServer();
 	}
 	
-	if (UFRMConfigManager::FRM_GetConfigOrDefault<bool>(TEXT("Serial.Autostart"), false))
+	if (UFRMConfigManager::GetConfigOrDefault<bool>(TEXT("Serial.Autostart"), false))
 	{
 		InitSerialDevice();
 	}
@@ -107,7 +110,7 @@ void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
 		UE_LOGFMT(LogHttpServer, Log, "Starting PushUpdatedData loop");
 		while (SocketRunning && !bShouldStop)
 		{
-			const float PushCycle = UFRMConfigManager::FRM_GetConfigOrDefault<float>(TEXT("uWS.PushCycle"), 5.0f);
+			const float PushCycle = UFRMConfigManager::GetConfigOrDefault<float>(TEXT("uWS.PushCycle"), 5.0f);
 
 			PushUpdatedData();
 			FPlatformProcess::Sleep(PushCycle);
@@ -188,8 +191,8 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                 auto app = uWS::App();
                 auto World = GetWorld();
 
-            	const int32 port = UFRMConfigManager::FRM_GetConfigOrDefault<int32>(TEXT("uWS.Port"), 8080);
-            	const FString Root = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");            	
+            	const int32 port = UFRMConfigManager::GetConfigOrDefault<int32>(TEXT("uWS.Port"), 8080);
+            	const FString Root = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");            	
 
                 FString ModPath = FPaths::ProjectModsDir() + "FicsitRemoteMonitoring/";
                 FString IconsPath = ModPath + "Icons";
@@ -281,7 +284,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                     // Log the request URL
                     //UE_LOGFMT(LogHttpServer, Log, "Request URL: {0}", Endpoint);
 
-                	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+                	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
 
                 	FRequestData RequestData;
                 	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
@@ -315,7 +318,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 			            		return UFRM_RequestLibrary::SendErrorMessage(res, "400 Bad Request", FString("Invalid Request Body"));
 			            	}
 
-			            	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+			            	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
 			            	
 			            	FRequestData RequestData;
 			            	RequestData.Method = "POST";
@@ -337,9 +340,9 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 
 			            	HandleApiRequest(World, res, req, RelativePath, RequestData);
 			            }
-			            catch (const std::exception &e)
+			            catch (const std::exception& e)
 			            {
-			            	UE_LOG(LogHttpServer, Error, TEXT("Request Exception: %s"), *e.what());
+			            	UE_LOG(LogHttpServer, Error, TEXT("Request Exception: %s"), *FString(e.what()));
 			            	UFRM_RequestLibrary::SendErrorMessage(res, "400 Bad Request", FString("Invalid Request Body"));
 			            }
             		});
@@ -352,7 +355,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 
                     std::string url(req->getUrl().begin(), req->getUrl().end());
 
-                	const FString AuthToken = UFRMConfigManager::FRM_GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+                	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
                     
                     bool bFileExists = false;
                     // Remove initial '/'

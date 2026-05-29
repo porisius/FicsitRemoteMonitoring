@@ -1,4 +1,4 @@
-﻿#include "Research.h"
+#include "Endpoints/World/Research.h"
 
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "FicsitRemoteMonitoring.h"
@@ -8,7 +8,6 @@
 #include "FGItemPickup.h"
 #include "FGResearchTree.h"
 #include "FGItemCategory.h"
-#include "FGItemDescriptor.h"
 #include "FGSchematicCategory.h"
 #include "Kismet/KismetMathLibrary.h"
 

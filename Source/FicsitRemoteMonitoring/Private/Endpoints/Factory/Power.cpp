@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Power.h"
+#include "Endpoints/Factory/Power.h"
 
-#include "FGBuildableGenerator.h"
-#include "FGBuildableGeneratorGeoThermal.h"
-#include "FGBuildableGeneratorNuclear.h"
-#include "FGBuildablePriorityPowerSwitch.h"
+#include "Buildables/FGBuildableGenerator.h"
+#include "Buildables/FGBuildableGeneratorGeoThermal.h"
+#include "Buildables/FGBuildableGeneratorNuclear.h"
+#include "Buildables/FGBuildablePriorityPowerSwitch.h"
 #include "FGCircuitConnectionComponent.h"
 #include "FGCircuitSubsystem.h"
-#include "FGBuildableWire.h"
+#include "Buildables/FGBuildableWire.h"
 #include "FGInventoryLibrary.h"
 #include "FGPowerInfoComponent.h"
 #include "FicsitRemoteMonitoring.h"

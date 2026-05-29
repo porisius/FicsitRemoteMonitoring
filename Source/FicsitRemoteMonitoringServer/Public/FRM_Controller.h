@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "FGDSSharedTypes.h"
+#include "Server/FGDSSharedTypes.h"
 #include "FactoryDedicatedServer/Public/Controller/FGServerControllerBase.h"
 
 #include "FRM_Controller.generated.h"

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Drones.h"
+#include "Endpoints/Travel/Drones.h"
 
-#include "FGBuildableDroneStation.h"
+#include "Buildables/FGBuildableDroneStation.h"
 #include "RemoteMonitoringLibrary.h"
 #include "Kismet/GameplayStatics.h"
 

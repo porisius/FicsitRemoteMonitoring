@@ -1,12 +1,15 @@
 #pragma once
 
-#include "FGBuildableConveyorBelt.h"
-#include "FGBuildableConveyorLift.h"
+#include "Buildables/FGBuildableConveyorBelt.h"
+#include "Buildables/FGBuildableConveyorLift.h"
 #include "FGResearchTreeNode.h"
-#include "FGResourceDeposit.h"
-#include "Power.h"
+#include "Resources/FGResourceDeposit.h"
+#include "Endpoints/Factory/Power.h"
 #include "FRM_RequestData.h"
-#include "ModSubsystem.h"
+#include "FGRailroadSubsystem.h"
+#include "FGTrain.h"
+#include "Subsystem/ModSubsystem.h"
+#include "RemoteMonitoringLibrary.h"
 
 THIRD_PARTY_INCLUDES_START
 #include "ThirdParty/uWebSockets/App.h"
