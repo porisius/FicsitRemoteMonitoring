@@ -115,8 +115,9 @@ I am more than appreciated if you wish to contribute to the mod, as I am not an 
 If you wish to contribute to the mod, you will need to setup the [modding environment](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/index.html). The Satisfactory Modding Team has a detailed step-by-step guide for implementation. The best resource for assistance can be found on the Satisfactory Modding [Discord](https://discord.ficsit.app/). However, feel free to either as myself or the Sysadmin Modding Discord for assistance.
 
 - Setup the modding environment as described above.
-- Download or Clone the Ficsit Remote Monitoring Dev branch to your FactoryGame.uproject's Mods folder
-- Download or Clone the ArduinoKit to your FactoryGame.uproject's Mods folder. 
+- Download or Clone the Ficsit Remote Monitoring Dev branch to your FactoryGame.uproject's Mods\GameFeatures folder
+- Download or Clone the ArduinoKit to your FactoryGame.uproject's Mods folder.
+- Download or Clone the DiscIt to your FactoryGame.uproject's Mods folder.
   - This is required for packing/testing the mod, due to handling potential Serial/RS232 Device Communication.
 - Continue from [here](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/project_setup.html#_generate_visual_studio_files) to compile the project for opening in Unreal Engine Editor.
 
