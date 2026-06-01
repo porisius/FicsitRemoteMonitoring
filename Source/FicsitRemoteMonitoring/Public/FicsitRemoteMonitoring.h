@@ -104,7 +104,6 @@ private:
 
 	TFuture<void> WebServer{};
 	
-	bool JSONDebugMode = false;
 	bool bShouldStop = false;
 	bool bHasRunningPushDataLoop = false;
 

@@ -1124,6 +1124,8 @@ void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, FRequestData Re
 
 	auto [JsonValues, bUseFirstObject] = this->CallEndpoint(WorldContext, InEndpoint, RequestData, bSuccess, ErrorCode);
 
+	const bool JSONDebugMode = UFRMConfigManager::GetConfigOrDefault<bool>(TEXT("Debug.JSONDebug"), false);
+	
 	if (bSuccess && !bUseFirstObject)
 	{
 		if (Interface == EInterfaceType::Socket)
