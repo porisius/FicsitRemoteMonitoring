@@ -193,7 +193,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             	const int32 port = UFRMConfigManager::GetConfigOrDefault<int32>(TEXT("uWS.Port"), 8080);
             	const FString Root = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");            	
 
-                FString ModPath = FPaths::ProjectModsDir() + "FicsitRemoteMonitoring/";
+                FString ModPath = FPaths::ProjectModsDir() + "GameFeatures/FicsitRemoteMonitoring/";
                 FString IconsPath = ModPath + "Icons";
                 FString UIPath;
 
