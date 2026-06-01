@@ -45,7 +45,7 @@ jobs:
         run: git -C C:\SatisfactoryModLoader pull
 
       - name: Remove any existing FRM
-        run: Remove-Item "C:\\SatisfactoryModLoader\\Mods\\FicsitRemoteMonitoring" -Recurse -ErrorAction Ignore -Confirm:$false
+        run: Remove-Item "C:\\SatisfactoryModLoader\\Mods\\GameFeatures\\FicsitRemoteMonitoring" -Recurse -ErrorAction Ignore -Confirm:$false
 
       - name: Read uPlugin
         id: uPlugin
@@ -54,7 +54,7 @@ jobs:
           file_path: "FicsitRemoteMonitoring/FicsitRemoteMonitoring.uPlugin"
 
       - name: Copy FicsitRemoteMonitoring to Project
-        run: Copy-Item "$Env:GITHUB_WORKSPACE\\FicsitRemoteMonitoring" C:\SatisfactoryModLoader\Mods -Recurse -Force -Confirm:$false -ErrorAction Ignore
+        run: Copy-Item "$Env:GITHUB_WORKSPACE\\FicsitRemoteMonitoring" C:\SatisfactoryModLoader\Mods\GameFeatures -Recurse -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
@@ -77,8 +77,8 @@ jobs:
 
       - name: Copy DLLs to Windows/WindowsServer Builds
         run: |
-          Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" C:\workspace\Archive\FicsitRemoteMonitoring\Windows\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
-          Copy-Item "C:/SatisfactoryModLoader/Mods/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" C:\workspace\Archive\FicsitRemoteMonitoring\WindowsServer\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
+          Copy-Item "C:/SatisfactoryModLoader/Mods/GameFeatures/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" C:\workspace\Archive\FicsitRemoteMonitoring\Windows\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
+          Copy-Item "C:/SatisfactoryModLoader/Mods/GameFeatures/FicsitRemoteMonitoring/Source/ThirdParty/uWebSockets/lib/*.dll" C:\workspace\Archive\FicsitRemoteMonitoring\WindowsServer\Binaries\Win64 -Force -Confirm:$false -ErrorAction Ignore
 
       - name: Upload artifacts - UnrealAutomationTool Logs
         uses: actions/upload-artifact@master
