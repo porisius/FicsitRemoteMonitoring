@@ -39,12 +39,7 @@
 			"Enabled": true
 		}
 	],
-	"GameVersion": ">=416835",
+	"GameVersion": ">=491125",
 	"RequiredOnRemote": false,
-	"LocalizationTargets": [
-		{
-			"Name": "FicsitRemoteMonitoring",
-			"LoadingPolicy": "Always"
-		}
-	]
+	"BuiltInInitialFeatureState": "Active"
 }
