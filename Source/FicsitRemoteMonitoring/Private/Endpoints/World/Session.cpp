@@ -35,6 +35,7 @@ void USession::getSessionInfo(UObject* WorldContext, FRequestData RequestData, T
 	JSessionInfo->Values.Add("IsDay", MakeShared<FJsonValueBoolean>(TimeOfDaySubSystem->IsDay()));
 	JSessionInfo->Values.Add("TotalPlayDuration", MakeShared<FJsonValueNumber>(PlayDuration));
 	JSessionInfo->Values.Add("TotalPlayDurationText", MakeShared<FJsonValueString>(SecondsToTimeString(PlayDuration)));
+	JSessionInfo->Values.Add("Seed",MakeShared<FJsonValueNumber>(GameState->GetNodeRandomizationSeed()));
 	
 	OutJsonArray.Add(MakeShared<FJsonValueObject>(JSessionInfo));
 

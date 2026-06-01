@@ -25,22 +25,24 @@ include::../_responseBody.adoc[]
 | IsDay | Boolean | Save Name currently running.
 | TotalPlayDuration | Integer | Duration in Seconds.
 | TotalPlayDurationText | String | Duration in Hours:Minutes:Seconds.
+| Seed | Integer | Seed Number for World.
 
 == Example Response
 [source,json]
 -----------------
 {
-  "SessionName": "1.1-Save",
+  "SessionName": "SML-1.2.Test",
   "IsPaused": false,
   "DayLength": 50,
   "NightLength": 10,
-  "PassedDays": 1306,
-  "NumberOfDaysSinceLastDeath": 235,
-  "Hours": 15,
-  "Minutes": 26,
-  "Seconds": 14.97265625,
+  "PassedDays": 0,
+  "NumberOfDaysSinceLastDeath": 0,
+  "Hours": 13,
+  "Minutes": 31,
+  "Seconds": 54.6875,
   "IsDay": true,
-  "TotalPlayDuration": 4685136,
-  "TotalPlayDurationText": "1301:25:36"
+  "TotalPlayDuration": 510,
+  "TotalPlayDurationText": "00:08:30",
+  "Seed": 396373824
 }
 -----------------
