@@ -1,5 +1,4 @@
-﻿
-#include "Endpoints/Factory/Logistics.h"
+﻿#include "Endpoints/Factory/Logistics.h"
 
 #include "Buildables/FGBuildableConveyorBelt.h"
 #include "Buildables/FGBuildableConveyorMonitor.h"

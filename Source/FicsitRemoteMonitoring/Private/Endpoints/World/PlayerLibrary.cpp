@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Endpoints/World/PlayerLibrary.h"
 
 #include "FGCharacterPlayer.h"

@@ -2,7 +2,6 @@
 
 #include <sstream>
 
-
 #include "Runtime/Core/Public/Logging/LogCategory.h"
 #include "EngineUtils.h"
 #include "FGPowerCircuit.h"

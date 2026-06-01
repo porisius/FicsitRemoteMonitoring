@@ -1,5 +1,4 @@
-﻿
-#include "Endpoints/World/Communication.h"
+﻿#include "Endpoints/World/Communication.h"
 
 #include "Buildables/FGBuildableCircuitSwitch.h"
 #include "FGChatManager.h"

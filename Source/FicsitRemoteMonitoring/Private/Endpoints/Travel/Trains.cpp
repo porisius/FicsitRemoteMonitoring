@@ -1,4 +1,3 @@
-
 #include "Endpoints/Travel/Trains.h"
 
 #include "Buildables/FGBuildableRailroadSignal.h"

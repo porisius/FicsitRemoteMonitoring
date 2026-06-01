@@ -1,5 +1,4 @@
-﻿
-#include "Endpoints/World/Inventory.h"
+﻿#include "Endpoints/World/Inventory.h"
 
 #include "FGCentralStorageSubsystem.h"
 #include "FGBuildableSubsystem.h"

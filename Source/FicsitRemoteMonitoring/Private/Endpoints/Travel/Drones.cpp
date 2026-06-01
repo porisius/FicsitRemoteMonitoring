@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Endpoints/Travel/Drones.h"
 
 #include "Buildables/FGBuildableDroneStation.h"

@@ -1,6 +1,4 @@
-﻿#pragma once
-
-#include "FRM_Controller.h"
+﻿#include "FRM_Controller.h"
 
 #include "../../FicsitRemoteMonitoring/Public/Configs/Config_HTTPStruct.h"
 #include "../../FicsitRemoteMonitoring/Public/FicsitRemoteMonitoring.h"
@@ -33,12 +31,12 @@ FFGServerErrorResponse UFRM_Controller::Handler_Frm(FFGFileResponseWrapper& OutF
 	TMap<FString, TArray<FString>> RequestHeaders = RequestContext.RequestHandlerContext->RequestHeaders;
 
 	FString Endpoint;
-	if (!JsonBody->TryGetStringField("endpoint", Endpoint))
+	if (!JsonBody->TryGetStringField(TEXT("endpoint"), Endpoint))
 	{
 		return FFGServerErrorResponse::Error("missing_parameter","Parameter \'endpoint\' was not found.");
 	}
 
-	TSharedPtr<FJsonValue> JsonValue = JsonBody->TryGetField("data");
+	TSharedPtr<FJsonValue> JsonValue = JsonBody->TryGetField(TEXT("data"));
 	if (JsonValue.IsValid())
 	{
 		if (JsonValue->Type == EJson::Array)

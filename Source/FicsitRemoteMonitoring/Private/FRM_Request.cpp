@@ -1,6 +1,5 @@
-﻿#pragma once
-
-#include "FRM_Request.h"
+﻿#include "FRM_Request.h"
+#include "Dom/JsonValue.h"
 
 void UFRM_RequestLibrary::SendErrorJson(uWS::HttpResponse<false>* res, const FString& Status, const FString& Json)
 {

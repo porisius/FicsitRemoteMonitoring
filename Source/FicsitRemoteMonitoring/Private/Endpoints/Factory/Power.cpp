@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Endpoints/Factory/Power.h"
 
 #include "Buildables/FGBuildableGenerator.h"

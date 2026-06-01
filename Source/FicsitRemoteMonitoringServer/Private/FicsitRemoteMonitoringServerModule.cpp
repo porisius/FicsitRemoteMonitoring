@@ -3,7 +3,7 @@
 #include "FGGameMode.h"
 #include "Patching/NativeHookManager.h"
 
-IMPLEMENT_GAME_MODULE(FFicsitRemoteMonitoringServerModule, FicsitRemoteMonitoring);
+IMPLEMENT_GAME_MODULE(FFicsitRemoteMonitoringServerModule, FicsitRemoteMonitoringServer);
 
 DEFINE_LOG_CATEGORY(LogFRMServerAPI);
 DEFINE_LOG_CATEGORY(LogFRMServerDebug);
