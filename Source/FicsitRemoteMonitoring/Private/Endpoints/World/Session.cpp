@@ -21,7 +21,57 @@ void USession::getSessionInfo(UObject* WorldContext, FRequestData RequestData, T
 	const AFGTimeOfDaySubsystem* TimeOfDaySubSystem = AFGTimeOfDaySubsystem::Get(WorldContext);
 
 	const auto PlayDuration = GameState->GetTotalPlayDuration();
+	
+	FString NodeRandomizationMode;
+	switch (GameState->GetNodeRandomization())
+	{
+	case ENodeRandomizationMode::NRM_AdvancedRich:
+		NodeRandomizationMode = TEXT("Advanced Rich");
+		break;
+	case ENodeRandomizationMode::NRM_FossilFuelRich:
+		NodeRandomizationMode = TEXT("Fossil Fuel Rich");
+		break;
+	case ENodeRandomizationMode::NRM_BasicReach:
+		NodeRandomizationMode = TEXT("Basic Rich");
+		break;
+	case ENodeRandomizationMode::NRM_None:
+		NodeRandomizationMode = TEXT("Default");
+		break;
+	case ENodeRandomizationMode::NRM_Strict:
+		NodeRandomizationMode = TEXT("Random");
+		break;
+	default:
+		NodeRandomizationMode = TEXT("Unknown");
+	}
 
+	FString NodePuritySettings;
+	switch (GameState->GetNodePuritySettings())
+	{
+	case ENodePuritySettings::NPS_AllImpure:
+		NodePuritySettings = TEXT("All Impure");
+		break;
+	case ENodePuritySettings::NPS_AllNormal:
+		NodePuritySettings = TEXT("All Normal");
+		break;
+	case ENodePuritySettings::NPS_AllPure:
+		NodePuritySettings = TEXT("All Pure");
+		break;
+	case ENodePuritySettings::NPS_AllRandom:
+		NodePuritySettings = TEXT("Random");
+		break;
+	case ENodePuritySettings::NPS_Decrease:
+		NodePuritySettings = TEXT("Mostly Impure");
+		break;
+	case ENodePuritySettings::NPS_Increase:
+		NodePuritySettings = TEXT("Mostly Pure");
+		break;
+	case ENodePuritySettings::NPS_NoChange:
+		NodePuritySettings = TEXT("Default");
+		break;
+	default:
+		NodePuritySettings = TEXT("Unknown");
+	}
+	
 	TSharedPtr<FJsonObject> JSessionInfo = MakeShared<FJsonObject>();
 	JSessionInfo->Values.Add("SessionName", MakeShared<FJsonValueString>(GameState->GetSessionName()));
 	JSessionInfo->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(WorldContext->GetWorld()->IsPaused()));
@@ -36,7 +86,12 @@ void USession::getSessionInfo(UObject* WorldContext, FRequestData RequestData, T
 	JSessionInfo->Values.Add("TotalPlayDuration", MakeShared<FJsonValueNumber>(PlayDuration));
 	JSessionInfo->Values.Add("TotalPlayDurationText", MakeShared<FJsonValueString>(SecondsToTimeString(PlayDuration)));
 	JSessionInfo->Values.Add("Seed",MakeShared<FJsonValueNumber>(GameState->GetNodeRandomizationSeed()));
-	
+	JSessionInfo->Values.Add("SpaceElevatorCost", MakeShared<FJsonValueNumber>(GameState->GetSpacePartsCostMultiplier()));
+	JSessionInfo->Values.Add("RecipeCost", MakeShared<FJsonValueNumber>(GameState->GetPartsCostMultiplier()));
+	JSessionInfo->Values.Add("PowerCost", MakeShared<FJsonValueNumber>(GameState->GetEnergyCostMultiplier()));
+	JSessionInfo->Values.Add("NodeRando", MakeShared<FJsonValueString>(NodeRandomizationMode));
+	JSessionInfo->Values.Add("NodePurity", MakeShared<FJsonValueString>(NodePuritySettings));
+		
 	OutJsonArray.Add(MakeShared<FJsonValueObject>(JSessionInfo));
 
 }
