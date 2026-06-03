@@ -183,11 +183,29 @@ void UResources::getDropPod(UObject* WorldContext, FRequestData RequestData, TAr
 	for (AActor* FoundActor : FoundActors) {
 		AFGDropPod* DropPod = Cast<AFGDropPod>(FoundActor);
 		FFGDropPodUnlockCost DropPodCost = DropPod->GetUnlockCost();
-
 		TSharedPtr<FJsonObject> JDropPod = CreateBaseJsonObject(FoundActor);
+		
 		JDropPod->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(DropPod)));
 		JDropPod->Values.Add("Opened", MakeShared<FJsonValueBoolean>(DropPod->HasBeenOpened()));
 		JDropPod->Values.Add("Looted", MakeShared<FJsonValueBoolean>(DropPod->HasBeenLooted()));
+
+		FString CostType{};
+		switch (DropPodCost.CostType)
+		{
+		case EFGDropPodUnlockCostType::None:
+			JDropPod->Values.Add("CostType", MakeShared<FJsonValueString>(TEXT("None")));
+			break;
+		case EFGDropPodUnlockCostType::Item:
+			JDropPod->Values.Add("CostType", MakeShared<FJsonValueString>(TEXT("Item")));
+			break;
+		case EFGDropPodUnlockCostType::Power:
+			JDropPod->Values.Add("CostType", MakeShared<FJsonValueString>(TEXT("Power")));
+			break;
+		default:
+			JDropPod->Values.Add("CostType", MakeShared<FJsonValueString>(TEXT("Unknown")));
+			break;
+		}
+		
 		JDropPod->Values.Add("RequiredItem", MakeShared<FJsonValueObject>(GetItemValueObject(DropPodCost.ItemCost)));
 		JDropPod->Values.Add("RequiredPower", MakeShared<FJsonValueNumber>(DropPodCost.PowerConsumption));
 		JDropPod->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(DropPod, "Drop Pod", "Drop Pod")));
