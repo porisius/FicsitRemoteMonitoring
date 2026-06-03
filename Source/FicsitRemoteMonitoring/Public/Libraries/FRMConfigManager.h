@@ -5,9 +5,13 @@
 #include "Misc/Variant.h"
 #include <type_traits>
 #include "FGGameUserSettings.h"
+#include "FicsitRemoteMonitoringModule.h"
+#include "Logging/StructuredLog.h"
+#include "Styling/ISlateStyle.h"
 #include "FRMConfigManager.generated.h"
 
 class UFGGameUserSettings;
+DEFINE_LOG_CATEGORY_STATIC(LogFRMConfigManager, Log, All);
 
 UCLASS()
 class FICSITREMOTEMONITORING_API UFRMConfigManager : public UBlueprintFunctionLibrary
@@ -23,7 +27,7 @@ public:
 		UFGGameUserSettings* UserSettings = UFGGameUserSettings::GetFGGameUserSettings();
 		if (!UserSettings)
 		{
-			UE_LOG(LogTemp, Error, TEXT("GetConfig: UserSettings is null"));
+			UE_LOG(LogFRMConfigManager, Error, TEXT("GetConfig: UserSettings is null"));
 			return false;
 		}
 

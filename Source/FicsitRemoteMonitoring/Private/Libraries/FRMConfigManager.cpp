@@ -9,7 +9,7 @@ bool UFRMConfigManager::GetStoredConfigType(const FString& StrID, EVariantTypes&
 	UFGGameUserSettings* UserSettings = UFGGameUserSettings::GetFGGameUserSettings();
 	if (!UserSettings)
 	{
-		UE_LOG(LogTemp, Error, TEXT("GetStoredConfigType: UserSettings is null"));
+		UE_LOG(LogFRMConfigManager, Error, TEXT("GetStoredConfigType: UserSettings is null"));
 		return false;
 	}
 
@@ -19,7 +19,7 @@ bool UFRMConfigManager::GetStoredConfigType(const FString& StrID, EVariantTypes&
 
 	if (OutType == EVariantTypes::Empty)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("GetStoredConfigType: Setting '%s' is empty or invalid"), *FullSettingName);
+		UE_LOG(LogFRMConfigManager, Warning, TEXT("GetStoredConfigType: Setting '%s' is empty or invalid"), *FullSettingName);
 		return false;
 	}
 
@@ -153,7 +153,7 @@ bool UFRMConfigManager::ParseConfigInputToVariant(
 			{
 				OutReason = FString::Printf(TEXT("'%s' is not a valid integer."), *RawTextValue);
 				UE_LOG(
-					LogTemp,
+					LogFRMConfigManager,
 					Warning,
 					TEXT("ParseConfigInputToVariant: Failed to parse int32 from '%s' for setting '%s'"),
 					*RawTextValue,
@@ -173,7 +173,7 @@ bool UFRMConfigManager::ParseConfigInputToVariant(
 			{
 				OutReason = FString::Printf(TEXT("'%s' is not a valid float."), *RawTextValue);
 				UE_LOG(
-					LogTemp,
+					LogFRMConfigManager,
 					Warning,
 					TEXT("ParseConfigInputToVariant: Failed to parse float from '%s' for setting '%s'"),
 					*RawTextValue,
@@ -196,7 +196,7 @@ bool UFRMConfigManager::ParseConfigInputToVariant(
 		{
 			OutReason = FString::Printf(TEXT("Unsupported variant type %d."), static_cast<int32>(ExpectedType));
 			UE_LOG(
-				LogTemp,
+				LogFRMConfigManager,
 				Warning,
 				TEXT("ParseConfigInputToVariant: Unsupported variant type %d for setting '%s'"),
 				static_cast<int32>(ExpectedType),
@@ -216,16 +216,16 @@ bool UFRMConfigManager::SetConfigFromInput(
 	UFGGameUserSettings* UserSettings = UFGGameUserSettings::GetFGGameUserSettings();
 	if (!UserSettings)
 	{
-		UE_LOG(LogTemp, Error, TEXT("SetConfigFromInput: UserSettings is null"));
+		UE_LOG(LogFRMConfigManager, Error, TEXT("SetConfigFromInput: UserSettings is null"));
 		return false;
 	}
-
+	
 	FVariant ParsedVariant;
 	FString ParseReason;
 	if (!ParseConfigInputToVariant(StrID, RawTextValue, bCheckboxValue, ParsedVariant, ParseReason))
 	{
 		UE_LOG(
-			LogTemp,
+			LogFRMConfigManager,
 			Warning,
 			TEXT("SetConfigFromInput: Failed to parse setting '%s': %s"),
 			*StrID,
@@ -238,7 +238,7 @@ bool UFRMConfigManager::SetConfigFromInput(
 	if (!ValidateConfigValue(StrID, ParsedVariant, ValidationReason))
 	{
 		UE_LOG(
-			LogTemp,
+			LogFRMConfigManager,
 			Warning,
 			TEXT("SetConfigFromInput: Validation failed for setting '%s': %s"),
 			*StrID,
@@ -251,7 +251,7 @@ bool UFRMConfigManager::SetConfigFromInput(
 	UserSettings->SetOptionValue(FullSettingName, ParsedVariant);
 
 	UE_LOG(
-		LogTemp,
+		LogFRMConfigManager,
 		Log,
 		TEXT("SetConfigFromInput: Applied setting '%s'"),
 		*FullSettingName
