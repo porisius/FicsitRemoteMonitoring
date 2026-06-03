@@ -3,7 +3,7 @@
 
 = Get Vehicles
 
-Gets a list of all vehicles (tractors, trucks, trains, factory carts, etc.).
+Gets a list of all vehicles (explorers, tractors, trucks, factory carts, etc.).
 
 `getExplorer` only retrieves Explorers +
 `getTractor` only retrieves Tractors +
@@ -32,6 +32,7 @@ include::../Models/_location.adoc[]
 | EngineRPM | Integer | RPM of Engine
 | Airborne | Boolean | Is the truck making a jump
 | AutoPilot | Boolean | Auto pilot engaged?
+| FuelConsumption | Float | Fuel Consumption in MegaWatts
 
 | Storage | Object[] | A list of items.
 include::../Models/_inventoryItem.adoc[]
@@ -64,6 +65,7 @@ include::../Models/_features.adoc[]
     "ThrottlePercent": 0.400730907917023,
     "Airborne": false,
     "AutoPilot": false,
+    "FuelConsumption": 20.0,
     "Storage": [
       {
         "Name": "Battery",

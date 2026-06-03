@@ -198,7 +198,7 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 			JVehicle->Values.Add("FollowingPath", MakeShared<FJsonValueBoolean>(WheeledVehicle->IsFollowingAPath()));
 			JVehicle->Values.Add("Autopilot", MakeShared<FJsonValueBoolean>(VehicleInfo->IsAutopilotEnabled()));
 			JVehicle->Values.Add("HasFuel", MakeShared<FJsonValueBoolean>(WheeledVehicle->HasFuel()));
-			JVehicle->Values.Add("FuelConsumption", MakeShared<FJsonValueNumber>(VehicleInfo->IsAutopilotEnabled() ? WheeledVehicle->GetManualFuelConsumption() : WheeledVehicle->GetAutopilotFuelConsumption()));
+			JVehicle->Values.Add("FuelConsumption", MakeShared<FJsonValueNumber>(VehicleInfo->IsAutopilotEnabled() ? WheeledVehicle->GetAutopilotFuelConsumption() : WheeledVehicle->GetManualFuelConsumption()));
 			// JVehicle->Values.Add("TotalFuelEnergy", MakeShared<FJsonValueNumber>(WheeledVehicle->GetTotalFuelEnergy())); Broken by SF 1.2
 			//JVehicle->Values.Add("MaxFuelEnergy", MakeShared<FJsonValueNumber>(WheeledVehicle->GetMaxFuelEnergy())); Broken by SF 1.2
 			JVehicle->Values.Add("Inventory", MakeShared<FJsonValueArray>(Inventory));
