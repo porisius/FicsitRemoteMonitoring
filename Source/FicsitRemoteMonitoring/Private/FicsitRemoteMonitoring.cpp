@@ -7,7 +7,7 @@
 #include "FGPowerCircuit.h"
 #include "FGRailroadSubsystem.h"
 #include "FicsitRemoteMonitoringModule.h"
-#include "FRMConfigInitSubsystem.h"
+//#include "FRMConfigInitSubsystem.h"
 #include "Async/Async.h"
 #include "FRM_Request.h"
 #include "Inventory.h"
@@ -67,9 +67,11 @@ void AFicsitRemoteMonitoring::BeginPlay()
 
 	// Load FRM's API Endpoints
 	InitAPIRegistry();
-
-	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.Root"), "");
-
+	
+	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+	
+	UE_LOGFMT(LogHttpServer, Log, "DEBUG: AuthToken - {AuthToken}", *AuthToken);
+	
 	if (AuthToken.IsEmpty())
 	{
 		if (!UFRMConfigManager::SetConfigFromInput(TEXT("uWS.AuthenticationToken"), GenerateAuthToken(32), false))

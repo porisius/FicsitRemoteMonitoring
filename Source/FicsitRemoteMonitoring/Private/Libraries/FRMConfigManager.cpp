@@ -13,7 +13,7 @@ bool UFRMConfigManager::GetStoredConfigType(const FString& StrID, EVariantTypes&
 		return false;
 	}
 
-	const FString FullSettingName = TEXT("FicsitRemoteMonitoring.") + StrID;
+	const FString FullSettingName = TEXT("FicsitRemoteMonitoring.") + FString(IsRunningDedicatedServer() ? "Server." : "") + StrID;
 	const FVariant ConfigVariant = UserSettings->GetOptionValue(FullSettingName);
 	OutType = ConfigVariant.GetType();
 
@@ -247,8 +247,11 @@ bool UFRMConfigManager::SetConfigFromInput(
 		return false;
 	}
 
-	const FString FullSettingName = TEXT("FicsitRemoteMonitoring.") + StrID;
+	const FString FullSettingName = TEXT("FicsitRemoteMonitoring.") + FString(IsRunningDedicatedServer() ? "Server." : "") + StrID;
 	UserSettings->SetOptionValue(FullSettingName, ParsedVariant);
+	UserSettings->ApplyChanges();
+	UserSettings->SaveSettings();
+	
 
 	UE_LOG(
 		LogFRMConfigManager,

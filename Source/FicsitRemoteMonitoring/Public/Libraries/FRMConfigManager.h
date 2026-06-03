@@ -31,7 +31,7 @@ public:
 			return false;
 		}
 
-		const FString FullSettingName = TEXT("FicsitRemoteMonitoring.") + StrID;
+		const FString FullSettingName = TEXT("FicsitRemoteMonitoring.") + FString(IsRunningDedicatedServer() ? "Server." : "") + StrID;
 		const FVariant ConfigVariant = UserSettings->GetOptionValue(FullSettingName);
 		const EVariantTypes VariantType = ConfigVariant.GetType();
 

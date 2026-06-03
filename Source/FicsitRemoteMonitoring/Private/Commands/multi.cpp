@@ -1,14 +1,17 @@
 #include "Commands/multi.h"
 
+#include "FGPlayerController.h"
 #include "Configs/Config_HTTPStruct.h"
 #include "Configs/Config_SerialStruct.h"
 #include "FicsitRemoteMonitoring.h"
 #include "FicsitRemoteMonitoringModule.h"
 #include "FRM_Request.h"
 #include "NotificationLoader.h"
+#include "Command/CommandSender.h"
 #include "Logging/StructuredLog.h"
 #include "Libraries/Validation.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Networking/FGServerAPIManager.h"
 
 FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommandSender* Sender, TArray<FString> Arguments) {
 	FChatReturn ChatReturn;
@@ -24,6 +27,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 			"/frm debug <file/info> <Endpoint>\n"
 			"/frm http <start/stop>\n"
 			"/frm serial <start/stop>\n"
+			"/frm config setting value\n"
 			"/frm icon"
 		);
 
@@ -115,6 +119,46 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 			ChatReturn.Color = FLinearColor::White;
 			ChatReturn.Status = EExecutionStatus::COMPLETED;
 		}
+
+		return ChatReturn;
+	}
+	
+	if (command == "config")
+	{
+		ChatReturn.Chat = TEXT("Usage: /frm config setting value");
+				
+		if (argumentsNum < 3) {
+			return ChatReturn;
+		}
+
+		FString arg1 = Arguments[1].ToLower();
+		FString arg2 = Arguments[2].ToLower();
+	
+		AFGPlayerController* PlayerController = Cast<AFGPlayerController>(Sender->GetPlayer()->GetControlledCharacter()->GetLocalViewingPlayerController());
+		EPrivilegeLevel PrivilegeLevel = PlayerController->GetDSPrivilegeLevel();
+		
+		if (PrivilegeLevel != EPrivilegeLevel::Administrator &&
+			PrivilegeLevel != EPrivilegeLevel::InitialAdmin &&
+			PlayerController->GetNetMode() != NM_ListenServer &&
+			PlayerController->GetNetMode() != NM_Standalone)
+		{
+			ChatReturn.Chat = FString(TEXT("Insufficient Permissions to set " + arg1 + " to " +arg2));
+			ChatReturn.Color = FLinearColor::Red;
+			ChatReturn.Status = EExecutionStatus::COMPLETED;
+		}		
+
+		if (UFRMConfigManager::SetConfigFromInput(arg1, arg2))
+		{
+			ChatReturn.Chat = FString(TEXT("Configured " + arg1 + " to " + arg2));
+			ChatReturn.Color = FLinearColor::Green;
+			ChatReturn.Status = EExecutionStatus::COMPLETED;
+		}
+		else
+		{
+			ChatReturn.Chat = FString(TEXT("Unable to set " + arg1 + " to " +arg2));
+			ChatReturn.Color = FLinearColor::Red;
+			ChatReturn.Status = EExecutionStatus::COMPLETED;
+		};
 
 		return ChatReturn;
 	}
