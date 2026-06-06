@@ -156,6 +156,19 @@ void AFicsitRemoteMonitoring::StopWebSocketServer()
     EndpointSubscribers.Empty();
 }
 
+FArduinoConfig AFicsitRemoteMonitoring::GetSerialConfig()
+{
+	FArduinoConfig Config;
+	
+	Config.AutoStart = UFRMConfigManager::GetConfigOrDefault<bool>("Serial.AutoStart", false);
+	Config.BaudRate = UFRMConfigManager::GetConfigOrDefault<int32>("Serial.BaudRate", 9600);
+	Config.RS232_Port = UFRMConfigManager::GetConfigOrDefault<FString>("Serial.Port", "COM3");
+	Config.SerialDelay = UFRMConfigManager::GetConfigOrDefault<float>("Serial.SerialDelay", 0.5);
+	Config.SerialStack = UFRMConfigManager::GetConfigOrDefault<int32>("Serial.AutoStart", 4098);
+		
+	return Config;
+}
+
 void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning) 
 {
     UE_LOGFMT(LogHttpServer, Log, "Initializing WebSocket Service");
@@ -828,179 +841,36 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	
 }
 
-FString AFicsitRemoteMonitoring::FlavorTextRandomizer(EFlavorType FlavorType) {
-
-	auto World = GetWorld();	
-
-	FString DefaultPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/JSON/Outage.json";
-	FString JsonPath;
-	FString WebhookJson;
-	TSharedPtr<FJsonObject> FlavorJson;
-	TArray<FString> FlavorArray;
-	TArray<FString> BufferArray;
-	TArray<FString> DetrimentalArray;
-	TArray<FString> PositiveArray;
-				
-	auto config = FConfig_DiscITStruct::GetActiveConfig(World);
-
-	JsonPath = config.OutageJSON;
-
-	if (config.OutageJSON.IsEmpty()) { 
-		JsonPath = DefaultPath; 
-	}
-
-	UNotificationLoader::FileLoadString(JsonPath, WebhookJson);
-	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(WebhookJson);
-	FJsonSerializer::Deserialize(Reader, FlavorJson);
-
-	FlavorJson->TryGetStringArrayField(TEXT("Any"), FlavorArray);
-	FlavorJson->TryGetStringArrayField(TEXT("Detrimental"), DetrimentalArray);
-	FlavorJson->TryGetStringArrayField(TEXT("Positive"), PositiveArray);
-
-	switch (FlavorType)
-	{
-		case EFlavorType::Battery:
-			if (FlavorJson->TryGetStringArrayField(TEXT("Battery"), BufferArray))
-			{
-				FlavorArray.Append(BufferArray);
-				FlavorArray.Append(DetrimentalArray);
-			};
-			break;
-		
-		case EFlavorType::Power:
-			if (FlavorJson->TryGetStringArrayField(TEXT("Power"), BufferArray))
-			{
-				FlavorArray.Append(BufferArray);
-				FlavorArray.Append(DetrimentalArray);
-			};
-			break;
-		
-		case EFlavorType::Train:
-			if (FlavorJson->TryGetStringArrayField(TEXT("Train"), BufferArray))
-			{
-				FlavorArray.Append(BufferArray);
-				FlavorArray.Append(DetrimentalArray);
-			};
-			break;
-		
-		case EFlavorType::Doggo:
-			if (FlavorJson->TryGetStringArrayField(TEXT("Doggo"), BufferArray))
-			{
-				FlavorArray.Append(BufferArray);
-				FlavorArray.Append(PositiveArray);
-			};
-			break;
-		
-		case EFlavorType::Player:
-			if (FlavorJson->TryGetStringArrayField(TEXT("Player"), BufferArray))
-			{
-				FlavorArray.Append(BufferArray);
-				FlavorArray.Append(PositiveArray);
-			};
-			break;
-		
-		case EFlavorType::Research:
-			if (FlavorJson->TryGetStringArrayField(TEXT("Research"), BufferArray))
-			{
-				FlavorArray.Append(BufferArray);
-				FlavorArray.Append(PositiveArray);
-			};
-			break;
-	}
-	
-	
-	
-	int32 len = FlavorArray.Num();
-	int32 rng = UKismetMathLibrary::RandomIntegerInRange(0, len);
-
-	return FlavorArray[rng];
-
-}
-
-void AFicsitRemoteMonitoring::InitOutageNotification() {/*
-	if (!WITH_EDITOR)
+void AFicsitRemoteMonitoring::InitOutageNotification() {
+	#if (!WITH_EDITOR)
 	{
 		auto World = GetWorld();
 		SUBSCRIBE_UOBJECT_METHOD_AFTER(UFGPowerCircuitGroup, OnFuseSet, [World](UFGPowerCircuitGroup* PowerGroup)
 			{
-
-				FString DefaultPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/JSON/Outage.json";
-				FString JsonPath;
-				FString WebhookJson;
-				FString Flavor;
 						
 				auto config = FConfig_DiscITStruct::GetActiveConfig(World);
 				AFicsitRemoteMonitoring* FicsitRemoteMonitoring = AFicsitRemoteMonitoring::Get(World);
 				TArray<FString> FlavorArray = FicsitRemoteMonitoring->Flavor_Power;
 
-				JsonPath = config.OutageJSON;
-
-				if (config.OutageJSON.IsEmpty()) { 
-					JsonPath = DefaultPath; 
-				}
-
-				UNotificationLoader::FileLoadString(JsonPath, WebhookJson);
 
 				if (UFGPowerCircuit* PowerCircuit = GetValid(PowerGroup->mCircuits[0])) {
 					const int32 CircuitID = PowerCircuit->GetCircuitGroupID();
-
-					int32 len = FlavorArray.Num();
-					int32 rng = UKismetMathLibrary::RandomIntegerInRange(0, len);
-					Flavor = FlavorArray[rng];
-
-					FString Circuit = FString::FromInt(CircuitID);
-
-					int32 CircuitLog = UKismetStringLibrary::ReplaceInline(WebhookJson, "CircuitID", Circuit, ESearchCase::IgnoreCase);
-					int32 FlavorLog = UKismetStringLibrary::ReplaceInline(WebhookJson, "FlavorText", Flavor, ESearchCase::IgnoreCase);
-
-
-
 				}
-
-
 			});
-	}*/
+	}
+	#endif
 }
 
 void AFicsitRemoteMonitoring::InitTrainDerailNotification() {
-if (!WITH_EDITOR) {
-/*
+if (!WITH_EDITOR) {/*
+
 	auto World = GetWorld();
 	
 	//	void OnCollided( AFGRailroadVehicle* ourVehicle, float ourVelocity, AFGRailroadVehicle* otherVehicle, float otherVelocity, bool shouldDerail );
 	SUBSCRIBE_METHOD_AFTER(AFGRailroadSubsystem::OnTrainsCollided, [this](AFGTrain* PriTrain, AFGTrain* SecTrain)
 		{
-
-			FString DefaultPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/JSON/Outage.json";
-			FString JsonPath;
-			FString WebhookJson;
-			FString Flavor;
-						
-			auto config = FConfig_DiscITStruct::GetActiveConfig(World);			
-			AFicsitRemoteMonitoring* FicsitRemoteMonitoring = AFicsitRemoteMonitoring::Get(World);
-			TArray<FString> FlavorArray = FicsitRemoteMonitoring->Flavor_Train;
-
-			JsonPath = config.OutageJSON;
-
-			if (config.OutageJSON.IsEmpty()) { 
-				JsonPath = DefaultPath; 
-			}
-		
-		this->
-
-			UNotificationLoader::FileLoadString(JsonPath, WebhookJson);
-		
-			int32 len = FlavorArray.Num();
-			int32 rng = UKismetMathLibrary::RandomIntegerInRange(0, len);
-			Flavor = FlavorArray[rng];
-		
-			auto TrainOne = PriTrain->GetTrainID();
-
-			//UKismetStringLibrary::ReplaceInline(WebhookJson, "CircuitID", Circuit, ESearchCase::IgnoreCase);
-			UKismetStringLibrary::ReplaceInline(WebhookJson, "FlavorText", Flavor, ESearchCase::IgnoreCase);
-
+			auto TrainOne = FString::(PriTrain->GetTrainName());
 		});*/
-
 	}
 }
 

@@ -13,7 +13,9 @@ enum class EFlavorType : uint8
 	PlayerLogout,
 	PowerOutage,
 	Research,
+	Schematic,
 	TrainDerail,
+	TrainError,
 	TrainIdle
 };
 
@@ -28,5 +30,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
 	FString FlavorTextRandomizer(EFlavorType FlavorType);
+	
+	UFUNCTION(BlueprintPure, Category = "Ficsit Remote Monitoring")
+	int32 TrainDelay();
 	
 };

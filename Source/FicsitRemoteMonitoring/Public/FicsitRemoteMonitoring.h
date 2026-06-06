@@ -29,17 +29,6 @@ struct FClientInfo
 	TArray<uWS::WebSocket<false, true, FWebSocketUserData>*> Client{};  // Add the third template argument for USERDATA
 };
 
-UENUM( BlueprintType )
-enum class EFlavorType : uint8
-{
-	Battery,
-	Doggo,
-	Player,
-	Power,
-	Research,
-	Train
-};
-
 typedef void (*FEndpointFunction)(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray);
 
 USTRUCT()
@@ -87,6 +76,28 @@ struct FAPIEndpoint {
 };
 
 USTRUCT(BlueprintType)
+struct FArduinoConfig
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ficsit Remote Monitoring")
+	FString RS232_Port;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ficsit Remote Monitoring")
+	int32 BaudRate;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ficsit Remote Monitoring")
+	int32 SerialStack;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ficsit Remote Monitoring")
+	bool AutoStart;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ficsit Remote Monitoring")
+	float SerialDelay;
+	
+};
+
+USTRUCT(BlueprintType)
 struct FCallEndpointResponse
 {
 	GENERATED_BODY()
@@ -130,9 +141,6 @@ public:
 	
 	FCallEndpointResponse CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode);
 
-	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
-	FString FlavorTextRandomizer(EFlavorType FlavorType);
-	
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void GetDropPodInfo_BIE(const AFGDropPod* Droppod, TSubclassOf<UFGItemDescriptor>& ItemClass, int32& Amount, float& Power);
 
@@ -175,6 +183,9 @@ public:
 
 	void StartWebSocketServer(bool bSkipIfRunning = false);
 	void StopWebSocketServer();
+	
+	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
+	FArduinoConfig GetSerialConfig();
 
 	void OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message);
 	void OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode);
