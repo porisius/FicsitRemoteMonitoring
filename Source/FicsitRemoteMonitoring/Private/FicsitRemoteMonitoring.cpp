@@ -10,7 +10,6 @@
 #include "Async/Async.h"
 #include "FRM_Request.h"
 #include "Inventory.h"
-#include "NotificationLoader.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "TimerManager.h"
