@@ -800,7 +800,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getStorageInv", &UInventory::getStorageInv));
 	RegisterEndpoint(FAPIEndpoint("GET", "getSwitches", &UPower::getSwitches));
 	RegisterEndpoint(FAPIEndpoint("GET", "getThroughputCounter", &ULogistics::getThroughputCounter));
-	RegisterEndpoint(FAPIEndpoint("GET", "getToilet", &USupport::getToilet));
+	RegisterEndpoint(FAPIEndpoint("GET", "getSPWN", &USupport::getSPWN));
 	RegisterEndpoint(FAPIEndpoint("GET", "getTractor", &UVehicles::getTractor).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getTradingPost", &USupport::getTradingPost));
 	RegisterEndpoint(FAPIEndpoint("GET", "getTrains", &UTrains::getTrains));

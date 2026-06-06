@@ -356,16 +356,16 @@ void USupport::getRadarTower(UObject* WorldContext, FRequestData RequestData, TA
 	}
 }
 
-void USupport::getToilet(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
+void USupport::getSPWN(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
 {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
-	TArray<AFGBuildable*> Toilets;
+	TArray<AFGBuildable*> SPWNs;
 	UClass* TypedBuildable = LoadObject<UClass>(nullptr, TEXT("/Game/FactoryGame/Buildable/Factory/PortalPotty/Build_PortalPotty.Build_PortalPotty_C"));
-	BuildableSubsystem->GetTypedBuildable(TypedBuildable, Toilets);	
+	BuildableSubsystem->GetTypedBuildable(TypedBuildable, SPWNs);	
 
-	for (AFGBuildable* Toilet : Toilets) {
-		TSharedPtr<FJsonObject> JToilet = CreateBuildableBaseJsonObject(Toilet);
-		OutJsonArray.Add(MakeShared<FJsonValueObject>(JToilet));
+	for (AFGBuildable* SPWN : SPWNs) {
+		TSharedPtr<FJsonObject> JSPWN = CreateBuildableBaseJsonObject(SPWN);
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JSPWN));
 	}
 }
 

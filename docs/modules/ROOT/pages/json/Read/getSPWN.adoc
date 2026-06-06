@@ -8,7 +8,7 @@ Get a list of all SPWN toilets.
 
 == URL
 
-`GET http://localhost:8080/getToilet`
+`GET http://localhost:8080/getSPWN`
 
 include::../_responseBody.adoc[]
 
