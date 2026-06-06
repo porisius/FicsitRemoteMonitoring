@@ -1057,7 +1057,6 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
             if ((EndpointInfo.bRequireGameThread || IsGarbageCollecting()) && !IsInGameThread()) {
                 FThreadSafeBool bAllocationComplete = false;
                 AsyncTask(ENamedThreads::GameThread, [&EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &ErrorCode, &bSuccess]() {
-					//if (SocketListener && EndpointInfo.FunctionPtr)
 					if (EndpointInfo.FunctionPtr)
 					{
 						(EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
@@ -1071,7 +1070,6 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
                     FPlatformProcess::Sleep(0.0001f);
                 }
             }
-			//else if (SocketListener && EndpointInfo.FunctionPtr)
 			else if (EndpointInfo.FunctionPtr)
 			{
 				(EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
