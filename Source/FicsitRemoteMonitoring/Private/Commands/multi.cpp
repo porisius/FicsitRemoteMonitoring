@@ -1,8 +1,6 @@
 #include "Commands/multi.h"
 
 #include "FGPlayerController.h"
-#include "Configs/Config_HTTPStruct.h"
-#include "Configs/Config_SerialStruct.h"
 #include "FicsitRemoteMonitoring.h"
 #include "FicsitRemoteMonitoringModule.h"
 #include "FRM_Request.h"
@@ -64,9 +62,9 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 		}
 
 		if (OutputType == "file") {
-			FString JsonPath = FPaths::ProjectDir() + "Mods/FicsitRemoteMonitoring/Debug/" + sEndpoint + ".json";
+			FString JsonPath = FPaths::ProjectDir() + "Mods/GameFeatrures/FicsitRemoteMonitoring/Debug/" + sEndpoint + ".json";
 
-			UNotificationLoader::FileSaveString(Json, JsonPath);
+			URemoteMonitoringLibrary::FileSaveString(Json, JsonPath);
 
 			ChatReturn.Chat = TEXT("Data saved to Mod location in the Debug folder.");
 			ChatReturn.Color = FLinearColor::White;
