@@ -67,4 +67,7 @@ public:
 	static TSharedPtr<FJsonObject> ConvertVectorToFJsonObject(FVector JsonVector);
 	static TSharedPtr<FJsonObject> ConvertVectorToFJsonObject(FIntVector JsonVector);
 	static TSharedPtr<FJsonValueArray> GetSplineVector(TArray<FSplinePointData>);
+	
+	static bool FileSaveString(FString SaveString, FString SaveFile);
+	static bool FileLoadString(FString LoadFile, FString& LoadString);
 };
