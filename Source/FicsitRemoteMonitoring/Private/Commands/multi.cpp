@@ -61,7 +61,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 		}
 
 		if (OutputType == "file") {
-			FString JsonPath = FPaths::ProjectDir() + "Mods/GameFeatrures/FicsitRemoteMonitoring/Debug/" + sEndpoint + ".json";
+			FString JsonPath = FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/Debug/" + sEndpoint + ".json";
 
 			URemoteMonitoringLibrary::FileSaveString(Json, JsonPath);
 
