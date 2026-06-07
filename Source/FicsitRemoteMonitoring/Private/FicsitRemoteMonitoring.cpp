@@ -87,7 +87,7 @@ void AFicsitRemoteMonitoring::BeginPlay()
 	
 	if (UFRMConfigManager::GetConfigOrDefault<bool>(TEXT("uWS.Autostart"), false))
 	{
-		StartWebSocketServer();
+		StartWebSocketServer(true);
 	}
 	
 	if (UFRMConfigManager::GetConfigOrDefault<bool>(TEXT("Serial.Autostart"), false))
@@ -191,7 +191,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             // Then switch back to the game thread to run the task
             AsyncTask(ENamedThreads::GameThread, [this]()
             {
-                StartWebSocketServer();
+                StartWebSocketServer(true);
             });
         });
         return;
