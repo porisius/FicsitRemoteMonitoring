@@ -174,7 +174,13 @@ FString ANotifications::FlavorTextRandomizer(EFlavorType FlavorType) {
 	}
 		
 	const int32 len = FlavorArray.Num();
-	const int32 rng = UKismetMathLibrary::RandomIntegerInRange(0, len);
+
+	if (len == 0)
+	{
+		return TEXT("");
+	}
+	
+	const int32 rng = UKismetMathLibrary::RandomIntegerInRange(0, len - 1);
 
 	return FlavorArray[rng];
 
