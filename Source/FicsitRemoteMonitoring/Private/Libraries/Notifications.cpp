@@ -18,6 +18,13 @@ void ANotifications::SendWebhook(TMap<FString, FString> WebhookObjects, const EF
 	
 	FString JsonPath;
 	FString WebhookJson;
+	FString WebhookURL = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.URL", "");
+	
+	if (WebhookURL.IsEmpty())
+	{
+		// No URL set for webhooks, just return and skip rest. Issue# 285
+		return;
+	}
 	
 	switch(FlavorType)
 	{
@@ -64,9 +71,9 @@ void ANotifications::SendWebhook(TMap<FString, FString> WebhookObjects, const EF
 	{
 		WebhookJson.ReplaceInline(*WebhookObject.Key, *WebhookObject.Value, ESearchCase::IgnoreCase);
 	};
-	
+		
 	Request->SetVerb("POST");
-	Request->SetURL(UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.URL", ""));
+	Request->SetURL(WebhookURL);
 	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
 	
 	Request->SetContentAsString(WebhookJson);
