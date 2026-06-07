@@ -108,6 +108,12 @@ FString ANotifications::FlavorTextRandomizer(EFlavorType FlavorType) {
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(WebhookJson);
 	FJsonSerializer::Deserialize(Reader, FlavorJson);
 
+	if (!FlavorJson.IsValid())
+	{
+		UE_LOG(LogFRMNotification, Warning, TEXT("FlavorJson is invalid!"));
+		return "Flavor JSON is invalid!";
+	}
+	
 	FlavorJson->TryGetStringArrayField(TEXT("Any"), FlavorArray);
 	FlavorJson->TryGetStringArrayField(TEXT("Detrimental"), DetrimentalArray);
 	FlavorJson->TryGetStringArrayField(TEXT("Positive"), PositiveArray);
