@@ -252,6 +252,7 @@ bool UFRMConfigManager::SetConfigFromInput(
 	UserSettings->ApplyChanges();
 	UserSettings->SaveSettings();
 	
+	UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, RawTextValue);
 
 	UE_LOG(
 		LogFRMConfigManager,

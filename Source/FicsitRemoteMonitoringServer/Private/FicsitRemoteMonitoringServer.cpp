@@ -19,9 +19,9 @@ void AFicsitRemoteMonitoringServer::BeginPlay()
 	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(World);
 	this->Controller->ModSubsystem = ModSubsystem;
 
-	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+	//const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
 
-	this->Controller->AuthToken = AuthToken;
+	//this->Controller->AuthToken = AuthToken;
 	
 	if (World == nullptr)
 		return;

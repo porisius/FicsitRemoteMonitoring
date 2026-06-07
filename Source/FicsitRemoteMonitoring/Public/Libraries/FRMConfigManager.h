@@ -33,17 +33,21 @@ public:
 		const FVariant ConfigVariant = UserSettings->GetOptionValue(FullSettingName);
 		const EVariantTypes VariantType = ConfigVariant.GetType();
 
+		UE_LOG(LogFRMConfigManager, Log, TEXT("DEBUG: Getting Config for: %s"), *FullSettingName);
+		
 		if constexpr (std::is_same_v<T, float>)
 		{
 			if (VariantType == EVariantTypes::Float)
 			{
 				OutValue = ConfigVariant.GetValue<float>();
+				UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 				return true;
 			}
 
 			if (VariantType == EVariantTypes::Int32)
 			{
 				OutValue = static_cast<float>(ConfigVariant.GetValue<int32>());
+				UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 				return true;
 			}
 
@@ -54,6 +58,7 @@ public:
 				if (LexTryParseString(ParsedValue, *StringValue))
 				{
 					OutValue = ParsedValue;
+					UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 					return true;
 				}
 			}
@@ -63,12 +68,14 @@ public:
 			if (VariantType == EVariantTypes::Int32)
 			{
 				OutValue = ConfigVariant.GetValue<int32>();
+				UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 				return true;
 			}
 
 			if (VariantType == EVariantTypes::Float)
 			{
 				OutValue = static_cast<int32>(ConfigVariant.GetValue<float>());
+				UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 				return true;
 			}
 
@@ -79,6 +86,7 @@ public:
 				if (LexTryParseString(ParsedValue, *StringValue))
 				{
 					OutValue = ParsedValue;
+					UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 					return true;
 				}
 			}
@@ -88,6 +96,7 @@ public:
 			if (VariantType == EVariantTypes::Bool)
 			{
 				OutValue = ConfigVariant.GetValue<bool>();
+				UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 				return true;
 			}
 
@@ -99,6 +108,7 @@ public:
 					StringValue.Equals(TEXT("1"), ESearchCase::IgnoreCase))
 				{
 					OutValue = true;
+					UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 					return true;
 				}
 
@@ -106,6 +116,7 @@ public:
 					StringValue.Equals(TEXT("0"), ESearchCase::IgnoreCase))
 				{
 					OutValue = false;
+					UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 					return true;
 				}
 			}
@@ -115,24 +126,28 @@ public:
 			if (VariantType == EVariantTypes::String)
 			{
 				OutValue = ConfigVariant.GetValue<FString>();
+				UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 				return true;
 			}
 
 			if (VariantType == EVariantTypes::Int32)
 			{
 				OutValue = FString::FromInt(ConfigVariant.GetValue<int32>());
+				UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 				return true;
 			}
 
 			if (VariantType == EVariantTypes::Float)
 			{
 				OutValue = FString::SanitizeFloat(ConfigVariant.GetValue<float>());
+				UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 				return true;
 			}
 
 			if (VariantType == EVariantTypes::Bool)
 			{
 				OutValue = ConfigVariant.GetValue<bool>() ? TEXT("true") : TEXT("false");
+				UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 				return true;
 			}
 		}
