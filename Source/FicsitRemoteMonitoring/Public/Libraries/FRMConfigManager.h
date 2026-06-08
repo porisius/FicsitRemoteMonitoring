@@ -163,7 +163,7 @@ public:
 		}
 
 		UE_LOG(
-			LogTemp,
+			LogFRMConfigManager,
 			Warning,
 			TEXT("GetConfig: Invalid type for setting '%s'. Variant type: %d"),
 			*FullSettingName,
