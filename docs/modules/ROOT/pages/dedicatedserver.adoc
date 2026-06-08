@@ -4,7 +4,7 @@
 
 FRM can, now as of 1.1, interface with Satisfactory's Dedicated Server API Port that can be accessed, by default, at `https://<ServerIP>:7777/api/v1/` (Ex. `https://localhost:7777/api/v1/`). The Network Port will depend on the port you set for your Dedicated Server.
 
-This feature is not available for the base game, and is only available for the Dedicated Server. This is Coffee Stain Studios'design for the game, and we cannot enable this feature for the base game.
+This feature is not available for the base game, and is only available for the Dedicated Server. This is Coffee Stain Studios' design for the game, and we cannot enable this feature for the base game.
 
 For setting up your Dedicated Server, please refer to the official documentation at https://satisfactory.wiki.gg/wiki/Dedicated_servers. Also for documentation on the **Official** API, please refer to https://satisfactory.wiki.gg/wiki/Dedicated_servers/HTTPS_API.
 

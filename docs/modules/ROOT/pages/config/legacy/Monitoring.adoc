@@ -1,5 +1,10 @@
 = Monitoring Configurations
 
+[WARNING]
+====
+**Only for Satisfactory 1.1 and before, not applicable for 1.2+**
+====
+
 :url-repo: https://github.com/porisius/FicsitRemoteMonitoring
 
 File: Config/FicsitRemoteMonitoring/MonitoringConfig.cfg

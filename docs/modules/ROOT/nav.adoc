@@ -8,10 +8,10 @@
 * xref:icons.adoc[Icon System (Web Server Only)]
 
 * xref:config/config.adoc[Config]
-*** xref:config/DiscIT.adoc[DiscIT]
-*** xref:config/Monitoring.adoc[Monitoring]
-*** xref:config/Serial.adoc[Serial Devices]
-*** xref:config/Web.adoc[Web Server]
+*** xref:config/legacy/DiscIT.adoc[DiscIT]
+*** xref:config/legacy/Monitoring.adoc[Monitoring]
+*** xref:config/legacy/Serial.adoc[Serial Devices]
+*** xref:config/legacy/Web.adoc[Web Server]
 
 * xref:json/json.adoc[API]
 

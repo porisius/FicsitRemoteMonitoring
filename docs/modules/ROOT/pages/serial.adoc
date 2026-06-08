@@ -4,7 +4,7 @@
 
 Communications with a Serial Port requires either a virtual Serial driver or physical hardware. Any serial device (Arduino/RPi/PLC) should work, it will be the code on the device that may need to be customized to match. Examples will be provided in my GitHub (https://www.github.com/porisius/FicsitRemoteMonitoring) and is open for anyone wanting to provide their update/config.
 
-FRM serial communication can be configured on a serial port of your choosing (Default: COM3). This can be modified by either modifying the COM_Port value in %SatisfactoryRootFolder%\FactoryGame\Configs\FicsitRemoteMonitoring\SerialDevices.cfg (Config File Method).
+FRM serial communication can be configured on a serial port of your choosing (Default: COM3). This can be modified by changing the respective configuration value in either the Server Manager for Dedicated Servers or the Main Menu Options for Single-Player, Hosted Sessions, and Client Sessions.
 
 The serial driver, by default, is not activated until the appropriate chat command is provided. You may also have the serial driver auto-start by changing the COM_Autostart to true.
 
