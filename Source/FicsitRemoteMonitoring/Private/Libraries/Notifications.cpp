@@ -186,7 +186,24 @@ FString ANotifications::FlavorTextRandomizer(EFlavorType FlavorType) {
 
 }
 
-int32 ANotifications::TrainDelay()
+float ANotifications::TrainDelay()
 {
-	return UFRMConfigManager::GetConfigOrDefault<int32>("DiscIT.TrainIdleDelay", 180);
+	return UFRMConfigManager::GetConfigOrDefault<float>("DiscIT.TrainIdleDelay", 180);
+}
+
+TArray<float> ANotifications::BatteryLevels()
+{
+	FString BatteryLevels = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.Battery", "20,40,60,80");
+	
+	TArray<FString> BatteryArray;
+	BatteryLevels.ParseIntoArray(BatteryArray, TEXT(","), true);
+	
+	TArray<float> FloatArray;
+	for (const FString& Level : BatteryArray)
+	{
+		FloatArray.Add(FCString::Atof(*Level));
+	}
+	
+	return FloatArray;
+	
 }
