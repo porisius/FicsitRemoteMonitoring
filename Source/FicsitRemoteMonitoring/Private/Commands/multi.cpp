@@ -215,37 +215,32 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 		
 		if (arg1 == "webhooks")
 		{
-			
-			AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this]()
-			{
-				ANotifications* Notifications = ANotifications::Get(this->GetWorld());
-				
-				TMap<FString, FString> TestValues;
-			
-				TestValues.Add("{CircuitID}", "Actually 42");
-				TestValues.Add("{TimeEmpty}", "Not Enough Time");
-				TestValues.Add("{BattPercent}", "Less than 42");
-							
-				TestValues.Add("{ItemName}", "Screws");
-				TestValues.Add("{ItemNum}", "42");
-							
-				TestValues.Add("{TrainName}", "Actually 42");
-				TestValues.Add("{SelfDriving}", "Who's driving?");
-				TestValues.Add("{TrainStation}", "The End (Minecraft)");
-							
-				TestValues.Add("{Player}", "Robb testing PowerSuit");
-				TestValues.Add("{Doggo}", "Nuclear Waste Finder");
-							
-				TestValues.Add("{Recipes}", "Screws, Screws, and moar Screws");
-				TestValues.Add("{Schematic}", "Everyone's favorite Cast Screws");
-				
-				for (EFlavorType WebhookType : TEnumRange<EFlavorType>())
-				{
-					Notifications->SendWebhook(TestValues, WebhookType);
-					FPlatformProcess::Sleep(0.5);
-				}
-			});
 
+			ANotifications* Notifications = ANotifications::Get(this->GetWorld());
+			
+			TMap<FString, FString> TestValues;
+		
+			TestValues.Add("{CircuitID}", "Actually 42");
+			TestValues.Add("{TimeEmpty}", "Not Enough Time");
+			TestValues.Add("{BattPercent}", "Less than 42");
+						
+			TestValues.Add("{ItemName}", "Screws");
+			TestValues.Add("{ItemNum}", "42");
+						
+			TestValues.Add("{TrainName}", "Actually 42");
+			TestValues.Add("{SelfDriving}", "Who's driving?");
+			TestValues.Add("{TrainStation}", "The End (Minecraft)");
+						
+			TestValues.Add("{Player}", "Robb testing PowerSuit");
+			TestValues.Add("{Doggo}", "Nuclear Waste Finder");
+						
+			TestValues.Add("{Recipes}", "Screws, Screws, and moar Screws");
+			TestValues.Add("{Schematic}", "Everyone's favorite Cast Screws");
+			
+			for (EFlavorType WebhookType : TEnumRange<EFlavorType>())
+			{
+				Notifications->SendWebhook(TestValues, WebhookType);
+			}
 			
 			ChatReturn.Chat = TEXT("Webhook Tests Completed. Verify results");
 			ChatReturn.Color = FLinearColor::Green;
