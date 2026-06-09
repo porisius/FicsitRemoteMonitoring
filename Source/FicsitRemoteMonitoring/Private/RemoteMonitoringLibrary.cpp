@@ -695,13 +695,3 @@ TSharedPtr<FJsonValueArray> URemoteMonitoringLibrary::GetSplineVector(TArray<FSp
 	
 	return MakeShared<FJsonValueArray>(SplineVectors);
 }
-
-bool URemoteMonitoringLibrary::FileLoadString(FString LoadFile, FString& LoadString)
-{
-	return FFileHelper::LoadFileToString(LoadString, *(LoadFile));
-}
-
-bool URemoteMonitoringLibrary::FileSaveString(FString SaveString, FString SaveFile)
-{
-	return FFileHelper::SaveStringToFile(SaveString, *(SaveFile));
-}

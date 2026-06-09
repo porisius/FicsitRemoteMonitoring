@@ -10,6 +10,7 @@
 #include "Interfaces/IHttpResponse.h"
 #include "Dom/JsonObject.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Misc/FileHelper.h"
 #include "Serialization/JsonSerializer.h"
 
 ANotifications* ANotifications::Get(UWorld* WorldContext)
@@ -89,7 +90,8 @@ void ANotifications::SendWebhook(TMap<FString, FString> WebhookObjects, const EF
 	);
 	
 	UE_LOG(LogFRMNotification, Log, TEXT("DEBUG: File Path for %s: %s"), *FlavorString, *JsonPath);
-	URemoteMonitoringLibrary::FileLoadString(JsonPath, WebhookJson);
+		
+	FFileHelper::LoadFileToString(WebhookJson, *JsonPath);
 	
 	WebhookObjects.Add("{Flavor}", FlavorTextRandomizer(FlavorType));
 	
@@ -132,6 +134,7 @@ FString ANotifications::FlavorTextRandomizer(EFlavorType FlavorType) {
 	FString WebhookJson = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.FlavorJSON", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/FlavorText.json");
 	
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(WebhookJson);
+	FFileHelper::LoadFileToString(WebhookJson, *(FlavorPath));
 	FJsonSerializer::Deserialize(Reader, FlavorJson);
 
 	if (!FlavorJson.IsValid())
