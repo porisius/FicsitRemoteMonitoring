@@ -3,7 +3,7 @@
   "avatar_url": "https://storage.ficsit.app/file/smr-prod-s3/images/mods/B9bEiZFtaaQZHU/logo.webp",
   "embeds": [
     {
-      "title": "Notification: A Lizard Doggo has gained an item!",
+      "title": "Notification: {Doggo} has found an item!",
       "fields": [
         {
           "name": "Item Name:",
