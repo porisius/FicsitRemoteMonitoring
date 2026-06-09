@@ -252,7 +252,8 @@ bool UFRMConfigManager::SetConfigFromInput(
 	UserSettings->ApplyChanges();
 	UserSettings->SaveSettings();
 	
-	UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, RawTextValue);
+	// Debug log to verify setting application -Porisius
+	// UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, RawTextValue);
 
 	UE_LOG(
 		LogFRMConfigManager,

@@ -67,7 +67,8 @@ void AFicsitRemoteMonitoring::BeginPlay()
 	
 	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
 	
-	UE_LOGFMT(LogHttpServer, Log, "DEBUG: AuthToken - {AuthToken}", *AuthToken);
+	// Debug log to verify token retrieval -Porisius
+	// UE_LOGFMT(LogHttpServer, Log, "DEBUG: AuthToken - {AuthToken}", *AuthToken);
 	
 	if (AuthToken.IsEmpty())
 	{

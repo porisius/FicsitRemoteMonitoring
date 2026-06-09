@@ -112,6 +112,9 @@ void ANotifications::SendWebhook(TMap<FString, FString> WebhookObjects, const EF
 	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
 	
 	Request->SetContentAsString(WebhookJson);
+
+	// Debug log to verify webhook content -Porisius
+	// UE_LOG(LogFRMNotification, Log, TEXT("Webhook Data: %s"), *WebhookJson);
 	
 	Request->OnProcessRequestComplete().BindLambda([this](const FHttpRequestPtr& RequestPtr, const FHttpResponsePtr& Response, const bool bWasSuccessful) {
 		if (bWasSuccessful && Response.IsValid())
@@ -141,7 +144,15 @@ FString ANotifications::FlavorTextRandomizer(EFlavorType FlavorType) {
 
 	FString FlavorPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.FlavorJSON", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/FlavorText.json");
 	
-	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(WebhookJson);
+	/* Useful for debugging file path issues. Leaving here for now since it's not a common code path and may be needed again in the future. -Darth
+		UE_LOG(LogFRMNotification, Log, TEXT("Exists: %s"),	FPaths::FileExists(FlavorPath) ? TEXT("true") : TEXT("false"));
+		
+		UE_LOG(LogFRMNotification, Log, TEXT("FileExists=%d DirectoryExists=%d"),
+		IFileManager::Get().FileExists(*FlavorPath),
+		IFileManager::Get().DirectoryExists(*FlavorPath));
+		
+		UE_LOG(LogFRMNotification, Log, TEXT("DEBUG: Flavor File Path for %s"), *FlavorPath);
+	*/
 	FFileHelper::LoadFileToString(WebhookJson, *(FlavorPath));
 	
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(*WebhookJson);
