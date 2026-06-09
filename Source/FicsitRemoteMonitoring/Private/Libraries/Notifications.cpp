@@ -51,46 +51,53 @@ void ANotifications::SendWebhook(TMap<FString, FString> WebhookObjects, const EF
 	switch(FlavorType)
 	{
 		case EFlavorType::Battery:
-			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.PwrUPSJSON", "FicsitRemoteMonitoring/JSON/UPSPower.json");
+			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.PwrUPSJSON", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/UPSPower.json");
 			break;
 		case EFlavorType::Doggo:
-			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.Doggo", "FicsitRemoteMonitoring/JSON/Doggo.json");
+			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.Doggo", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/Doggo.json");
 			break;
 		case EFlavorType::PlayerLogin:
-			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.PlayerOnline", "FicsitRemoteMonitoring/JSON/PlayerOnline.json");
+			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.PlayerOnline", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/PlayerOnline.json");
 			break;
 		case EFlavorType::PlayerLogout:
-			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.PlayerOffline", "FicsitRemoteMonitoring/JSON/PlayerOffline.json");
+			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.PlayerOffline", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/PlayerOffline.json");
 			break;
 		case EFlavorType::PowerOutage:
-			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.OutageJSON", "FicsitRemoteMonitoring/JSON/Outage.json");
+			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.OutageJSON", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/Outage.json");
 			break;
 		case EFlavorType::Research:
-			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.ResearchJSON", "FicsitRemoteMonitoring/JSON/Research.json");
+			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.ResearchJSON", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/Research.json");
 			break;
 		case EFlavorType::Schematic:
-			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.SchematicJSON", "FicsitRemoteMonitoring/JSON/Schematic.json");
+			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.SchematicJSON", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/Schematic.json");
 			break;
 		case EFlavorType::TrainDerail:
-			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.DerailJSON", "FicsitRemoteMonitoring/JSON/Derail.json");
+			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.DerailJSON", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/Derail.json");
 			break;
 		case EFlavorType::TrainError:
-			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.TrainErrorJSON", "FicsitRemoteMonitoring/JSON/TrainError.json");
+			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.TrainErrorJSON", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/TrainError.json");
 			break;
 		case EFlavorType::TrainIdle:
-			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.TrainIdleJSON", "FicsitRemoteMonitoring/JSON/TrainIdle.json");
+			JsonPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.TrainIdleJSON", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/TrainIdle.json");
 			break;
 		default:
 			UE_LOG(LogFRMNotification, Warning, TEXT("Unknown FlavorType!"));
 			return;
 	}
-	
-	FString FlavorString = StaticEnum<EFlavorType>()->GetNameStringByValue(
-		static_cast<int64>(FlavorType)
-	);
-	
-	UE_LOG(LogFRMNotification, Log, TEXT("DEBUG: File Path for %s: %s"), *FlavorString, *JsonPath);
+	/* Useful for debugging file path issues. Leaving here for now since it's not a common code path and may be needed again in the future. -Darth
+		FString FlavorString = StaticEnum<EFlavorType>()->GetNameStringByValue(
+			static_cast<int64>(FlavorType)
+		);
 		
+		UE_LOG(LogFRMNotification, Log, TEXT("Exists: %s"),	FPaths::FileExists(JsonPath) ? TEXT("true") : TEXT("false"));
+		
+		UE_LOG(LogFRMNotification, Log, TEXT("FileExists=%d DirectoryExists=%d"),
+		IFileManager::Get().FileExists(*JsonPath),
+		IFileManager::Get().DirectoryExists(*JsonPath));
+		
+		UE_LOG(LogFRMNotification, Log, TEXT("DEBUG: File Path for %s: %s"), *FlavorString, *JsonPath);
+		
+	*/
 	FFileHelper::LoadFileToString(WebhookJson, *JsonPath);
 	
 	WebhookObjects.Add("{Flavor}", FlavorTextRandomizer(FlavorType));
@@ -130,11 +137,14 @@ FString ANotifications::FlavorTextRandomizer(EFlavorType FlavorType) {
 	TArray<FString> BufferArray;
 	TArray<FString> DetrimentalArray;
 	TArray<FString> PositiveArray;
+	FString WebhookJson;
 
-	FString WebhookJson = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.FlavorJSON", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/FlavorText.json");
+	FString FlavorPath = UFRMConfigManager::GetConfigOrDefault<FString>("DiscIT.FlavorJSON", FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/JSON/FlavorText.json");
 	
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(WebhookJson);
 	FFileHelper::LoadFileToString(WebhookJson, *(FlavorPath));
+	
+	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(*WebhookJson);
 	FJsonSerializer::Deserialize(Reader, FlavorJson);
 
 	if (!FlavorJson.IsValid())
