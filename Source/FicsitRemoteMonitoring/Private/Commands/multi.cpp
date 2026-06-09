@@ -8,6 +8,7 @@
 #include "Logging/StructuredLog.h"
 #include "Libraries/Validation.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Libraries/Notifications.h"
 #include "Networking/FGServerAPIManager.h"
 
 FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommandSender* Sender, TArray<FString> Arguments) {
@@ -24,7 +25,8 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 			"/frm debug <file/info> <Endpoint>\n"
 			"/frm http <start/stop>\n"
 			"/frm serial <start/stop>\n"
-			"/frm config setting value\n"
+			"/frm config <setting> <value>\n"
+			"/frm test <webhook/endpoints>\n"
 			"/frm icon"
 		);
 
@@ -207,6 +209,81 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 		return ChatReturn;
 	}
 
+	if (command == "test")
+	{
+		FString arg1 = Arguments[1].ToLower();
+		
+		if (arg1 == "webhooks")
+		{
+			
+			AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this]()
+			{
+				ANotifications* Notifications = ANotifications::Get(this->GetWorld());
+				
+				TMap<FString, FString> TestValues;
+			
+				TestValues.Add("{CircuitID}", "Actually 42");
+				TestValues.Add("{TimeEmpty}", "Not Enough Time");
+				TestValues.Add("{BattPercent}", "Less than 42");
+							
+				TestValues.Add("{ItemName}", "Screws");
+				TestValues.Add("{ItemNum}", "42");
+							
+				TestValues.Add("{TrainName}", "Actually 42");
+				TestValues.Add("{SelfDriving}", "Who's driving?");
+				TestValues.Add("{TrainStation}", "The End (Minecraft)");
+							
+				TestValues.Add("{Player}", "Robb testing PowerSuit");
+				TestValues.Add("{Doggo}", "Nuclear Waste Finder");
+							
+				TestValues.Add("{Recipes}", "Screws, Screws, and moar Screws");
+				TestValues.Add("{Schematic}", "Everyone's favorite Cast Screws");
+				
+				for (EFlavorType WebhookType : TEnumRange<EFlavorType>())
+				{
+					Notifications->SendWebhook(TestValues, WebhookType);
+					FPlatformProcess::Sleep(0.5);
+				}
+			});
+
+			
+			ChatReturn.Chat = TEXT("Webhook Tests Completed. Verify results");
+			ChatReturn.Color = FLinearColor::Green;
+			ChatReturn.Status = EExecutionStatus::COMPLETED;
+			
+			return ChatReturn;
+		}
+		
+		if (arg1 == "endpoints")
+		{
+					
+			for (FAPIEndpoint endpoint : ModSubsystem->APIEndpoints)
+			{
+				bool bSuccess = false;
+				int32 ErrorCode = 404;
+				FRequestData RequestData = FRequestData();
+				RequestData.bIsAuthorized = true;
+				FString Json;
+
+				const FString sEndpoint = endpoint.APIName;
+				
+				ModSubsystem->HandleEndpoint(sEndpoint, RequestData, bSuccess, ErrorCode, Json, EInterfaceType::Command);
+				
+				FString JsonPath = FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/Debug/" + sEndpoint + ".json";
+
+				URemoteMonitoringLibrary::FileSaveString(Json, JsonPath);
+				
+			}
+			
+			ChatReturn.Chat = TEXT("Endpoint Tests Completed. Verify results");
+			ChatReturn.Color = FLinearColor::Green;
+			ChatReturn.Status = EExecutionStatus::COMPLETED;
+			
+			return ChatReturn;
+
+		}
+	}
+	
 	ChatReturn.Chat = TEXT("Unable to find command " + command + ", please refer to the documentation at docs.ficsit.app.");
 
 	return ChatReturn;
