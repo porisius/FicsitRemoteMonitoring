@@ -9,6 +9,7 @@
 #include "Libraries/Validation.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Libraries/Notifications.h"
+#include "Misc/FileHelper.h"
 #include "Networking/FGServerAPIManager.h"
 
 FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommandSender* Sender, TArray<FString> Arguments) {
@@ -65,7 +66,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 		if (OutputType == "file") {
 			FString JsonPath = FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/Debug/" + sEndpoint + ".json";
 
-			URemoteMonitoringLibrary::FileSaveString(Json, JsonPath);
+			FFileHelper::SaveStringToFile(Json, *JsonPath);
 
 			ChatReturn.Chat = TEXT("Data saved to Mod location in the Debug folder.");
 			ChatReturn.Color = FLinearColor::White;
@@ -266,7 +267,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 				
 				FString JsonPath = FPaths::ProjectDir() + "Mods/GameFeatures/FicsitRemoteMonitoring/Debug/" + sEndpoint + ".json";
 
-				URemoteMonitoringLibrary::FileSaveString(Json, JsonPath);
+				FFileHelper::SaveStringToFile(Json, *JsonPath);
 				
 			}
 			
