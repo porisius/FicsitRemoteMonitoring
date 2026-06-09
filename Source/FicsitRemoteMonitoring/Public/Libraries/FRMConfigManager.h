@@ -125,7 +125,7 @@ public:
 		{
 			if (VariantType == EVariantTypes::String)
 			{
-				OutValue = ConfigVariant.GetValue<FString>();
+				AssignIfValid(OutValue, ConfigVariant.GetValue<FString>());
 				UE_LOGFMT(LogFRMConfigManager, Log, "DEBUG: {Name} Config Value: {OutValue}", *FullSettingName, OutValue);
 				return true;
 			}
@@ -191,6 +191,16 @@ public:
 	/** Validates a parsed variant value for a specific setting. */
 	static bool ValidateConfigValue(const FString& StrID, const FVariant& InValue, FString& OutReason);
 
+	/** If valid is empty or null, then return the applied default value */
+	template<typename T>
+	static void AssignIfValid(T& Target, const T& Source)
+		{
+			if (!Source.IsEmpty())
+			{
+				Target = Source;
+			}
+		}
+	
 	/**
 	 * Converts UI input into a correctly typed FVariant for the target setting.
 	 * RawTextValue is used for String / Int32 / Float settings.
