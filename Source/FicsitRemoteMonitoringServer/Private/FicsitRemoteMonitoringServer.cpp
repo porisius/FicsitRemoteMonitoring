@@ -1,7 +1,6 @@
 ﻿#include "FicsitRemoteMonitoringServer.h"
 
 #include "FGServerSubsystem.h"
-#include "../../FicsitRemoteMonitoring/Public/Libraries/FRMConfigManager.h"
 #include "../../FicsitRemoteMonitoring/Public/FicsitRemoteMonitoring.h"
 #include "Engine/GameInstance.h"
 
@@ -19,10 +18,6 @@ void AFicsitRemoteMonitoringServer::BeginPlay()
 	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(World);
 	this->Controller->ModSubsystem = ModSubsystem;
 
-	//const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
-
-	//this->Controller->AuthToken = AuthToken;
-	
 	if (World == nullptr)
 		return;
 	

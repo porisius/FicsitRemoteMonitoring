@@ -1,6 +1,5 @@
 #include "RemoteMonitoringLibrary.h"
 
-#include "Configs/Config_FactoryStruct.h"
 #include "Endpoints/Travel/Drones.h"
 #include "Buildables/FGBuildableCircuitSwitch.h"
 #include "Buildables/FGBuildableDroneStation.h"

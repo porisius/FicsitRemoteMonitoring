@@ -1,6 +1,5 @@
 ﻿#include "FRM_Controller.h"
 
-#include "../../FicsitRemoteMonitoring/Public/Configs/Config_HTTPStruct.h"
 #include "../../FicsitRemoteMonitoring/Public/FicsitRemoteMonitoring.h"
 #include "../../FicsitRemoteMonitoring/Public/FRM_RequestData.h"
 #include "FicsitRemoteMonitoringServerModule.h"

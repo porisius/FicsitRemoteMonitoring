@@ -13,7 +13,6 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "TimerManager.h"
-#include "Configs/Config_DiscITStruct.h"
 #include "Endpoints/Factory/FactoryLibrary.h"
 #include "Endpoints/Factory/Logistics.h"
 #include "Endpoints/Factory/Support.h"
@@ -846,8 +845,6 @@ void AFicsitRemoteMonitoring::InitOutageNotification() {
 		auto World = GetWorld();
 		SUBSCRIBE_UOBJECT_METHOD_AFTER(UFGPowerCircuitGroup, OnFuseSet, [World](UFGPowerCircuitGroup* PowerGroup)
 			{
-						
-				auto config = FConfig_DiscITStruct::GetActiveConfig(World);
 				AFicsitRemoteMonitoring* FicsitRemoteMonitoring = AFicsitRemoteMonitoring::Get(World);
 				TArray<FString> FlavorArray = FicsitRemoteMonitoring->Flavor_Power;
 
