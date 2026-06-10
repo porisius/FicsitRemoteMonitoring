@@ -1,0 +1,9 @@
+= Configurations
+
+:url-repo: https://github.com/porisius/FicsitRemoteMonitoring
+
+Legacy Configuration for Ficsit Remote Monitoring (Satisfactory 1.1 and before)
+
+This will show the UI option as well as the FicsitRemoteMonitoring folder option for manual/headless changes.
+
+See the Config Section for details.

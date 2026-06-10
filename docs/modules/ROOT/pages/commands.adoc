@@ -35,3 +35,13 @@ Info will display back to the in-game chat, this is useful for quickly checking 
 === file
 
 Info will be saved as file to the *host's* Debug folder located in the Remote Monitoring's Mod Folder.
+
+=== test
+
+Usage: `/frm test endpoints`
+Dumps all API endpoints to the *host's* Debug Folder for testing and debugging purposes.
+*WARNING*: This will dump a lot of data and may cause performance issues, use with caution.
+
+Usage: `/frm test webhooks`
+Fires all Webhooks for testing and debugging purposes.
+*WARNING*: This will fire all webhooks and may cause your webhook host to reject some requests as spam, use with caution.
