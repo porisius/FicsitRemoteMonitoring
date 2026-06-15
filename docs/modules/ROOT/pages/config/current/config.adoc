@@ -12,6 +12,15 @@ These files are not used by the mod anymore, but are left for reference for anyo
 
 If you are having issues connecting to the Web Server or Serial Device, please update your configuration to the new system. Refer to the old/legacy configuration files located in the `FactoryGame/Configs/FicsitRemoteMonitoring` folder for Ficsit Remote Monitoring.
 
+[WARNING]
+====
+Please note that there is a difference between the Single Player/Host Session configuration and the Dedicated Server configuration. The Single Player/Host Session configuration is used for single player games and when hosting a multiplayer session, while the Dedicated Server configuration is used for dedicated servers. 
+
+Make sure to update the correct configuration based on your use case as using the Single Player/Host Session configuration for a dedicated server or vice versa may lead to unexpected behavior or issues with the mod. 
+
+A fix is in the works to resolve the confusion between the two configurations, but in the meantime, please make sure to update the correct configuration based on your use case.
+====
+
 Single Player/Host Session Config Location
 image:https://raw.githubusercontent.com/porisius/FicsitRemoteMonitoring/refs/heads/main/docs/modules/ROOT/pages/config/images/main_menu.png[Single Player/Host Session Config Location]
 
