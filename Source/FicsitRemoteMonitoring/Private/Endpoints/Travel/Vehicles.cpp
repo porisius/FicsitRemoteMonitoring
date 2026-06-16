@@ -7,6 +7,7 @@
 #include "RemoteMonitoringLibrary.h"
 #include "Components/SplineComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "WheeledVehicles/FGDockingStationIdentifier.h"
 #include "WheeledVehicles/FGVehiclePathPreset.h"
 #include "WheeledVehicles/FGVehicleSubsystem.h"
 #include "WheeledVehicles/FGWheeledVehicleIdentifier.h"
@@ -184,7 +185,7 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 			//AFGDrivingTargetList* TargetList = VehicleInfo->mTargetList;
 			const FString VehiclePathName = "PathName"; //GetPathNameForTargetList(TargetList);
 
-			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(WheeledVehicle->mDisplayName.ToString()));
+			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(VehicleInfo->GetVehicleName().ToString()));
 			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(WheeledVehicle->GetClass())));
 			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(WheeledVehicle)));
 			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>(VehiclePathName));
