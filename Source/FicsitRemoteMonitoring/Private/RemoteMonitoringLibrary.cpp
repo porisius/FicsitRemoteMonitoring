@@ -17,6 +17,7 @@
 #include "FGTrainStationIdentifier.h"
 #include "FicsitRemoteMonitoring.h"
 #include "FicsitRemoteMonitoringModule.h"
+#include "Buildables/FGBuildableDockingStation.h"
 #include "Endpoints/World/Research.h"
 #include "Settings/SMLOptionsLibrary.h"
 #include "Logging/StructuredLog.h"
@@ -27,6 +28,7 @@
 #include "Policies/CondensedJsonPrintPolicy.h"
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
+#include "WheeledVehicles/FGDockingStationIdentifier.h"
 
 TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getActorJSON(AActor* Actor) {
 
@@ -527,6 +529,12 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::CreateBuildableBaseJsonObject(
 		{
 			JObject->Values.Add("Name", MakeShared<FJsonValueString>(StationIdentifier->GetStationName().ToString()));
 		}
+	} else if (AFGBuildableDockingStation* TruckStation = Cast<AFGBuildableDockingStation>(Buildable))
+	{
+		if (AFGDockingStationIdentifier* StationIdentifier = TruckStation->GetStationIdentifier())
+		{
+			JObject->Values.Add("Name", MakeShared<FJsonValueString>(StationIdentifier->GetStationName().ToString()));
+		}	
 	} else 	if (AFGBuildableCircuitSwitch* PowerSwitch = Cast<AFGBuildableCircuitSwitch>(Buildable))
 	{
 		JObject->Values.Add("Name", MakeShared<FJsonValueString>(PowerSwitch->GetBuildingTag_Implementation()));	

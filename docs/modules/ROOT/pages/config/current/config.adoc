@@ -27,7 +27,7 @@ image:https://raw.githubusercontent.com/porisius/FicsitRemoteMonitoring/refs/hea
 Dedicated Server Config Location
 image:https://raw.githubusercontent.com/porisius/FicsitRemoteMonitoring/refs/heads/main/docs/modules/ROOT/pages/config/images/server_manager.png[Dedicated Server Location]
 
-== NOTE:
+NOTE:
 
 The configuration values are stored in the GameUserSettings.ini file, which can be found in the following locations: +
 - Single Player/Host Session: +
