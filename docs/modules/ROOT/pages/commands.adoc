@@ -28,15 +28,15 @@ Usage: `/frm debug <info/file> <endpoint>`
 
 Intended for getting outputs of API Endpoints to save for future information or debugging/troubleshooting.
 
-=== info 
+== info 
 
 Info will display back to the in-game chat, this is useful for quickly checking if JSON populates.
 
-=== file
+== file
 
 Info will be saved as file to the *host's* Debug folder located in the Remote Monitoring's Mod Folder.
 
-=== test
+== test
 
 Usage: `/frm test endpoints`
 Dumps all API endpoints to the *host's* Debug Folder for testing and debugging purposes.
