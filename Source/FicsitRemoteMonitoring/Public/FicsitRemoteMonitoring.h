@@ -162,6 +162,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void ResearchTreeNodeUnlockData_BIE(UFGResearchTreeNode* ResearchTreeNode, TArray<FIntPoint>& Parents, TArray<FIntPoint>& UnhiddenBy, FIntPoint& Coordinates);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
+	void SporeFlower_BIE(AFGSporeFlower* SporeFlower, FString& State, FString& GasState, bool& bIsSignificant, bool& bIsDead);
+	
 	// Array of API endpoints
 	TArray<FAPIEndpoint> APIEndpoints{};
 
