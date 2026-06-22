@@ -736,6 +736,7 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 void AFicsitRemoteMonitoring::InitAPIRegistry()
 {
 	//Registering Endpoints: API Name, bRequireGameThread, FunctionPtr
+	RegisterEndpoint(FAPIEndpoint("GET", "getArtifacts", &UResearch::getArtifacts).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getAssembler", &UFactoryLibrary::getAssembler));
 	RegisterEndpoint(FAPIEndpoint("GET", "getBelts", &ULogistics::getBelts));
 	RegisterEndpoint(FAPIEndpoint("GET", "getLifts", &ULogistics::getLifts));
@@ -761,6 +762,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getFrackingActivator", &UResources::getFrackingActivator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getFuelGenerator", &UPower::getFuelGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getGeothermalGenerator", &UPower::getGeothermalGenerator));
+	RegisterEndpoint(FAPIEndpoint("GET", "getHazards", &UPlayerLibrary::getHazards).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getHUBTerminal", &USupport::getHubTerminal).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getHyperEntrance", &UHypertubes::getHyperEntrance));
 	RegisterEndpoint(FAPIEndpoint("GET", "getHypertube", &UHypertubes::getHypertube));
@@ -776,8 +778,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getPlayer", &UPlayerLibrary::getPlayer).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPortal", &USupport::getPortal));
 	RegisterEndpoint(FAPIEndpoint("GET", "getPower", &UPower::getPower));
-	RegisterEndpoint(FAPIEndpoint("GET", "getPowerSlug", &UResources::getPowerSlug).RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getArtifacts", &UResearch::getArtifacts).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getPowerSlug", &UResources::getPowerSlug).RequiresGameThread());	
 	RegisterEndpoint(FAPIEndpoint("GET", "getPowerUsage", &UPower::getPowerUsage));
 	RegisterEndpoint(FAPIEndpoint("GET", "getProdStats", &USession::getProdStats));
 	RegisterEndpoint(FAPIEndpoint("GET", "getPump", &ULogistics::getPump));

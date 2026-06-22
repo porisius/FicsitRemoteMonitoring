@@ -1,0 +1,65 @@
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Hazards
+
+Gets a list of all hazards.
+
+== URL
+
+`GET http://localhost:8080/getHazards`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Spore Flower.
+| Name | String | Name of the Hazard.
+| ClassName | String | ClassName of the Hazard.
+
+{set:key-name:location}
+{set:key-description:Location details of the Hazard.}
+include::../Models/_location.adoc[]
+
+| State | String | Current state of the hazard. Possible values are "Idle", "Expanding", "Retracting" and "Active".
+| Gas State | String | Current state of the hazard. Possible values are "No Gas", "Gas", and "Cooldown".
+| Significant | Boolean | Is the actor within range to perform animations, ticks, and other processing
+| Dead | Boolean | Does the actor persist despite being blown up?
+
+// features
+include::../Models/_features.adoc[]
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "BP_SporeFlower25_13738",
+    "ClassName": "BP_SporeFlower_C",
+    "location": {
+      "x": -17811,
+      "y": 269409,
+      "z": -6977.728515625,
+      "rotation": 90
+    },
+    "State": "Idle",
+    "GasState": "NoGas",
+    "Significant": false,
+    "Dead": false,
+    "features": {
+      "properties": {
+        "name": "BP_SporeFlower_C",
+        "type": "Spore Flower"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": -17811,
+          "y": 269409,
+          "z": -6977.728515625
+        },
+        "type": "Point"
+      }
+    }
+  }
+]
+-----------------
