@@ -21,6 +21,7 @@
 #include "Endpoints/Travel/Trains.h"
 #include "Endpoints/Travel/Vehicles.h"
 #include "Endpoints/World/Communication.h"
+#include "Endpoints/World/Environment.h"
 #include "Endpoints/World/EventsLibrary.h"
 #include "Endpoints/World/Inventory.h"
 #include "Endpoints/World/PlayerLibrary.h"
@@ -762,7 +763,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getFrackingActivator", &UResources::getFrackingActivator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getFuelGenerator", &UPower::getFuelGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getGeothermalGenerator", &UPower::getGeothermalGenerator));
-	RegisterEndpoint(FAPIEndpoint("GET", "getHazards", &UPlayerLibrary::getHazards).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getHazards", &UEnvironment::getHazards).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getHUBTerminal", &USupport::getHubTerminal).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getHyperEntrance", &UHypertubes::getHyperEntrance));
 	RegisterEndpoint(FAPIEndpoint("GET", "getHypertube", &UHypertubes::getHypertube));
@@ -791,7 +792,9 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getResourceSink", &USession::getResourceSink));
 	RegisterEndpoint(FAPIEndpoint("GET", "getResourceSinkBuilding", &USupport::getResourceSinkBuilding));
 	RegisterEndpoint(FAPIEndpoint("GET", "getResourceWell", &UResources::getResourceWell).RequiresGameThread());
+	RegisterEndpoint(FAPIEndpoint("GET", "getSpawners", &UEnvironment::getSpawners).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getSplitterMerger", &ULogistics::getSplitterMerger));
+	RegisterEndpoint(FAPIEndpoint("GET", "getSporeFlowers", &UEnvironment::getSporeFlowers).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getSessionInfo", &USession::getSessionInfo).RequiresGameThread().UseFirstObject());
 	RegisterEndpoint(FAPIEndpoint("GET", "getSchematics", &UResearch::getSchematics).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getSinkList", &USession::getSinkList).RequiresGameThread());
