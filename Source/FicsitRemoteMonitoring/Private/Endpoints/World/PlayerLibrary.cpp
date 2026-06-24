@@ -93,37 +93,3 @@ void UPlayerLibrary::getCreatures(UObject* WorldContext, FRequestData RequestDat
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JCreature));
 	};
 };
-
-void UPlayerLibrary::getHazards(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
-
-	UClass* SporeFlowerClass = AFGSporeFlower::StaticClass(); 
-	TArray<AActor*> FoundActors;
-
-	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), SporeFlowerClass, FoundActors);
-	for (AActor* SporeFlowerActor : FoundActors) {
-		
-		AFGSporeFlower* SporeFlower = Cast<AFGSporeFlower>(SporeFlowerActor);
-		
-		TSharedPtr<FJsonObject> JSporeFlower = CreateBaseJsonObject(SporeFlower);
-
-		AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
-		fgcheck(ModSubsystem);
-
-		FString State;
-		FString GasState;
-		bool bIsSignificant;
-		bool bIsDead;
-
-		ModSubsystem->SporeFlower_BIE(SporeFlower, State, GasState, bIsSignificant, bIsDead);
-
-		JSporeFlower->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(SporeFlower->GetClass())));
-		JSporeFlower->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(SporeFlower)));
-		JSporeFlower->Values.Add("State", MakeShared<FJsonValueString>(State));
-		JSporeFlower->Values.Add("GasState", MakeShared<FJsonValueString>(GasState));
-		JSporeFlower->Values.Add("Significant", MakeShared<FJsonValueBoolean>(bIsSignificant));
-		JSporeFlower->Values.Add("Dead", MakeShared<FJsonValueBoolean>(bIsDead));
-		JSporeFlower->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(SporeFlower, TEXT("Spore Flower"), TEXT("Spore Flower"))));
-
-		OutJsonArray.Add(MakeShared<FJsonValueObject>(JSporeFlower));
-	};
-};
