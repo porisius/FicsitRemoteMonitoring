@@ -40,8 +40,25 @@ stage_compile() {
 }
 
 stage_package() {
-	echo "Package stage not yet implemented — see build/RUNBOOK.md (added by a later plan in this phase)." >&2
-	exit 1
+	echo "==> [package] RunUAT.sh PackagePlugin -DLCName=FicsitRemoteMonitoring -platform=Win64 -server -serverplatform=Linux"
+	# D-01/D-02 scope: Win64 client + Linux server only. Deliberately OMITS
+	# -serverplatform=Win64+Linux (no WindowsServer target), -installed (this
+	# is a source-built engine, not an Epic-installed one), and -merge (keep
+	# separate per-platform zips). Shipping config for both — the only
+	# supported/tested configuration per Alpakit's own default. Relies on
+	# -nocompileeditor since the compile stage above already built the
+	# editor with both plugin modules linked in.
+	"${UE_DIR}/Engine/Build/BatchFiles/RunUAT.sh" \
+		-ScriptsForProject="${SML_PROJECT}" \
+		PackagePlugin \
+		-project="${SML_PROJECT}" \
+		-DLCName=FicsitRemoteMonitoring \
+		-build \
+		-clientconfig=Shipping -serverconfig=Shipping \
+		-platform=Win64 \
+		-server -serverplatform=Linux \
+		-nocompileeditor \
+		-utf8output
 }
 
 case "${STAGE}" in
