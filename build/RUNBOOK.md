@@ -103,12 +103,60 @@ from this machine's defaults.
 Confirm both modules were reported as built in the RunUBT.sh output, and
 re-run the Step 2 sanity check to confirm the patch applied.
 
-## Step 4 — Package (placeholder — added in plan 01-02)
+## Step 4 — Package
 
-TODO: `RunUAT.sh -ScriptsForProject=... PackagePlugin -DLCName=FicsitRemoteMonitoring
--build -clientconfig=Shipping -serverconfig=Shipping -platform=Win64 -server
--serverplatform=Linux -nocompileeditor -utf8output`, packaging both the Win64
-client (via wine + msvc-wine) and the Linux dedicated-server target.
+```bash
+bash build/package.sh package
+```
+
+Equivalent to running directly:
+
+```bash
+"$UE_DIR/Engine/Build/BatchFiles/RunUAT.sh" \
+  -ScriptsForProject="$SML_PROJECT" \
+  PackagePlugin \
+  -project="$SML_PROJECT" \
+  -DLCName=FicsitRemoteMonitoring \
+  -build \
+  -clientconfig=Shipping -serverconfig=Shipping \
+  -platform=Win64 \
+  -server -serverplatform=Linux \
+  -nocompileeditor \
+  -utf8output
+```
+
+Produces both required artifacts under
+`<SML_PROJECT>/Saved/ArchivedPlugins/FicsitRemoteMonitoring/`:
+`FicsitRemoteMonitoring-Windows.zip` (client) and
+`FicsitRemoteMonitoring-LinuxServer.zip` (server). The Win64 zip's
+`Binaries/Win64/` already contains `uv.dll` and `zlib1.dll` via the
+`RuntimeDependencies` staging declared in the build.cs files — no manual DLL
+copy step was needed on this machine.
+
+**Required external dependency — ArduinoKit:** this repo's
+`Content/Subsystems/FicsitRemoteMonitoring_BP.uasset` hard-references
+Blueprint nodes (serial/RS232 I/O) from the `ArduinoKit` plugin. Without it,
+the cook stage fails outright (`ExitCode=25`, `Error_UnknownCookFailure`,
+log mentions `/Script/ArduinoKit`). Per `CONTRIBUTING.md`, clone it into the
+host project's `Mods/` folder (note: `Mods/`, not `Mods/GameFeatures/`):
+
+```bash
+git clone https://github.com/porisius/ArduinoKit \
+  /home/fabrice/dev/SatisfactoryModLoader/Mods/ArduinoKit
+```
+
+Then **re-run Step 3 (compile)** before packaging again — `ArduinoKit`'s own
+C++ module is only source after cloning; `-nocompileeditor` in the package
+stage means the newly-added module must already be built, or the cook fails
+a second time with `Plugin 'ArduinoKit' failed to load because module
+'ArduinoKit' could not be found`. This machine did not need `DiscIt` (it did
+not surface in the cook failure, unlike ArduinoKit); do not pre-emptively
+clone it — only add it if a future cook run demonstrably references it.
+
+ArduinoKit's clone lives in the sibling `SatisfactoryModLoader` checkout, not
+in this repo — it is a build-environment dependency of the *host project*,
+not a code change to this plugin, so it is not (and should not be) tracked by
+this repo's git.
 
 ## Step 5 — Deploy (placeholder — added in plan 01-03)
 
@@ -128,13 +176,15 @@ API is live end-to-end.
   attempt fails with "plugin not found" if Step 1 was skipped.
 - **SML header patch silent-fail** — see Step 2's caveat; always dry-run
   before trusting a green compile as proof the patch applied.
-- **Missing optional `ArduinoKit`/`DiscIt` Blueprint dependencies** — may
-  cause the *package* (cook) stage to fail on `Client_DiscIT_*` Blueprint
-  references. Not needed for compile (Step 3); only clone them per
-  `CONTRIBUTING.md` if the packaging step (Step 4) demonstrably needs them.
-- **`-nocompileeditor` before the editor has ever built this plugin** — always
-  run the explicit compile (Step 3) before packaging with `-nocompileeditor`,
-  or the package step will use stale/missing module binaries.
+- **Missing `ArduinoKit` Blueprint dependency** — confirmed on this machine:
+  the cook stage fails outright without it (see Step 4). `DiscIt` did not
+  surface as a failure in this run; do not pre-emptively clone it.
+- **`-nocompileeditor` before the editor has ever built this plugin (or a
+  newly-cloned dependency plugin like `ArduinoKit`)** — always run the
+  explicit compile (Step 3) after cloning `ArduinoKit` and before packaging
+  with `-nocompileeditor`, or the package step fails with `Plugin
+  'ArduinoKit' failed to load because module 'ArduinoKit' could not be
+  found` — confirmed on this machine.
 - **Disk space** — the root filesystem (`/`) on this machine is at ~95%
   capacity with a limited margin free; UE's cook → stage → archive pipeline
   creates multiple intermediate copies per platform. Monitor free space
