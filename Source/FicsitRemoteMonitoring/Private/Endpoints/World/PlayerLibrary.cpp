@@ -127,19 +127,27 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 				Pitch = FMath::Clamp(RawPitch, -90.f, 90.f);
 			}
 
-			// Dedupe (Pitfall 4) + opportunistic name-cache refresh (A1 mitigation,
-			// Open Question 3): record this player's stable ID so the offline
-			// enumeration loop below skips them, and refresh PlayerNameCache with
-			// the name already computed here in case it was empty at PostLogin time.
-			const APlayerState* PlayerStateBase = PlayerCharacter->GetPlayerState();
-			if (IsValid(PlayerStateBase)) {
-				const AFGPlayerState* PlayerState = Cast<AFGPlayerState>(PlayerStateBase);
-				if (IsValid(PlayerState)) {
-					const FString UserID = PlayerState->GetUserID();
-					if (!UserID.IsEmpty()) {
-						VisitedIDs.Add(UserID);
-						if (bHasValidSubsystem) {
-							ModSubsystem->PlayerNameCache.Add(UserID, PlayerName);
+			// Dedupe (Pitfall 4) + name-cache population: record this player's stable
+			// ID so the offline enumeration loop below skips them, and cache the name
+			// keyed by that ID so it survives a later disconnect (PLYR-03).
+			//
+			// GATED ON bOnline: AFGPlayerState::GetUserID() dereferences the player's
+			// unique-net-id TSharedPtr, which is NOT populated until the player is fully
+			// connected. Calling it any earlier (mid-login) crashes the dedicated server
+			// — this is exactly why the PostLogin connect-hook was removed. IsPlayerOnline()
+			// == true is a safe, source-available signal that the net id is ready, so it
+			// gates every GetUserID() call on the proven-safe fully-online path.
+			if (bOnline) {
+				const APlayerState* PlayerStateBase = PlayerCharacter->GetPlayerState();
+				if (IsValid(PlayerStateBase)) {
+					const AFGPlayerState* PlayerState = Cast<AFGPlayerState>(PlayerStateBase);
+					if (IsValid(PlayerState)) {
+						const FString UserID = PlayerState->GetUserID();
+						if (!UserID.IsEmpty()) {
+							VisitedIDs.Add(UserID);
+							if (bHasValidSubsystem) {
+								ModSubsystem->PlayerNameCache.Add(UserID, PlayerName);
+							}
 						}
 					}
 				}

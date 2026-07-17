@@ -28,8 +28,6 @@
 #include "Endpoints/World/Resources.h"
 #include "Endpoints/World/Session.h"
 #include "Engine/World.h"
-#include "FGPlayerState.h"
-#include "GameFramework/GameModeBase.h"
 #include "Libraries/Validation.h"
 #include "Misc/FileHelper.h"
 #include "Patching/NativeHookManager.h"
@@ -66,9 +64,6 @@ void AFicsitRemoteMonitoring::BeginPlay()
 
 	// Load FRM's API Endpoints
 	InitAPIRegistry();
-
-	// Populate the player display-name cache on connect (PLYR-03, D-04).
-	InitPlayerConnectCache();
 
 	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
 	
@@ -1083,31 +1078,6 @@ if (!WITH_EDITOR) {/*
 		});*/
 	}
 }
-
-// Populates PlayerNameCache on connect (PLYR-03, D-04). First-time integration of a
-// SUBSCRIBE_UOBJECT_METHOD_AFTER hook that is actually wired into BeginPlay (unlike the dead
-// InitOutageNotification/InitTrainDerailNotification siblings above) — treat as new, unverified
-// runtime surface until live-connect-verified (03-02 Task 3).
-void AFicsitRemoteMonitoring::InitPlayerConnectCache() {
-	#if (!WITH_EDITOR)
-	{
-		SUBSCRIBE_UOBJECT_METHOD_AFTER(AGameModeBase, PostLogin, [this](AGameModeBase* GameMode, APlayerController* NewPlayer)
-			{
-				if (!IsValid(NewPlayer)) { return; }
-
-				const AFGPlayerState* PlayerState = Cast<AFGPlayerState>(NewPlayer->PlayerState);
-				if (!IsValid(PlayerState)) { return; }
-
-				const FString UserID = PlayerState->GetUserID();
-				if (UserID.IsEmpty()) { return; } // defensive: never cache an empty key
-
-				// PostLogin already runs on the game thread — no AsyncTask hop needed here.
-				PlayerNameCache.Add(UserID, PlayerState->GetPlayerName());
-			});
-	}
-	#endif
-}
-
 
 void AFicsitRemoteMonitoring::RegisterEndpoint(const FAPIEndpoint& Endpoint)
 {

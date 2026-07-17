@@ -190,7 +190,10 @@ public:
 	TMap<uWS::WebSocket<false, true, FWebSocketUserData>*, int32> ClientGenerations{};
 
 	// Player display-name cache, keyed by AFGPlayerState::GetUserID() (stable across reconnect).
-	// Populated on connect via InitPlayerConnectCache(); never evicted (cleared only on server restart).
+	// Populated opportunistically from the getPlayer live loop while a player is online (a
+	// PostLogin connect-hook was removed: GetUserID() dereferences the not-yet-populated
+	// unique-net-id TSharedPtr at connect time and crashes the dedicated server). Never
+	// evicted (cleared only on server restart).
 	TMap<FString, FString> PlayerNameCache{};
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
@@ -204,7 +207,6 @@ public:
 	void InitAPIRegistry();
 	void InitOutageNotification();
 	void InitTrainDerailNotification();
-	void InitPlayerConnectCache();
 
 	void StartWebSocketServer(bool bSkipIfRunning = false);
 	void StopWebSocketServer();
