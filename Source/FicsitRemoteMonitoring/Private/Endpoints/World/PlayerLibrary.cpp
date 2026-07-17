@@ -2,6 +2,7 @@
 
 #include "FGCharacterPlayer.h"
 #include "FGCreatureSubsystem.h"
+#include "FGPlayerController.h"
 #include "FGSporeFlower.h"
 #include "FicsitRemoteMonitoring.h"
 #include "RemoteMonitoringLibrary.h"
@@ -27,6 +28,11 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 		float PlayerHP = 0.0f;
 		bool bDead = false;
 
+		// Camera/look pitch (PLYR-01/D-03), signed -90..90, sourced from the
+		// PlayerController's control rotation — NOT actor body rotation.
+		// Defaults to 0.0 when there is no valid controller (mid-disconnect).
+		float Pitch = 0.0f;
+
 		if (IsValid(PlayerCharacter)) {
 			Speed = PlayerCharacter->GetVelocity().Length() * 0.036;
 			bOnline = PlayerCharacter->IsPlayerOnline();
@@ -44,11 +50,25 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 				PlayerHP = PlayerHealthComponent->GetCurrentHealth();
 				bDead = PlayerHealthComponent->IsDead();
 			}
+
+			AFGPlayerController* PlayerController = PlayerCharacter->GetFGPlayerController();
+			if (IsValid(PlayerController)) {
+				float RawPitch = PlayerController->GetControlRotation().Pitch;
+				if (RawPitch > 180.f) {
+					RawPitch -= 360.f;
+				}
+				Pitch = FMath::Clamp(RawPitch, -90.f, 90.f);
+			}
 		}
+
+		// getPlayer-local injection into the object getActorJSON returns — the
+		// shared helper itself is NOT modified (D-03 blast-radius limit).
+		TSharedPtr<FJsonObject> LocationJson = getActorJSON(Player);
+		LocationJson->Values.Add("pitch", MakeShared<FJsonValueNumber>(Pitch));
 
 		JPlayer->Values.Add("Name", MakeShared<FJsonValueString>(PlayerName));
 		JPlayer->Values.Add("ClassName", MakeShared<FJsonValueString>(Player->GetClass()->GetName()));
-		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(Player)));
+		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(LocationJson));
 		JPlayer->Values.Add("Speed", MakeShared<FJsonValueNumber>(Speed));
 		JPlayer->Values.Add("Online", MakeShared<FJsonValueBoolean>(bOnline));
 		JPlayer->Values.Add("PlayerHP", MakeShared<FJsonValueNumber>(PlayerHP));
