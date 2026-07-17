@@ -159,10 +159,46 @@ void AFicsitRemoteMonitoring::StopWebSocketServer()
         SocketListener = nullptr;
 
         UE_LOG(LogHttpServer, Log, TEXT("Closing all %d connections"), ConnectedClients.Num());
-        for (const auto ConnectedClient : ConnectedClients)
+
+        // D-04 shutdown safety / resolves RESEARCH Open Question #1: ws->close() is a socket-owning call,
+        // the same thread-ownership violation class as PushUpdatedData's send() — it must run on the uWS
+        // loop thread, not here on the game thread. Snapshot (ws, ClientID) pairs now (game-thread-owned
+        // ConnectedClients/ClientGenerations are still safe to read here), then defer the actual close()
+        // onto the loop thread; the deferred callback re-validates against LoopLiveSockets before
+        // touching ws. Safe no-op if CapturedLoop is already null (loop thread already torn down).
+        if (CapturedLoop)
         {
-            ConnectedClient->close();
+            TArray<TPair<uWS::WebSocket<false, true, FWebSocketUserData>*, int32>> ClientsToClose;
+            ClientsToClose.Reserve(ConnectedClients.Num());
+
+            for (const auto ConnectedClient : ConnectedClients)
+            {
+                if (const int32* FoundClientID = ClientGenerations.Find(ConnectedClient))
+                {
+                    ClientsToClose.Emplace(ConnectedClient, *FoundClientID);
+                }
+            }
+
+            TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
+            CapturedLoop->defer([WeakThis, ClientsToClose]()
+            {
+                AFicsitRemoteMonitoring* Self = WeakThis.Get();
+                if (!Self)
+                {
+                    return;
+                }
+
+                for (const auto& ClientPair : ClientsToClose)
+                {
+                    const int32* FoundClientID = Self->LoopLiveSockets.Find(ClientPair.Key);
+                    if (FoundClientID && *FoundClientID == ClientPair.Value)
+                    {
+                        ClientPair.Key->close();
+                    }
+                }
+            });
         }
+
         ConnectedClients.Empty();
     }
 
