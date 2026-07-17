@@ -5,10 +5,9 @@ against the Satisfactory Mod Loader (SML) / Unreal Engine 5 toolchain on this
 dev machine. This runbook explains each step; `build/package.sh` re-runs the
 compile/package commands directly.
 
-Status: this is a skeleton, filled in incrementally across this phase's plans.
-Currently documents the **symlink → verify patch → compile** segment (plan
-01-01). Packaging, deploy, and smoke-test steps are placeholders below,
-completed by plans 01-02 and 01-03.
+This runbook documents the full pipeline end-to-end: **symlink → verify patch →
+compile → package → deploy → smoke-test**, plus a Known pitfalls section. Every
+step below has been run and verified live on this machine.
 
 ## Local environment facts (this machine)
 
