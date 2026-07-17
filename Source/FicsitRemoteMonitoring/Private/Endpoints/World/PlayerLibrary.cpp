@@ -17,23 +17,43 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 
 		AFGCharacterPlayer* PlayerCharacter = Cast<AFGCharacterPlayer>(Player);
 
-		// get player inventory
-		TArray<FInventoryStack> InventoryStacks;
-		PlayerCharacter->GetInventory()->GetInventoryStacks(InventoryStacks);
-		TMap<TSubclassOf<UFGItemDescriptor>, int32> PlayerInventory = GetGroupedInventoryItems(InventoryStacks);
-
-		//TODO: Find way to get player's name when they are offline
 		FString PlayerName = GetPlayerName(PlayerCharacter);
+
+		// Safe defaults for every field that depends on a component that can
+		// legitimately be null while a player is mid-disconnect (PLYR-02/D-02).
+		TArray<TSharedPtr<FJsonValue>> InventoryJsonArray;
+		float Speed = 0.0f;
+		bool bOnline = false;
+		float PlayerHP = 0.0f;
+		bool bDead = false;
+
+		if (IsValid(PlayerCharacter)) {
+			Speed = PlayerCharacter->GetVelocity().Length() * 0.036;
+			bOnline = PlayerCharacter->IsPlayerOnline();
+
+			UFGInventoryComponent* PlayerInventoryComponent = PlayerCharacter->GetInventory();
+			if (IsValid(PlayerInventoryComponent)) {
+				TArray<FInventoryStack> InventoryStacks;
+				PlayerInventoryComponent->GetInventoryStacks(InventoryStacks);
+				TMap<TSubclassOf<UFGItemDescriptor>, int32> PlayerInventory = GetGroupedInventoryItems(InventoryStacks);
+				InventoryJsonArray = GetInventoryJSON(PlayerInventory);
+			}
+
+			UFGHealthComponent* PlayerHealthComponent = PlayerCharacter->GetHealthComponent();
+			if (IsValid(PlayerHealthComponent)) {
+				PlayerHP = PlayerHealthComponent->GetCurrentHealth();
+				bDead = PlayerHealthComponent->IsDead();
+			}
+		}
 
 		JPlayer->Values.Add("Name", MakeShared<FJsonValueString>(PlayerName));
 		JPlayer->Values.Add("ClassName", MakeShared<FJsonValueString>(Player->GetClass()->GetName()));
-		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(Player))); 
-		//JPlayer->Values.Add("PlayerID", MakeShared<FJsonValueString>(PlayerState->GetUserID()));
-		JPlayer->Values.Add("Speed", MakeShared<FJsonValueNumber>(PlayerCharacter->GetVelocity().Length() * 0.036));
-		JPlayer->Values.Add("Online", MakeShared<FJsonValueBoolean>(PlayerCharacter->IsPlayerOnline()));
-		JPlayer->Values.Add("PlayerHP", MakeShared<FJsonValueNumber>(PlayerCharacter->GetHealthComponent()->GetCurrentHealth()));
-		JPlayer->Values.Add("Dead", MakeShared<FJsonValueBoolean>(PlayerCharacter->GetHealthComponent()->IsDead()));
-		JPlayer->Values.Add("Inventory", MakeShared<FJsonValueArray>(GetInventoryJSON(PlayerInventory)));
+		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(Player)));
+		JPlayer->Values.Add("Speed", MakeShared<FJsonValueNumber>(Speed));
+		JPlayer->Values.Add("Online", MakeShared<FJsonValueBoolean>(bOnline));
+		JPlayer->Values.Add("PlayerHP", MakeShared<FJsonValueNumber>(PlayerHP));
+		JPlayer->Values.Add("Dead", MakeShared<FJsonValueBoolean>(bDead));
+		JPlayer->Values.Add("Inventory", MakeShared<FJsonValueArray>(InventoryJsonArray));
 		JPlayer->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(Player, PlayerName, "Player")));
 
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JPlayer));
