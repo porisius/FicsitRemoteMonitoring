@@ -228,6 +228,18 @@ public:
 	bool IsAuthorizedRequest(uWS::HttpRequest* req, FString RequiredToken);
 	void AddResponseHeaders(uWS::HttpResponse<false>* res, bool bIncludeContentType);
 	void AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonArray, const FString& ErrorMessage);
+
+	/** Loop-thread-only, synchronous WS subscribe/unsubscribe envelope validator (VALD-01). Strictly
+	 *  validates `action` (must be "subscribe"/"unsubscribe") and `endpoints` (string or array of
+	 *  strings, GET-only registry match) using the TryGet-family plus explicit EJson::String checks
+	 *  -- never the silently coercing GetStringField/AsString accessors. Reads only the
+	 *  immutable-after-BeginPlay APIEndpoints registry; never touches EndpointSubscribers (that
+	 *  stays game-thread-only). Returns false only on a whole-request reject (invalid/missing
+	 *  action, missing/wrong-typed endpoints field) -- OutErrorMessage is empty only when the
+	 *  envelope was fully valid with no invalid entries. OutValidNames always carries every entry
+	 *  that passed both the string-type and registered-GET checks, even when OutErrorMessage is
+	 *  non-empty (D-03 partial success). */
+	bool ValidateWSSubscriptionEnvelope(const TSharedPtr<FJsonObject>& JsonRequest, FString& OutAction, TArray<FString>& OutValidNames, FString& OutErrorMessage) const;
 		
 	TArray<FString> Flavor_Battery{};
 	TArray<FString> Flavor_Doggo{};

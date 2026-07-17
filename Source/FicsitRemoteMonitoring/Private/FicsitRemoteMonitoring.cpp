@@ -1188,6 +1188,106 @@ void AFicsitRemoteMonitoring::AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonA
     JsonArray.Add(MakeShared<FJsonValueObject>(JsonObject));
 }
 
+// VALD-01: strict WS subscribe/unsubscribe envelope validator. Runs synchronously on the uWS loop
+// thread (called from ProcessClientRequest's synchronous prefix, before the AsyncTask(GameThread,
+// ...) hop) — reads only the immutable-after-BeginPlay APIEndpoints registry, never
+// EndpointSubscribers (that map remains exclusively game-thread-owned; see Pitfall 4 — a
+// registered-but-not-currently-subscribed name is valid input for "unsubscribe").
+//
+// Uses TryGetStringField/TryGetArrayField + explicit EJson::String checks throughout (never
+// GetStringField/AsString, which silently default/coerce instead of failing) so malformed input is
+// rejected instead of silently swallowed.
+bool AFicsitRemoteMonitoring::ValidateWSSubscriptionEnvelope(const TSharedPtr<FJsonObject>& JsonRequest, FString& OutAction, TArray<FString>& OutValidNames, FString& OutErrorMessage) const
+{
+    // D-04: strict `action` extraction — TryGetStringField fails closed on a missing or
+    // wrong-typed field instead of GetStringField's silent "" default.
+    FString RawAction;
+    if (!JsonRequest->TryGetStringField(TEXT("action"), RawAction)
+        || (RawAction != TEXT("subscribe") && RawAction != TEXT("unsubscribe")))
+    {
+        OutErrorMessage = FString::Printf(
+            TEXT("Invalid or missing 'action' field (got '%s'); expected 'subscribe' or 'unsubscribe'."),
+            *RawAction);
+        return false;   // whole-request reject — nothing to mutate
+    }
+    OutAction = RawAction;
+
+    // D-04/D-05: strict `endpoints` extraction — array-of-strings or single string only. A
+    // non-string array entry is a per-entry problem (D-03 partial success), NOT a whole-request
+    // reject; a missing/wrong-typed top-level `endpoints` field IS a whole-request reject.
+    TArray<FString> RawNames;
+    TArray<FString> Problems;
+
+    const TArray<TSharedPtr<FJsonValue>>* EndpointsArray;
+    FString SingleEndpoint;
+
+    if (JsonRequest->TryGetArrayField(TEXT("endpoints"), EndpointsArray))
+    {
+        for (int32 Index = 0; Index < EndpointsArray->Num(); ++Index)
+        {
+            const TSharedPtr<FJsonValue>& EndpointValue = (*EndpointsArray)[Index];
+            if (!EndpointValue.IsValid() || EndpointValue->Type != EJson::String)
+            {
+                Problems.Add(FString::Printf(TEXT("endpoints[%d] is not a string"), Index));
+                continue;
+            }
+            RawNames.Add(EndpointValue->AsString());
+        }
+    }
+    else if (JsonRequest->TryGetStringField(TEXT("endpoints"), SingleEndpoint))
+    {
+        RawNames.Add(SingleEndpoint);
+    }
+    else
+    {
+        // Covers both "missing"/"null" and "wrong top-level type" (e.g. endpoints: 5) — D-04/D-05.
+        OutErrorMessage = TEXT("'endpoints' field is required and must be a string or an array of strings.");
+        return false;   // whole-request reject
+    }
+
+    // D-01/Pattern 2: GET-only registry match. PushUpdatedData always builds a default FRequestData
+    // (Method == "GET", FRM_RequestData.h) and never overrides it, so a WS client can never actually
+    // receive push data for a non-GET name — accepting one here would just move today's
+    // silent-garbage-forever bug one step later. APIEndpoints is populated once in InitAPIRegistry()
+    // (BeginPlay, before StartWebSocketServer) and never mutated after, so it is safe to read
+    // cross-thread here without marshaling.
+    for (const FString& Name : RawNames)
+    {
+        const bool bIsRegisteredGet = APIEndpoints.ContainsByPredicate([&Name](const FAPIEndpoint& Endpoint)
+        {
+            return Endpoint.APIName == Name && Endpoint.Method == TEXT("GET");
+        });
+
+        if (bIsRegisteredGet)
+        {
+            OutValidNames.AddUnique(Name);
+        }
+        else
+        {
+            Problems.Add(FString::Printf(TEXT("Unknown endpoint: %s"), *Name));
+        }
+    }
+
+    // D-03: partial success — combine every per-entry problem (type errors first, then unknown
+    // names, in array-index order) into ONE error frame, but still return true: the envelope shape
+    // itself (action/endpoints) was valid, so surviving OutValidNames still feed the mutation.
+    if (Problems.Num() > 0)
+    {
+        // Backstop (T-04-03): cap the reflected problem list so a maliciously large all-invalid
+        // `endpoints` array cannot drive an unbounded error frame.
+        constexpr int32 MaxReportedProblems = 20;
+        if (Problems.Num() > MaxReportedProblems)
+        {
+            const int32 Remainder = Problems.Num() - MaxReportedProblems;
+            Problems.SetNum(MaxReportedProblems);
+            Problems.Add(FString::Printf(TEXT("...and %d more"), Remainder));
+        }
+        OutErrorMessage = FString::Join(Problems, TEXT("; "));
+    }
+
+    return true;
+}
+
 void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode, FString& Out_Data, EInterfaceType Interface)
 {
 	bSuccess = false;
