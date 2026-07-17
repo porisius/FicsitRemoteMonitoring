@@ -68,10 +68,17 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 
 	TArray<AActor*> FoundActors;
 
-	// Stable GetUserID()s already emitted by the live loop below — the offline
-	// enumeration loop (PlayerNameCache) skips any ID present here so a
-	// live-and-cached player appears exactly once (PLYR-03/Pitfall 4).
+	// Dedupe sets so the offline enumeration loop (PlayerNameCache) never emits a
+	// player already produced by the live loop — "exactly one entry" (PLYR-03/Pitfall 4).
+	// - VisitedIDs: stable net-ids of ONLINE players (net-id readable only while online).
+	// - VisitedNames: display names of ALL live actors, including a DISCONNECTED-but-
+	//   persisted player whose actor lingers in the world with its name but has lost its
+	//   net-id. On this dedicated server disconnected players keep their character actor,
+	//   so the live loop already shows them; without the name check the cache would emit a
+	//   second, net-id-keyed copy of the same player. The name is the one identifier that
+	//   is consistent across the live-actor and cache representations.
 	TSet<FString> VisitedIDs;
+	TSet<FString> VisitedNames;
 
 	// Subsystem pointer used both for the opportunistic in-loop cache refresh and
 	// the offline-enumeration loop after it. IsValid()-guarded (never fgcheck) —
@@ -86,6 +93,12 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 		AFGCharacterPlayer* PlayerCharacter = Cast<AFGCharacterPlayer>(Player);
 
 		FString PlayerName = GetPlayerName(PlayerCharacter);
+
+		// Every live actor (online or disconnected-but-persisted) suppresses a same-name
+		// cache duplicate in the offline loop below.
+		if (!PlayerName.IsEmpty()) {
+			VisitedNames.Add(PlayerName);
+		}
 
 		// Safe defaults for every field that depends on a component that can
 		// legitimately be null while a player is mid-disconnect (PLYR-02/D-02).
@@ -179,11 +192,15 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 	if (bHasValidSubsystem) {
 		for (const TPair<FString, FString>& CachedPlayer : ModSubsystem->PlayerNameCache) {
 			const FString& UserID = CachedPlayer.Key;
-			if (VisitedIDs.Contains(UserID)) {
+			const FString& CachedName = CachedPlayer.Value;
+			// Skip if the same player is already shown by the live loop — matched by
+			// net-id (online) OR by display name (disconnected-but-persisted actor,
+			// whose net-id is no longer readable). Prevents the offline duplicate.
+			if (VisitedIDs.Contains(UserID) || VisitedNames.Contains(CachedName)) {
 				continue;
 			}
 
-			OutJsonArray.Add(MakeShared<FJsonValueObject>(BuildOfflinePlayerJson(UserID, CachedPlayer.Value)));
+			OutJsonArray.Add(MakeShared<FJsonValueObject>(BuildOfflinePlayerJson(UserID, CachedName)));
 		}
 	}
 };
