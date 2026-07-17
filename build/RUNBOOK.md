@@ -259,6 +259,34 @@ curl -s -o /dev/null -w 'HTTP %{http_code}\n' \
 A `200` with well-formed JSON confirms the monitoring API is live end-to-end on the
 dedicated server.
 
+### Validating the Windows client package (`-Windows.zip`)
+
+The Linux server package is the primary target, but the Windows client build is
+validated the same way — deploy it into a game **client** install and load a
+**single-player** world (no dedicated server needed; the world is ready immediately).
+On the client, `uWS.Autostart` is typically already enabled and the options live
+under the `FicsitRemoteMonitoring.` prefix (no `Server.` segment). Deploy path is the
+same `Mods/GameFeatures/FicsitRemoteMonitoring/`:
+
+```bash
+# with the game client CLOSED, back up any existing install first, then:
+unzip -o FicsitRemoteMonitoring-Windows.zip \
+  -d "<client>/FactoryGame/Mods/GameFeatures/FicsitRemoteMonitoring"
+```
+
+Launch the client, load a single-player world, then:
+
+```bash
+curl -s -o /dev/null -w 'HTTP %{http_code}\n' http://localhost:8080/getWorldInv
+```
+
+Expect HTTP 200 (the body may be `[]` on a brand-new save with no inventory
+containers — an empty JSON array is still a valid 200). Confirm in the client's
+`FactoryGame.log` that the mod loaded with **no** module-load error (the vendored
+`uv.dll`/`zlib1.dll` in the package's `Binaries/Win64/` mean the CONTRIBUTING.md
+DLL-copy fallback is normally unnecessary) and that SML logged
+`Discovered N world modules of class GameWorldModule` counting your FRM install.
+
 > Note: the alternate dedicated-server route — the game Server API on `:7777` via a
 > custom `Frm` function (`UFRM_Controller::Handler_Frm`) — currently returns
 > `bad_function` even after the FRM server subsystem spawns; the mod's
