@@ -216,6 +216,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
         WebServer = Async(EAsyncExecution::Thread, [this]() {
             try {
                 auto app = uWS::App();
+
+                // Captured once, on the uWS loop thread (uWS::Loop::get() is thread-local — calling it
+                // from any other thread returns a different, unrelated loop). Consumed by PushUpdatedData
+                // and StopWebSocketServer to defer() outbound send()/close() onto this thread (THRD-02).
+                CapturedLoop = uWS::Loop::get();
+
                 auto World = GetWorld();
 
             	const int32 port = UFRMConfigManager::GetConfigOrDefault<int32>(TEXT("uWS.Port"), 8080);
@@ -492,6 +498,11 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             } catch (...) {
                 UE_LOG(LogHttpServer, Error, TEXT("Unknown Exception in WebSocket Server"));
             }
+
+            // Teardown safety (RESEARCH Open Question #2): clear the captured loop pointer once this
+            // thread's app.run() returns (normally or via exception) so no push-pacing/game-thread caller
+            // can defer() onto a stale/torn-down loop after this thread exits.
+            CapturedLoop = nullptr;
         });
 
 }
