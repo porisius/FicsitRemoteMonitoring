@@ -102,10 +102,15 @@ void AFicsitRemoteMonitoring::BeginPlay()
 void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
 {
 	if (bHasRunningPushDataLoop) return;
-	
+
+	// This function is only ever invoked from ProcessClientRequest's marshaled game-thread subscribe
+	// branch, so this read/write of bHasRunningPushDataLoop is already game-thread owned. Set it here,
+	// synchronously, before spawning the push-pacing thread (D-04: all writes/reads of this flag must be
+	// game-thread owned end-to-end — do not move this into the Async(Thread,...) lambda below).
+	bHasRunningPushDataLoop = true;
+
 	Async(EAsyncExecution::Thread, [this]()
 	{
-		bHasRunningPushDataLoop = true;
 		UE_LOGFMT(LogHttpServer, Log, "Starting PushUpdatedData loop");
 		while (SocketRunning && !bShouldStop)
 		{
@@ -115,7 +120,17 @@ void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
 			FPlatformProcess::Sleep(PushCycle);
 		}
 		UE_LOGFMT(LogHttpServer, Log, "Stopped PushUpdatedData loop");
-		bHasRunningPushDataLoop = false;
+
+		// Marshal the terminal write back to the game thread (D-04) instead of writing it directly from
+		// this push-pacing thread.
+		TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
+		AsyncTask(ENamedThreads::GameThread, [WeakThis]()
+		{
+			if (AFicsitRemoteMonitoring* Self = WeakThis.Get())
+			{
+				Self->bHasRunningPushDataLoop = false;
+			}
+		});
 	});
 }
 
@@ -546,60 +561,68 @@ void AFicsitRemoteMonitoring::OnMessageReceived(uWS::WebSocket<false, true, FWeb
 
 void AFicsitRemoteMonitoring::ProcessClientRequest(uWS::WebSocket<false, true, FWebSocketUserData>* ws, const TSharedPtr<FJsonObject>& JsonRequest)
 {
-    FString Action = JsonRequest->GetStringField(TEXT("action"));
+    // Loop-thread-only: extract plain values while ws is still safely dereferenceable — this runs
+    // synchronously inside wsBehavior.message's own call stack (per uWS's open->close validity
+    // guarantee). No shared-state mutation happens here; the actual EndpointSubscribers/
+    // bHasRunningPushDataLoop work is marshaled to the game thread below (THRD-01).
+    const FString Action = JsonRequest->GetStringField(TEXT("action"));
+    const int32 RequestClientID = ws->getUserData()->ClientID;
+
+    TArray<FString> EndpointNames;
     const TArray<TSharedPtr<FJsonValue>>* EndpointsArray;
-    FString Endpoint;
+    FString SingleEndpoint;
 
     if (JsonRequest->TryGetArrayField(TEXT("endpoints"), EndpointsArray))
     {
         for (const TSharedPtr<FJsonValue>& EndpointValue : *EndpointsArray)
         {
-            Endpoint = EndpointValue->AsString();
+            EndpointNames.Add(EndpointValue->AsString());
+        }
+    }
+    else if (JsonRequest->TryGetStringField(TEXT("endpoints"), SingleEndpoint))
+    {
+        EndpointNames.Add(SingleEndpoint);
+    }
 
+    if (EndpointNames.Num() == 0) return;
+
+    TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
+    AsyncTask(ENamedThreads::GameThread, [WeakThis, ws, RequestClientID, Action, EndpointNames]()
+    {
+        AFicsitRemoteMonitoring* Self = WeakThis.Get();
+        if (!Self || Self->bShouldStop) return;   // shutdown/teardown race guard (D-04)
+
+        // Drop stale/not-yet-registered messages rather than treat as an error (Assumption A2): a
+        // message for a ws whose ClientID isn't (or is no longer) in ClientGenerations is a valid
+        // ignorable state, not a crash — also covers Pitfall 2 (AsyncTask ordering isn't guaranteed;
+        // self-validate instead of trusting submission order).
+        if (!Self->IsClientCurrent(ws, RequestClientID)) return;
+
+        for (const FString& Endpoint : EndpointNames)
+        {
             if (Action == "subscribe")
             {
-            	
-                if (!EndpointSubscribers.Contains(Endpoint)) {
-                    EndpointSubscribers.Add(Endpoint, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>());
+                if (!Self->EndpointSubscribers.Contains(Endpoint))
+                {
+                    Self->EndpointSubscribers.Add(Endpoint, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>());
                 }
 
-				if (!bHasRunningPushDataLoop) {
-					StartWebSocketPushDataLoop();
-				}
+                if (!Self->bHasRunningPushDataLoop)
+                {
+                    Self->StartWebSocketPushDataLoop();
+                }
 
-                EndpointSubscribers[Endpoint].Add(ws);
+                Self->EndpointSubscribers[Endpoint].Add(ws);
 
                 UE_LOG(LogHttpServer, Warning, TEXT("Client subscribed to endpoint: %s"), *Endpoint);
             }
-            else if (Action == "unsubscribe" && EndpointSubscribers.Contains(Endpoint))
+            else if (Action == "unsubscribe" && Self->EndpointSubscribers.Contains(Endpoint))
             {
-                EndpointSubscribers[Endpoint].Remove(ws);
+                Self->EndpointSubscribers[Endpoint].Remove(ws);
                 UE_LOG(LogHttpServer, Warning, TEXT("Client unsubscribed from endpoint: %s"), *Endpoint);
             }
         }
-    }
-    else if (JsonRequest->TryGetStringField(TEXT("endpoints"), Endpoint)) {
-
-        if (Action == "subscribe")
-        {
-            if (!EndpointSubscribers.Contains(Endpoint)) {
-                EndpointSubscribers.Add(Endpoint, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>());
-            }
-
-			if (!bHasRunningPushDataLoop) {
-				StartWebSocketPushDataLoop();
-			}
-
-            EndpointSubscribers[Endpoint].Add(ws);
-
-            UE_LOG(LogHttpServer, Warning, TEXT("Client subscribed to endpoint: %s"), *Endpoint);
-        }
-        else if (Action == "unsubscribe")
-        {
-            EndpointSubscribers[Endpoint].Remove(ws);
-            UE_LOG(LogHttpServer, Warning, TEXT("Client unsubscribed from endpoint: %s"), *Endpoint);
-        }
-    }
+    });
 }
 
 void AFicsitRemoteMonitoring::PushUpdatedData() {
