@@ -223,11 +223,40 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 
                 wsBehavior.compression = uWS::SHARED_COMPRESSOR;
 
-                // Close handler (for when a client disconnects)
+                // Close handler (for when a client disconnects). Runs on the uWS loop thread; per uWS's
+                // open->close validity guarantee, ws and its userdata are still safely dereferenceable here
+                // (closeHandler fires before ~WebSocketData()). This is the last safe touch of ws on this
+                // thread. All shared-state mutation (ConnectedClients/EndpointSubscribers/ClientGenerations)
+                // is marshaled to the game thread and re-validated by generation tag (THRD-01, D-02/D-03).
                 wsBehavior.close = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
-                    ConnectedClients.Remove(ws);
-                    UE_LOG(LogHttpServer, Log, TEXT("Client Disconnected. Remaining connections: %d"), ConnectedClients.Num());
-                    OnClientDisconnected(ws, code, message);  // Ensure this signature matches
+                    const int32 ClosedClientID = ws->getUserData()->ClientID;
+
+                    // Loop-thread-only bookkeeping, consumed by the outbound deferred-send path (Plan 03).
+                    LoopLiveSockets.Remove(ws);
+
+                    TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
+                    AsyncTask(ENamedThreads::GameThread, [WeakThis, ws, ClosedClientID]()
+                    {
+                        AFicsitRemoteMonitoring* Self = WeakThis.Get();
+                        if (!Self || Self->bShouldStop) return;   // shutdown/teardown race guard (D-04)
+
+                        // Re-validate against the generation map (D-03) rather than trusting submission
+                        // order (Pitfall 2) — a stale/reused ws must not mutate the wrong client's state.
+                        if (Self->IsClientCurrent(ws, ClosedClientID))
+                        {
+                            Self->ConnectedClients.Remove(ws);
+                            Self->ClientGenerations.Remove(ws);
+
+                            // Folded from the retired OnClientDisconnected: remove ws from every
+                            // subscription so no EndpointSubscribers mutation remains on the loop thread.
+                            for (auto& Elem : Self->EndpointSubscribers)
+                            {
+                                Elem.Value.Remove(ws);
+                            }
+                        }
+
+                        UE_LOG(LogHttpServer, Log, TEXT("Client Disconnected. Remaining connections: %d"), Self->ConnectedClients.Num());
+                    });
                 };
 
                 // Message handler (for when a client sends a message)
@@ -235,10 +264,26 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                     OnMessageReceived(ws, message, opCode);  // Make sure this signature matches
                 };
 
+                // Open handler (for when a client connects). Runs on the uWS loop thread; ws is provably
+                // valid here (freshly opened). Mint the ClientID generation tag synchronously (safe: this is
+                // the loop-thread-only counter/bookkeeping), then marshal the registry mutation to the game
+                // thread — fire-and-forget, no spin-wait (D-02).
                 wsBehavior.open = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws)
                 {
-                    ConnectedClients.Add(ws);
-                    UE_LOG(LogHttpServer, Log, TEXT("Client Disconnected. Connections: %d"), ConnectedClients.Num());
+                    const int32 NewClientID = NextClientIDCounter++;
+                    ws->getUserData()->ClientID = NewClientID;
+                    LoopLiveSockets.Add(ws, NewClientID);
+
+                    TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
+                    AsyncTask(ENamedThreads::GameThread, [WeakThis, ws, NewClientID]()
+                    {
+                        AFicsitRemoteMonitoring* Self = WeakThis.Get();
+                        if (!Self || Self->bShouldStop) return;   // shutdown/teardown race guard (D-04)
+
+                        Self->ConnectedClients.Add(ws);
+                        Self->ClientGenerations.Add(ws, NewClientID);  // ws used only as an opaque map key
+                        UE_LOG(LogHttpServer, Log, TEXT("Client Connected. Connections: %d"), Self->ConnectedClients.Num());
+                    });
                 };
 
                 app.get("/getCoffee", [this](auto* res, auto* req) {
@@ -473,11 +518,12 @@ std::unordered_map<std::string, std::string> ParseQueryString(const std::string&
 	return QueryPairs;
 }
 
-void AFicsitRemoteMonitoring::OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
-    // Remove the client from all endpoint subscriptions
-    for (auto& Elem : EndpointSubscribers) {
-        Elem.Value.Remove(ws);
-    }
+bool AFicsitRemoteMonitoring::IsClientCurrent(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int32 ClientID) const
+{
+    // Game-thread-only. ws is used strictly as an opaque map key here — never dereferenced — so this is
+    // safe to call even for a ws that has since been closed/freed/reused (D-03 generation-tag defense).
+    const int32* FoundClientID = ClientGenerations.Find(ws);
+    return FoundClientID != nullptr && *FoundClientID == ClientID;
 }
 
 void AFicsitRemoteMonitoring::OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode) {
