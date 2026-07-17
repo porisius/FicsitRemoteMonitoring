@@ -189,11 +189,12 @@ public:
 	// ConnectedClients/EndpointSubscribers or dereferencing ws — defends against ABA/pointer-reuse (D-03).
 	TMap<uWS::WebSocket<false, true, FWebSocketUserData>*, int32> ClientGenerations{};
 
-	// Player display-name cache, keyed by AFGPlayerState::GetUserID() (stable across reconnect).
-	// Populated opportunistically from the getPlayer live loop while a player is online (a
-	// PostLogin connect-hook was removed: GetUserID() dereferences the not-yet-populated
-	// unique-net-id TSharedPtr at connect time and crashes the dedicated server). Never
-	// evicted (cleared only on server restart).
+	// Player display-name cache, keyed by the stable online id from
+	// APlayerState::GetUniqueId().ToString() (consistent across reconnect). Populated from
+	// the getPlayer live loop via the crash-safe engine accessor (FUniqueNetIdRepl::IsValid
+	// + ToString null-check internally) — NOT FactoryGame's AFGPlayerState::GetUserID(),
+	// which asserts/SIGSEGVs on a dedicated server when the net id is unset. Never evicted
+	// (cleared only on server restart).
 	TMap<FString, FString> PlayerNameCache{};
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")

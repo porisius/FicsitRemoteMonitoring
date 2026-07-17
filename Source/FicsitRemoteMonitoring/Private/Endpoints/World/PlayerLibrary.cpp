@@ -127,27 +127,27 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 				Pitch = FMath::Clamp(RawPitch, -90.f, 90.f);
 			}
 
-			// Dedupe (Pitfall 4) + name-cache population: record this player's stable
-			// ID so the offline enumeration loop below skips them, and cache the name
-			// keyed by that ID so it survives a later disconnect (PLYR-03).
+			// Stable-ID keying + dedupe (Pitfall 4) + name-cache population: record this
+			// player's stable online ID so the offline enumeration loop below skips them,
+			// and cache the name keyed by that ID so it survives disconnect (PLYR-03/D-04).
 			//
-			// GATED ON bOnline: AFGPlayerState::GetUserID() dereferences the player's
-			// unique-net-id TSharedPtr, which is NOT populated until the player is fully
-			// connected. Calling it any earlier (mid-login) crashes the dedicated server
-			// — this is exactly why the PostLogin connect-hook was removed. IsPlayerOnline()
-			// == true is a safe, source-available signal that the net id is ready, so it
-			// gates every GetUserID() call on the proven-safe fully-online path.
-			if (bOnline) {
-				const APlayerState* PlayerStateBase = PlayerCharacter->GetPlayerState();
-				if (IsValid(PlayerStateBase)) {
-					const AFGPlayerState* PlayerState = Cast<AFGPlayerState>(PlayerStateBase);
-					if (IsValid(PlayerState)) {
-						const FString UserID = PlayerState->GetUserID();
-						if (!UserID.IsEmpty()) {
-							VisitedIDs.Add(UserID);
-							if (bHasValidSubsystem) {
-								ModSubsystem->PlayerNameCache.Add(UserID, PlayerName);
-							}
+			// Crash-safe stable ID: use the ENGINE accessor APlayerState::GetUniqueId()
+			// (returns the FUniqueNetIdRepl member by ref) guarded by FUniqueNetIdRepl::
+			// IsValid() + ToString(), BOTH of which null-check the underlying net-id
+			// internally (Engine/CoreOnline.h). This deliberately replaces FactoryGame's
+			// AFGPlayerState::GetUserID(), which dereferences the net-id via the asserting
+			// operator-> WITHOUT an IsValid() check and SIGSEGVs on a dedicated server
+			// whenever the id is not populated. When no valid net id is available, ToString
+			// yields empty and we simply skip caching-by-id — never crash.
+			const APlayerState* PlayerStateBase = PlayerCharacter->GetPlayerState();
+			if (IsValid(PlayerStateBase)) {
+				const FUniqueNetIdRepl& NetId = PlayerStateBase->GetUniqueId();
+				if (NetId.IsValid()) {
+					const FString UserID = NetId.ToString();
+					if (!UserID.IsEmpty()) {
+						VisitedIDs.Add(UserID);
+						if (bHasValidSubsystem) {
+							ModSubsystem->PlayerNameCache.Add(UserID, PlayerName);
 						}
 					}
 				}

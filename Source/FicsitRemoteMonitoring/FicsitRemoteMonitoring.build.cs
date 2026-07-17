@@ -40,6 +40,7 @@ public class FicsitRemoteMonitoring : ModuleRules
             new string[] {
                 "Core",
                 "CoreUObject",
+                "CoreOnline",
                 "Engine",
                 "InputCore",
                 "Json",
