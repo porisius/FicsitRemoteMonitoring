@@ -223,19 +223,32 @@ grep -c 'Registered API Endpoint' /mnt/data/satisfactory-server/server-run.log
 ## Step 6 — Smoke test
 
 FRM's uWS HTTP server is **off by default** on a dedicated server (`uWS.Autostart`
-defaults to `false`) and binds `uWS.Port` (default `8080`). On this dev box `8080`
-is already held by the local wine game client's own FRM, so enable autostart on a
-free port via the server's `GameUserSettings.ini` before launching (settings live
-under the `FicsitRemoteMonitoring.Server.` prefix; booleans are stored in
-`mIntValues` as `0/1`):
+defaults to `false`) and binds `uWS.Port` (default `8080`). `uWS.Autostart=1` (or
+running `/frm http start` in-game) is required before the server opens the port —
+without it the port never binds and the curl below will fail to connect regardless
+of whether the mod loaded correctly.
+
+The canonical smoke test, matching this phase's stated verification bar, is:
+
+```bash
+curl -sf http://localhost:8080/api/getWorldInv
+```
+
+Expect HTTP 200 with a JSON body. Both `/getWorldInv` and `/api/getWorldInv` are
+served by the uWS router; either path form works against the same port.
+
+**If port `8080` is already occupied** (e.g. a colocated Satisfactory game client
+also running FRM on this machine, as on this dev box), set `uWS.Port` to a free
+port before launching and curl that port instead. Settings live under the
+`FicsitRemoteMonitoring.Server.` prefix in the server's `GameUserSettings.ini`;
+booleans are stored in `mIntValues` as `0/1`:
 
 ```ini
 [/Script/FactoryGame.FGGameUserSettings]
 mIntValues=(("FicsitRemoteMonitoring.Server.uWS.Port", 8091),("FicsitRemoteMonitoring.Server.uWS.Autostart", 1))
 ```
 
-After launch + session load, confirm the listener and query live data (note: FRM
-endpoints are served at the path root, e.g. `/getWorldInv`, not under `/api/`):
+After launch + session load, confirm the listener and query live data:
 
 ```bash
 ss -tlnp | grep ':8091'                         # expect a FactoryServer LISTEN
@@ -279,3 +292,14 @@ dedicated server.
   to the packaged mod's `Binaries/Win64` directory. Try without this manual
   copy first — `RuntimeDependencies` staging declared in the build.cs files
   should already handle it.
+- **Deployed one level too shallow (`Mods/FicsitRemoteMonitoring/` instead of
+  `Mods/GameFeatures/FicsitRemoteMonitoring/`)** — confirmed failure mode on
+  this machine, see Step 5. FRM's pak is cooked with a baked-in mount point
+  under `Mods/GameFeatures/`; deploying to plain `Mods/` deceptively looks
+  fine (SML still logs `FicsitRemoteMonitoring: 1.5.2` from the C++ Binaries,
+  and the pak still mounts) but the content pak's `GameWorldModule` never
+  resolves, so SML's log reads `Discovered 2 world modules` instead of `3`,
+  `Registered API Endpoint` stays at `0`, and `/frm` reports "Unknown
+  command". Always verify with the Step 5 `test -f ... .uplugin` deploy-path
+  guard and the `Discovered 3 world modules` / endpoint-count check before
+  moving on to the smoke test.
