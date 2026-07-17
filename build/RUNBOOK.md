@@ -158,17 +158,100 @@ in this repo — it is a build-environment dependency of the *host project*,
 not a code change to this plugin, so it is not (and should not be) tracked by
 this repo's git.
 
-## Step 5 — Deploy (placeholder — added in plan 01-03)
+## Step 5 — Deploy
 
-TODO: unzip the packaged artifact(s) from `Saved/ArchivedPlugins/FicsitRemoteMonitoring/`
-into a running `FactoryServer` (Linux) instance's `Mods/` directory (and/or
-`FactoryGameEGS.exe` under wine for the client).
+Unzip the packaged `-LinuxServer.zip` artifact from
+`Saved/ArchivedPlugins/FicsitRemoteMonitoring/` into the dedicated server's mod
+tree. **Critical:** FRM must land under `Mods/GameFeatures/`, not plain `Mods/`:
 
-## Step 6 — Smoke test (placeholder — added in plan 01-03)
+```bash
+SRV=/mnt/data/satisfactory-server/SatisfactoryDedicatedServer
+unzip -o \
+  /home/fabrice/dev/SatisfactoryModLoader/Saved/ArchivedPlugins/FicsitRemoteMonitoring/FicsitRemoteMonitoring-LinuxServer.zip \
+  -d "$SRV/FactoryGame/Mods/GameFeatures/FicsitRemoteMonitoring"
+```
 
-TODO: `curl -s http://localhost:8080/api/getWorldInv` against the launched
-packaged instance — confirms the mod loaded with no errors and the monitoring
-API is live end-to-end.
+Resulting layout (the `.uplugin` and `Content/Paks/` land directly under this dir):
+
+```
+FactoryGame/Mods/GameFeatures/FicsitRemoteMonitoring/FicsitRemoteMonitoring.uplugin
+FactoryGame/Mods/GameFeatures/FicsitRemoteMonitoring/Content/Paks/LinuxServer/FicsitRemoteMonitoringFactoryGame-LinuxServer.{pak,utoc,ucas}
+```
+
+**Why `Mods/GameFeatures/` and not `Mods/`** (this is a real, confirmed failure
+mode — see `.planning/debug/resolved/frm-worldmodule-not-cooked.md`): FRM is a
+Game Feature mod. Its pak is cooked with a baked-in mount point of
+`../../../FactoryGame/Mods/GameFeatures/FicsitRemoteMonitoring/` (Step 1's symlink
+location drives this — Alpakit bakes the plugin's `Mods/GameFeatures/<Name>` path
+into the pak). If you deploy the plugin one level too shallow at
+`Mods/FicsitRemoteMonitoring/`, the runtime plugin content root no longer matches
+the pak's baked mount point, so the cooked packages — including
+`Content/InitGameWorld` (FRM's `GameWorldModule` blueprint) — never resolve under
+the `FicsitRemoteMonitoring` plugin. SML's root-module asset-registry scan then
+misses FRM entirely: the log reads `Discovered 2 world modules` (SML + ArduinoKit
+only), **no** `AFicsitRemoteMonitoring*` subsystem spawns, `Registered API
+Endpoint` stays `0`, and `/frm` reports "Unknown command" — even though the pak
+mounts cleanly and SML still logs `FicsitRemoteMonitoring: 1.5.2` (that version
+line comes from the C++ Binaries, not the content pak, which is what masks the
+failure). Contrast: ArduinoKit is a plain mod cooked with mount point
+`Mods/ArduinoKit/`, so it deploys to `Mods/ArduinoKit/` and matches.
+
+Verify the deploy path before launching:
+
+```bash
+test -f "$SRV/FactoryGame/Mods/GameFeatures/FicsitRemoteMonitoring/FicsitRemoteMonitoring.uplugin" \
+  && echo "FRM deployed under GameFeatures (correct)" \
+  || { echo "WRONG PATH — FRM not under Mods/GameFeatures/"; exit 1; }
+```
+
+Launch the server (output captured for the smoke test in Step 6):
+
+```bash
+cd "$SRV"
+./FactoryServer.sh -log -unattended > /mnt/data/satisfactory-server/server-run.log 2>&1 &
+```
+
+Confirm discovery succeeded once a session loads:
+
+```bash
+grep 'Discovered .* world modules' /mnt/data/satisfactory-server/server-run.log | tail -1
+# expected: "Discovered 3 world modules of class GameWorldModule" (SML + ArduinoKit + FRM)
+grep -c 'Registered API Endpoint' /mnt/data/satisfactory-server/server-run.log
+# expected: > 0  (93 on this build)
+```
+
+## Step 6 — Smoke test
+
+FRM's uWS HTTP server is **off by default** on a dedicated server (`uWS.Autostart`
+defaults to `false`) and binds `uWS.Port` (default `8080`). On this dev box `8080`
+is already held by the local wine game client's own FRM, so enable autostart on a
+free port via the server's `GameUserSettings.ini` before launching (settings live
+under the `FicsitRemoteMonitoring.Server.` prefix; booleans are stored in
+`mIntValues` as `0/1`):
+
+```ini
+[/Script/FactoryGame.FGGameUserSettings]
+mIntValues=(("FicsitRemoteMonitoring.Server.uWS.Port", 8091),("FicsitRemoteMonitoring.Server.uWS.Autostart", 1))
+```
+
+After launch + session load, confirm the listener and query live data (note: FRM
+endpoints are served at the path root, e.g. `/getWorldInv`, not under `/api/`):
+
+```bash
+ss -tlnp | grep ':8091'                         # expect a FactoryServer LISTEN
+curl -s http://localhost:8091/getModList         # expect JSON incl. "Ficsit Remote Monitoring" 1.5.2
+curl -s -o /dev/null -w 'HTTP %{http_code}\n' \
+     http://localhost:8091/getWorldInv           # expect HTTP 200
+```
+
+A `200` with well-formed JSON confirms the monitoring API is live end-to-end on the
+dedicated server.
+
+> Note: the alternate dedicated-server route — the game Server API on `:7777` via a
+> custom `Frm` function (`UFRM_Controller::Handler_Frm`) — currently returns
+> `bad_function` even after the FRM server subsystem spawns; the mod's
+> `RegisterRequestHandler` does not surface in the `:7777` dispatch table. Use the
+> uWS route above for smoke testing until that separate issue is resolved.
 
 ## Known pitfalls
 
