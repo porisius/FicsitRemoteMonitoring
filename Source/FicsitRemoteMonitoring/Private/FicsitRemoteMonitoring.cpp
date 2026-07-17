@@ -603,6 +603,15 @@ void AFicsitRemoteMonitoring::OnMessageReceived(uWS::WebSocket<false, true, FWeb
 	else
 	{
 		UE_LOG(LogHttpServer, Error, TEXT("Failed to parse client message: %s"), *MessageContent);
+
+		// D-02: give the client feedback instead of a silent server-side-only log-and-drop; the
+		// connection stays open. This runs synchronously inside wsBehavior.message's own call
+		// stack (the same validity guarantee wsBehavior.open/close already rely on), so a direct
+		// ws->send() here needs no Loop::defer()/TWeakObjectPtr hop.
+		const FString ErrorJson = UFRM_RequestLibrary::JsonObjectToString(
+			UFRM_RequestLibrary::GenerateError(TEXT("Malformed request: payload is not valid JSON.")), /*JSONDebugMode=*/false);
+		FTCHARToUTF8 Converted(*ErrorJson);
+		ws->send(std::string_view(Converted.Get(), Converted.Length()), uWS::OpCode::TEXT);
 	}
 }
 
@@ -612,29 +621,35 @@ void AFicsitRemoteMonitoring::ProcessClientRequest(uWS::WebSocket<false, true, F
     // synchronously inside wsBehavior.message's own call stack (per uWS's open->close validity
     // guarantee). No shared-state mutation happens here; the actual EndpointSubscribers/
     // bHasRunningPushDataLoop work is marshaled to the game thread below (THRD-01).
-    const FString Action = JsonRequest->GetStringField(TEXT("action"));
     const int32 RequestClientID = ws->getUserData()->ClientID;
 
-    TArray<FString> EndpointNames;
-    const TArray<TSharedPtr<FJsonValue>>* EndpointsArray;
-    FString SingleEndpoint;
+    FString Action;
+    TArray<FString> ValidNames;
+    FString ErrorMessage;
 
-    if (JsonRequest->TryGetArrayField(TEXT("endpoints"), EndpointsArray))
+    // VALD-01: strict envelope validation (action, endpoints shape/type, GET-only registry match)
+    // runs synchronously here, before the AsyncTask(GameThread) hop below — see
+    // ValidateWSSubscriptionEnvelope for the strict TryGet*-family + EJson::String checks that
+    // replace the previous silent-coercion GetStringField/AsString reads.
+    const bool bWholeRequestValid = ValidateWSSubscriptionEnvelope(JsonRequest, Action, ValidNames, ErrorMessage);
+
+    if (!ErrorMessage.IsEmpty())
     {
-        for (const TSharedPtr<FJsonValue>& EndpointValue : *EndpointsArray)
-        {
-            EndpointNames.Add(EndpointValue->AsString());
-        }
-    }
-    else if (JsonRequest->TryGetStringField(TEXT("endpoints"), SingleEndpoint))
-    {
-        EndpointNames.Add(SingleEndpoint);
+        // D-02: direct, synchronous send — no Loop::defer()/TWeakObjectPtr hop needed here, since
+        // this code is not crossing a thread boundary (unlike PushUpdatedData, which originates on
+        // the push-pacing thread). Never ws->close() on validation failure — the connection stays
+        // open (D-02) regardless of whether this was a whole-request reject or a partial-success
+        // report (D-03).
+        const FString ErrorJson = UFRM_RequestLibrary::JsonObjectToString(
+            UFRM_RequestLibrary::GenerateError(ErrorMessage), /*JSONDebugMode=*/false);
+        FTCHARToUTF8 Converted(*ErrorJson);
+        ws->send(std::string_view(Converted.Get(), Converted.Length()), uWS::OpCode::TEXT);
     }
 
-    if (EndpointNames.Num() == 0) return;
+    if (!bWholeRequestValid || ValidNames.Num() == 0) return;   // nothing valid left to mutate
 
     TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
-    AsyncTask(ENamedThreads::GameThread, [WeakThis, ws, RequestClientID, Action, EndpointNames]()
+    AsyncTask(ENamedThreads::GameThread, [WeakThis, ws, RequestClientID, Action, ValidNames]()
     {
         AFicsitRemoteMonitoring* Self = WeakThis.Get();
         if (!Self || Self->bShouldStop) return;   // shutdown/teardown race guard (D-04)
@@ -645,7 +660,7 @@ void AFicsitRemoteMonitoring::ProcessClientRequest(uWS::WebSocket<false, true, F
         // self-validate instead of trusting submission order).
         if (!Self->IsClientCurrent(ws, RequestClientID)) return;
 
-        for (const FString& Endpoint : EndpointNames)
+        for (const FString& Endpoint : ValidNames)
         {
             if (Action == "subscribe")
             {
