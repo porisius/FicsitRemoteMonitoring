@@ -114,9 +114,21 @@ class FICSITREMOTEMONITORING_API AFicsitRemoteMonitoring : public AModSubsystem
 private:
 
 	TFuture<void> WebServer{};
-	
+
 	bool bShouldStop = false;
 	bool bHasRunningPushDataLoop = false;
+
+	// Loop-thread-only monotonic counter used to mint each connection's ClientID in wsBehavior.open.
+	int32 NextClientIDCounter{};
+
+	// Loop-thread-only liveness bookkeeping (ws -> ClientID). Written exclusively from wsBehavior.open/close
+	// and from inside Loop::defer() callbacks; never touched from the game thread. Consumed by Plan 03's
+	// deferred outbound sends.
+	TMap<uWS::WebSocket<false, true, FWebSocketUserData>*, int32> LoopLiveSockets{};
+
+	// Captured once, on the uWS loop thread, inside StartWebSocketServer. Consumed by Plan 03's outbound
+	// Loop::defer() calls.
+	uWS::Loop* CapturedLoop{ nullptr };
 
 	FString AuthenticationToken{};
 	
@@ -172,6 +184,11 @@ public:
 
 	TSet<uWS::WebSocket<false, true, FWebSocketUserData>*> ConnectedClients{};
 
+	// Game-thread-owned authoritative (ws -> ClientID) liveness/generation map. A marshaled task or deferred
+	// send must validate its (ws, ClientID) pair against this map (via IsClientCurrent) before touching
+	// ConnectedClients/EndpointSubscribers or dereferencing ws — defends against ABA/pointer-reuse (D-03).
+	TMap<uWS::WebSocket<false, true, FWebSocketUserData>*, int32> ClientGenerations{};
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void InitSerialDevice();
 
@@ -193,6 +210,10 @@ public:
 	void OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message);
 	void OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode);
 	void ProcessClientRequest(uWS::WebSocket<false, true, FWebSocketUserData>* ws, const TSharedPtr<FJsonObject>& JsonRequest);
+
+	/** Game-thread ws-validity helper: true only if ws is still registered in ClientGenerations with a
+	 *  matching ClientID. ws is used only as an opaque map key here — never dereferenced. */
+	bool IsClientCurrent(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int32 ClientID) const;
 
 	void PushUpdatedData();
 
