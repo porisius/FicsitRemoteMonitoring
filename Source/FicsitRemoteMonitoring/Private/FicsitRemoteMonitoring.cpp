@@ -638,29 +638,120 @@ void AFicsitRemoteMonitoring::ProcessClientRequest(uWS::WebSocket<false, true, F
 
 void AFicsitRemoteMonitoring::PushUpdatedData() {
 
-    for (auto& Elem : EndpointSubscribers) {
-        FString Endpoint = Elem.Key;
-        
-        if (Elem.Value.Num() == 0) {
-            continue;
+    // THRD-02 / Pitfall 3: PushUpdatedData runs on the push-pacing thread (Async(EAsyncExecution::Thread,
+    // ...) started in StartWebSocketPushDataLoop) — a third thread distinct from both the game thread and
+    // the uWS loop thread. Reading EndpointSubscribers here directly would be an unmarshaled read racing
+    // against the game thread's writes, and calling Client->send() here would violate uWS's single-
+    // thread socket affinity. So: (1) hop to the game thread to build each endpoint's JSON and snapshot
+    // its recipients as plain {ws, ClientID} pairs (never hand a live TSet/ws reference across threads),
+    // then (2) back on the pacing thread, defer() each send onto the loop thread, re-validating liveness
+    // against the loop-thread-only LoopLiveSockets set (D-03) before touching ws.
+
+    struct FPushRecipient
+    {
+        uWS::WebSocket<false, true, FWebSocketUserData>* Ws;
+        int32 ClientID;
+    };
+
+    struct FPushSnapshotEntry
+    {
+        FString Payload;
+        TArray<FPushRecipient> Recipients;
+    };
+
+    TArray<FPushSnapshotEntry> Snapshot;
+
+    TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
+    FThreadSafeBool bSnapshotComplete = false;
+
+    AsyncTask(ENamedThreads::GameThread, [WeakThis, &Snapshot, &bSnapshotComplete]()
+    {
+        AFicsitRemoteMonitoring* Self = WeakThis.Get();
+        if (Self && !Self->bShouldStop)
+        {
+            for (auto& Elem : Self->EndpointSubscribers)
+            {
+                if (Elem.Value.Num() == 0)
+                {
+                    continue;
+                }
+
+                bool bSuccess = false;
+                int32 ErrorCode = 404;
+
+                FRequestData RequestData = FRequestData();
+                RequestData.bIsAuthorized = true;
+
+                FString Json;
+                Self->HandleEndpoint(Elem.Key, RequestData, bSuccess, ErrorCode, Json, EInterfaceType::Socket);
+
+                FPushSnapshotEntry Entry;
+                Entry.Payload = MoveTemp(Json);
+
+                for (uWS::WebSocket<false, true, FWebSocketUserData>* Client : Elem.Value)
+                {
+                    // Re-validate against the authoritative generation map (D-03) rather than trusting
+                    // that everything in EndpointSubscribers is still current.
+                    if (const int32* FoundClientID = Self->ClientGenerations.Find(Client))
+                    {
+                        Entry.Recipients.Add({ Client, *FoundClientID });
+                    }
+                }
+
+                if (Entry.Recipients.Num() > 0)
+                {
+                    Snapshot.Add(MoveTemp(Entry));
+                }
+            }
         }
+        bSnapshotComplete = true;
+    });
 
-        bool bSuccess = false;
-    	int32 ErrorCode = 404;
+    // The pacing thread's whole job is this periodic snapshot-then-send cycle, so it is expected to wait
+    // synchronously for the result (same fire-and-wait shape as CallEndpoint's existing game-thread hop,
+    // FicsitRemoteMonitoring.cpp CallEndpoint) — unlike the inbound WS callbacks (D-02), nothing here is
+    // blocking the uWS loop thread.
+    while (!bSnapshotComplete)
+    {
+        FPlatformProcess::Sleep(0.0001f);
+    }
 
-    	FRequestData RequestData = FRequestData();
-    	RequestData.bIsAuthorized = true;
+    if (!CapturedLoop)
+    {
+        // Loop already torn down (shutdown race) — nothing safe to defer onto.
+        return;
+    }
 
-        FString Json;
+    for (const FPushSnapshotEntry& Entry : Snapshot)
+    {
+        // Owning UTF-8 copy: the deferred callback may run well after this stack frame (and this
+        // function's FTCHARToUTF8 buffer) is gone, so a plain char* into a stack-scoped converter must
+        // never be captured — copy into an owning std::string instead.
+        FTCHARToUTF8 Converted(*Entry.Payload);
+        const std::string PayloadUtf8(Converted.Get(), Converted.Length());
 
-    	this->HandleEndpoint(Endpoint, RequestData, bSuccess, ErrorCode, Json, EInterfaceType::Socket);
+        for (const FPushRecipient& Recipient : Entry.Recipients)
+        {
+            uWS::WebSocket<false, true, FWebSocketUserData>* Ws = Recipient.Ws;
+            const int32 ClientID = Recipient.ClientID;
 
-    	FTCHARToUTF8 Converted(*Json);
-    	const char* UWSOutput = Converted.Get();
-    	
-        // Broadcast updated data to all clients subscribed to this endpoint
-        for (uWS::WebSocket<false, true, FWebSocketUserData>* Client : Elem.Value) {
-            Client->send(UWSOutput, uWS::OpCode::TEXT);
+            CapturedLoop->defer([WeakThis, Ws, ClientID, PayloadUtf8]()
+            {
+                // Now executing on the loop thread. Re-validate ws against the loop-thread-only liveness
+                // set before dereferencing it — the client may have disconnected (and its ws* memory
+                // possibly reused) between the game-thread snapshot above and this callback running.
+                AFicsitRemoteMonitoring* Self = WeakThis.Get();
+                if (!Self)
+                {
+                    return;
+                }
+
+                const int32* FoundClientID = Self->LoopLiveSockets.Find(Ws);
+                if (FoundClientID && *FoundClientID == ClientID)
+                {
+                    Ws->send(PayloadUtf8, uWS::OpCode::TEXT);
+                }
+            });
         }
     }
 }
