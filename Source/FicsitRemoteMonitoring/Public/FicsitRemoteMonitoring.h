@@ -189,6 +189,10 @@ public:
 	// ConnectedClients/EndpointSubscribers or dereferencing ws — defends against ABA/pointer-reuse (D-03).
 	TMap<uWS::WebSocket<false, true, FWebSocketUserData>*, int32> ClientGenerations{};
 
+	// Player display-name cache, keyed by AFGPlayerState::GetUserID() (stable across reconnect).
+	// Populated on connect via InitPlayerConnectCache(); never evicted (cleared only on server restart).
+	TMap<FString, FString> PlayerNameCache{};
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void InitSerialDevice();
 
@@ -200,6 +204,7 @@ public:
 	void InitAPIRegistry();
 	void InitOutageNotification();
 	void InitTrainDerailNotification();
+	void InitPlayerConnectCache();
 
 	void StartWebSocketServer(bool bSkipIfRunning = false);
 	void StopWebSocketServer();
