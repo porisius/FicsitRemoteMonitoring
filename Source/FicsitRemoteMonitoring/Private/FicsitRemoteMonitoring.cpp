@@ -37,6 +37,9 @@
 us_listen_socket_t* SocketListener;
 bool SocketRunning = false;
 
+// PKG-02: fallback-page docs link, matches FicsitRemoteMonitoring.uplugin's DocsURL field.
+static const FString DocsURL = TEXT("https://docs.ficsit.app/ficsitremotemonitoring/latest/index.html");
+
 AFicsitRemoteMonitoring* AFicsitRemoteMonitoring::Get(UWorld* WorldContext)
 {
 	for (TActorIterator<AFicsitRemoteMonitoring> It(WorldContext, StaticClass(), EActorIteratorFlags::AllActors); It; ++It) {
@@ -493,9 +496,16 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                         HandleGetRequest(res, req, FilePath);
                     }
                     else {
-                    	FRequestData RequestData;
-                    	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
-                        HandleApiRequest(World, res, req, RelativePath, RequestData);
+                    	FString ReqExt = FPaths::GetExtension(RelativePath).ToLower();
+                    	bool bIsPageRequest = ReqExt.IsEmpty() || ReqExt == "html" || ReqExt == "htm";
+                    	if (bIsPageRequest) {
+                    		UFRM_RequestLibrary::SendFallbackPage(res, DocsURL);
+                    	}
+                    	else {
+                    		FRequestData RequestData;
+                    		RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
+                    		HandleApiRequest(World, res, req, RelativePath, RequestData);
+                    	}
                     }
                 });
 
@@ -880,7 +890,12 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
 
     if (!FileLoaded) {
         UE_LOG(LogHttpServer, Error, TEXT("Failed to load file: %s"), *FilePath);
-    	UFRM_RequestLibrary::SendErrorMessage(res, "500 Internal Server Error", "Failed to load file.");
+    	if (Extension == "html" || Extension == "htm") {
+    		UFRM_RequestLibrary::SendFallbackPage(res, DocsURL);
+    	}
+    	else {
+    		UFRM_RequestLibrary::SendErrorMessage(res, "500 Internal Server Error", "Failed to load file.");
+    	}
     }
 }
 
