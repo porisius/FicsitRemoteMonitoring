@@ -304,6 +304,58 @@ curl -s -o /dev/null -w 'HTTP %{http_code}\n' \
 A `200` with well-formed JSON confirms the monitoring API is live end-to-end on the
 dedicated server.
 
+### PKG-02 fallback-page smoke test
+
+Verifies the branded 503 fallback page (`UFRM_RequestLibrary::SendFallbackPage`)
+appears when the web UI's files are missing, while every other route keeps its
+existing, unchanged behavior (missing sub-resources stay 404 JSON, `/Icons/*`
+stays 404, `/api/*` stays JSON). This is a **manual, restorable** procedure —
+temporarily rename the deployed `www/` folder aside, run the curl battery below,
+then restore it. Use the same port as Step 6 (`8091` in these examples if you
+overrode the default, or `8080` otherwise).
+
+1. Rename `www/` aside so the web UI files are missing:
+
+   ```bash
+   mv "$SRV/FactoryGame/Mods/GameFeatures/FicsitRemoteMonitoring/www" \
+      "$SRV/FactoryGame/Mods/GameFeatures/FicsitRemoteMonitoring/www.bak"
+   ```
+
+2. Run the five-case curl battery:
+
+   ```bash
+   # (1) page request with www/ missing -> expect 503, branded HTML body
+   curl -s -o /dev/null -w 'HTTP %{http_code}\n' \
+        http://localhost:8091/index.html            # expect HTTP 503
+   curl -s http://localhost:8091/index.html | grep -q 'api'  \
+        && echo "fallback body OK (carries /api/ note)"
+
+   # (2) missing sub-resource -> unchanged 404 JSON, NOT the HTML fallback
+   curl -s -o /dev/null -w 'HTTP %{http_code}\n' \
+        http://localhost:8091/_next/static/nonexistent.js  # expect HTTP 404
+   curl -s http://localhost:8091/_next/static/nonexistent.js  # expect a JSON body, not HTML
+
+   # (3) /Icons/* stays on its documented, unmodified behavior
+   curl -s -o /dev/null -w 'HTTP %{http_code}\n' \
+        http://localhost:8091/Icons/Nonexistent_C.png  # expect HTTP 404
+
+   # (4) /api/* stays JSON, unaffected by the page fallback
+   curl -s http://localhost:8091/api/nonexistentEndpoint  # expect a JSON body (unchanged, not HTML)
+   ```
+
+3. Restore `www/` and confirm normal service resumes:
+
+   ```bash
+   mv "$SRV/FactoryGame/Mods/GameFeatures/FicsitRemoteMonitoring/www.bak" \
+      "$SRV/FactoryGame/Mods/GameFeatures/FicsitRemoteMonitoring/www"
+
+   curl -s -o /dev/null -w 'HTTP %{http_code}\n' \
+        http://localhost:8091/index.html            # expect HTTP 200 again
+   ```
+
+**If port `8091` is not yours** (i.e. you did not override the default per Step
+6's colocated-client note), substitute `8080` throughout the battery above.
+
 ### Validating the Windows client package (`-Windows.zip`)
 
 The Linux server package is the primary target, but the Windows client build is
