@@ -22,6 +22,7 @@ class FICSITREMOTEMONITORING_API UFRM_RequestLibrary : public UFGBlueprintFuncti
 public:
 	static void SendErrorJson(uWS::HttpResponse<false>* res, const FString& Status, const FString& Json);
 	static void SendErrorMessage(uWS::HttpResponse<false>* res, const FString& Status, const FString& Message);
+	static void SendFallbackPage(uWS::HttpResponse<false>* res, const FString& DocsURL);
 
 	static void AddResponseHeaders(uWS::HttpResponse<false>* res, const bool bIncludeContentType);
 
