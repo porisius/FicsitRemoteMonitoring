@@ -34,21 +34,23 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getActorJSON(AActor* Actor) {
 
 	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();
 
-	long double primaryX = Actor->GetActorLocation().X;
-	long double primaryY = Actor->GetActorLocation().Y;
-	long double primaryZ = Actor->GetActorLocation().Z;
-
+	const long double primaryX = Actor->GetActorLocation().X;
+	const long double primaryY = Actor->GetActorLocation().Y;
+	const long double primaryZ = Actor->GetActorLocation().Z;
+	const long double pitch = Actor->GetActorRotation().Pitch;	
+	
 	// UE rotations range from -180 to 180 with zero as "forward" and negative values "left".
 	// In Satisfactory this results in a rotation of zero being due east.
 	// FRM will normalise this to a range of 0 <= x < 360 with zero as due north.
 	long double rotation = Actor->GetActorRotation().Yaw;
 	rotation += 450;
 	rotation = fmod(rotation, 360);
-
+	
 	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(primaryX));
 	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(primaryY));
 	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(primaryZ));
 	JLibrary->Values.Add("rotation", MakeShared<FJsonValueNumber>(rotation));
+	JLibrary->Values.Add("pitch", MakeShared<FJsonValueNumber>(pitch));
 		
 	return JLibrary;
 
