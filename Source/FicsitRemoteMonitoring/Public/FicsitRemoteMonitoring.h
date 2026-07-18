@@ -153,6 +153,12 @@ public:
 	
 	FCallEndpointResponse CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode);
 
+	/** True if InName exactly matches a registered API endpoint name (any method). Used by the
+	 *  catch-all GET handler to tell bare-form API requests (which are extensionless, e.g.
+	 *  "getWorldInv") apart from web UI page navigations before serving the missing-web-UI
+	 *  fallback page. */
+	bool IsRegisteredEndpointName(const FString& InName) const;
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void GetDropPodInfo_BIE(const AFGDropPod* Droppod, TSubclassOf<UFGItemDescriptor>& ItemClass, int32& Amount, float& Power);
 

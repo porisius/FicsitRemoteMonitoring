@@ -321,7 +321,7 @@ overrode the default, or `8080` otherwise).
       "$SRV/FactoryGame/Mods/GameFeatures/FicsitRemoteMonitoring/www.bak"
    ```
 
-2. Run the five-case curl battery:
+2. Run the six-case curl battery:
 
    ```bash
    # (1) page request with www/ missing -> expect 503, branded HTML body
@@ -341,6 +341,13 @@ overrode the default, or `8080` otherwise).
 
    # (4) /api/* stays JSON, unaffected by the page fallback
    curl -s http://localhost:8091/api/nonexistentEndpoint  # expect a JSON body (unchanged, not HTML)
+
+   # (5) REGRESSION GUARD: bare-form API endpoints are extensionless like a page
+   #     request, but must NOT be diverted to the 503 fallback even while www/ is
+   #     missing -- the catch-all consults the endpoint registry first.
+   curl -s -o /dev/null -w 'HTTP %{http_code}\n' \
+        http://localhost:8091/getWorldInv           # expect HTTP 200 (JSON, not the fallback)
+   curl -s http://localhost:8091/getModList         # expect a JSON body, not the HTML fallback
    ```
 
 3. Restore `www/` and confirm normal service resumes:

@@ -497,7 +497,13 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                     }
                     else {
                     	FString ReqExt = FPaths::GetExtension(RelativePath).ToLower();
-                    	bool bIsPageRequest = ReqExt.IsEmpty() || ReqExt == "html" || ReqExt == "htm";
+                    	// Bare-form API endpoints (e.g. "getWorldInv") are also extensionless, so the
+                    	// extension alone cannot tell a web UI page navigation apart from an API call.
+                    	// Only serve the branded fallback when the request looks like a page AND does not
+                    	// name a registered endpoint; anything that maps to an endpoint (or a mistyped
+                    	// endpoint name) keeps its existing JSON contract via HandleApiRequest.
+                    	bool bIsPageRequest = (ReqExt.IsEmpty() || ReqExt == "html" || ReqExt == "htm")
+                    		&& !IsRegisteredEndpointName(RelativePath);
                     	if (bIsPageRequest) {
                     		UFRM_RequestLibrary::SendFallbackPage(res, DocsURL);
                     	}
@@ -968,6 +974,18 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 	    UE_LOGFMT(LogHttpServer, Log, "Unknown Error {Endpoint} {ErrorCode}", Endpoint, ErrorCode);
 	    UFRM_RequestLibrary::SendErrorJson(res, "500 Internal Server Error", OutJson);
     }
+}
+
+bool AFicsitRemoteMonitoring::IsRegisteredEndpointName(const FString& InName) const
+{
+	for (const FAPIEndpoint& EndpointInfo : APIEndpoints)
+	{
+		if (EndpointInfo.APIName == InName)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void AFicsitRemoteMonitoring::InitAPIRegistry()
