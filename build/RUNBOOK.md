@@ -157,6 +157,51 @@ in this repo — it is a build-environment dependency of the *host project*,
 not a code change to this plugin, so it is not (and should not be) tracked by
 this repo's git.
 
+## Icon release workflow (PKG-01)
+
+Icon generation is **client-only** — a dedicated server has no UE textures
+loaded, so `/frm icon` cannot run there. The real bundling mechanism is
+`Config/PluginSettings.ini`'s `[StageSettings] +AdditionalNonUSFDirectories=Icons`
+(already present in this repo); `Config/FilterPlugin.ini` is inert for this
+pipeline (Alpakit's `PackagePlugin` extends `BuildCookRun`, which never reads
+it — see the comment added to that file). Verification for PKG-01 is therefore
+against the **packaged zip's contents**, not against which `.ini` was edited.
+
+1. On a **game client** (not the dedicated server), run the in-game chat
+   command:
+
+   ```
+   /frm icon
+   ```
+
+   This generates icon PNGs into that client's local `Icons/` folder.
+
+2. Copy the generated PNGs from the client's `Icons/` folder into this repo's
+   source `Icons/` folder, then package:
+
+   ```bash
+   bash build/package.sh package
+   ```
+
+3. Verify the icons actually landed in the packaged artifact — an empty
+   source `Icons/` folder still ships the (empty) directory harmlessly, so
+   check the real zip contents, not the `.ini` edited:
+
+   ```bash
+   unzip -l Saved/ArchivedPlugins/FicsitRemoteMonitoring/FicsitRemoteMonitoring-LinuxServer.zip \
+     | grep 'Icons/'
+   # expected: the populated PNG files under .../Icons/, not just the bare directory entry
+   ```
+
+4. After deploying (Step 5) and starting the HTTP server (Step 6), confirm a
+   known icon renders live:
+
+   ```bash
+   curl -s -o /dev/null -w '%{http_code}\n' \
+     http://<server>:<port>/Icons/<KnownClassName>_C.png
+   # expected: 200 once Icons/ is populated and deployed (404 when absent)
+   ```
+
 ## Step 5 — Deploy
 
 Unzip the packaged `-LinuxServer.zip` artifact from
