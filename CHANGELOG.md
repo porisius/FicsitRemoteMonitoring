@@ -200,7 +200,7 @@ Each phase was verified **live on a deployed Satisfactory Linux dedicated server
 |------|------|--------|
 | `Source/…/FicsitRemoteMonitoring.cpp` | threading + validation + fallback/Icons serving | core logic (+506/−92) |
 | `Source/…/FicsitRemoteMonitoring.h` | declarations, `ClientGenerations`, `PlayerNameCache`, validator | header |
-| `Source/…/Endpoints/World/PlayerLibrary.cpp` | `getPlayer` hardening + pitch + offline names | endpoint (+191) |
+| `Source/…/Endpoints/World/PlayerLibrary.cpp` | `getPlayer` hardening + `location.lookPitch` + offline names | endpoint (+191) |
 | `Source/…/FRM_Request.cpp` / `.h` | `SendFallbackPage` (503 page) | helper |
 | `Source/…/FicsitRemoteMonitoring.build.cs` | `+CoreOnline` module | build |
 | `Config/FilterPlugin.ini` | inert marker comment | config (no functional effect) |
