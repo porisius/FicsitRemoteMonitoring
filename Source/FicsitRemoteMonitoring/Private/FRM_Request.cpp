@@ -22,7 +22,7 @@ void UFRM_RequestLibrary::SendErrorMessage(uWS::HttpResponse<false>* res, const 
 	SendErrorJson(res, Status, JsonObjectToString(JsonObject, false));
 }
 
-void UFRM_RequestLibrary::SendFallbackPage(uWS::HttpResponse<false>* res, const FString& DocsURL)
+void UFRM_RequestLibrary::SendFallbackPage(uWS::HttpResponse<false>* res, const FString& InDocsURL)
 {
 	const FString Html = FString::Printf(TEXT(
 		"<!DOCTYPE html><html><head><title>FRM - Web UI Unavailable</title></head><body>"
@@ -30,7 +30,7 @@ void UFRM_RequestLibrary::SendFallbackPage(uWS::HttpResponse<false>* res, const 
 		"<p>This is common on dedicated servers when the web UI bundle was not deployed alongside "
 		"the mod. The monitoring API itself is still live at <a href=\"/api/\">/api/</a>.</p>"
 		"<p>See the <a href=\"%s\">setup documentation</a> for how to deploy the web UI.</p>"
-		"</body></html>"), *DocsURL);
+		"</body></html>"), *InDocsURL);
 
 	res->writeStatus("503 Service Unavailable");
 	res->writeHeader("Content-Type", "text/html");
