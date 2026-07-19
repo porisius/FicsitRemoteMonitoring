@@ -31,7 +31,7 @@ namespace {
 		Location->Values.Add("y", MakeShared<FJsonValueNumber>(0));
 		Location->Values.Add("z", MakeShared<FJsonValueNumber>(0));
 		Location->Values.Add("rotation", MakeShared<FJsonValueNumber>(0));
-		Location->Values.Add("pitch", MakeShared<FJsonValueNumber>(0));
+		Location->Values.Add("lookPitch", MakeShared<FJsonValueNumber>(0));
 		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(Location));
 
 		JPlayer->Values.Add("Speed", MakeShared<FJsonValueNumber>(0));
@@ -168,9 +168,13 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 		}
 
 		// getPlayer-local injection into the object getActorJSON returns — the
-		// shared helper itself is NOT modified (D-03 blast-radius limit).
+		// shared helper itself is NOT modified (D-03 blast-radius limit). Named
+		// "lookPitch" (not "pitch") so it coexists with getActorJSON's generic
+		// actor-rotation pitch instead of shadowing it: "pitch" = body/actor
+		// pitch (meaningful for vehicles), "lookPitch" = the player's camera/aim
+		// pitch (the only pitch that is meaningful for an upright player body).
 		TSharedPtr<FJsonObject> LocationJson = getActorJSON(Player);
-		LocationJson->Values.Add("pitch", MakeShared<FJsonValueNumber>(Pitch));
+		LocationJson->Values.Add("lookPitch", MakeShared<FJsonValueNumber>(Pitch));
 
 		JPlayer->Values.Add("Name", MakeShared<FJsonValueString>(PlayerName));
 		JPlayer->Values.Add("ClassName", MakeShared<FJsonValueString>(Player->GetClass()->GetName()));

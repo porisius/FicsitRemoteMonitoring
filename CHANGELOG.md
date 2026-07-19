@@ -19,7 +19,7 @@ Format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 | Area | What changed | Why it matters |
 |------|--------------|----------------|
 | **WebSocket threading** | All inbound callbacks and outbound sends are now marshaled through the game thread. | Removes a whole class of race-condition crashes / shared-state corruption. |
-| **`getPlayer`** | Crash-safe reads, new `location.pitch`, persistent player names across disconnect. | Endpoint no longer crashes the server; richer, more reliable data. |
+| **`getPlayer`** | Crash-safe reads, new `location.lookPitch`, persistent player names across disconnect. | Endpoint no longer crashes the server; richer, more reliable data. |
 | **WS request validation** | Malformed/malicious subscribe envelopes are rejected with a clear error *before* dispatch. | Bad input can no longer reach endpoint logic on the now-guaranteed game thread. |
 | **Dedicated-server packaging** | Branded 503 fallback when the web UI is missing; icon staging verified against a real packaged build. | Servers without the web UI bundle degrade gracefully instead of breaking silently. |
 | **Dev tooling** | Reproducible build/package pipeline, WS stress + validation harnesses, deploy/verify runbook. | Makes the plugin buildable and verifiable on Linux (no test framework exists). |
@@ -83,9 +83,12 @@ purely about *where* the work runs.
   and `GetHealthComponent()->GetCurrentHealth()/IsDead()` — are now `IsValid()`-guarded with
   fallbacks (`Inventory:[]`, `PlayerHP:0`, `Dead:false`). The `Cast<AFGCharacterPlayer>` result is
   guarded too (defense in depth).
-- **New field:** `location.pitch` on every live player entry — signed camera/look pitch from
+- **New field:** `location.lookPitch` on every live player entry — signed camera/look pitch from
   `AFGPlayerController::GetControlRotation().Pitch`, clamped to `[-90, 90]` (never actor body
-  rotation).
+  rotation). Named `lookPitch` (not `pitch`) so it coexists with upstream's generic actor-rotation
+  `pitch` field (porisius/FicsitRemoteMonitoring#297) instead of shadowing it: `pitch` = body/actor
+  pitch (meaningful for vehicles), `lookPitch` = the player's camera/aim pitch (the only pitch
+  meaningful for an upright player body).
 - **Persistent player names:** a session-persistent `PlayerNameCache` (`net-id → name`, keyed by
   the stable `APlayerState::GetUniqueId().ToString()`) lets `getPlayer` emit offline players from
   cache via a hand-built JSON path that never dereferences a despawned actor.
@@ -167,7 +170,8 @@ None of these ship in the packaged plugin; they make it buildable and verifiable
   and the vendored uWebSockets).
 
 **Additive-only API changes** (no breaking changes to existing consumers):
-- `getPlayer` entries gain `location.pitch`.
+- `getPlayer` entries gain `location.lookPitch` (camera/aim pitch; distinct from the generic actor
+  `pitch` field added upstream in porisius/FicsitRemoteMonitoring#297).
 - `getPlayer` may now include offline players (from the persistent name cache).
 - WebSocket subscribe/unsubscribe now returns an `{"error": …}` frame for malformed envelopes
   (previously undefined behavior); well-formed requests are unaffected.
