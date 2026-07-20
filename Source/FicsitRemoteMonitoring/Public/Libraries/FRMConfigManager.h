@@ -22,6 +22,17 @@ public:
 	template<typename T>
 	static bool GetConfig(const FString& StrID, T& OutValue)
 	{
+		// GetFGGameUserSettings() dereferences GEngine internally, so GEngine must
+		// be checked BEFORE the call — the UserSettings null-check below happens
+		// too late to help. During engine teardown GEngine is destroyed while the
+		// uWS worker thread may still be serving a request, and the dereference
+		// faults (SIGSEGV reading a small member offset). Degrade to the caller's
+		// default instead of crashing the server.
+		if (!GEngine)
+		{
+			return false;
+		}
+
 		UFGGameUserSettings* UserSettings = UFGGameUserSettings::GetFGGameUserSettings();
 		if (!UserSettings)
 		{
