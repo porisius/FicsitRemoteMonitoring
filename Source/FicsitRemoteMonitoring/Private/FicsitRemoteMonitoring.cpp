@@ -1,5 +1,6 @@
 #include "FicsitRemoteMonitoring.h"
 
+#include <atomic>
 #include <sstream>
 
 #include "Runtime/Core/Public/Logging/LogCategory.h"
@@ -36,6 +37,36 @@
 
 us_listen_socket_t* SocketListener;
 bool SocketRunning = false;
+
+// Set as soon as teardown begins, cleared when a server starts. Deliberately a
+// file-scope atomic rather than a member: once teardown starts, the subsystem
+// actor and the world are being destroyed, so the uWS worker thread cannot
+// safely touch `this`, the World, or any UObject — not even to call IsValid(),
+// which must dereference the object to read its flags. A dangling pointer is
+// not null, so the IsValid() guards inside CallEndpoint() are reached and then
+// fault. This flag is the only state a request handler can consult without
+// dereferencing anything that may already be freed.
+std::atomic<bool> GFRMShuttingDown{false};
+
+// Shutdown barrier for uWS request handlers. Answers 503 and reports true when
+// teardown has begun, so the caller returns before touching the subsystem, the
+// world, or any other UObject. Touches nothing but the response socket, which
+// uWS owns and keeps alive for the duration of the callback.
+static bool FRMRejectIfShuttingDown(uWS::HttpResponse<false>* Res)
+{
+	if (!GFRMShuttingDown.load(std::memory_order_acquire))
+	{
+		return false;
+	}
+
+	if (Res)
+	{
+		Res->writeStatus("503 Service Unavailable");
+		Res->end("{\"error\":\"Server is shutting down\"}");
+	}
+
+	return true;
+}
 
 AFicsitRemoteMonitoring* AFicsitRemoteMonitoring::Get(UWorld* WorldContext)
 {
@@ -138,6 +169,11 @@ void AFicsitRemoteMonitoring::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AFicsitRemoteMonitoring::StopWebSocketServer()
 {
+	// Raise the shutdown barrier FIRST, before anything is torn down, so any
+	// request already inside the uWS worker thread bails out with 503 instead
+	// of walking into a half-destroyed world.
+	GFRMShuttingDown.store(true, std::memory_order_release);
+
 	bShouldStop = true;
 
     // Signal the WebSocket server to stop
@@ -178,9 +214,14 @@ FArduinoConfig AFicsitRemoteMonitoring::GetSerialConfig()
 	return Config;
 }
 
-void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning) 
+void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 {
     UE_LOGFMT(LogHttpServer, Log, "Initializing WebSocket Service");
+
+	// Lower the shutdown barrier: a previous StopWebSocketServer() raised it, and
+	// without this a server restarted in the same session (e.g. `/frm http start`
+	// after a stop) would answer 503 to every request forever.
+	GFRMShuttingDown.store(false, std::memory_order_release);
 
     if (SocketRunning)
     {
@@ -300,6 +341,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                 });
 
                 app.get("/api/:APIEndpoint", [this, World](auto* res, auto* req) {
+                    if (FRMRejectIfShuttingDown(res)) return;
                     std::string url(req->getParameter("APIEndpoint"));
                     FString Endpoint = FString(url.c_str());
 
@@ -323,11 +365,13 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             	
             	app.post("/*", [this, World](auto* res, uWS::HttpRequest* req)
             	{
+            		if (FRMRejectIfShuttingDown(res)) return;
 		            const std::string URL(req->getUrl().begin(), req->getUrl().end());
 					FString RelativePath = FString(URL.c_str()).Mid(1);
 
             		res->onData([this, res, req, World, RelativePath](const std::string_view data, bool)
             		{
+            			if (FRMRejectIfShuttingDown(res)) return;
 			            try
 			            {
 				            const std::string PostData(data);
@@ -373,6 +417,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             	});
 
                 app.get("/*", [this, UIPath, World](auto* res, uWS::HttpRequest* req) {
+                    if (FRMRejectIfShuttingDown(res)) return;
                     if (!res) return;
 
                     std::string url(req->getUrl().begin(), req->getUrl().end());
