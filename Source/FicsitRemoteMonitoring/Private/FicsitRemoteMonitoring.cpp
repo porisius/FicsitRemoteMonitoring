@@ -65,23 +65,33 @@ void AFicsitRemoteMonitoring::BeginPlay()
 	// Load FRM's API Endpoints
 	InitAPIRegistry();
 	
+	// Read the auth token ONCE here, on the game thread, and cache it in the
+	// AuthenticationToken member. The uWS request handlers must not read config
+	// per-request: that runs on the uWS worker thread and reaches GEngine, which
+	// is unsafe while the engine is tearing down (observed SIGSEGV).
 	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
-	
+
 	// Debug log to verify token retrieval -Porisius
 	// UE_LOGFMT(LogHttpServer, Log, "DEBUG: AuthToken - {AuthToken}", *AuthToken);
-	
+
 	if (AuthToken.IsEmpty())
 	{
-		if (!UFRMConfigManager::SetConfigFromInput(TEXT("uWS.AuthenticationToken"), GenerateAuthToken(32), false))
+		const FString GeneratedToken = GenerateAuthToken(32);
+		if (!UFRMConfigManager::SetConfigFromInput(TEXT("uWS.AuthenticationToken"), GeneratedToken, false))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Failed to apply setting"));
 			return;
 		}
 
-		UE_LOG(LogTemp, Log, TEXT("Generated and saved new token: %s"), *AuthToken);
+		AuthenticationToken = GeneratedToken;
+
+		// Log the token that was actually generated. This previously logged
+		// AuthToken, which is empty on this branch by definition.
+		UE_LOG(LogTemp, Log, TEXT("Generated and saved new token: %s"), *GeneratedToken);
 	}
 	else
 	{
+		AuthenticationToken = AuthToken;
 		UE_LOG(LogTemp, Log, TEXT("Token already exists."));
 	}
 	
@@ -296,7 +306,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                     // Log the request URL
                     //UE_LOGFMT(LogHttpServer, Log, "Request URL: {0}", Endpoint);
 
-                	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+                	const FString AuthToken = AuthenticationToken;
 
                 	FRequestData RequestData;
                 	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
@@ -330,7 +340,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 			            		return UFRM_RequestLibrary::SendErrorMessage(res, "400 Bad Request", FString("Invalid Request Body"));
 			            	}
 
-			            	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+			            	const FString AuthToken = AuthenticationToken;
 			            	
 			            	FRequestData RequestData;
 			            	RequestData.Method = "POST";
@@ -367,7 +377,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 
                     std::string url(req->getUrl().begin(), req->getUrl().end());
 
-                	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
+                	const FString AuthToken = AuthenticationToken;
                     
                     bool bFileExists = false;
                     // Remove initial '/'
