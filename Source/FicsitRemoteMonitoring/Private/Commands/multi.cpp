@@ -134,8 +134,14 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 		FString arg1 = Arguments[1].ToLower();
 		FString arg2 = Arguments[2].ToLower();
 	
-		AFGPlayerController* PlayerController = Cast<AFGPlayerController>(Sender->GetPlayer()->GetControlledCharacter()->GetLocalViewingPlayerController());
-		EPrivilegeLevel PrivilegeLevel = PlayerController->GetDSPrivilegeLevel();
+		// UCommandSender::GetPlayer() already returns the sender's server-side AFGPlayerController.
+		// The previous GetControlledCharacter()->GetLocalViewingPlayerController() detour is null on a
+		// dedicated server (no local client) and crashed (SIGSEGV) on ANY /frm config. A null controller
+		// here means a non-player/console sender, which we treat as trusted.
+		AFGPlayerController* PlayerController = Sender ? Sender->GetPlayer() : nullptr;
+		// A null (console/non-player) sender is trusted -> InitialAdmin so the check below passes and
+		// short-circuits before ever calling GetNetMode() on the null controller.
+		const EPrivilegeLevel PrivilegeLevel = IsValid(PlayerController) ? PlayerController->GetDSPrivilegeLevel() : EPrivilegeLevel::InitialAdmin;
 		
 		if (PrivilegeLevel != EPrivilegeLevel::Administrator &&
 			PrivilegeLevel != EPrivilegeLevel::InitialAdmin &&
@@ -145,7 +151,8 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 			ChatReturn.Chat = FString(TEXT("Insufficient Permissions to set " + arg1 + " to " +arg2));
 			ChatReturn.Color = FLinearColor::Red;
 			ChatReturn.Status = EExecutionStatus::COMPLETED;
-		}		
+			return ChatReturn;
+		}
 
 		if (UFRMConfigManager::SetConfigFromInput(arg1, arg2))
 		{
