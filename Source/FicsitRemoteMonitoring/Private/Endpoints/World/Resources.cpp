@@ -248,7 +248,15 @@ void UResources::getExtractor(UObject* WorldContext, FRequestData RequestData, T
 
 			float CurrentProd = Productivity * MaxProd;
 
-			TSharedPtr<FJsonObject> JProduct = GetItemValueObject(ResourceClass->GetResourceClass(), ExtractorInventory->GetNumItems(ItemClass), Extractor->GetFluidInventoryStackSizeScalar());
+			// GetNumItems() asserts mInventoryStacks.Num() > 0 ("Inventory need to be
+			// initialized before use"), so an extractor whose output inventory has not
+			// been initialized yet - e.g. while the world is still streaming in - takes
+			// the whole game down. GetSizeLinear() reads the same array without asserting.
+			const int32 NumItems = (IsValid(ExtractorInventory) && ExtractorInventory->GetSizeLinear() > 0)
+				? ExtractorInventory->GetNumItems(ItemClass)
+				: 0;
+
+			TSharedPtr<FJsonObject> JProduct = GetItemValueObject(ResourceClass->GetResourceClass(), NumItems, Extractor->GetFluidInventoryStackSizeScalar());
 			JProduct->Values.Add("CurrentProd", MakeShared<FJsonValueNumber>(CurrentProd));
 			JProduct->Values.Add("MaxProd", MakeShared<FJsonValueNumber>(MaxProd));
 			JProduct->Values.Add("ProdPercent", MakeShared<FJsonValueNumber>(100 * UKismetMathLibrary::SafeDivide(CurrentProd, MaxProd)));
@@ -314,7 +322,10 @@ void UResources::getFrackingActivator(UObject* WorldContext, FRequestData Reques
 				const float Productivity = SatelliteExtractor->GetProductivity();
 				const UFGInventoryComponent* ExtractorInventory = SatelliteExtractor->GetOutputInventory();
 
-				const float NumItems = ExtractorInventory->GetNumItems(ItemClass);
+				// Same uninitialised-inventory assert as getExtractor above.
+				const float NumItems = (IsValid(ExtractorInventory) && ExtractorInventory->GetSizeLinear() > 0)
+					? ExtractorInventory->GetNumItems(ItemClass)
+					: 0;
 				BaseNumItems += NumItems;
 				float CurrentProd = Productivity * MaxProd;
 				

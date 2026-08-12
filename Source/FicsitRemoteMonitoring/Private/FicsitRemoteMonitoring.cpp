@@ -756,10 +756,13 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getEncoder", &UFactoryLibrary::getEncoder));
 	RegisterEndpoint(FAPIEndpoint("GET", "getExplorationSink", &USession::getExplorationSink));
 	RegisterEndpoint(FAPIEndpoint("GET", "getExplorer", &UVehicles::getExplorer).RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getExtractor", &UResources::getExtractor));
+	// RequiresGameThread: calls AFGBuildableFactory::GetProductivity(), which
+	// check()s IsInGameThread() and crashes when served off the uWS event loop.
+	RegisterEndpoint(FAPIEndpoint("GET", "getExtractor", &UResources::getExtractor).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getFactoryCart", &UVehicles::getFactoryCart).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getFoundry", &UFactoryLibrary::getFoundry));
-	RegisterEndpoint(FAPIEndpoint("GET", "getFrackingActivator", &UResources::getFrackingActivator));
+	// RequiresGameThread: same GetProductivity() game-thread check as getExtractor.
+	RegisterEndpoint(FAPIEndpoint("GET", "getFrackingActivator", &UResources::getFrackingActivator).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getFuelGenerator", &UPower::getFuelGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getGeothermalGenerator", &UPower::getGeothermalGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getHazards", &UPlayerLibrary::getHazards).RequiresGameThread());
@@ -780,7 +783,10 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getPower", &UPower::getPower));
 	RegisterEndpoint(FAPIEndpoint("GET", "getPowerSlug", &UResources::getPowerSlug).RequiresGameThread());	
 	RegisterEndpoint(FAPIEndpoint("GET", "getPowerUsage", &UPower::getPowerUsage));
-	RegisterEndpoint(FAPIEndpoint("GET", "getProdStats", &USession::getProdStats));
+	// RequiresGameThread: walks every manufacturer/extractor/generator calling
+	// GetProductivity(), which check()s IsInGameThread(). This was the most
+	// frequent startup crash - the web UI polls it on a timer.
+	RegisterEndpoint(FAPIEndpoint("GET", "getProdStats", &USession::getProdStats).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPump", &ULogistics::getPump));
 	RegisterEndpoint(FAPIEndpoint("GET", "getRadarTower", &USupport::getRadarTower));
 	RegisterEndpoint(FAPIEndpoint("GET", "getRecipes", &UResearch::getRecipes).RequiresGameThread());
