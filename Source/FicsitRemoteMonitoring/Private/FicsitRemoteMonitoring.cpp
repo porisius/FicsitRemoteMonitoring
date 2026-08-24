@@ -38,6 +38,9 @@
 us_listen_socket_t* SocketListener;
 bool SocketRunning = false;
 
+// PKG-02: fallback-page docs link, matches FicsitRemoteMonitoring.uplugin's DocsURL field.
+static const FString DocsURL = TEXT("https://docs.ficsit.app/ficsitremotemonitoring/latest/index.html");
+
 AFicsitRemoteMonitoring* AFicsitRemoteMonitoring::Get(UWorld* WorldContext)
 {
 	for (TActorIterator<AFicsitRemoteMonitoring> It(WorldContext, StaticClass(), EActorIteratorFlags::AllActors); It; ++It) {
@@ -65,7 +68,7 @@ void AFicsitRemoteMonitoring::BeginPlay()
 
 	// Load FRM's API Endpoints
 	InitAPIRegistry();
-	
+
 	const FString AuthToken = UFRMConfigManager::GetConfigOrDefault<FString>(TEXT("uWS.AuthenticationToken"), "");
 	
 	// Debug log to verify token retrieval -Porisius
@@ -103,10 +106,15 @@ void AFicsitRemoteMonitoring::BeginPlay()
 void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
 {
 	if (bHasRunningPushDataLoop) return;
-	
+
+	// This function is only ever invoked from ProcessClientRequest's marshaled game-thread subscribe
+	// branch, so this read/write of bHasRunningPushDataLoop is already game-thread owned. Set it here,
+	// synchronously, before spawning the push-pacing thread (D-04: all writes/reads of this flag must be
+	// game-thread owned end-to-end — do not move this into the Async(Thread,...) lambda below).
+	bHasRunningPushDataLoop = true;
+
 	Async(EAsyncExecution::Thread, [this]()
 	{
-		bHasRunningPushDataLoop = true;
 		UE_LOGFMT(LogHttpServer, Log, "Starting PushUpdatedData loop");
 		while (SocketRunning && !bShouldStop)
 		{
@@ -116,7 +124,17 @@ void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()
 			FPlatformProcess::Sleep(PushCycle);
 		}
 		UE_LOGFMT(LogHttpServer, Log, "Stopped PushUpdatedData loop");
-		bHasRunningPushDataLoop = false;
+
+		// Marshal the terminal write back to the game thread (D-04) instead of writing it directly from
+		// this push-pacing thread.
+		TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
+		AsyncTask(ENamedThreads::GameThread, [WeakThis]()
+		{
+			if (AFicsitRemoteMonitoring* Self = WeakThis.Get())
+			{
+				Self->bHasRunningPushDataLoop = false;
+			}
+		});
 	});
 }
 
@@ -145,10 +163,46 @@ void AFicsitRemoteMonitoring::StopWebSocketServer()
         SocketListener = nullptr;
 
         UE_LOG(LogHttpServer, Log, TEXT("Closing all %d connections"), ConnectedClients.Num());
-        for (const auto ConnectedClient : ConnectedClients)
+
+        // D-04 shutdown safety / resolves RESEARCH Open Question #1: ws->close() is a socket-owning call,
+        // the same thread-ownership violation class as PushUpdatedData's send() — it must run on the uWS
+        // loop thread, not here on the game thread. Snapshot (ws, ClientID) pairs now (game-thread-owned
+        // ConnectedClients/ClientGenerations are still safe to read here), then defer the actual close()
+        // onto the loop thread; the deferred callback re-validates against LoopLiveSockets before
+        // touching ws. Safe no-op if CapturedLoop is already null (loop thread already torn down).
+        if (CapturedLoop)
         {
-            ConnectedClient->close();
+            TArray<TPair<uWS::WebSocket<false, true, FWebSocketUserData>*, int32>> ClientsToClose;
+            ClientsToClose.Reserve(ConnectedClients.Num());
+
+            for (const auto ConnectedClient : ConnectedClients)
+            {
+                if (const int32* FoundClientID = ClientGenerations.Find(ConnectedClient))
+                {
+                    ClientsToClose.Emplace(ConnectedClient, *FoundClientID);
+                }
+            }
+
+            TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
+            CapturedLoop->defer([WeakThis, ClientsToClose]()
+            {
+                AFicsitRemoteMonitoring* Self = WeakThis.Get();
+                if (!Self)
+                {
+                    return;
+                }
+
+                for (const auto& ClientPair : ClientsToClose)
+                {
+                    const int32* FoundClientID = Self->LoopLiveSockets.Find(ClientPair.Key);
+                    if (FoundClientID && *FoundClientID == ClientPair.Value)
+                    {
+                        ClientPair.Key->close();
+                    }
+                }
+            });
         }
+
         ConnectedClients.Empty();
     }
 
@@ -202,6 +256,12 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
         WebServer = Async(EAsyncExecution::Thread, [this]() {
             try {
                 auto app = uWS::App();
+
+                // Captured once, on the uWS loop thread (uWS::Loop::get() is thread-local — calling it
+                // from any other thread returns a different, unrelated loop). Consumed by PushUpdatedData
+                // and StopWebSocketServer to defer() outbound send()/close() onto this thread (THRD-02).
+                CapturedLoop = uWS::Loop::get();
+
                 auto World = GetWorld();
 
             	const int32 port = UFRMConfigManager::GetConfigOrDefault<int32>(TEXT("uWS.Port"), 8080);
@@ -224,11 +284,40 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 
                 wsBehavior.compression = uWS::SHARED_COMPRESSOR;
 
-                // Close handler (for when a client disconnects)
+                // Close handler (for when a client disconnects). Runs on the uWS loop thread; per uWS's
+                // open->close validity guarantee, ws and its userdata are still safely dereferenceable here
+                // (closeHandler fires before ~WebSocketData()). This is the last safe touch of ws on this
+                // thread. All shared-state mutation (ConnectedClients/EndpointSubscribers/ClientGenerations)
+                // is marshaled to the game thread and re-validated by generation tag (THRD-01, D-02/D-03).
                 wsBehavior.close = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
-                    ConnectedClients.Remove(ws);
-                    UE_LOG(LogHttpServer, Log, TEXT("Client Disconnected. Remaining connections: %d"), ConnectedClients.Num());
-                    OnClientDisconnected(ws, code, message);  // Ensure this signature matches
+                    const int32 ClosedClientID = ws->getUserData()->ClientID;
+
+                    // Loop-thread-only bookkeeping, consumed by the outbound deferred-send path (Plan 03).
+                    LoopLiveSockets.Remove(ws);
+
+                    TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
+                    AsyncTask(ENamedThreads::GameThread, [WeakThis, ws, ClosedClientID]()
+                    {
+                        AFicsitRemoteMonitoring* Self = WeakThis.Get();
+                        if (!Self || Self->bShouldStop) return;   // shutdown/teardown race guard (D-04)
+
+                        // Re-validate against the generation map (D-03) rather than trusting submission
+                        // order (Pitfall 2) — a stale/reused ws must not mutate the wrong client's state.
+                        if (Self->IsClientCurrent(ws, ClosedClientID))
+                        {
+                            Self->ConnectedClients.Remove(ws);
+                            Self->ClientGenerations.Remove(ws);
+
+                            // Folded from the retired OnClientDisconnected: remove ws from every
+                            // subscription so no EndpointSubscribers mutation remains on the loop thread.
+                            for (auto& Elem : Self->EndpointSubscribers)
+                            {
+                                Elem.Value.Remove(ws);
+                            }
+                        }
+
+                        UE_LOG(LogHttpServer, Log, TEXT("Client Disconnected. Remaining connections: %d"), Self->ConnectedClients.Num());
+                    });
                 };
 
                 // Message handler (for when a client sends a message)
@@ -236,10 +325,26 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                     OnMessageReceived(ws, message, opCode);  // Make sure this signature matches
                 };
 
+                // Open handler (for when a client connects). Runs on the uWS loop thread; ws is provably
+                // valid here (freshly opened). Mint the ClientID generation tag synchronously (safe: this is
+                // the loop-thread-only counter/bookkeeping), then marshal the registry mutation to the game
+                // thread — fire-and-forget, no spin-wait (D-02).
                 wsBehavior.open = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws)
                 {
-                    ConnectedClients.Add(ws);
-                    UE_LOG(LogHttpServer, Log, TEXT("Client Disconnected. Connections: %d"), ConnectedClients.Num());
+                    const int32 NewClientID = NextClientIDCounter++;
+                    ws->getUserData()->ClientID = NewClientID;
+                    LoopLiveSockets.Add(ws, NewClientID);
+
+                    TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
+                    AsyncTask(ENamedThreads::GameThread, [WeakThis, ws, NewClientID]()
+                    {
+                        AFicsitRemoteMonitoring* Self = WeakThis.Get();
+                        if (!Self || Self->bShouldStop) return;   // shutdown/teardown race guard (D-04)
+
+                        Self->ConnectedClients.Add(ws);
+                        Self->ClientGenerations.Add(ws, NewClientID);  // ws used only as an opaque map key
+                        UE_LOG(LogHttpServer, Log, TEXT("Client Connected. Connections: %d"), Self->ConnectedClients.Num());
+                    });
                 };
 
                 app.get("/getCoffee", [this](auto* res, auto* req) {
@@ -392,9 +497,22 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                         HandleGetRequest(res, req, FilePath);
                     }
                     else {
-                    	FRequestData RequestData;
-                    	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
-                        HandleApiRequest(World, res, req, RelativePath, RequestData);
+                    	FString ReqExt = FPaths::GetExtension(RelativePath).ToLower();
+                    	// Bare-form API endpoints (e.g. "getWorldInv") are also extensionless, so the
+                    	// extension alone cannot tell a web UI page navigation apart from an API call.
+                    	// Only serve the branded fallback when the request looks like a page AND does not
+                    	// name a registered endpoint; anything that maps to an endpoint (or a mistyped
+                    	// endpoint name) keeps its existing JSON contract via HandleApiRequest.
+                    	bool bIsPageRequest = (ReqExt.IsEmpty() || ReqExt == "html" || ReqExt == "htm")
+                    		&& !IsRegisteredEndpointName(RelativePath);
+                    	if (bIsPageRequest) {
+                    		UFRM_RequestLibrary::SendFallbackPage(res, DocsURL);
+                    	}
+                    	else {
+                    		FRequestData RequestData;
+                    		RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
+                    		HandleApiRequest(World, res, req, RelativePath, RequestData);
+                    	}
                     }
                 });
 
@@ -433,6 +551,11 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             } catch (...) {
                 UE_LOG(LogHttpServer, Error, TEXT("Unknown Exception in WebSocket Server"));
             }
+
+            // Teardown safety (RESEARCH Open Question #2): clear the captured loop pointer once this
+            // thread's app.run() returns (normally or via exception) so no push-pacing/game-thread caller
+            // can defer() onto a stale/torn-down loop after this thread exits.
+            CapturedLoop = nullptr;
         });
 
 }
@@ -474,11 +597,12 @@ std::unordered_map<std::string, std::string> ParseQueryString(const std::string&
 	return QueryPairs;
 }
 
-void AFicsitRemoteMonitoring::OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
-    // Remove the client from all endpoint subscriptions
-    for (auto& Elem : EndpointSubscribers) {
-        Elem.Value.Remove(ws);
-    }
+bool AFicsitRemoteMonitoring::IsClientCurrent(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int32 ClientID) const
+{
+    // Game-thread-only. ws is used strictly as an opaque map key here — never dereferenced — so this is
+    // safe to call even for a ws that has since been closed/freed/reused (D-03 generation-tag defense).
+    const int32* FoundClientID = ClientGenerations.Find(ws);
+    return FoundClientID != nullptr && *FoundClientID == ClientID;
 }
 
 void AFicsitRemoteMonitoring::OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode) {
@@ -496,92 +620,206 @@ void AFicsitRemoteMonitoring::OnMessageReceived(uWS::WebSocket<false, true, FWeb
 	else
 	{
 		UE_LOG(LogHttpServer, Error, TEXT("Failed to parse client message: %s"), *MessageContent);
+
+		// D-02: give the client feedback instead of a silent server-side-only log-and-drop; the
+		// connection stays open. This runs synchronously inside wsBehavior.message's own call
+		// stack (the same validity guarantee wsBehavior.open/close already rely on), so a direct
+		// ws->send() here needs no Loop::defer()/TWeakObjectPtr hop.
+		const FString ErrorJson = UFRM_RequestLibrary::JsonObjectToString(
+			UFRM_RequestLibrary::GenerateError(TEXT("Malformed request: payload is not valid JSON.")), /*JSONDebugMode=*/false);
+		FTCHARToUTF8 Converted(*ErrorJson);
+		ws->send(std::string_view(Converted.Get(), Converted.Length()), uWS::OpCode::TEXT);
 	}
 }
 
 void AFicsitRemoteMonitoring::ProcessClientRequest(uWS::WebSocket<false, true, FWebSocketUserData>* ws, const TSharedPtr<FJsonObject>& JsonRequest)
 {
-    FString Action = JsonRequest->GetStringField(TEXT("action"));
-    const TArray<TSharedPtr<FJsonValue>>* EndpointsArray;
-    FString Endpoint;
+    // Loop-thread-only: extract plain values while ws is still safely dereferenceable — this runs
+    // synchronously inside wsBehavior.message's own call stack (per uWS's open->close validity
+    // guarantee). No shared-state mutation happens here; the actual EndpointSubscribers/
+    // bHasRunningPushDataLoop work is marshaled to the game thread below (THRD-01).
+    const int32 RequestClientID = ws->getUserData()->ClientID;
 
-    if (JsonRequest->TryGetArrayField(TEXT("endpoints"), EndpointsArray))
+    FString Action;
+    TArray<FString> ValidNames;
+    FString ErrorMessage;
+
+    // VALD-01: strict envelope validation (action, endpoints shape/type, GET-only registry match)
+    // runs synchronously here, before the AsyncTask(GameThread) hop below — see
+    // ValidateWSSubscriptionEnvelope for the strict TryGet*-family + EJson::String checks that
+    // replace the previous silent-coercion GetStringField/AsString reads.
+    const bool bWholeRequestValid = ValidateWSSubscriptionEnvelope(JsonRequest, Action, ValidNames, ErrorMessage);
+
+    if (!ErrorMessage.IsEmpty())
     {
-        for (const TSharedPtr<FJsonValue>& EndpointValue : *EndpointsArray)
-        {
-            Endpoint = EndpointValue->AsString();
+        // D-02: direct, synchronous send — no Loop::defer()/TWeakObjectPtr hop needed here, since
+        // this code is not crossing a thread boundary (unlike PushUpdatedData, which originates on
+        // the push-pacing thread). Never ws->close() on validation failure — the connection stays
+        // open (D-02) regardless of whether this was a whole-request reject or a partial-success
+        // report (D-03).
+        const FString ErrorJson = UFRM_RequestLibrary::JsonObjectToString(
+            UFRM_RequestLibrary::GenerateError(ErrorMessage), /*JSONDebugMode=*/false);
+        FTCHARToUTF8 Converted(*ErrorJson);
+        ws->send(std::string_view(Converted.Get(), Converted.Length()), uWS::OpCode::TEXT);
+    }
 
+    if (!bWholeRequestValid || ValidNames.Num() == 0) return;   // nothing valid left to mutate
+
+    TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
+    AsyncTask(ENamedThreads::GameThread, [WeakThis, ws, RequestClientID, Action, ValidNames]()
+    {
+        AFicsitRemoteMonitoring* Self = WeakThis.Get();
+        if (!Self || Self->bShouldStop) return;   // shutdown/teardown race guard (D-04)
+
+        // Drop stale/not-yet-registered messages rather than treat as an error (Assumption A2): a
+        // message for a ws whose ClientID isn't (or is no longer) in ClientGenerations is a valid
+        // ignorable state, not a crash — also covers Pitfall 2 (AsyncTask ordering isn't guaranteed;
+        // self-validate instead of trusting submission order).
+        if (!Self->IsClientCurrent(ws, RequestClientID)) return;
+
+        for (const FString& Endpoint : ValidNames)
+        {
             if (Action == "subscribe")
             {
-            	
-                if (!EndpointSubscribers.Contains(Endpoint)) {
-                    EndpointSubscribers.Add(Endpoint, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>());
+                if (!Self->EndpointSubscribers.Contains(Endpoint))
+                {
+                    Self->EndpointSubscribers.Add(Endpoint, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>());
                 }
 
-				if (!bHasRunningPushDataLoop) {
-					StartWebSocketPushDataLoop();
-				}
+                if (!Self->bHasRunningPushDataLoop)
+                {
+                    Self->StartWebSocketPushDataLoop();
+                }
 
-                EndpointSubscribers[Endpoint].Add(ws);
+                Self->EndpointSubscribers[Endpoint].Add(ws);
 
                 UE_LOG(LogHttpServer, Warning, TEXT("Client subscribed to endpoint: %s"), *Endpoint);
             }
-            else if (Action == "unsubscribe" && EndpointSubscribers.Contains(Endpoint))
+            else if (Action == "unsubscribe" && Self->EndpointSubscribers.Contains(Endpoint))
             {
-                EndpointSubscribers[Endpoint].Remove(ws);
+                Self->EndpointSubscribers[Endpoint].Remove(ws);
                 UE_LOG(LogHttpServer, Warning, TEXT("Client unsubscribed from endpoint: %s"), *Endpoint);
             }
         }
-    }
-    else if (JsonRequest->TryGetStringField(TEXT("endpoints"), Endpoint)) {
-
-        if (Action == "subscribe")
-        {
-            if (!EndpointSubscribers.Contains(Endpoint)) {
-                EndpointSubscribers.Add(Endpoint, TSet<uWS::WebSocket<false, true, FWebSocketUserData>*>());
-            }
-
-			if (!bHasRunningPushDataLoop) {
-				StartWebSocketPushDataLoop();
-			}
-
-            EndpointSubscribers[Endpoint].Add(ws);
-
-            UE_LOG(LogHttpServer, Warning, TEXT("Client subscribed to endpoint: %s"), *Endpoint);
-        }
-        else if (Action == "unsubscribe")
-        {
-            EndpointSubscribers[Endpoint].Remove(ws);
-            UE_LOG(LogHttpServer, Warning, TEXT("Client unsubscribed from endpoint: %s"), *Endpoint);
-        }
-    }
+    });
 }
 
 void AFicsitRemoteMonitoring::PushUpdatedData() {
 
-    for (auto& Elem : EndpointSubscribers) {
-        FString Endpoint = Elem.Key;
-        
-        if (Elem.Value.Num() == 0) {
-            continue;
+    // THRD-02 / Pitfall 3: PushUpdatedData runs on the push-pacing thread (Async(EAsyncExecution::Thread,
+    // ...) started in StartWebSocketPushDataLoop) — a third thread distinct from both the game thread and
+    // the uWS loop thread. Reading EndpointSubscribers here directly would be an unmarshaled read racing
+    // against the game thread's writes, and calling Client->send() here would violate uWS's single-
+    // thread socket affinity. So: (1) hop to the game thread to build each endpoint's JSON and snapshot
+    // its recipients as plain {ws, ClientID} pairs (never hand a live TSet/ws reference across threads),
+    // then (2) back on the pacing thread, defer() each send onto the loop thread, re-validating liveness
+    // against the loop-thread-only LoopLiveSockets set (D-03) before touching ws.
+
+    struct FPushRecipient
+    {
+        uWS::WebSocket<false, true, FWebSocketUserData>* Ws;
+        int32 ClientID;
+    };
+
+    struct FPushSnapshotEntry
+    {
+        FString Payload;
+        TArray<FPushRecipient> Recipients;
+    };
+
+    TArray<FPushSnapshotEntry> Snapshot;
+
+    TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
+    FThreadSafeBool bSnapshotComplete = false;
+
+    AsyncTask(ENamedThreads::GameThread, [WeakThis, &Snapshot, &bSnapshotComplete]()
+    {
+        AFicsitRemoteMonitoring* Self = WeakThis.Get();
+        if (Self && !Self->bShouldStop)
+        {
+            for (auto& Elem : Self->EndpointSubscribers)
+            {
+                if (Elem.Value.Num() == 0)
+                {
+                    continue;
+                }
+
+                bool bSuccess = false;
+                int32 ErrorCode = 404;
+
+                FRequestData RequestData = FRequestData();
+                RequestData.bIsAuthorized = true;
+
+                FString Json;
+                Self->HandleEndpoint(Elem.Key, RequestData, bSuccess, ErrorCode, Json, EInterfaceType::Socket);
+
+                FPushSnapshotEntry Entry;
+                Entry.Payload = MoveTemp(Json);
+
+                for (uWS::WebSocket<false, true, FWebSocketUserData>* Client : Elem.Value)
+                {
+                    // Re-validate against the authoritative generation map (D-03) rather than trusting
+                    // that everything in EndpointSubscribers is still current.
+                    if (const int32* FoundClientID = Self->ClientGenerations.Find(Client))
+                    {
+                        Entry.Recipients.Add({ Client, *FoundClientID });
+                    }
+                }
+
+                if (Entry.Recipients.Num() > 0)
+                {
+                    Snapshot.Add(MoveTemp(Entry));
+                }
+            }
         }
+        bSnapshotComplete = true;
+    });
 
-        bool bSuccess = false;
-    	int32 ErrorCode = 404;
+    // The pacing thread's whole job is this periodic snapshot-then-send cycle, so it is expected to wait
+    // synchronously for the result (same fire-and-wait shape as CallEndpoint's existing game-thread hop,
+    // FicsitRemoteMonitoring.cpp CallEndpoint) — unlike the inbound WS callbacks (D-02), nothing here is
+    // blocking the uWS loop thread.
+    while (!bSnapshotComplete)
+    {
+        FPlatformProcess::Sleep(0.0001f);
+    }
 
-    	FRequestData RequestData = FRequestData();
-    	RequestData.bIsAuthorized = true;
+    if (!CapturedLoop)
+    {
+        // Loop already torn down (shutdown race) — nothing safe to defer onto.
+        return;
+    }
 
-        FString Json;
+    for (const FPushSnapshotEntry& Entry : Snapshot)
+    {
+        // Owning UTF-8 copy: the deferred callback may run well after this stack frame (and this
+        // function's FTCHARToUTF8 buffer) is gone, so a plain char* into a stack-scoped converter must
+        // never be captured — copy into an owning std::string instead.
+        FTCHARToUTF8 Converted(*Entry.Payload);
+        const std::string PayloadUtf8(Converted.Get(), Converted.Length());
 
-    	this->HandleEndpoint(Endpoint, RequestData, bSuccess, ErrorCode, Json, EInterfaceType::Socket);
+        for (const FPushRecipient& Recipient : Entry.Recipients)
+        {
+            uWS::WebSocket<false, true, FWebSocketUserData>* Ws = Recipient.Ws;
+            const int32 ClientID = Recipient.ClientID;
 
-    	FTCHARToUTF8 Converted(*Json);
-    	const char* UWSOutput = Converted.Get();
-    	
-        // Broadcast updated data to all clients subscribed to this endpoint
-        for (uWS::WebSocket<false, true, FWebSocketUserData>* Client : Elem.Value) {
-            Client->send(UWSOutput, uWS::OpCode::TEXT);
+            CapturedLoop->defer([WeakThis, Ws, ClientID, PayloadUtf8]()
+            {
+                // Now executing on the loop thread. Re-validate ws against the loop-thread-only liveness
+                // set before dereferencing it — the client may have disconnected (and its ws* memory
+                // possibly reused) between the game-thread snapshot above and this callback running.
+                AFicsitRemoteMonitoring* Self = WeakThis.Get();
+                if (!Self)
+                {
+                    return;
+                }
+
+                const int32* FoundClientID = Self->LoopLiveSockets.Find(Ws);
+                if (FoundClientID && *FoundClientID == ClientID)
+                {
+                    Ws->send(PayloadUtf8, uWS::OpCode::TEXT);
+                }
+            });
         }
     }
 }
@@ -659,7 +897,12 @@ void AFicsitRemoteMonitoring::HandleGetRequest(uWS::HttpResponse<false>* res, uW
 
     if (!FileLoaded) {
         UE_LOG(LogHttpServer, Error, TEXT("Failed to load file: %s"), *FilePath);
-    	UFRM_RequestLibrary::SendErrorMessage(res, "500 Internal Server Error", "Failed to load file.");
+    	if (Extension == "html" || Extension == "htm") {
+    		UFRM_RequestLibrary::SendFallbackPage(res, DocsURL);
+    	}
+    	else {
+    		UFRM_RequestLibrary::SendErrorMessage(res, "500 Internal Server Error", "Failed to load file.");
+    	}
     }
 }
 
@@ -732,6 +975,18 @@ void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse
 	    UE_LOGFMT(LogHttpServer, Log, "Unknown Error {Endpoint} {ErrorCode}", Endpoint, ErrorCode);
 	    UFRM_RequestLibrary::SendErrorJson(res, "500 Internal Server Error", OutJson);
     }
+}
+
+bool AFicsitRemoteMonitoring::IsRegisteredEndpointName(const FString& InName) const
+{
+	for (const FAPIEndpoint& EndpointInfo : APIEndpoints)
+	{
+		if (EndpointInfo.APIName == InName)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void AFicsitRemoteMonitoring::InitAPIRegistry()
@@ -872,7 +1127,7 @@ void AFicsitRemoteMonitoring::InitTrainDerailNotification() {
 if (!WITH_EDITOR) {/*
 
 	auto World = GetWorld();
-	
+
 	//	void OnCollided( AFGRailroadVehicle* ourVehicle, float ourVelocity, AFGRailroadVehicle* otherVehicle, float otherVelocity, bool shouldDerail );
 	SUBSCRIBE_METHOD_AFTER(AFGRailroadSubsystem::OnTrainsCollided, [this](AFGTrain* PriTrain, AFGTrain* SecTrain)
 		{
@@ -880,7 +1135,6 @@ if (!WITH_EDITOR) {/*
 		});*/
 	}
 }
-
 
 void AFicsitRemoteMonitoring::RegisterEndpoint(const FAPIEndpoint& Endpoint)
 {
@@ -989,6 +1243,106 @@ void AFicsitRemoteMonitoring::AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonA
     TSharedPtr<FJsonObject> JsonObject = MakeShared<FJsonObject>();
     JsonObject->SetStringField("error", ErrorMessage);
     JsonArray.Add(MakeShared<FJsonValueObject>(JsonObject));
+}
+
+// VALD-01: strict WS subscribe/unsubscribe envelope validator. Runs synchronously on the uWS loop
+// thread (called from ProcessClientRequest's synchronous prefix, before the AsyncTask(GameThread,
+// ...) hop) — reads only the immutable-after-BeginPlay APIEndpoints registry, never
+// EndpointSubscribers (that map remains exclusively game-thread-owned; see Pitfall 4 — a
+// registered-but-not-currently-subscribed name is valid input for "unsubscribe").
+//
+// Uses TryGetStringField/TryGetArrayField + explicit EJson::String checks throughout (never
+// GetStringField/AsString, which silently default/coerce instead of failing) so malformed input is
+// rejected instead of silently swallowed.
+bool AFicsitRemoteMonitoring::ValidateWSSubscriptionEnvelope(const TSharedPtr<FJsonObject>& JsonRequest, FString& OutAction, TArray<FString>& OutValidNames, FString& OutErrorMessage) const
+{
+    // D-04: strict `action` extraction — TryGetStringField fails closed on a missing or
+    // wrong-typed field instead of GetStringField's silent "" default.
+    FString RawAction;
+    if (!JsonRequest->TryGetStringField(TEXT("action"), RawAction)
+        || (RawAction != TEXT("subscribe") && RawAction != TEXT("unsubscribe")))
+    {
+        OutErrorMessage = FString::Printf(
+            TEXT("Invalid or missing 'action' field (got '%s'); expected 'subscribe' or 'unsubscribe'."),
+            *RawAction);
+        return false;   // whole-request reject — nothing to mutate
+    }
+    OutAction = RawAction;
+
+    // D-04/D-05: strict `endpoints` extraction — array-of-strings or single string only. A
+    // non-string array entry is a per-entry problem (D-03 partial success), NOT a whole-request
+    // reject; a missing/wrong-typed top-level `endpoints` field IS a whole-request reject.
+    TArray<FString> RawNames;
+    TArray<FString> Problems;
+
+    const TArray<TSharedPtr<FJsonValue>>* EndpointsArray;
+    FString SingleEndpoint;
+
+    if (JsonRequest->TryGetArrayField(TEXT("endpoints"), EndpointsArray))
+    {
+        for (int32 Index = 0; Index < EndpointsArray->Num(); ++Index)
+        {
+            const TSharedPtr<FJsonValue>& EndpointValue = (*EndpointsArray)[Index];
+            if (!EndpointValue.IsValid() || EndpointValue->Type != EJson::String)
+            {
+                Problems.Add(FString::Printf(TEXT("endpoints[%d] is not a string"), Index));
+                continue;
+            }
+            RawNames.Add(EndpointValue->AsString());
+        }
+    }
+    else if (JsonRequest->TryGetStringField(TEXT("endpoints"), SingleEndpoint))
+    {
+        RawNames.Add(SingleEndpoint);
+    }
+    else
+    {
+        // Covers both "missing"/"null" and "wrong top-level type" (e.g. endpoints: 5) — D-04/D-05.
+        OutErrorMessage = TEXT("'endpoints' field is required and must be a string or an array of strings.");
+        return false;   // whole-request reject
+    }
+
+    // D-01/Pattern 2: GET-only registry match. PushUpdatedData always builds a default FRequestData
+    // (Method == "GET", FRM_RequestData.h) and never overrides it, so a WS client can never actually
+    // receive push data for a non-GET name — accepting one here would just move today's
+    // silent-garbage-forever bug one step later. APIEndpoints is populated once in InitAPIRegistry()
+    // (BeginPlay, before StartWebSocketServer) and never mutated after, so it is safe to read
+    // cross-thread here without marshaling.
+    for (const FString& Name : RawNames)
+    {
+        const bool bIsRegisteredGet = APIEndpoints.ContainsByPredicate([&Name](const FAPIEndpoint& Endpoint)
+        {
+            return Endpoint.APIName == Name && Endpoint.Method == TEXT("GET");
+        });
+
+        if (bIsRegisteredGet)
+        {
+            OutValidNames.AddUnique(Name);
+        }
+        else
+        {
+            Problems.Add(FString::Printf(TEXT("Unknown endpoint: %s"), *Name));
+        }
+    }
+
+    // D-03: partial success — combine every per-entry problem (type errors first, then unknown
+    // names, in array-index order) into ONE error frame, but still return true: the envelope shape
+    // itself (action/endpoints) was valid, so surviving OutValidNames still feed the mutation.
+    if (Problems.Num() > 0)
+    {
+        // Backstop (T-04-03): cap the reflected problem list so a maliciously large all-invalid
+        // `endpoints` array cannot drive an unbounded error frame.
+        constexpr int32 MaxReportedProblems = 20;
+        if (Problems.Num() > MaxReportedProblems)
+        {
+            const int32 Remainder = Problems.Num() - MaxReportedProblems;
+            Problems.SetNum(MaxReportedProblems);
+            Problems.Add(FString::Printf(TEXT("...and %d more"), Remainder));
+        }
+        OutErrorMessage = FString::Join(Problems, TEXT("; "));
+    }
+
+    return true;
 }
 
 void AFicsitRemoteMonitoring::HandleEndpoint(FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode, FString& Out_Data, EInterfaceType Interface)
