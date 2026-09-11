@@ -1,5 +1,5 @@
 /*
- * Authored by Alex Hultman, 2018-2020.
+ * Authored by Alex Hultman, 2018-2026.
  * Intellectual property of third-party.
 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,12 +69,26 @@ private:
     /* Init the HttpContext by registering libusockets event handlers */
     HttpContext<SSL> *init() {
         /* Handle socket connections */
-        us_socket_context_on_open(SSL, getSocketContext(), [](us_socket_t *s, int /*is_client*/, char */*ip*/, int /*ip_length*/) {
+        us_socket_context_on_open(SSL, getSocketContext(), [](us_socket_t *s, int /*is_client*/, char *ip, int ip_length) {
             /* Any connected socket should timeout until it has a request */
             us_socket_timeout(SSL, s, HTTP_IDLE_TIMEOUT_S);
 
             /* Init socket ext */
             new (us_socket_ext(SSL, s)) HttpResponseData<SSL>;
+
+#ifdef UWS_REMOTE_ADDRESS_USERSPACE
+            /* Copy remote address into per-socket cache for later retrieval */
+            AsyncSocketData<SSL> *asyncSocketData = (AsyncSocketData<SSL> *) us_socket_ext(SSL, s);
+            if (ip_length > 0 && ip_length <= 16) {
+                memcpy(asyncSocketData->remoteAddress, ip, (size_t) ip_length);
+                asyncSocketData->remoteAddressLength = ip_length;
+            } else {
+                asyncSocketData->remoteAddressLength = 0;
+            }
+#else
+            (void) ip;
+            (void) ip_length;
+#endif
 
             /* Call filter */
             HttpContextData<SSL> *httpContextData = getSocketContextDataS(s);
@@ -149,7 +163,9 @@ private:
                 HttpResponseData<SSL> *httpResponseData = (HttpResponseData<SSL> *) us_socket_ext(SSL, (us_socket_t *) s);
                 httpResponseData->offset = 0;
 
-                /* Are we not ready for another request yet? Terminate the connection. */
+                /* Are we not ready for another request yet? Terminate the connection.
+                 * Important for denying async pipelining until, if ever, we want to suppot it.
+                 * Otherwise requests can get mixed up on the same connection. We still support sync pipelining. */
                 if (httpResponseData->state & HttpResponseData<SSL>::HTTP_RESPONSE_PENDING) {
                     us_socket_close(SSL, (us_socket_t *) s, 0, nullptr);
                     return nullptr;
@@ -199,7 +215,10 @@ private:
                 /* Returning from a request handler without responding or attaching an onAborted handler is ill-use */
                 if (!((HttpResponse<SSL> *) s)->hasResponded() && !httpResponseData->onAborted) {
                     /* Throw exception here? */
-                    std::cerr << "Error: Returning from a request handler without responding or attaching an abort handler is forbidden!" << std::endl;
+                    std::cerr << "Error: Returning from a request handler without responding or attaching an abort handler is forbidden!"
+                              << std::endl
+                              << "\tMethod: \"" << httpRequest->getCaseSensitiveMethod() << "\"" << std::endl
+                              << "\tURL: \"" << httpRequest->getUrl() << "\"" << std::endl;
                     std::terminate();
                 }
 
@@ -211,12 +230,12 @@ private:
                 /* Continue parsing */
                 return s;
 
-            }, [httpResponseData](void *user, std::string_view data, bool fin) -> void * {
+            }, [httpResponseData](void *user, std::string_view data, uint64_t maxRemainingBodyLength) -> void * {
                 /* We always get an empty chunk even if there is no data */
                 if (httpResponseData->inStream) {
 
                     /* Todo: can this handle timeout for non-post as well? */
-                    if (fin) {
+                    if (maxRemainingBodyLength == 0) {
                         /* If we just got the last chunk (or empty chunk), disable timeout */
                         us_socket_timeout(SSL, (struct us_socket_t *) user, 0);
                     } else {
@@ -230,7 +249,7 @@ private:
                     }
 
                     /* We might respond in the handler, so do not change timeout after this */
-                    httpResponseData->inStream(data, fin);
+                    httpResponseData->inStream(data, maxRemainingBodyLength);
 
                     /* Was the socket closed? */
                     if (us_socket_is_closed(SSL, (struct us_socket_t *) user)) {
@@ -244,7 +263,7 @@ private:
 
                     /* If we were given the last data chunk, reset data handler to ensure following
                      * requests on the same socket won't trigger any previously registered behavior */
-                    if (fin) {
+                    if (maxRemainingBodyLength == 0) {
                         httpResponseData->inStream = nullptr;
                     }
                 }
@@ -487,13 +506,13 @@ public:
         return us_socket_context_listen_unix(SSL, getSocketContext(), path, options, sizeof(HttpResponseData<SSL>));
     }
 
-    void onPreOpen(LIBUS_SOCKET_DESCRIPTOR (*handler)(LIBUS_SOCKET_DESCRIPTOR)) {
+    void onPreOpen(LIBUS_SOCKET_DESCRIPTOR (*handler)(struct us_socket_context_t *, LIBUS_SOCKET_DESCRIPTOR, char *, int)) {
         us_socket_context_on_pre_open(SSL, getSocketContext(), handler);
     }
 
     /* Adopt an externally accepted socket into this HttpContext */
-    us_socket_t *adoptAcceptedSocket(LIBUS_SOCKET_DESCRIPTOR accepted_fd) {
-        return us_adopt_accepted_socket(SSL, getSocketContext(), accepted_fd, sizeof(HttpResponseData<SSL>), 0, 0);
+    us_socket_t *adoptAcceptedSocket(LIBUS_SOCKET_DESCRIPTOR accepted_fd, char *ip, int ip_length) {
+        return us_adopt_accepted_socket(SSL, getSocketContext(), accepted_fd, sizeof(HttpResponseData<SSL>), ip, ip_length);
     }
 };
 
