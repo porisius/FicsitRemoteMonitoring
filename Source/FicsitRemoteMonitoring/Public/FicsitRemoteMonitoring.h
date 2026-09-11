@@ -12,7 +12,20 @@
 #include "RemoteMonitoringLibrary.h"
 
 THIRD_PARTY_INCLUDES_START
+
+// uWebSockets/Unreal warning-policy collision
+#if PLATFORM_WINDOWS
+	#pragma warning(push)
+	#pragma warning(disable : 4706)
+#endif
+
 #include "ThirdParty/uWebSockets/App.h"
+
+// uWebSockets/Unreal warning-policy collision
+#if PLATFORM_WINDOWS
+	#pragma warning(pop)
+#endif
+
 THIRD_PARTY_INCLUDES_END
 
 #include "FicsitRemoteMonitoring.generated.h"
