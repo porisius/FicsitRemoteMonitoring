@@ -182,13 +182,60 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 					break;
 			}
 			
-			//AFGDrivingTargetList* TargetList = VehicleInfo->mTargetList;
-			const FString VehiclePathName = "PathName"; //GetPathNameForTargetList(TargetList);
+			// SF 1.2 removed recorded paths (AFGSavedWheeledVehiclePath / AFGDrivingTargetList).
+			// The replacement is a route expressed as an ordered list of path-node GUIDs on the
+			// vehicle identifier; GUIDs that correspond to a docking station resolve to a station
+			// name via AFGVehicleSubsystem::FindDockingStationIdentifierForPathNodeGuid().
+			const TArray<FGuid>& VehicleRoute = VehicleInfo->GetVehicleRoute();
+			const int32 TargetWaypointIndex = VehicleInfo->GetCurrentTargetWaypointIndex();
+
+			TArray<TSharedPtr<FJsonValue>> JRoute;
+			TArray<FString> RouteNames;
+			RouteNames.Reserve(VehicleRoute.Num());
+
+			for (int32 WaypointIndex = 0; WaypointIndex < VehicleRoute.Num(); ++WaypointIndex)
+			{
+				const FGuid& WaypointGuid = VehicleRoute[WaypointIndex];
+
+				FString WaypointName = TEXT("Waypoint");
+				bool bIsStation = false;
+
+				if (const AFGDockingStationIdentifier* StationIdentifier =
+						VehicleSubsystem->FindDockingStationIdentifierForPathNodeGuid(WaypointGuid))
+				{
+					const FString StationName = StationIdentifier->GetStationName().ToString();
+					bIsStation = true;
+					WaypointName = StationName.IsEmpty() ? TEXT("Unnamed Station") : StationName;
+				}
+
+				RouteNames.Add(WaypointName);
+
+				TSharedPtr<FJsonObject> JWaypoint = MakeShared<FJsonObject>();
+				JWaypoint->Values.Add("Index", MakeShared<FJsonValueNumber>(WaypointIndex));
+				JWaypoint->Values.Add("Name", MakeShared<FJsonValueString>(WaypointName));
+				JWaypoint->Values.Add("IsStation", MakeShared<FJsonValueBoolean>(bIsStation));
+				JWaypoint->Values.Add("IsNextStop", MakeShared<FJsonValueBoolean>(WaypointIndex == TargetWaypointIndex));
+				JWaypoint->Values.Add("PathNodeGUID", MakeShared<FJsonValueString>(WaypointGuid.ToString(EGuidFormats::DigitsWithHyphens)));
+
+				JRoute.Add(MakeShared<FJsonValueObject>(JWaypoint));
+			}
+
+			const FString NextStop = RouteNames.IsValidIndex(TargetWaypointIndex) ? RouteNames[TargetWaypointIndex] : FString();
+
+			// Backwards compatibility: pre-1.2 clients read "PathName" as a single human-readable
+			// identifier for what the vehicle is doing. There is no longer a stored path object to
+			// name, so synthesise one from the route. Empty string when the vehicle has no route,
+			// which matches the old "no recorded path" behaviour.
+			const FString VehiclePathName = RouteNames.Num() > 0 ? FString::Join(RouteNames, TEXT(" -> ")) : FString();
 
 			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(VehicleInfo->GetVehicleName().ToString()));
 			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(WheeledVehicle->GetClass())));
 			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(WheeledVehicle)));
 			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>(VehiclePathName));
+			JVehicle->Values.Add("Route", MakeShared<FJsonValueArray>(JRoute));
+			JVehicle->Values.Add("NextStop", MakeShared<FJsonValueString>(NextStop));
+			JVehicle->Values.Add("NextStopIndex", MakeShared<FJsonValueNumber>(TargetWaypointIndex));
+			JVehicle->Values.Add("IsCurrentlyDocking", MakeShared<FJsonValueBoolean>(VehicleInfo->IsCurrentlyDocking()));
 			JVehicle->Values.Add("AutoPilotStatus", MakeShared<FJsonValueString>(FormString));
 			JVehicle->Values.Add("Driver", MakeShared<FJsonValueString>(PlayerName));
 			JVehicle->Values.Add("CurrentGear", MakeShared<FJsonValueNumber>(VehicleMovement->GetCurrentGear()));
