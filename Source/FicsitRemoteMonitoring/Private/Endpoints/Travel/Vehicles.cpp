@@ -11,6 +11,7 @@
 #include "WheeledVehicles/FGVehiclePathPreset.h"
 #include "WheeledVehicles/FGVehicleSubsystem.h"
 #include "WheeledVehicles/FGWheeledVehicleIdentifier.h"
+#include "WheeledVehicles/FGVehicleAutopilotComponent.h"
 
 void UVehicles::getTruckStation(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 
@@ -228,9 +229,46 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 			// which matches the old "no recorded path" behaviour.
 			const FString VehiclePathName = RouteNames.Num() > 0 ? FString::Join(RouteNames, TEXT(" -> ")) : FString();
 
+			// SF 1.2 drives autopilot vehicles "virtually" along their path when no player is near: the
+			// vehicle actor stays where it was last seen, while the autopilot component holds the real
+			// position and speed. Report the autopilot's values whenever it is authoritative so
+			// location/ForwardSpeed keep moving (see #295).
+			TSharedPtr<FJsonObject> JLocation = getActorJSON(WheeledVehicle);
+			TSharedPtr<FJsonObject> JFeatures = getActorFeaturesJSON(WheeledVehicle, WheeledVehicle->mDisplayName.ToString(), WheeledVehicle->mDisplayName.ToString());
+			double ForwardSpeedKmh = VehicleMovement->GetForwardSpeed() * 0.036;	// cm/s -> km/h
+			FString LocationSource = TEXT("Actor");
+
+			const UFGVehicleAutopilotComponent* AutopilotComponent = WheeledVehicle->GetVehicleAutopilotComponent();
+			if (IsValid(AutopilotComponent) && VehicleInfo->IsAutopilotEnabled() && AutopilotComponent->HasAuthoritativeVehicleLocation())
+			{
+				const FVector AutopilotLocation = AutopilotComponent->GetLastVehicleLocation();
+				const FRotator AutopilotRotation = AutopilotComponent->GetLastVehicleRotation();
+
+				JLocation->SetNumberField(TEXT("x"), AutopilotLocation.X);
+				JLocation->SetNumberField(TEXT("y"), AutopilotLocation.Y);
+				JLocation->SetNumberField(TEXT("z"), AutopilotLocation.Z);
+				// same normalisation as getActorJSON: 0 <= rotation < 360, zero = due north
+				JLocation->SetNumberField(TEXT("rotation"), FMath::Fmod(AutopilotRotation.Yaw + 450.0, 360.0));
+				JLocation->SetNumberField(TEXT("pitch"), AutopilotRotation.Pitch);
+
+				const TSharedPtr<FJsonObject>* JGeometry;
+				const TSharedPtr<FJsonObject>* JCoordinates;
+				if (JFeatures->TryGetObjectField(TEXT("geometry"), JGeometry) && (*JGeometry)->TryGetObjectField(TEXT("coordinates"), JCoordinates))
+				{
+					(*JCoordinates)->SetNumberField(TEXT("x"), AutopilotLocation.X);
+					(*JCoordinates)->SetNumberField(TEXT("y"), AutopilotLocation.Y);
+					(*JCoordinates)->SetNumberField(TEXT("z"), AutopilotLocation.Z);
+				}
+
+				// The header says m/s, but measured movement shows it's cm/s like the movement component
+				ForwardSpeedKmh = AutopilotComponent->GetCurrentForwardSpeed() * 0.036;	// cm/s -> km/h
+				LocationSource = TEXT("Autopilot");
+			}
+
 			JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(VehicleInfo->GetVehicleName().ToString()));
 			JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(WheeledVehicle->GetClass())));
-			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(WheeledVehicle)));
+			JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(JLocation));
+			JVehicle->Values.Add("LocationSource", MakeShared<FJsonValueString>(LocationSource));
 			JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>(VehiclePathName));
 			JVehicle->Values.Add("Route", MakeShared<FJsonValueArray>(JRoute));
 			JVehicle->Values.Add("NextStop", MakeShared<FJsonValueString>(NextStop));
@@ -239,7 +277,7 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 			JVehicle->Values.Add("AutoPilotStatus", MakeShared<FJsonValueString>(FormString));
 			JVehicle->Values.Add("Driver", MakeShared<FJsonValueString>(PlayerName));
 			JVehicle->Values.Add("CurrentGear", MakeShared<FJsonValueNumber>(VehicleMovement->GetCurrentGear()));
-			JVehicle->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(VehicleMovement->GetForwardSpeed() * 0.036));
+			JVehicle->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(ForwardSpeedKmh));
 			JVehicle->Values.Add("EngineRPM", MakeShared<FJsonValueNumber>(VehicleMovement->GetEngineRotationSpeed()));
 			JVehicle->Values.Add("ThrottlePercent", MakeShared<FJsonValueNumber>(VehicleMovement->GetThrottleInput()));		
 			JVehicle->Values.Add("Airborne", MakeShared<FJsonValueBoolean>(VehicleMovement->IsInAir()));
@@ -251,7 +289,7 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 			//JVehicle->Values.Add("MaxFuelEnergy", MakeShared<FJsonValueNumber>(WheeledVehicle->GetMaxFuelEnergy())); Broken by SF 1.2
 			JVehicle->Values.Add("Inventory", MakeShared<FJsonValueArray>(Inventory));
 			JVehicle->Values.Add("FuelInventory", MakeShared<FJsonValueArray>(FuelInventory));
-			JVehicle->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(WheeledVehicle, WheeledVehicle->mDisplayName.ToString(), WheeledVehicle->mDisplayName.ToString())));
+			JVehicle->Values.Add("features", MakeShared<FJsonValueObject>(JFeatures));
 
 			JVehicleArray.Add(MakeShared<FJsonValueObject>(JVehicle));
 		};
