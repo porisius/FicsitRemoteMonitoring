@@ -1,6 +1,8 @@
 #include "Endpoints/Travel/Drones.h"
 
 #include "Buildables/FGBuildableDroneStation.h"
+#include "FGDroneVehicle.h"
+#include "FGInventoryComponent.h"
 #include "RemoteMonitoringLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -164,6 +166,10 @@ void UDrones::getDrone(UObject* WorldContext, FRequestData RequestData, TArray<T
 		JDrone->Values.Add("FlyingSpeed", MakeShared<FJsonValueNumber>(DroneMovementComponent->GetVelocity().Length() * 0.036));
 		JDrone->Values.Add("MaxSpeed", MakeShared<FJsonValueNumber>(DroneMovementComponent->GetMaxSpeed() * 0.036));
 		JDrone->Values.Add("CurrentFlyingMode", MakeShared<FJsonValueString>(FormString));
+		// what the drone is carrying right now (drones have their own 9-slot storage, separate from the ports)
+		UFGInventoryComponent* DroneInventory = Drone->GetStorageInventory();
+		JDrone->Values.Add("Inventory", MakeShared<FJsonValueArray>(IsValid(DroneInventory)
+			? GetInventoryJSON(GetGroupedInventoryItems(DroneInventory)) : TArray<TSharedPtr<FJsonValue>>()));
 		JDrone->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(Drone)));
 		JDrone->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(Drone, Drone->mDisplayName.ToString(), "Drone")));
 

@@ -903,7 +903,7 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
 	TArray<FString> AvailableMethods;
     bool bEndpointFound = false;
 
-	if (!IsValid(WorldContext) || !IsValid(WorldContext->GetWorld()))
+	if (!IsValid(WorldContext) || !IsValid(WorldContext->GetWorld()) || WorldContext->GetWorld()->bIsTearingDown)
 	{
 		UE_LOG(LogHttpServer, Warning, TEXT("Blocked API call: World not ready."));
 		ErrorCode = 503;
@@ -936,10 +936,28 @@ FCallEndpointResponse AFicsitRemoteMonitoring::CallEndpoint(UObject* WorldContex
         try {
             if ((EndpointInfo.bRequireGameThread || IsGarbageCollecting()) && !IsInGameThread()) {
                 FThreadSafeBool bAllocationComplete = false;
-                AsyncTask(ENamedThreads::GameThread, [&EndpointInfo, WorldContext, RequestData, &JsonArray, &bAllocationComplete, &ErrorCode, &bSuccess]() {
-					if (EndpointInfo.FunctionPtr)
+                // The task can run long after it was queued (e.g. the game thread is busy loading a new
+                // session), by which time the world may have been torn down and WorldContext freed.
+                // Hold it weakly and re-check on the game thread instead of dereferencing a stale pointer.
+                // Copy what the task needs: this actor (and its APIEndpoints) belongs to that world too.
+                TWeakObjectPtr<UObject> WeakWorldContext = WorldContext;
+                const auto FunctionPtr = EndpointInfo.FunctionPtr;
+                AsyncTask(ENamedThreads::GameThread, [FunctionPtr, WeakWorldContext, RequestData, &JsonArray, &bAllocationComplete, &ErrorCode, &bSuccess]() {
+					UObject* LiveWorldContext = WeakWorldContext.Get();
+					UWorld* World = IsValid(LiveWorldContext) ? LiveWorldContext->GetWorld() : nullptr;
+					if (!IsValid(World) || World->bIsTearingDown)
 					{
-						(EndpointInfo.FunctionPtr)(WorldContext, RequestData, JsonArray);  // Use direct function call
+						UE_LOG(LogHttpServer, Warning, TEXT("Blocked API call: World went away before the request ran."));
+						ErrorCode = 503;
+						TSharedPtr<FJsonObject> JError = MakeShared<FJsonObject>();
+						JError->SetStringField(TEXT("error"), TEXT("Blocked API call: World not ready."));
+						JsonArray.Add(MakeShared<FJsonValueObject>(JError));
+						bAllocationComplete = true;
+						return;
+					}
+					if (FunctionPtr)
+					{
+						(FunctionPtr)(LiveWorldContext, RequestData, JsonArray);  // Use direct function call
 						ErrorCode = 200;
 						bSuccess = true;
 					}
