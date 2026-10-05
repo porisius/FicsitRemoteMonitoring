@@ -781,7 +781,10 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getPipeJunctions", &ULogistics::getPipeJunctions));
 	RegisterEndpoint(FAPIEndpoint("GET", "getPlayer", &UPlayerLibrary::getPlayer).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPortal", &USupport::getPortal));
-	RegisterEndpoint(FAPIEndpoint("GET", "getPower", &UPower::getPower));
+	// RequiresGameThread: reads the circuit subsystem's circuit groups, which the game
+	// thread rebuilds while players edit the power grid. Served off the uWS event loop
+	// this raced and crashed dedicated servers (index 0 into an empty mCircuits).
+	RegisterEndpoint(FAPIEndpoint("GET", "getPower", &UPower::getPower).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPowerSlug", &UResources::getPowerSlug).RequiresGameThread());	
 	RegisterEndpoint(FAPIEndpoint("GET", "getPowerUsage", &UPower::getPowerUsage));
 	// RequiresGameThread: walks every manufacturer/extractor/generator calling

@@ -18,11 +18,18 @@
 void UPower::getPower(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
 {
 	AFGCircuitSubsystem* CircuitSubsystem = AFGCircuitSubsystem::Get(WorldContext->GetWorld());
+	if (!IsValid(CircuitSubsystem)) { return; }
 
 	for (UFGCircuitGroup* CircuitGroup : CircuitSubsystem->mCircuitGroups) {
 		UFGPowerCircuitGroup* PowerGroup = Cast<UFGPowerCircuitGroup>(CircuitGroup);
+
+		// Circuit groups are rebuilt while players build or dismantle power infrastructure,
+		// so a group can briefly have no circuits.
+		if (!IsValid(PowerGroup) || PowerGroup->mCircuits.Num() == 0) { continue; }
+
 		UFGPowerCircuit* PowerCircuit = PowerGroup->mCircuits[0];
 		UFGCircuit* Circuit = Cast<UFGCircuit>(PowerCircuit);
+		if (!IsValid(Circuit)) { continue; }
 
 		TSharedPtr<FJsonObject> JCircuit = MakeShared<FJsonObject>();
 
@@ -30,6 +37,7 @@ void UPower::getPower(UObject* WorldContext, FRequestData RequestData, TArray<TS
 
 		TArray<TSharedPtr<FJsonValue>> JCircuits;
 		for (UFGPowerCircuit* PCircuit : PowerGroup->mCircuits) {
+			if (!IsValid(PCircuit)) { continue; }
 			JCircuits.Add(MakeShared<FJsonValueNumber>(PCircuit->GetCircuitID()));
 		}
 
