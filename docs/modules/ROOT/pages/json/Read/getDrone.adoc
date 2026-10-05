@@ -27,6 +27,9 @@ include::../_responseBody.adoc[]
 - `None`: Drone is in idle mode. +
 - `Travelling`: Drone is travelling.
 
+| Inventory | Object[] | Items the drone is currently carrying.
+include::../Models/_inventoryItem.adoc[]
+
 {set:key-name:location}
 {set:key-description:Location details of the Drone.}
 include::../Models/_location.adoc[]
@@ -50,6 +53,14 @@ include::../Models/_features.adoc[]
     "FlyingSpeed": 0,
     "MaxSpeed": 0,
     "CurrentFlyingMode": "None",
+    "Inventory": [
+      {
+        "Name": "Iron Plate",
+        "ClassName": "Desc_IronPlate_C",
+        "Amount": 200,
+        "MaxAmount": 200
+      }
+    ],
     "location": {
       "x": -48777.9609375,
       "y": 252677.703125,

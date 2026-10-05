@@ -3,12 +3,14 @@
 
 = Get Vehicles
 
-Gets a list of all vehicles (explorers, tractors, trucks, factory carts, etc.).
+Gets a list of all wheeled vehicles (explorers, tractors, trucks, fluid trucks, factory carts, cyber wagons, etc.).
 
 `getExplorer` only retrieves Explorers +
 `getTractor` only retrieves Tractors +
 `getTruck` only retrieves Trucks +
 `getFactoryCart` only retrieves Factory Carts
+
+Vehicles that the game's vehicle subsystem does not track (such as the Cyber Wagon, which has no autopilot) are included with an empty `Route` and `LocationSource` `Actor`.
 
 == URL
 
@@ -16,28 +18,51 @@ Gets a list of all vehicles (explorers, tractors, trucks, factory carts, etc.).
 
 include::../_responseBody.adoc[]
 
-| ID | String | Unique ID of the vehicle type.
-| Name | String | Name of the vehicle type.
+| ID | String | Unique ID of the vehicle.
+| Name | String | Name of the vehicle.
 | ClassName | String | ClassName of the vehicle type.
 
 {set:key-name:location}
-{set:key-description:Location details of the Vehicle.}
+{set:key-description:Location details of the Vehicle. For vehicles driving on autopilot this is the autopilot's simulated position, which keeps updating when no player is nearby.}
 include::../Models/_location.adoc[]
 
-| PathName | String | Name of Saved Path Assigned
-| Status | String | Vehicle Status
+| LocationSource | String | Where `location`, `features` and `ForwardSpeed` come from +
+- `Autopilot`: the vehicle's autopilot (vehicle is driving its route) +
+- `Actor`: the vehicle actor itself (driven by a player, parked, or no autopilot)
+| PathName | String | The vehicle's route as stop names (station names, or `Waypoint` for non-station points) joined by ` -> ` (empty if the vehicle has no route)
+
+| Route | Object[] | The stops of the vehicle's route, in order
+| {depth}  Index | Integer | Position of the stop in the route
+| {depth}  Name | String | Station name of the stop (`Waypoint` if the route point is not a station)
+| {depth}  IsStation | Boolean | Is the stop a docking station?
+| {depth}  IsNextStop | Boolean | Is this the stop the vehicle is currently heading to?
+| {depth}  PathNodeGUID | String | GUID of the vehicle path node for the stop
+
+| NextStop | String | Name of the stop the vehicle is currently heading to (empty if none)
+| NextStopIndex | Integer | Index in `Route` of the next stop (-1 if none)
+| IsCurrentlyDocking | Boolean | Is the vehicle currently docking at a station?
+| AutoPilotStatus | String | Autopilot error status +
+- `None`: No error +
+- `Station Unreachable`: Station Unreachable +
+- `Not On-Path`: Not On-Path +
+- `Too Few Stations`: Too Few Stations +
+- `No Fuel`: No Fuel +
+- `Deadlocked`: Deadlocked
 | Driver | String | Player Name of Vehicle Driver
-| ForwardSpeed | Float | Current Speed in km/h
 | CurrentGear | Integer | Transmission Gear
-| EngineRPM | Integer | RPM of Engine
-| Airborne | Boolean | Is the truck making a jump
-| AutoPilot | Boolean | Auto pilot engaged?
+| ForwardSpeed | Float | Current Speed in km/h
+| EngineRPM | Float | RPM of Engine
+| ThrottlePercent | Float | Throttle input
+| Airborne | Boolean | Is the vehicle making a jump
+| FollowingPath | Boolean | Is the vehicle following a path
+| Autopilot | Boolean | Auto pilot engaged?
+| HasFuel | Boolean | Does the vehicle have fuel
 | FuelConsumption | Float | Fuel Consumption in MegaWatts
 
-| Storage | Object[] | A list of items.
+| Inventory | Object[] | A list of items.
 include::../Models/_inventoryItem.adoc[]
 
-| Fuel | Object[] | A list of Fuel.
+| FuelInventory | Object[] | A list of Fuel.
 include::../Models/_inventoryItem.adoc[]
 include::../Models/_features.adoc[]
 
@@ -48,58 +73,67 @@ include::../Models/_features.adoc[]
 -----------------
 [
   {
-    "ID": 0,
-    "VehicleType": "Explorer",
-    "location":
-    {
-      "x": -52341.4375,
-      "y": -162543.21875,
-      "z": -904.133544921875,
-      "rotation": 313
+    "ID": "BP_Tractor_C_2147442508",
+    "Name": "Tractor",
+    "ClassName": "BP_Tractor_C",
+    "location": {
+      "x": 253929.57,
+      "y": -149754.07,
+      "z": 5226.63,
+      "rotation": 306.13,
+      "pitch": 0
     },
+    "LocationSource": "Autopilot",
+    "PathName": "Truck Station3 -> Truck Station1",
+    "Route": [
+      {
+        "Index": 0,
+        "Name": "Truck Station3",
+        "IsStation": true,
+        "IsNextStop": false,
+        "PathNodeGUID": "BAF58CB6-4472-CB57-9A08-4DA4BC05C5FF"
+      },
+      {
+        "Index": 1,
+        "Name": "Truck Station1",
+        "IsStation": true,
+        "IsNextStop": true,
+        "PathNodeGUID": "A58ED2E2-431A-0EB4-D86E-73848DEF9F49"
+      }
+    ],
+    "NextStop": "Truck Station1",
+    "NextStopIndex": 1,
+    "IsCurrentlyDocking": false,
     "AutoPilotStatus": "None",
-    "Driver": "porisius",
-    "CurrentGear": 1,
-    "ForwardSpeed": 11.1579312744141,
-    "EngineRPM": 2244.17504882813,
-    "ThrottlePercent": 0.400730907917023,
+    "Driver": "",
+    "CurrentGear": 0,
+    "ForwardSpeed": 30.59,
+    "EngineRPM": 0,
+    "ThrottlePercent": 0,
     "Airborne": false,
-    "AutoPilot": false,
-    "FuelConsumption": 20.0,
-    "Storage": [
-      {
-        "Name": "Battery",
-        "ClassName": "Desc_Battery_C",
-        "Amount": 200
-      },
-      {
-        "Name": "Battery",
-        "ClassName": "Desc_Battery_C",
-        "Amount": 200
-      }
-    ],
-    "Fuel": [
-      {
-        "Name": "Battery",
-        "ClassName": "Desc_Battery_C",
-        "Amount": 199
-      }
-    ],
     "FollowingPath": false,
-    "features":
-    {
-      "properties":
+    "Autopilot": true,
+    "HasFuel": true,
+    "FuelConsumption": 0.05,
+    "Inventory": [
       {
-        "name": "Explorer",
-        "type": "Explorer"
+        "Name": "Purple Power Slug",
+        "ClassName": "Desc_Crystal_mk3_C",
+        "Amount": 950,
+        "MaxAmount": 50
+      }
+    ],
+    "FuelInventory": [],
+    "features": {
+      "properties": {
+        "name": "Tractor",
+        "type": "Tractor"
       },
-      "geometry":
-      {
-        "coordinates":
-        {
-          "X": -52341.4375,
-          "Y": -162543.21875,
-          "Z": -904.133544921875
+      "geometry": {
+        "coordinates": {
+          "x": 253929.57,
+          "y": -149754.07,
+          "z": 5226.63
         },
         "type": "Point"
       }
