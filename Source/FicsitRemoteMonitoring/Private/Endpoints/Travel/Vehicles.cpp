@@ -12,6 +12,10 @@
 #include "WheeledVehicles/FGVehicleSubsystem.h"
 #include "WheeledVehicles/FGWheeledVehicleIdentifier.h"
 #include "WheeledVehicles/FGVehicleAutopilotComponent.h"
+#include "WheeledVehicles/FGWheeledVehicle.h"
+#include "WheeledVehicles/FGWheeledVehicleMovementComponent.h"
+#include "FGInventoryComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 void UVehicles::getTruckStation(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
 
@@ -86,6 +90,10 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 	}
 	
 	AFGVehicleSubsystem* VehicleSubsystem = AFGVehicleSubsystem::Get(WorldContext);
+	if (!IsValid(VehicleSubsystem))
+	{
+		return JVehicleArray;
+	}
 	TArray<AFGWheeledVehicleIdentifier*> VehicleInfos = VehicleSubsystem->GetAllVehicles();
 	//TArray<AFGSavedWheeledVehiclePath*> SavedPaths = VehicleSubsystem->mSavedPaths;
 
@@ -294,6 +302,62 @@ TArray<TSharedPtr<FJsonValue>> UVehicles::getVehicles_Helper(UObject* WorldConte
 			JVehicleArray.Add(MakeShared<FJsonValueObject>(JVehicle));
 		};
 	};
+
+	// Vehicles the vehicle subsystem doesn't track (no AFGWheeledVehicleIdentifier, e.g. the Cyber Wagon, which
+	// has no autopilot/path preset) never appear above. List them too, with what the actor itself can tell us.
+	TSet<const AFGWheeledVehicle*> Registered;
+	for (const AFGWheeledVehicleIdentifier* VehicleInfo : VehicleInfos)
+	{
+		if (IsValid(VehicleInfo)) Registered.Add(VehicleInfo->GetOwnerVehicle());
+	}
+
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(WorldContext->GetWorld(), VehicleClass, FoundActors);
+	for (AActor* FoundActor : FoundActors)
+	{
+		AFGWheeledVehicle* WheeledVehicle = Cast<AFGWheeledVehicle>(FoundActor);
+		if (!IsValid(WheeledVehicle) || Registered.Contains(WheeledVehicle)) continue;
+
+		TSharedPtr<FJsonObject> JVehicle = CreateBaseJsonObject(WheeledVehicle);
+		UFGWheeledVehicleMovementComponent* VehicleMovement = WheeledVehicle->GetVehicleMovementComponent();
+
+		FString PlayerName;
+		if (const AFGCharacterPlayer* Driver = WheeledVehicle->GetDriver())
+		{
+			if (const APlayerState* PlayerState = Driver->GetPlayerState()) PlayerName = PlayerState->GetPlayerName();
+		}
+
+		UFGInventoryComponent* StorageInventory = WheeledVehicle->GetStorageInventory();
+		UFGInventoryComponent* FuelInventoryComponent = WheeledVehicle->GetFuelInventory();
+
+		JVehicle->Values.Add("Name", MakeShared<FJsonValueString>(WheeledVehicle->mDisplayName.ToString()));
+		JVehicle->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(WheeledVehicle->GetClass())));
+		JVehicle->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(WheeledVehicle)));
+		JVehicle->Values.Add("LocationSource", MakeShared<FJsonValueString>(TEXT("Actor")));
+		JVehicle->Values.Add("PathName", MakeShared<FJsonValueString>(FString()));
+		JVehicle->Values.Add("Route", MakeShared<FJsonValueArray>(TArray<TSharedPtr<FJsonValue>>()));
+		JVehicle->Values.Add("NextStop", MakeShared<FJsonValueString>(FString()));
+		JVehicle->Values.Add("NextStopIndex", MakeShared<FJsonValueNumber>(INDEX_NONE));
+		JVehicle->Values.Add("IsCurrentlyDocking", MakeShared<FJsonValueBoolean>(false));
+		JVehicle->Values.Add("AutoPilotStatus", MakeShared<FJsonValueString>(TEXT("None")));
+		JVehicle->Values.Add("Driver", MakeShared<FJsonValueString>(PlayerName));
+		JVehicle->Values.Add("CurrentGear", MakeShared<FJsonValueNumber>(IsValid(VehicleMovement) ? VehicleMovement->GetCurrentGear() : 0));
+		JVehicle->Values.Add("ForwardSpeed", MakeShared<FJsonValueNumber>(IsValid(VehicleMovement) ? VehicleMovement->GetForwardSpeed() * 0.036 : 0));	// cm/s -> km/h
+		JVehicle->Values.Add("EngineRPM", MakeShared<FJsonValueNumber>(IsValid(VehicleMovement) ? VehicleMovement->GetEngineRotationSpeed() : 0));
+		JVehicle->Values.Add("ThrottlePercent", MakeShared<FJsonValueNumber>(IsValid(VehicleMovement) ? VehicleMovement->GetThrottleInput() : 0));
+		JVehicle->Values.Add("Airborne", MakeShared<FJsonValueBoolean>(IsValid(VehicleMovement) && VehicleMovement->IsInAir()));
+		JVehicle->Values.Add("FollowingPath", MakeShared<FJsonValueBoolean>(false));
+		JVehicle->Values.Add("Autopilot", MakeShared<FJsonValueBoolean>(false));
+		JVehicle->Values.Add("HasFuel", MakeShared<FJsonValueBoolean>(WheeledVehicle->HasFuel()));
+		JVehicle->Values.Add("FuelConsumption", MakeShared<FJsonValueNumber>(WheeledVehicle->GetManualFuelConsumption()));
+		JVehicle->Values.Add("Inventory", MakeShared<FJsonValueArray>(IsValid(StorageInventory)
+			? GetInventoryJSON(GetGroupedInventoryItems(StorageInventory)) : TArray<TSharedPtr<FJsonValue>>()));
+		JVehicle->Values.Add("FuelInventory", MakeShared<FJsonValueArray>(IsValid(FuelInventoryComponent)
+			? GetInventoryJSON(GetGroupedInventoryItems(FuelInventoryComponent)) : TArray<TSharedPtr<FJsonValue>>()));
+		JVehicle->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(WheeledVehicle, WheeledVehicle->mDisplayName.ToString(), WheeledVehicle->mDisplayName.ToString())));
+
+		JVehicleArray.Add(MakeShared<FJsonValueObject>(JVehicle));
+	}
 
 	return JVehicleArray;
 
