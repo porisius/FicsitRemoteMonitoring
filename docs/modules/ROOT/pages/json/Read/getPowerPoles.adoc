@@ -1,0 +1,75 @@
+﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Power Poles
+
+Gets a list of all power poles, wall outlets and power towers: where they are, which power circuit they're on and how many of their wire slots are used.
+
+Power poles and wall outlets (single and double) are reported by their own Name / ClassName (e.g. `Build_PowerPoleMk1_C`, `Build_PowerPoleWall_C`, `Build_PowerPoleWallDouble_C`), as are power towers (`Build_PowerTower_C`, `Build_PowerTowerPlatform_C`).
+
+== URL
+
+`GET http://localhost:8080/getPowerPoles`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the power pole, wall outlet or power tower.
+| Name | String | Name of the building (e.g. Power Pole Mk.1, Wall Outlet Mk.1, Power Tower).
+| ClassName | String | Class Name of the building.
+
+// location
+{set:key-name:location}
+{set:key-description:Location details of the building.}
+include::../Models/_location.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+| Connections | Integer | Number of power lines connected to it.
+| MaxConnections | Integer | Number of power lines it can take.
+| CircuitID | Integer | ID of the power circuit it's on (-1 if none). Matches `CircuitID` in getPowerUsage and the `AssociatedCircuits` of getPower.
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "Build_PowerPoleMk1_C_2147469776",
+    "Name": "Power Pole Mk.1",
+    "ClassName": "Build_PowerPoleMk1_C",
+    "location": {
+      "x": 272187.31823951827,
+      "y": -243723.12304332544,
+      "z": 1906.6836793173925,
+      "rotation": 170,
+      "pitch": 0
+    },
+    "BoundingBox": {
+      "min": {
+        "x": 272147.31823951827,
+        "y": -243763.12304332544,
+        "z": 1906.6836793173925
+      },
+      "max": {
+        "x": 272227.31823951827,
+        "y": -243683.12304332544,
+        "z": 2666.6836793173925
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "Connections": 4,
+    "MaxConnections": 4,
+    "CircuitID": 7
+  }
+]
+-----------------

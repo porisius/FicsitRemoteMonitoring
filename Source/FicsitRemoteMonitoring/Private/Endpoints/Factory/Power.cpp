@@ -4,6 +4,8 @@
 #include "Buildables/FGBuildableGeneratorGeoThermal.h"
 #include "Buildables/FGBuildableGeneratorNuclear.h"
 #include "Buildables/FGBuildablePriorityPowerSwitch.h"
+#include "Buildables/FGBuildablePowerPole.h"
+#include "Buildables/FGBuildablePowerTower.h"
 #include "FGCircuitConnectionComponent.h"
 #include "FGCircuitSubsystem.h"
 #include "Buildables/FGBuildableWire.h"
@@ -225,6 +227,38 @@ void UPower::getCables(UObject* WorldContext, FRequestData RequestData, TArray<T
 
 	};
 };
+
+// Power poles, wall outlets (both AFGBuildablePowerPole) and power towers: where they are, which grid they're on and
+// how many of their wire slots are used. Name/ClassName tell the kinds apart (e.g. Build_PowerPoleWall_C).
+void UPower::getPowerPoles(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	if (!BuildableSubsystem) { return; }
+
+	TArray<AFGBuildable*> Buildables;
+	BuildableSubsystem->GetTypedBuildable(AFGBuildablePowerPole::StaticClass(), Buildables);
+	BuildableSubsystem->GetTypedBuildable(AFGBuildablePowerTower::StaticClass(), Buildables);
+
+	for (AFGBuildable* Buildable : Buildables) {
+		if (!IsValid(Buildable)) { continue; }
+
+		TInlineComponentArray<UFGCircuitConnectionComponent*> Connections;
+		Buildable->GetComponents(Connections);
+
+		int32 Used = 0, Max = 0, CircuitID = -1;
+		for (const UFGCircuitConnectionComponent* Connection : Connections) {
+			if (!IsValid(Connection)) { continue; }
+			Used += Connection->GetNumConnections();
+			Max += Connection->GetMaxNumConnections();
+			if (CircuitID < 0) { CircuitID = Connection->GetCircuitID(); }
+		}
+
+		TSharedPtr<FJsonObject> JPole = CreateBuildableBaseJsonObject(Buildable);
+		JPole->Values.Add("Connections", MakeShared<FJsonValueNumber>(Used));
+		JPole->Values.Add("MaxConnections", MakeShared<FJsonValueNumber>(Max));
+		JPole->Values.Add("CircuitID", MakeShared<FJsonValueNumber>(CircuitID));
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JPole));
+	}
+}
 
 TArray<TSharedPtr<FJsonValue>> UPower::getGenerators_Helper(UObject* WorldContext, UClass* TypedBuildable)
 {

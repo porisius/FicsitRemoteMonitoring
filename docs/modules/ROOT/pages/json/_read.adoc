@@ -85,6 +85,7 @@
 | World | xref:json/Read/getUObjectCount.adoc[getUObjectCount] | No | Get the current UObject count and capacity.
 
 | Power | xref:json/Read/getPower.adoc[getPower] | No | Gets a list of all power circuits.
+| Power | xref:json/Read/getPowerPoles.adoc[getPowerPoles] | No | Gets a list of all power poles, wall outlets and power towers.
 | Power | xref:json/Read/getPowerUsage.adoc[getPowerUsage] | No | Gets a list of buildings with power usage.
 
 | Other | xref:json/Read/getAll.adoc[getAll] | Mixed | Gets a list of specific endpoints (visit the page, to see all endpoints).

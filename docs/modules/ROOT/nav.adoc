@@ -123,6 +123,7 @@
 
 *** Power
 **** xref:json/Read/getPower.adoc[getPower]
+**** xref:json/Read/getPowerPoles.adoc[getPowerPoles]
 **** xref:json/Read/getPowerUsage.adoc[getPowerUsage]
 
 ** xref:json/Write/Write.adoc[Write]

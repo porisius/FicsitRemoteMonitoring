@@ -745,6 +745,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getBiomassGenerator", &UPower::getBiomassGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getBlender", &UFactoryLibrary::getBlender));
 	RegisterEndpoint(FAPIEndpoint("GET", "getCables", &UPower::getCables));
+	RegisterEndpoint(FAPIEndpoint("GET", "getPowerPoles", &UPower::getPowerPoles).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getCloudInv", &UInventory::getCloudInv));
 	RegisterEndpoint(FAPIEndpoint("GET", "getCoalGenerator", &UPower::getCoalGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getConstructor", &UFactoryLibrary::getConstructor));
