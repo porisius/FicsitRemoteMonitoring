@@ -41,9 +41,11 @@ include::../Models/_colorSlot.adoc[]
 | FluidClassName | String | Class Name of the fluid (e.g. `Desc_Water_C`).
 | Content | Float | Fluid in the buffer, in m³. Can be slightly above Capacity when the pipe is over-pressurized.
 | Capacity | Float | Most fluid the buffer holds, in m³.
-| FlowFill | Float | Rate the buffer is filling, in m³/min.
-| FlowDrain | Float | Rate the buffer is draining, in m³/min.
+| FlowFill | Float | Rate the buffer is filling right now, in m³/min.
+| FlowDrain | Float | Rate the buffer is draining right now, in m³/min.
 | FlowLimit | Float | Most the buffer can fill or drain, in m³/min.
+
+NOTE: `FlowFill` and `FlowDrain` are a snapshot of the pipe simulation, which fluctuates from tick to tick. Average several readings, or compare `Content` over time, for a steady rate.
 
 // features
 include::../Models/_features.adoc[]
