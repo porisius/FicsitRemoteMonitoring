@@ -20,6 +20,13 @@ class AFGBuildableConveyorBase;
 class FJsonValue;
 class UFGFactoryConnectionComponent;
 
+// ID of the building on the other side of a connection ("" if nothing is connected), so clients can follow
+// belts, lifts and pipes from piece to piece without matching positions
+static FString ConnectedOwnerID(const UActorComponent* Partner) {
+	const AActor* Owner = IsValid(Partner) ? Partner->GetOwner() : nullptr;
+	return IsValid(Owner) ? Owner->GetName() : FString();
+}
+
 TArray<TSharedPtr<FJsonValue>> ULogistics::getBelts_Helper(UObject* WorldContext, bool IsBelt) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 
@@ -48,6 +55,8 @@ TArray<TSharedPtr<FJsonValue>> ULogistics::getBelts_Helper(UObject* WorldContext
 		JConveyor->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
 		JConveyor->Values.Add("location1", MakeShared<FJsonValueObject>(getActorFactoryCompXYZ(Conveyor, ConnectionOne)));
 		JConveyor->Values.Add("Connected1", MakeShared<FJsonValueBoolean>(ConnectionOne->IsConnected()));
+		JConveyor->Values.Add("ConnectedTo0", MakeShared<FJsonValueString>(ConnectedOwnerID(ConnectionZero->GetConnection())));
+		JConveyor->Values.Add("ConnectedTo1", MakeShared<FJsonValueString>(ConnectedOwnerID(ConnectionOne->GetConnection())));
 		JConveyor->Values.Add("Length", MakeShared<FJsonValueNumber>(Conveyor->GetLength()));
 		JConveyor->Values.Add("ItemsPerMinute", MakeShared<FJsonValueNumber>((SafeDivide_Float(Conveyor->GetSpeed(), 2))));
 		JConveyor->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(Cast<AActor>(Conveyor), Conveyor->mDisplayName.ToString(), Conveyor->mDisplayName.ToString())));
@@ -199,6 +208,8 @@ void ULogistics::getPipes(UObject* WorldContext, FRequestData RequestData, TArra
 		JPipe->Values.Add("Connected0", MakeShared<FJsonValueBoolean>(ConnectionZero->IsConnected()));
 		JPipe->Values.Add("location1", MakeShared<FJsonValueObject>(getActorPipeXYZ(Pipe, ConnectionOne)));
 		JPipe->Values.Add("Connected1", MakeShared<FJsonValueBoolean>(ConnectionOne->IsConnected()));
+		JPipe->Values.Add("ConnectedTo0", MakeShared<FJsonValueString>(ConnectedOwnerID(ConnectionZero->GetConnection())));
+		JPipe->Values.Add("ConnectedTo1", MakeShared<FJsonValueString>(ConnectedOwnerID(ConnectionOne->GetConnection())));
 		JPipe->Values.Add("Length", MakeShared<FJsonValueNumber>(Pipe->GetLength()));
 		JPipe->Values.Add("Speed", MakeShared<FJsonValueNumber>(Pipe->GetFlowLimit()));
 		JPipe->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(Cast<AActor>(Pipe), Pipe->mDisplayName.ToString(), Pipe->mDisplayName.ToString())));

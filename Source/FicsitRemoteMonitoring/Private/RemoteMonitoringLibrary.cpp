@@ -60,17 +60,13 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getActorFactoryCompXYZ(AFGBuil
 
 	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();
 
-	const long double actorX = BeltPipe->GetActorLocation().X;
-	const long double actorY = BeltPipe->GetActorLocation().Y;
-	const long double actorZ = BeltPipe->GetActorLocation().Z;
-	
-	const long double connectionX = ConnectionComponent->GetRelativeTransform().GetTranslation().X;
-	const long double connectionY = ConnectionComponent->GetRelativeTransform().GetTranslation().Y;
-	const long double connectionZ = ConnectionComponent->GetRelativeTransform().GetTranslation().Z;
+	// the connection's world position: its relative translation is relative to its parent component and isn't
+	// rotated with the building, so actor location + relative translation was off for anything rotated (e.g. lifts)
+	const FVector Location = ConnectionComponent->GetComponentLocation();
 
-	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(actorX + connectionX));
-	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(actorY + connectionY));
-	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(actorZ + connectionZ));
+	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(Location.X));
+	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(Location.Y));
+	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(Location.Z));
 
 	return JLibrary;
 
@@ -178,17 +174,13 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getActorPipeXYZ(AFGBuildable* 
 
 	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();
 
-	const long double actorX = BeltPipe->GetActorLocation().X;
-	const long double actorY = BeltPipe->GetActorLocation().Y;
-	const long double actorZ = BeltPipe->GetActorLocation().Z;
-	
-	const long double connectionX = ConnectionComponent->GetRelativeTransform().GetTranslation().X;
-	const long double connectionY = ConnectionComponent->GetRelativeTransform().GetTranslation().Y;
-	const long double connectionZ = ConnectionComponent->GetRelativeTransform().GetTranslation().Z;
+	// the connection's world position: its relative translation is relative to its parent component and isn't
+	// rotated with the building, so actor location + relative translation was off for anything rotated (e.g. lifts)
+	const FVector Location = ConnectionComponent->GetComponentLocation();
 
-	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(actorX + connectionX));
-	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(actorY + connectionY));
-	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(actorZ + connectionZ));
+	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(Location.X));
+	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(Location.Y));
+	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(Location.Z));
 
 	return JLibrary;
 
@@ -198,17 +190,13 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::getActorHyperXYZ(AFGBuildable*
 
 	TSharedPtr<FJsonObject> JLibrary = MakeShared<FJsonObject>();
 
-	const long double actorX = HyperTube->GetActorLocation().X;
-	const long double actorY = HyperTube->GetActorLocation().Y;
-	const long double actorZ = HyperTube->GetActorLocation().Z;
-	
-	const long double connectionX = ConnectionComponent->GetRelativeTransform().GetTranslation().X;
-	const long double connectionY = ConnectionComponent->GetRelativeTransform().GetTranslation().Y;
-	const long double connectionZ = ConnectionComponent->GetRelativeTransform().GetTranslation().Z;
+	// the connection's world position: its relative translation is relative to its parent component and isn't
+	// rotated with the building, so actor location + relative translation was off for anything rotated (e.g. lifts)
+	const FVector Location = ConnectionComponent->GetComponentLocation();
 
-	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(actorX + connectionX));
-	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(actorY + connectionY));
-	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(actorZ + connectionZ));
+	JLibrary->Values.Add("x", MakeShared<FJsonValueNumber>(Location.X));
+	JLibrary->Values.Add("y", MakeShared<FJsonValueNumber>(Location.Y));
+	JLibrary->Values.Add("z", MakeShared<FJsonValueNumber>(Location.Z));
 
 	return JLibrary;
 
