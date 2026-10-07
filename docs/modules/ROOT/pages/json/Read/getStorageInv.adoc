@@ -5,7 +5,7 @@
 = Get Storage Inv
 
 This is inventory of the world broken up by their storage containers.
-This does not include pipes/belts/factory buildings, only buildings whom purpose is to provide storage except Fluid Buffers.
+This does not include pipes/belts/factory buildings, only buildings whom purpose is to provide storage. Fluid Buffers are listed by xref:json/Read/getFluidBuffer.adoc[getFluidBuffer].
 
 == Similar
 
@@ -14,6 +14,7 @@ This does not include pipes/belts/factory buildings, only buildings whom purpose
 |Resource|Endpoint|Description
 | Inventory | xref:json/Read/getCloudInv.adoc[getCloudInv] | Gets a list of the cloud inventory.
 | Inventory | xref:json/Read/getCrateInv.adoc[getCrateInv] | Gets a list of all crate inventories.
+| Inventory | xref:json/Read/getFluidBuffer.adoc[getFluidBuffer] | Gets a list of all fluid buffers.
 | Inventory | xref:json/Read/getWorldInv.adoc[getWorldInv] | Gets a list of the world inventory.
 |===
 
@@ -34,6 +35,8 @@ include::../Models/_location.adoc[]
 // inventory items
 | Inventory | Object[] | List of items in the Storage Container.
 include::../Models/_inventoryItem.adoc[]
+| Slots | Integer | Number of inventory slots the Storage Container has.
+| SlotsUsed | Integer | Number of those slots holding something.
 
 // bounding box
 {set:key-name:BoundingBox}
@@ -65,6 +68,8 @@ include::../Models/_features.adoc[]
         "MaxAmount": 200
       }
     ],
+    "Slots": 24,
+    "SlotsUsed": 1,
     "features": {
       "properties": {
         "name": "Storage Container",

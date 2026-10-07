@@ -3,8 +3,11 @@
 #include "FGCentralStorageSubsystem.h"
 #include "FGBuildableSubsystem.h"
 #include "Buildables/FGBuildableStorage.h"
+#include "Buildables/FGBuildablePipeReservoir.h"
+#include "FGInventoryComponent.h"
 #include "FGCrate.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 struct FItemAmount;
 
@@ -26,6 +29,17 @@ void UInventory::getStorageInv(UObject* WorldContext, FRequestData RequestData, 
 		TMap<TSubclassOf<UFGItemDescriptor>, int32> StorageInventory = GetGroupedInventoryItems(StorageContainer->GetStorageInventory());
 
 		JStorage->Values.Add("Inventory", MakeShared<FJsonValueArray>(GetInventoryJSON(StorageInventory)));
+
+		// how full it is: slots in use out of its slots
+		UFGInventoryComponent* Inventory = StorageContainer->GetStorageInventory();
+		int32 SlotsUsed = 0;
+		if (IsValid(Inventory)) {
+			TArray<FInventoryStack> Stacks;
+			Inventory->GetInventoryStacks(Stacks);
+			SlotsUsed = Stacks.Num();
+		}
+		JStorage->Values.Add("Slots", MakeShared<FJsonValueNumber>(IsValid(Inventory) ? Inventory->GetSizeLinear() : 0));
+		JStorage->Values.Add("SlotsUsed", MakeShared<FJsonValueNumber>(SlotsUsed));
 		JStorage->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(StorageContainer, StorageContainer->mDisplayName.ToString(), TEXT("Storage Container"))));
 
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JStorage));
@@ -102,6 +116,38 @@ void UInventory::getCloudInv(UObject* WorldContext, FRequestData RequestData, TA
 	CloudSubsystem->GetAllItemsFromCentralStorage(CloudInventory);
 
 	for (FItemAmount Storage : CloudInventory) {
-		OutJsonArray.Add(MakeShared<FJsonValueObject>(GetItemValueObject(Storage)));
+		TSharedPtr<FJsonObject> JItem = GetItemValueObject(Storage);
+		// most of this item the depot can hold (grows with the depot upgrades)
+		JItem->Values.Add("Limit", MakeShared<FJsonValueNumber>(CloudSubsystem->GetCentralStorageItemLimit(Storage.ItemClass)));
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JItem));
+	}
+}
+
+void UInventory::getFluidBuffer(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray) {
+
+	if (!IsValid(WorldContext) || !IsValid(WorldContext->GetWorld())) {
+		return;
+	}
+
+	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	TArray<AFGBuildablePipeReservoir*> Reservoirs;
+	BuildableSubsystem->GetTypedBuildable<AFGBuildablePipeReservoir>(Reservoirs);
+
+	for (AFGBuildablePipeReservoir* Reservoir : Reservoirs) {
+
+		TSharedPtr<FJsonObject> JReservoir = CreateBuildableBaseJsonObject(Reservoir);
+
+		// fluid amounts are m³, flows m³/min
+		const TSubclassOf<UFGItemDescriptor> Fluid = Reservoir->GetFluidDescriptor();
+		JReservoir->Values.Add("Fluid", MakeShared<FJsonValueString>(Fluid ? UFGItemDescriptor::GetItemName(Fluid).ToString() : TEXT("")));
+		JReservoir->Values.Add("FluidClassName", MakeShared<FJsonValueString>(Fluid ? UKismetSystemLibrary::GetClassDisplayName(Fluid) : TEXT("")));
+		JReservoir->Values.Add("Content", MakeShared<FJsonValueNumber>(Reservoir->GetFluidContent()));
+		JReservoir->Values.Add("Capacity", MakeShared<FJsonValueNumber>(Reservoir->GetFluidContentMax()));
+		JReservoir->Values.Add("FlowFill", MakeShared<FJsonValueNumber>(Reservoir->GetFlowFill() * 60));
+		JReservoir->Values.Add("FlowDrain", MakeShared<FJsonValueNumber>(Reservoir->GetFlowDrain() * 60));
+		JReservoir->Values.Add("FlowLimit", MakeShared<FJsonValueNumber>(Reservoir->GetFlowLimit() * 60));
+		JReservoir->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(Reservoir, Reservoir->mDisplayName.ToString(), TEXT("Fluid Buffer"))));
+
+		OutJsonArray.Add(MakeShared<FJsonValueObject>(JReservoir));
 	}
 }

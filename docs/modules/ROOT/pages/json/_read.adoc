@@ -43,6 +43,7 @@
 | Generators | xref:json/Read/getGenerators.adoc[getGeothermalGenerator] | No | Gets a list of all geothermal generators.
 
 | Inventory | xref:json/Read/getCloudInv.adoc[getCloudInv] | No | Gets a list of the cloud inventory.
+| Inventory | xref:json/Read/getFluidBuffer.adoc[getFluidBuffer] | No | Gets a list of all fluid buffers.
 | Inventory | xref:json/Read/getWorldInv.adoc[getWorldInv] | No | Gets a list of the world inventory.
 | Inventory | xref:json/Read/getStorageInv.adoc[getStorageInv] | No | Gets a list of all storage inventories.
 

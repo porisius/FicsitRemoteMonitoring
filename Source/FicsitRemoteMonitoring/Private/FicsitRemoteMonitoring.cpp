@@ -764,6 +764,7 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getFactoryCart", &UVehicles::getFactoryCart).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getFoundry", &UFactoryLibrary::getFoundry));
 	// RequiresGameThread: same GetProductivity() game-thread check as getExtractor.
+	RegisterEndpoint(FAPIEndpoint("GET", "getFluidBuffer", &UInventory::getFluidBuffer));
 	RegisterEndpoint(FAPIEndpoint("GET", "getFrackingActivator", &UResources::getFrackingActivator).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getFuelGenerator", &UPower::getFuelGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getGeothermalGenerator", &UPower::getGeothermalGenerator));

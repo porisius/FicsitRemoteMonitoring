@@ -1,0 +1,106 @@
+﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Fluid Buffer
+
+Gets a list of all fluid buffers (Fluid Buffer and Industrial Fluid Buffer): where they are, which fluid they hold, how full they are and how fast they are filling and draining.
+
+== Similar
+
+[cols="1,1,2"]
+|===
+|Resource|Endpoint|Description
+| Inventory | xref:json/Read/getStorageInv.adoc[getStorageInv] | Gets a list of all storage inventories.
+| Inventory | xref:json/Read/getCloudInv.adoc[getCloudInv] | Gets a list of the cloud inventory.
+|===
+
+== URL
+
+`GET http://localhost:8080/getFluidBuffer`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the fluid buffer.
+| Name | String | Name of the building (Fluid Buffer or Industrial Fluid Buffer).
+| ClassName | String | Class Name of the building (`Build_PipeStorageTank_C` or `Build_IndustrialTank_C`).
+
+// location
+{set:key-name:location}
+{set:key-description:Location details of the fluid buffer.}
+include::../Models/_location.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+| Fluid | String | Name of the fluid in the buffer (empty if it has never held one).
+| FluidClassName | String | Class Name of the fluid (e.g. `Desc_Water_C`).
+| Content | Float | Fluid in the buffer, in m³. Can be slightly above Capacity when the pipe is over-pressurized.
+| Capacity | Float | Most fluid the buffer holds, in m³.
+| FlowFill | Float | Rate the buffer is filling, in m³/min.
+| FlowDrain | Float | Rate the buffer is draining, in m³/min.
+| FlowLimit | Float | Most the buffer can fill or drain, in m³/min.
+
+// features
+include::../Models/_features.adoc[]
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "Build_IndustrialTank_C_2147339886",
+    "Name": "Industrial Fluid Buffer",
+    "ClassName": "Build_IndustrialTank_C",
+    "location": {
+      "x": 52400,
+      "y": 217200,
+      "z": 5900.00146484375,
+      "rotation": 270,
+      "pitch": 0
+    },
+    "BoundingBox": {
+      "min": {
+        "x": 51700,
+        "y": 216500,
+        "z": 5900.00146484375
+      },
+      "max": {
+        "x": 53100,
+        "y": 217900,
+        "z": 7100.00146484375
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "Fluid": "Fuel",
+    "FluidClassName": "Desc_LiquidFuel_C",
+    "Content": 1471.060302734375,
+    "Capacity": 2400,
+    "FlowFill": 23.22670555114746,
+    "FlowDrain": 93.05718994140625,
+    "FlowLimit": 1200,
+    "features": {
+      "properties": {
+        "name": "Industrial Fluid Buffer",
+        "type": "Fluid Buffer"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": 52400,
+          "y": 217200,
+          "z": 5900.00146484375
+        },
+        "type": "Point"
+      }
+    }
+  }
+]
+-----------------

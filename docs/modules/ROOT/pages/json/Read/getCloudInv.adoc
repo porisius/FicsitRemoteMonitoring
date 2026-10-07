@@ -23,6 +23,7 @@ This is inventory of the dimensional depot.
 include::../_responseBody.adoc[]
 
 include::../Models/_inventoryItem.adoc[]
+| Limit | Integer | Most of this item the dimensional depot can hold; grows with the depot upgrades.
 |===
 
 == Example Response
@@ -33,13 +34,15 @@ include::../Models/_inventoryItem.adoc[]
     "Name": "Iron Plate",
     "ClassName": "Desc_IronPlate_C",
     "Amount": 164,
-    "MaxAmount": 200
+    "MaxAmount": 200,
+    "Limit": 1000
   },
   {
     "Name": "Copper Sheet",
     "ClassName": "Desc_CopperSheet_C",
     "Amount": 200,
-    "MaxAmount": 200
+    "MaxAmount": 200,
+    "Limit": 1000
   }
 ]
 -----------------
