@@ -3,7 +3,9 @@
 
 = Get Belts
 
-Get a list of all belts.
+Get a list of all belts. Conveyor lifts are listed by xref:json/Read/getLifts.adoc[getLifts].
+
+`location0` / `location1` are the world positions of the belt's two connection points.
 
 == URL
 
@@ -40,6 +42,8 @@ include::../Models/_location.adoc[tags=!rotation]
 {set:key-description:End Location of the Belt}
 include::../Models/_location.adoc[tags=!rotation]
 | Connected1 | Boolean | Is Belt Connected at ending point?
+| ConnectedTo0 | String | ID of the building the belt is connected to at its starting point ("" if none): another belt, a splitter, merger, machine, storage… Follow these to trace a line from piece to piece.
+| ConnectedTo1 | String | ID of the building the belt is connected to at its ending point ("" if none).
 
 | Length | Float | Length of the Belt in centimetre (cm).
 | ItemsPerMinute | Float | Speed of the Belt.
@@ -68,6 +72,8 @@ include::../Models/_features.adoc[]
       "z": 27.264452340796197
     },
     "Connected1": true,
+    "ConnectedTo0": "Build_ConveyorAttachmentSplitter_C_2146837057",
+    "ConnectedTo1": "Build_ConstructorMk1_C_2146852692",
     "Length": 1000.2387084960938,
     "ItemsPerMinute": 60,
     "features": {

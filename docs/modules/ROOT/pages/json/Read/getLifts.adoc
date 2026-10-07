@@ -1,0 +1,111 @@
+:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+:depth:
+
+= Get Lifts
+
+Gets a list of all conveyor lifts. A lift is a belt piece that goes straight up or down: items enter at `location0` and leave at `location1`. Use `ConnectedTo0` / `ConnectedTo1` (the same fields as in xref:json/Read/getBelts.adoc[getBelts]) to join lifts and belts into one line; a lift's connection points sit on its centre line, so the belt ends that plug into it aren't at the same position.
+
+== URL
+
+`GET http://localhost:8080/getLifts`
+
+include::../_responseBody.adoc[]
+
+| ID | String | Unique ID of the Lift.
+| Name | String | Name of the Lift Type (Conveyor Lift Mk.1 … Mk.6).
+| ClassName | String | Class Name of the Lift.
+
+{set:key-name:location}
+{set:key-description:Location of the Lift}
+include::../Models/_location.adoc[]
+
+// bounding box
+{set:key-name:BoundingBox}
+include::../Models/_boundingBox.adoc[]
+
+// color slot/swatch
+{set:key-name:ColorSlot}
+include::../Models/_colorSlot.adoc[]
+
+{set:key-name:location0}
+{set:key-description:Where items enter the Lift}
+include::../Models/_location.adoc[tags=!rotation]
+| Connected0 | Boolean | Is the Lift connected where items enter?
+
+{set:key-name:location1}
+{set:key-description:Where items leave the Lift}
+include::../Models/_location.adoc[tags=!rotation]
+| Connected1 | Boolean | Is the Lift connected where items leave?
+| ConnectedTo0 | String | ID of the building connected where items enter ("" if none): a belt, another lift, a splitter, merger, machine, storage…
+| ConnectedTo1 | String | ID of the building connected where items leave ("" if none).
+| Length | Float | Height of the Lift in centimetre (cm).
+| ItemsPerMinute | Float | Speed of the Lift.
+
+include::../Models/_features.adoc[]
+
+|===
+
+== Example Response
+[source,json]
+-----------------
+[
+  {
+    "ID": "Build_ConveyorLiftMk4_C_2147449666",
+    "Name": "Conveyor Lift Mk.4",
+    "ClassName": "Build_ConveyorLiftMk4_C",
+    "location": {
+      "x": 7496.14501953125,
+      "y": 268205.4375,
+      "z": 1613.487548828125,
+      "rotation": 130.00122208934044,
+      "pitch": 0
+    },
+    "BoundingBox": {
+      "min": {
+        "x": 7396.14501953125,
+        "y": 268105.4375,
+        "z": 1543.487548828125
+      },
+      "max": {
+        "x": 7596.14501953125,
+        "y": 268305.4375,
+        "z": 2183.487548828125
+      }
+    },
+    "ColorSlot": {
+      "PrimaryColor": "FA954900",
+      "SecondaryColor": "5F668C00"
+    },
+    "location0": {
+      "x": 7496.14501953125,
+      "y": 268205.4375,
+      "z": 1613.487548828125
+    },
+    "Connected0": true,
+    "location1": {
+      "x": 7496.14501953125,
+      "y": 268205.4375,
+      "z": 2013.487548828125
+    },
+    "Connected1": true,
+    "ConnectedTo0": "Build_StorageContainerMk2_C_2147449672",
+    "ConnectedTo1": "Build_CentralStorage_C_2147449667",
+    "Length": 400,
+    "ItemsPerMinute": 480,
+    "features": {
+      "properties": {
+        "name": "Conveyor Lift Mk.4",
+        "type": "Conveyor Lift Mk.4"
+      },
+      "geometry": {
+        "coordinates": {
+          "x": 7496.14501953125,
+          "y": 268205.4375,
+          "z": 1613.487548828125
+        },
+        "type": "Point"
+      }
+    }
+  }
+]
+-----------------

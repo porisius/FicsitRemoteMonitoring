@@ -36,6 +36,8 @@ include::../Models/_location.adoc[tags=!rotation]
 {set:key-description:End Location of the Pipe}
 include::../Models/_location.adoc[tags=!rotation]
 | Connected1 | Boolean | Is Pipe Connected at ending point?
+| ConnectedTo0 | String | ID of the building the pipe is connected to at its starting point ("" if none): another pipe, a junction, pump, valve, machine, fluid buffer… Follow these to trace a line from piece to piece.
+| ConnectedTo1 | String | ID of the building the pipe is connected to at its ending point ("" if none).
 
 | Length | Float | Length of the Pipe in centimetre (cm).
 | ItemsPerMinute | Float | Speed of the Pipe.
@@ -128,6 +130,8 @@ include::../Models/_features.adoc[]
       "z": -1435.00002617008
     },
     "Connected1": true,
+    "ConnectedTo0": "Build_PipelineJunction_T_C_2147459566",
+    "ConnectedTo1": "Build_OilRefinery_C_2147459571",
     "Length": 2761.6640625,
     "Speed": 5,
     "features": {

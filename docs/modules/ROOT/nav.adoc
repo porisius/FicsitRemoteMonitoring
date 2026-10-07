@@ -29,6 +29,7 @@
 
 **** xref:json/Read/getFactory.adoc[getAssembler]
 **** xref:json/Read/getBelts.adoc[getBelts]
+**** xref:json/Read/getLifts.adoc[getLifts]
 **** xref:json/Read/getFactory.adoc[getBlender]
 **** xref:json/Read/getCables.adoc[getCables]
 **** xref:json/Read/getFactory.adoc[getConstructor]

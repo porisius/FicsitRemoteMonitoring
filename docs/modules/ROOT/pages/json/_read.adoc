@@ -20,6 +20,7 @@
 | Factory | xref:json/Read/getFactory.adoc[getParticle] | No | Gets a list of all particle accelerators.
 | Factory | xref:json/Read/getFactory.adoc[getFoundry] | No | Gets a list of all foundries.
 | Factory | xref:json/Read/getBelts.adoc[getBelts] | No | Gets a list of all belts.
+| Factory | xref:json/Read/getLifts.adoc[getLifts] | No | Gets a list of all conveyor lifts.
 | Factory | xref:json/Read/getCables.adoc[getCables] | No | Gets a list of all cables.
 | Factory | xref:json/Read/getHypertube.adoc[getHypertube] | No | Gets a list of all hypertubes.
 | Factory | xref:json/Read/getPipeJunctions.adoc[getPipeJunctions] | No | Gets a list of all pipe junctions.
