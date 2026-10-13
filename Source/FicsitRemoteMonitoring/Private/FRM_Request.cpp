@@ -22,6 +22,22 @@ void UFRM_RequestLibrary::SendErrorMessage(uWS::HttpResponse<false>* res, const 
 	SendErrorJson(res, Status, JsonObjectToString(JsonObject, false));
 }
 
+void UFRM_RequestLibrary::SendFallbackPage(uWS::HttpResponse<false>* res, const FString& InDocsURL)
+{
+	const FString Html = FString::Printf(TEXT(
+		"<!DOCTYPE html><html><head><title>FRM - Web UI Unavailable</title></head><body>"
+		"<h1>FicsitRemoteMonitoring: Web UI files not found</h1>"
+		"<p>This is common on dedicated servers when the web UI bundle was not deployed alongside "
+		"the mod. The monitoring API itself is still live at <a href=\"/api/\">/api/</a>.</p>"
+		"<p>See the <a href=\"%s\">setup documentation</a> for how to deploy the web UI.</p>"
+		"</body></html>"), *InDocsURL);
+
+	res->writeStatus("503 Service Unavailable");
+	res->writeHeader("Content-Type", "text/html");
+	AddResponseHeaders(res, false); // false: Content-Type already set above — do not pass true (see Pitfall 3)
+	res->end(TCHAR_TO_UTF8(*Html));
+}
+
 void UFRM_RequestLibrary::AddResponseHeaders(uWS::HttpResponse<false>* res, const bool bIncludeContentType)
 {
 	res

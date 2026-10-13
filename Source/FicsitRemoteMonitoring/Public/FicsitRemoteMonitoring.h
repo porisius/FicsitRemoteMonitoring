@@ -114,9 +114,21 @@ class FICSITREMOTEMONITORING_API AFicsitRemoteMonitoring : public AModSubsystem
 private:
 
 	TFuture<void> WebServer{};
-	
+
 	bool bShouldStop = false;
 	bool bHasRunningPushDataLoop = false;
+
+	// Loop-thread-only monotonic counter used to mint each connection's ClientID in wsBehavior.open.
+	int32 NextClientIDCounter{};
+
+	// Loop-thread-only liveness bookkeeping (ws -> ClientID). Written exclusively from wsBehavior.open/close
+	// and from inside Loop::defer() callbacks; never touched from the game thread. Consumed by Plan 03's
+	// deferred outbound sends.
+	TMap<uWS::WebSocket<false, true, FWebSocketUserData>*, int32> LoopLiveSockets{};
+
+	// Captured once, on the uWS loop thread, inside StartWebSocketServer. Consumed by Plan 03's outbound
+	// Loop::defer() calls.
+	uWS::Loop* CapturedLoop{ nullptr };
 
 	FString AuthenticationToken{};
 	
@@ -140,6 +152,12 @@ public:
 	void HandleEndpoint (FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode, FString& Out_Data, EInterfaceType Interface);
 	
 	FCallEndpointResponse CallEndpoint(UObject* WorldContext, FString InEndpoint, FRequestData RequestData, bool& bSuccess, int32& ErrorCode);
+
+	/** True if InName exactly matches a registered API endpoint name (any method). Used by the
+	 *  catch-all GET handler to tell bare-form API requests (which are extensionless, e.g.
+	 *  "getWorldInv") apart from web UI page navigations before serving the missing-web-UI
+	 *  fallback page. */
+	bool IsRegisteredEndpointName(const FString& InName) const;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void GetDropPodInfo_BIE(const AFGDropPod* Droppod, TSubclassOf<UFGItemDescriptor>& ItemClass, int32& Amount, float& Power);
@@ -172,6 +190,19 @@ public:
 
 	TSet<uWS::WebSocket<false, true, FWebSocketUserData>*> ConnectedClients{};
 
+	// Game-thread-owned authoritative (ws -> ClientID) liveness/generation map. A marshaled task or deferred
+	// send must validate its (ws, ClientID) pair against this map (via IsClientCurrent) before touching
+	// ConnectedClients/EndpointSubscribers or dereferencing ws — defends against ABA/pointer-reuse (D-03).
+	TMap<uWS::WebSocket<false, true, FWebSocketUserData>*, int32> ClientGenerations{};
+
+	// Player display-name cache, keyed by the stable online id from
+	// APlayerState::GetUniqueId().ToString() (consistent across reconnect). Populated from
+	// the getPlayer live loop via the crash-safe engine accessor (FUniqueNetIdRepl::IsValid
+	// + ToString null-check internally) — NOT FactoryGame's AFGPlayerState::GetUserID(),
+	// which asserts/SIGSEGVs on a dedicated server when the net id is unset. Never evicted
+	// (cleared only on server restart).
+	TMap<FString, FString> PlayerNameCache{};
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void InitSerialDevice();
 
@@ -190,9 +221,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ficsit Remote Monitoring")
 	FArduinoConfig GetSerialConfig();
 
-	void OnClientDisconnected(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message);
 	void OnMessageReceived(uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode);
 	void ProcessClientRequest(uWS::WebSocket<false, true, FWebSocketUserData>* ws, const TSharedPtr<FJsonObject>& JsonRequest);
+
+	/** Game-thread ws-validity helper: true only if ws is still registered in ClientGenerations with a
+	 *  matching ClientID. ws is used only as an opaque map key here — never dereferenced. */
+	bool IsClientCurrent(uWS::WebSocket<false, true, FWebSocketUserData>* ws, int32 ClientID) const;
 
 	void PushUpdatedData();
 
@@ -200,6 +234,18 @@ public:
 	bool IsAuthorizedRequest(uWS::HttpRequest* req, FString RequiredToken);
 	void AddResponseHeaders(uWS::HttpResponse<false>* res, bool bIncludeContentType);
 	void AddErrorJson(TArray<TSharedPtr<FJsonValue>>& JsonArray, const FString& ErrorMessage);
+
+	/** Loop-thread-only, synchronous WS subscribe/unsubscribe envelope validator (VALD-01). Strictly
+	 *  validates `action` (must be "subscribe"/"unsubscribe") and `endpoints` (string or array of
+	 *  strings, GET-only registry match) using the TryGet-family plus explicit EJson::String checks
+	 *  -- never the silently coercing GetStringField/AsString accessors. Reads only the
+	 *  immutable-after-BeginPlay APIEndpoints registry; never touches EndpointSubscribers (that
+	 *  stays game-thread-only). Returns false only on a whole-request reject (invalid/missing
+	 *  action, missing/wrong-typed endpoints field) -- OutErrorMessage is empty only when the
+	 *  envelope was fully valid with no invalid entries. OutValidNames always carries every entry
+	 *  that passed both the string-type and registered-GET checks, even when OutErrorMessage is
+	 *  non-empty (D-03 partial success). */
+	bool ValidateWSSubscriptionEnvelope(const TSharedPtr<FJsonObject>& JsonRequest, FString& OutAction, TArray<FString>& OutValidNames, FString& OutErrorMessage) const;
 		
 	TArray<FString> Flavor_Battery{};
 	TArray<FString> Flavor_Doggo{};
