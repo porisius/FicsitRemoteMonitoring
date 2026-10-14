@@ -1,4 +1,6 @@
+/*
 #pragma once
+
 
 #include "CoreMinimal.h"
 #include "FGRemoteCallObject.h"
@@ -22,3 +24,4 @@ public:
 	UFUNCTION(BlueprintCallable, Reliable, Server)
 	void Server_StopWebSocketServer(UWorld* WorldContext);
 };
+ */
