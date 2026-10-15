@@ -178,7 +178,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ficsit Remote Monitoring")
 	void StopSerialDevice();
 
-	void HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString Endpoint, FRequestData RequestData);
+	void HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, const std::string& QueryString, FString Endpoint, FRequestData RequestData);
 
 	void InitAPIRegistry();
 	void InitOutageNotification();
