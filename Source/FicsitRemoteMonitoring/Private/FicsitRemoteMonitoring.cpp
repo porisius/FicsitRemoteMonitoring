@@ -353,7 +353,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 
                 	FRequestData RequestData;
                 	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
-                    HandleApiRequest(World, res, req, Endpoint, RequestData);
+                    HandleApiRequest(World, res, std::string(req->getQuery().begin(), req->getQuery().end()), Endpoint, RequestData);
                 });
 
             	app.options("/*", [this, World](auto* res, uWS::HttpRequest* req)
@@ -370,13 +370,24 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 		            const std::string URL(req->getUrl().begin(), req->getUrl().end());
 					FString RelativePath = FString(URL.c_str()).Mid(1);
 
-            		res->onData([this, res, req, World, RelativePath](const std::string_view data, bool)
+            		// req is only valid inside this handler, but onData can run later (when the body arrives in its own
+            		// packet), so read what's needed from it now
+            		const std::string QueryString(req->getQuery().begin(), req->getQuery().end());
+            		const bool bIsAuthorized = IsAuthorizedRequest(req, AuthenticationToken);
+            		const std::shared_ptr<std::string> Body = std::make_shared<std::string>();
+
+            		res->onData([this, res, World, RelativePath, QueryString, bIsAuthorized, Body](const std::string_view data, const bool bLast)
             		{
+            			// the body can come in several chunks; parse it once the last one is in
+            			Body->append(data.data(), data.size());
+            			if (!bLast) return;
+
             			if (FRMRejectIfShuttingDown(res)) return;
 			            try
 			            {
-				            const std::string PostData(data);
-				            const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(FString(PostData.c_str()));
+				            // The body is UTF-8; FString(const char*) would widen each byte on its own (Latin-1) and garble non-ASCII text
+				            const FUTF8ToTCHAR PostData(Body->data(), Body->size());
+				            const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(FString(PostData.Length(), PostData.Get()));
 			            	TSharedPtr<FJsonValue> JsonValue;
 
 			            	if (!FJsonSerializer::Deserialize(Reader, JsonValue) || !JsonValue.IsValid())
@@ -385,11 +396,9 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 			            		return UFRM_RequestLibrary::SendErrorMessage(res, "400 Bad Request", FString("Invalid Request Body"));
 			            	}
 
-			            	const FString AuthToken = AuthenticationToken;
-			            	
 			            	FRequestData RequestData;
 			            	RequestData.Method = "POST";
-			            	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
+			            	RequestData.bIsAuthorized = bIsAuthorized;
 			            	
 			            	if (JsonValue->Type == EJson::Array)
 			            	{
@@ -405,7 +414,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 			            		return UFRM_RequestLibrary::SendErrorMessage(res, "400 Bad Request", FString("Invalid Request Body"));
 			            	}
 
-			            	HandleApiRequest(World, res, req, RelativePath, RequestData);
+			            	HandleApiRequest(World, res, QueryString, RelativePath, RequestData);
 			            }
 			            catch (const std::exception& e)
 			            {
@@ -449,7 +458,7 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                     else {
                     	FRequestData RequestData;
                     	RequestData.bIsAuthorized = IsAuthorizedRequest(req, AuthToken);
-                        HandleApiRequest(World, res, req, RelativePath, RequestData);
+                        HandleApiRequest(World, res, std::string(req->getQuery().begin(), req->getQuery().end()), RelativePath, RequestData);
                     }
                 });
 
@@ -741,10 +750,9 @@ FString AFicsitRemoteMonitoring::GenerateAuthToken(const int32 Length)
 	return RandomString;
 }
 
-void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, uWS::HttpRequest* req, FString Endpoint, FRequestData RequestData)
+void AFicsitRemoteMonitoring::HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, const std::string& QueryString, FString Endpoint, FRequestData RequestData)
 {
 	// Parse all query parameters
-	const std::string QueryString(req->getQuery().begin(), req->getQuery().end());
 	const auto QueryParams = ParseQueryString(QueryString);
 
 	TMap<FString, FString> RequestQueryParams = TMap<FString, FString>();
