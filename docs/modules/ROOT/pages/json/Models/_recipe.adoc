@@ -5,6 +5,7 @@
 
 | {depth}  ManualDuration | Float | The manual manufacturing duration for this recipe.
 | {depth}  FactoryDuration | Float | The base manufacturing duration for this recipe.
+| {depth}  Unlocked | Boolean | Has this recipe been unlocked in the current save (via a milestone, the M.A.M., the AWESOME Shop, a Hard Drive…)?
 
 | {depth}  Events | String[] | Event when the schematic is active. Possible Events: +
 `Satisfactory Birthday` +

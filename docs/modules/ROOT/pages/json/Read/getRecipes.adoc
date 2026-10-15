@@ -73,7 +73,8 @@ This example includes only two recipes to showcase the structure of the endpoint
       "BP_BuildGun_C"
     ],
     "ManualDuration": 1,
-    "FactoryDuration": 1
+    "FactoryDuration": 1,
+    "Unlocked": true
   },
   {
     "ID": "Recipe_Wall_Window_8x4_03_Steel_C",
