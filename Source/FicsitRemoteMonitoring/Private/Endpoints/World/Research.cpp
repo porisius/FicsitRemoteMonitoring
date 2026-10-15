@@ -5,6 +5,7 @@
 #include "Dom/JsonValue.h"
 #include "FGResearchManager.h"
 #include "FGSchematicManager.h"
+#include "FGRecipeManager.h"
 #include "FGItemPickup.h"
 #include "FGResearchTree.h"
 #include "FGItemCategory.h"
@@ -274,6 +275,9 @@ TSharedPtr<FJsonObject> UResearch::getRecipe(UObject* WorldContext, TSubclassOf<
 	JRecipe->Values.Add("ProducedIn", MakeShared<FJsonValueArray>(JProducedInArray));
 	JRecipe->Values.Add("ManualDuration", MakeShared<FJsonValueNumber>(ManualDuration));
 	JRecipe->Values.Add("FactoryDuration", MakeShared<FJsonValueNumber>(FactoryDuration));
+
+	AFGRecipeManager* RecipeManager = AFGRecipeManager::Get(WorldContext->GetWorld());
+	JRecipe->Values.Add("Unlocked", MakeShared<FJsonValueBoolean>(IsValid(RecipeManager) && RecipeManager->IsRecipeAvailable(Recipe)));
 
 	return JRecipe;
 }
