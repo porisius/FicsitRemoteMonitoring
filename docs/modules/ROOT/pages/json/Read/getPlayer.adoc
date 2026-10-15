@@ -18,6 +18,7 @@ include::../_responseBody.adoc[]
 {set:key-name:location}
 {set:key-description:Location of the Player.}
 include::../Models/_location.adoc[]
+| {depth}  pitch | Float | Where the player is looking up or down, in degrees: -90 = straight down, 0 = level, 90 = straight up.
 
 | PlayerHP | Float | HP of the Player.
 | Speed | Float | Speed of the Player.
@@ -43,7 +44,8 @@ include::../Models/_features.adoc[]
       "x": -57604.6796875,
       "y": 260436.1875,
       "z": -3018.36083984375,
-      "rotation": 115.5536737696151
+      "rotation": 115.5536737696151,
+      "pitch": 20.3
     },
     "Online": true,
     "PlayerHP": 100,
