@@ -27,7 +27,11 @@ void UPlayerLibrary::getPlayer(UObject* WorldContext, FRequestData RequestData, 
 
 		JPlayer->Values.Add("Name", MakeShared<FJsonValueString>(PlayerName));
 		JPlayer->Values.Add("ClassName", MakeShared<FJsonValueString>(Player->GetClass()->GetName()));
-		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(getActorJSON(Player))); 
+		// The character's own pitch is always 0 (it only turns left/right), so use where the player is looking:
+		// -90 (straight down) to 90 (straight up)
+		TSharedPtr<FJsonObject> JLocation = getActorJSON(Player);
+		JLocation->Values.Add("pitch", MakeShared<FJsonValueNumber>(FRotator::NormalizeAxis(PlayerCharacter->GetViewRotation().Pitch)));
+		JPlayer->Values.Add("location", MakeShared<FJsonValueObject>(JLocation));
 		//JPlayer->Values.Add("PlayerID", MakeShared<FJsonValueString>(PlayerState->GetUserID()));
 		JPlayer->Values.Add("Speed", MakeShared<FJsonValueNumber>(PlayerCharacter->GetVelocity().Length() * 0.036));
 		JPlayer->Values.Add("Online", MakeShared<FJsonValueBoolean>(PlayerCharacter->IsPlayerOnline()));
