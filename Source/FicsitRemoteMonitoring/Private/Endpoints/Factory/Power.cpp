@@ -15,6 +15,7 @@
 #include "RemoteMonitoringLibrary.h"
 #include "FRM_Request.h"
 #include "FRM_RequestData.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 void UPower::getPower(UObject* WorldContext, FRequestData RequestData, TArray<TSharedPtr<FJsonValue>>& OutJsonArray)
@@ -308,8 +309,27 @@ TArray<TSharedPtr<FJsonValue>> UPower::getGenerators_Helper(UObject* WorldContex
 			JSupplemental->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(Supplemental).ToString()));
 			JSupplemental->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(Supplemental.Get())));
 			JSupplemental->Values.Add("CurrentConsumed", MakeShared<FJsonValueNumber>(GeneratorFuel->GetSupplementalConsumptionRateCurrent() * 60));
-			JSupplemental->Values.Add("MaxConsumed", MakeShared<FJsonValueNumber>(GeneratorFuel->GetSupplementalConsumptionRateCurrent() * 60));
-			JSupplemental->Values.Add("PercentFull", MakeShared<FJsonValueNumber>(GeneratorFuel->GetSupplementalAmount() * 100));
+			JSupplemental->Values.Add("MaxConsumed", MakeShared<FJsonValueNumber>(GeneratorFuel->GetSupplementalConsumptionRateMaximum() * 60));
+
+			// How full the supplemental (water) slot of the fuel inventory is. GetSupplementalAmount() is only the
+			// share reserved for the current burn, so it rises and falls with FuelAmount instead.
+			float SupplementalAmount = 0.f;
+			float SupplementalCapacity = 0.f;
+			UFGInventoryComponent* SupplementalInventory = GeneratorFuel->GetFuelInventory();
+			const int32 SupplementalIndex = GeneratorFuel->GetSupplementalResourceInventoryIndex();
+			if (Supplemental && IsValid(SupplementalInventory) && SupplementalInventory->IsValidIndex(SupplementalIndex))
+			{
+				const EResourceForm SupplementalForm = UFGItemDescriptor::GetForm(Supplemental);
+				FInventoryStack SupplementalStack;
+				if (SupplementalInventory->GetStackFromIndex(SupplementalIndex, SupplementalStack) && SupplementalStack.HasItems())
+				{
+					SupplementalAmount = UFGInventoryLibrary::GetAmountConvertedByForm(SupplementalStack.NumItems, SupplementalForm);
+				}
+				SupplementalCapacity = UFGInventoryLibrary::GetAmountConvertedByForm(SupplementalInventory->GetSlotSize(SupplementalIndex, Supplemental), SupplementalForm);
+			}
+			JSupplemental->Values.Add("Amount", MakeShared<FJsonValueNumber>(SupplementalAmount));
+			JSupplemental->Values.Add("Capacity", MakeShared<FJsonValueNumber>(SupplementalCapacity));
+			JSupplemental->Values.Add("PercentFull", MakeShared<FJsonValueNumber>(UKismetMathLibrary::SafeDivide(SupplementalAmount, SupplementalCapacity) * 100));
 
 			FuelAmount = GeneratorFuel->GetFuelAmount();
 			FuelForm = UFGItemDescriptor::GetForm(GeneratorFuel->GetCurrentFuelClass());

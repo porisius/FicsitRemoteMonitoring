@@ -42,7 +42,9 @@ include::../Models/_location.adoc[]
 | {depth}  ClassName | String | UE Class Name
 | {depth}  CurrentConsumed | Float | Rate of Supplement Consumption
 | {depth}  MaxConsumed | Float | Max Rate of Supplement Consumption
-| {depth}  PercentFull | Float | Inventory Used of Supplement Storage (in %)
+| {depth}  Amount | Float | Supplement in the generator's tank (m³ for water)
+| {depth}  Capacity | Float | Size of the generator's supplement tank (m³ for water)
+| {depth}  PercentFull | Float | How full the supplement tank is (`Amount` / `Capacity`, in %)
 
 | FuelResource | Float | Fuel Type in Inventory
 | NuclearWarning | String | Nuclear Power System Alarm (Nuclear Reactors Only)
