@@ -121,6 +121,17 @@ If you wish to contribute to the mod, you will need to setup the [modding enviro
   - This is required for packing/testing the mod, due to handling potential Serial/RS232 Device Communication.
 - Continue from [here](https://docs.ficsit.app/satisfactory-modding/latest/Development/BeginnersGuide/project_setup.html#_generate_visual_studio_files) to compile the project for opening in Unreal Engine Editor.
 
+#### Building on Linux with Nix
+
+On x86_64 Linux with [Nix](https://nixos.org/download) (flakes enabled), `flake.nix` sets up an environment that builds both the LinuxServer and Win64 packages, with no Windows machine needed.
+
+You will need:
+- A GitHub account [linked to your Epic account](https://www.unrealengine.com/en-US/ue-on-github), with the EpicGames org invite accepted (the modding engine repo is private).
+- A free [Audiokinetic](https://www.audiokinetic.com/) account, exported as `WWISE_EMAIL` and `WWISE_PASSWORD`.
+- About 60GB of free disk. The workspace defaults to `~/satisfactory-modding`; set `FRM_WORKSPACE` to put it somewhere else.
+
+From your clone of this repo, run `nix develop`. A banner lists the bootstrap steps (`frm-fetch-engine`, `frm-fetch-sml`, ... `frm-package`), and `frm-status` shows which ones are done. All downloaded dependencies are pinned in `flake.nix`.
+
 ### Improving The Documentation
 
 The [Documentation](https://docs.ficsit.app/ficsitremotemonitoring/latest/) can always use improvements to include clarifying instructions, correcting inaccurate information, or better presentation.
