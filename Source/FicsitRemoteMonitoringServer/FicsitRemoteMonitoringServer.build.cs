@@ -42,9 +42,10 @@ public class FicsitRemoteMonitoringServer : ModuleRules
 
     public void ApplySMLPatch()
     {
-        // Example ModuleDirectory: C:\Modding\Satisfactory\SatisfactoryModLoader\Mods\FicsitRemoteMonitoring\Source\FicsitRemoteMonitoring
-        string patchPath = Path.Combine(ModuleDirectory, "..", "..", "Patches", "FGServerAPIManager-FRM-04162025.patch");
-        string headerPath = Path.Combine(ModuleDirectory, "..", "..", "..", "..", "Source", "FactoryDedicatedServer", "Public", "Networking", "FGServerAPIManager.h");
+        // Resolve from the plugin and project roots rather than walking up from ModuleDirectory,
+        // so this works whether the mod sits in Mods\ or Mods\GameFeatures\ (or is symlinked in).
+        string patchPath = Path.Combine(PluginDirectory, "Patches", "FGServerAPIManager-FRM-04162025.patch");
+        string headerPath = Path.Combine(Target.ProjectFile.Directory.FullName, "Source", "FactoryDedicatedServer", "Public", "Networking", "FGServerAPIManager.h");
 
         // Check if the target line is still 'private:' before patching
         bool needsPatch = false;
