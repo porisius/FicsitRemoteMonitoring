@@ -26,6 +26,29 @@ include::../Models/_boundingBox.adoc[]
 // power info fields
 include::../Models/_powerInfo.adoc[]
 
+| DesignHeadLift | Float | How high this pump pushes fluid above itself at full flow, in metres (Mk.1 20, Mk.2 50; 0 for a valve).
+| MaxHeadLift | Float | Height at which its flow stops, in metres (Mk.1 22, Mk.2 55; 0 for a valve).
+| HeadLift | Float | Head lift it's working against right now, in metres: the height of the fluid pushing back on it, as on its in-game panel. It also sits at the max when the line is full and backed up.
+| HeadLiftPercent | Float | HeadLift as a percentage of MaxHeadLift.
+| Flow | Float | Flow through the pump or valve, in m³ per minute.
+| FlowPercent | Float | Flow as a percentage of MaxFlow.
+| FlowLimit | Float | The flow limit set on it, in m³ per minute; -1 = fully open.
+| MaxFlow | Float | Most it can pass, in m³ per minute (set by the pipes on it).
+| Fluid | String | Name of the fluid going through it ("" if none).
+| FluidClassName | String | Class Name of that fluid.
+
+{set:key-name:location0}
+{set:key-description:Location of its first pipe connection}
+include::../Models/_location.adoc[tags=!rotation]
+| ConnectionType0 | String | What the first connection is: `Consumer` = the pump's input, `Producer` = its output.
+| ConnectedTo0 | String | ID of the pipe on the first connection ("" if none).
+
+{set:key-name:location1}
+{set:key-description:Location of its second pipe connection}
+include::../Models/_location.adoc[tags=!rotation]
+| ConnectionType1 | String | What the second connection is (`Consumer` / `Producer`).
+| ConnectedTo1 | String | ID of the pipe on the second connection ("" if none).
+
 include::../Models/_features.adoc[]
 
 |===
@@ -63,9 +86,33 @@ include::../Models/_features.adoc[]
     "PowerInfo": {
       "CircuitGroupID": -1,
       "CircuitID": -1,
-      "PowerConsumed": 0,
-      "MaxPowerConsumed": 0
-    }
+      "PowerConsumed": 4,
+      "MaxPowerConsumed": 4
+    },
+    "DesignHeadLift": 20,
+    "MaxHeadLift": 22,
+    "HeadLift": 16.9,
+    "HeadLiftPercent": 76.9,
+    "Flow": 299.9,
+    "FlowPercent": 99.97,
+    "FlowLimit": -1,
+    "MaxFlow": 300,
+    "location0": {
+      "x": -5246.6,
+      "y": 48738.5,
+      "z": 26675
+    },
+    "ConnectionType0": "Consumer",
+    "ConnectedTo0": "Build_Pipeline_C_2146879648",
+    "location1": {
+      "x": -5326.6,
+      "y": 48738.5,
+      "z": 26675
+    },
+    "ConnectionType1": "Producer",
+    "ConnectedTo1": "Build_Pipeline_C_2146879651",
+    "Fluid": "Water",
+    "FluidClassName": "Desc_Water_C"
   }
 ]
 -----------------
