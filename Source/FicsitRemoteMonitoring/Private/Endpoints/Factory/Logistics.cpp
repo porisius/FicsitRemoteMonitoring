@@ -27,6 +27,23 @@ static FString ConnectedOwnerID(const UActorComponent* Partner) {
 	return IsValid(Owner) ? Owner->GetName() : FString();
 }
 
+// What a pipe connection does: "Producer" (fluid comes out of it, e.g. a refinery or extractor output),
+// "Consumer" (fluid goes in), "Any" (pipes, junctions, buffers) or "" when there is nothing there
+static FString PipeConnectionTypeName(const UFGPipeConnectionComponentBase* Connection) {
+	if (!IsValid(Connection)) { return FString(); }
+	switch (Connection->GetPipeConnectionType()) {
+	case EPipeConnectionType::PCT_CONSUMER: return TEXT("Consumer");
+	case EPipeConnectionType::PCT_PRODUCER: return TEXT("Producer");
+	case EPipeConnectionType::PCT_SNAP_ONLY: return TEXT("SnapOnly");
+	default: return TEXT("Any");
+	}
+}
+
+static void AddFluidJSON(TSharedPtr<FJsonObject> Json, TSubclassOf<UFGItemDescriptor> Fluid) {
+	Json->Values.Add("Fluid", MakeShared<FJsonValueString>(Fluid ? UFGItemDescriptor::GetItemName(Fluid).ToString() : TEXT("")));
+	Json->Values.Add("FluidClassName", MakeShared<FJsonValueString>(Fluid ? UKismetSystemLibrary::GetClassDisplayName(Fluid) : TEXT("")));
+}
+
 TArray<TSharedPtr<FJsonValue>> ULogistics::getBelts_Helper(UObject* WorldContext, bool IsBelt) {
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
 
@@ -91,6 +108,32 @@ void ULogistics::getPump(UObject* WorldContext, FRequestData RequestData, TArray
 	for (AFGBuildablePipelinePump* Pump : BuildablePumps) {
 		TSharedPtr<FJsonObject> JPump = CreateBuildableBaseJsonObject(Pump);
 		JPump->Values.Add("PowerInfo", MakeShared<FJsonValueObject>(getPowerConsumptionJSON(Pump->GetPowerInfo())));
+
+		// Head lift, in metres: how high this pump can push fluid above itself (design = full flow, max = flow
+		// stops) and how much it is pushing right now (the height of fluid pushing back on it, as on its panel).
+		// Valves report 0 / 0.
+		JPump->Values.Add("DesignHeadLift", MakeShared<FJsonValueNumber>(Pump->GetDesignHeadLift()));
+		JPump->Values.Add("MaxHeadLift", MakeShared<FJsonValueNumber>(Pump->GetMaxHeadLift()));
+		JPump->Values.Add("HeadLift", MakeShared<FJsonValueNumber>(Pump->GetIndicatorHeadLift()));
+		JPump->Values.Add("HeadLiftPercent", MakeShared<FJsonValueNumber>(Pump->GetIndicatorHeadLiftPct() * 100));
+
+		// Flow in m³/min (the game works in m³/s); FlowLimit is the valve/limit setting, -1 = fully open
+		JPump->Values.Add("Flow", MakeShared<FJsonValueNumber>(Pump->GetIndicatorFlow() * 60));
+		JPump->Values.Add("FlowPercent", MakeShared<FJsonValueNumber>(Pump->GetIndicatorFlowPct() * 100));
+		JPump->Values.Add("FlowLimit", MakeShared<FJsonValueNumber>(Pump->GetUserFlowLimit() < 0 ? -1.f : Pump->GetUserFlowLimit() * 60));
+		JPump->Values.Add("MaxFlow", MakeShared<FJsonValueNumber>(Pump->GetDefaultFlowLimit() * 60));
+
+		// Both pipe connections, so clients know which way the pump faces and what it is attached to
+		TArray<UFGPipeConnectionComponent*> Connections = Pump->GetPipeConnections();
+		TSubclassOf<UFGItemDescriptor> Fluid = nullptr;
+		for (int32 i = 0; i < 2; i++) {
+			UFGPipeConnectionComponent* Connection = Connections.IsValidIndex(i) ? Connections[i] : nullptr;
+			if (IsValid(Connection) && !Fluid) { Fluid = Connection->GetFluidDescriptor(); }
+			JPump->Values.Add(FString::Printf(TEXT("location%d"), i), MakeShared<FJsonValueObject>(getActorPipeXYZ(Pump, Connection)));
+			JPump->Values.Add(FString::Printf(TEXT("ConnectionType%d"), i), MakeShared<FJsonValueString>(PipeConnectionTypeName(Connection)));
+			JPump->Values.Add(FString::Printf(TEXT("ConnectedTo%d"), i), MakeShared<FJsonValueString>(ConnectedOwnerID(IsValid(Connection) ? Connection->GetConnection() : nullptr)));
+		}
+		AddFluidJSON(JPump, Fluid);
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JPump));
 	}
 }
@@ -210,8 +253,22 @@ void ULogistics::getPipes(UObject* WorldContext, FRequestData RequestData, TArra
 		JPipe->Values.Add("Connected1", MakeShared<FJsonValueBoolean>(ConnectionOne->IsConnected()));
 		JPipe->Values.Add("ConnectedTo0", MakeShared<FJsonValueString>(ConnectedOwnerID(ConnectionZero->GetConnection())));
 		JPipe->Values.Add("ConnectedTo1", MakeShared<FJsonValueString>(ConnectedOwnerID(ConnectionOne->GetConnection())));
+		// what the far side of each end is: "Producer" = fluid comes out of it (an extractor or machine output),
+		// "Consumer" = fluid goes into it, "Any" = another pipe, junction, buffer…
+		JPipe->Values.Add("ConnectedType0", MakeShared<FJsonValueString>(PipeConnectionTypeName(ConnectionZero->GetConnection())));
+		JPipe->Values.Add("ConnectedType1", MakeShared<FJsonValueString>(PipeConnectionTypeName(ConnectionOne->GetConnection())));
 		JPipe->Values.Add("Length", MakeShared<FJsonValueNumber>(Pipe->GetLength()));
 		JPipe->Values.Add("Speed", MakeShared<FJsonValueNumber>(Pipe->GetFlowLimit()));
+
+		// What is in the pipe: content in m³, flow in m³/min. Read from the fluid simulation itself: the
+		// pipe's "indicator" values (its in-game panel) are only kept up to date on clients, not on a server.
+		AddFluidJSON(JPipe, Pipe->GetFluidDescriptor());
+		const FFluidBox* Box = Pipe->GetFluidBox();
+		JPipe->Values.Add("Content", MakeShared<FJsonValueNumber>(Box ? Box->Content : 0.f));
+		JPipe->Values.Add("Capacity", MakeShared<FJsonValueNumber>(Pipe->GetMaxContent()));
+		JPipe->Values.Add("Flow", MakeShared<FJsonValueNumber>(Box ? Box->FlowThrough * 60 : 0.f));
+		JPipe->Values.Add("MaxFlow", MakeShared<FJsonValueNumber>(Pipe->GetFlowLimit() * 60));
+		JPipe->Values.Add("PipeNetworkID", MakeShared<FJsonValueNumber>(ConnectionZero->GetPipeNetworkID()));
 		JPipe->Values.Add("features", MakeShared<FJsonValueObject>(getActorFeaturesJSON(Cast<AActor>(Pipe), Pipe->mDisplayName.ToString(), Pipe->mDisplayName.ToString())));
 
 		OutJsonArray.Add(MakeShared<FJsonValueObject>(JPipe));

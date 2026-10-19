@@ -842,7 +842,8 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	RegisterEndpoint(FAPIEndpoint("GET", "getNuclearGenerator", &UPower::getNuclearGenerator));
 	RegisterEndpoint(FAPIEndpoint("GET", "getPackager", &UFactoryLibrary::getPackager));
 	RegisterEndpoint(FAPIEndpoint("GET", "getParticle", &UFactoryLibrary::getParticle));
-	RegisterEndpoint(FAPIEndpoint("GET", "getPipes", &ULogistics::getPipes));
+	// RequiresGameThread: reads the live fluid simulation (content, flow) of every pipe
+	RegisterEndpoint(FAPIEndpoint("GET", "getPipes", &ULogistics::getPipes).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPipeJunctions", &ULogistics::getPipeJunctions));
 	RegisterEndpoint(FAPIEndpoint("GET", "getPlayer", &UPlayerLibrary::getPlayer).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getPortal", &USupport::getPortal));
@@ -856,7 +857,8 @@ void AFicsitRemoteMonitoring::InitAPIRegistry()
 	// GetProductivity(), which check()s IsInGameThread(). This was the most
 	// frequent startup crash - the web UI polls it on a timer.
 	RegisterEndpoint(FAPIEndpoint("GET", "getProdStats", &USession::getProdStats).RequiresGameThread());
-	RegisterEndpoint(FAPIEndpoint("GET", "getPump", &ULogistics::getPump));
+	// RequiresGameThread: reads the live head lift and flow of every pump
+	RegisterEndpoint(FAPIEndpoint("GET", "getPump", &ULogistics::getPump).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getRadarTower", &USupport::getRadarTower));
 	RegisterEndpoint(FAPIEndpoint("GET", "getRecipes", &UResearch::getRecipes).RequiresGameThread());
 	RegisterEndpoint(FAPIEndpoint("GET", "getRefinery", &UFactoryLibrary::getRefinery));
