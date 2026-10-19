@@ -1,4 +1,4 @@
-:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
+﻿:url-repo: https://www.github.com/porisius/FicsitRemoteMonitoring
 :depth:
 
 = Get Pipes
@@ -38,9 +38,18 @@ include::../Models/_location.adoc[tags=!rotation]
 | Connected1 | Boolean | Is Pipe Connected at ending point?
 | ConnectedTo0 | String | ID of the building the pipe is connected to at its starting point ("" if none): another pipe, a junction, pump, valve, machine, fluid buffer… Follow these to trace a line from piece to piece.
 | ConnectedTo1 | String | ID of the building the pipe is connected to at its ending point ("" if none).
+| ConnectedType0 | String | What the connection at the starting point is plugged into: `Producer` (fluid comes out of it: an extractor's or machine's output), `Consumer` (fluid goes into it: a machine's or generator's input), `Any` (another pipe, a junction, buffer…) or "" if nothing.
+| ConnectedType1 | String | The same for the ending point.
 
 | Length | Float | Length of the Pipe in centimetre (cm).
 | ItemsPerMinute | Float | Speed of the Pipe.
+| Fluid | String | Name of the fluid in the pipe's network ("" if none yet).
+| FluidClassName | String | Class Name of that fluid.
+| Content | Float | Fluid in this pipe right now, in cubic metres (m³).
+| Capacity | Float | How much this pipe holds, in m³.
+| Flow | Float | Flow through this pipe, in m³ per minute (a snapshot of the simulation; can swing).
+| MaxFlow | Float | Most this pipe can carry, in m³ per minute (300 Mk.1, 600 Mk.2).
+| PipeNetworkID | Integer | ID of the game's pipe network this pipe belongs to.
 
 include::../Models/_features.adoc[]
 
@@ -132,8 +141,17 @@ include::../Models/_features.adoc[]
     "Connected1": true,
     "ConnectedTo0": "Build_PipelineJunction_T_C_2147459566",
     "ConnectedTo1": "Build_OilRefinery_C_2147459571",
+    "ConnectedType0": "Any",
+    "ConnectedType1": "Consumer",
     "Length": 2761.6640625,
     "Speed": 5,
+    "Fluid": "Crude Oil",
+    "FluidClassName": "Desc_LiquidOil_C",
+    "Content": 7.2,
+    "Capacity": 37.0,
+    "Flow": 120.0,
+    "MaxFlow": 300,
+    "PipeNetworkID": 9,
     "features": {
       "properties": {
         "name": "Pipeline Mk.1",
