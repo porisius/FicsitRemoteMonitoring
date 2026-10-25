@@ -181,6 +181,7 @@ public:
 	void HandleApiRequest(UObject* World, uWS::HttpResponse<false>* res, const std::string& QueryString, FString Endpoint, FRequestData RequestData);
 
 	void InitAPIRegistry();
+	void LogInvalidSchematicRecipes();
 	void InitOutageNotification();
 	void InitTrainDerailNotification();
 

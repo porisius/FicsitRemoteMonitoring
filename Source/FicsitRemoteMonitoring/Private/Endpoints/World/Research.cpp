@@ -171,6 +171,8 @@ void UResearch::getRecipes(UObject* WorldContext, FRequestData RequestData, TArr
 		ModSubsystem->SchematicToRecipes_BIE(WorldContext, Schematic, Recipes, Purchased, HasUnlocks, LockedAny, LockedTutorial, LockedDependent, LockedPhase, Tutorial);
 
 		for (TSubclassOf<UFGRecipe> Recipe : Recipes) {
+			// Skip recipes that aren't loaded (see GetSchematicJson).
+			if (!IsValid(Recipe)) continue;
 			if (RecipeList.Contains(Recipe->GetName())) continue;
 
 			TSharedPtr<FJsonObject> JRecipe = getRecipe(WorldContext, Recipe);
@@ -196,13 +198,13 @@ void UResearch::getSchematics(UObject* WorldContext, FRequestData RequestData, T
 }
 
 TSharedPtr<FJsonObject> UResearch::getRecipe(UObject* WorldContext, TSubclassOf<UFGRecipe> Recipe) {
-	
+
+	if (!IsValid(Recipe)) { return MakeShared<FJsonObject>(); }
+
 	TSharedPtr<FJsonObject> JRecipe = CreateBaseJsonObject(Recipe);
 	
 	AFicsitRemoteMonitoring* ModSubsystem = AFicsitRemoteMonitoring::Get(WorldContext->GetWorld());
 	fgcheck(ModSubsystem);
-
-	if (!IsValid(Recipe)) { return JRecipe; };
 
 	float ManualDuration = UFGRecipe::GetManualManufacturingDuration(Recipe);
 	float FactoryDuration = UFGRecipe::GetManufacturingDuration(Recipe);
