@@ -30,6 +30,8 @@
 #include "Endpoints/World/Resources.h"
 #include "Endpoints/World/Session.h"
 #include "Engine/World.h"
+#include "FGRecipe.h"
+#include "FGSchematicManager.h"
 #include "Libraries/Validation.h"
 #include "Misc/FileHelper.h"
 #include "Patching/NativeHookManager.h"
@@ -96,7 +98,13 @@ void AFicsitRemoteMonitoring::BeginPlay()
 
 	// Load FRM's API Endpoints
 	InitAPIRegistry();
-	
+
+	// Warn once about schematics that unlock a recipe that isn't loaded (usually a
+	// broken or missing mod). getSchematics/getRecipes skip those recipes silently.
+	// Delayed so modded schematics are registered with the schematic manager first.
+	FTimerHandle InvalidRecipeScanTimer;
+	GetWorldTimerManager().SetTimer(InvalidRecipeScanTimer, this, &AFicsitRemoteMonitoring::LogInvalidSchematicRecipes, 10.0f, false);
+
 	// Read the auth token ONCE here, on the game thread, and cache it in the
 	// AuthenticationToken member. The uWS request handlers must not read config
 	// per-request: that runs on the uWS worker thread and reaches GEngine, which
@@ -139,6 +147,39 @@ void AFicsitRemoteMonitoring::BeginPlay()
 
 	// Register the callback to ensure WebSocket is stopped on crash/exit
 	FCoreDelegates::OnExit.AddUObject(this, &AFicsitRemoteMonitoring::StopWebSocketServer);
+}
+
+void AFicsitRemoteMonitoring::LogInvalidSchematicRecipes()
+{
+	AFGSchematicManager* SchematicManager = AFGSchematicManager::Get(GetWorld());
+	if (!IsValid(SchematicManager)) return;
+
+	TArray<TSubclassOf<UFGSchematic>> Schematics;
+	SchematicManager->GetAllSchematics(Schematics);
+
+	int32 BadSchematics = 0;
+	for (const TSubclassOf<UFGSchematic>& Schematic : Schematics) {
+		if (!IsValid(Schematic)) continue;
+
+		TArray<TSubclassOf<UFGRecipe>> Recipes;
+		bool Purchased = false, HasUnlocks = false, LockedAny = false, LockedTutorial = false, LockedDependent = false, LockedPhase = false, Tutorial = false;
+		SchematicToRecipes_BIE(this, Schematic, Recipes, Purchased, HasUnlocks, LockedAny, LockedTutorial, LockedDependent, LockedPhase, Tutorial);
+
+		int32 Invalid = 0;
+		for (const TSubclassOf<UFGRecipe>& Recipe : Recipes) {
+			if (!IsValid(Recipe)) Invalid++;
+		}
+
+		if (Invalid > 0) {
+			BadSchematics++;
+			UE_LOG(LogFRMAPI, Warning, TEXT("Schematic %s (%s) unlocks %d recipe(s) that are not loaded. getSchematics and getRecipes will skip them."),
+				*Schematic->GetName(), *Schematic->GetPathName(), Invalid);
+		}
+	}
+
+	if (BadSchematics > 0) {
+		UE_LOG(LogFRMAPI, Warning, TEXT("%d schematic(s) unlock recipes that are not loaded, usually a missing or broken mod. See the warnings above."), BadSchematics);
+	}
 }
 
 void AFicsitRemoteMonitoring::StartWebSocketPushDataLoop()

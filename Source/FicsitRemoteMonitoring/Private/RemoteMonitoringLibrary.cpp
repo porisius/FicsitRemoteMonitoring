@@ -413,6 +413,10 @@ TSharedPtr<FJsonObject> URemoteMonitoringLibrary::GetSchematicJson(AFicsitRemote
 	ModSubsystem->SchematicToRecipes_BIE(WorldContext, Schematic, Recipes, Purchased, HasUnlocks, LockedAny, LockedTutorial, LockedDependent, LockedPhase, Tutorial);
 
 	for (const TSubclassOf<UFGRecipe>& Recipe : Recipes) {
+		// A schematic can list a recipe that isn't loaded (broken/missing mod). Skip it;
+		// AFicsitRemoteMonitoring::LogInvalidSchematicRecipes reports these at startup.
+		if (!IsValid(Recipe)) continue;
+
 		TSharedPtr<FJsonObject> JRecipe = UResearch::getRecipe(WorldContext, Recipe);
 		JRecipeArray.Add(MakeShared<FJsonValueObject>(JRecipe));
 	}
@@ -500,6 +504,10 @@ TArray<TSharedPtr<FJsonValue>> URemoteMonitoringLibrary::GetInventoryJSON(const 
 TSharedPtr<FJsonObject> URemoteMonitoringLibrary::CreateBaseJsonObject(const UObject* Actor)
 {
 	TSharedPtr<FJsonObject> JObject = MakeShared<FJsonObject>();
+	if (!Actor) {
+		JObject->Values.Add("ID", MakeShared<FJsonValueString>(TEXT("")));
+		return JObject;
+	}
 	JObject->Values.Add("ID", MakeShared<FJsonValueString>(Actor->GetName()));
 
 	return JObject;
