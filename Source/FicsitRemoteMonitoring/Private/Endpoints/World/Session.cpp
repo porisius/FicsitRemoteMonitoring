@@ -277,13 +277,13 @@ void USession::getProdStats(UObject* WorldContext, FRequestData RequestData, TAr
 
 		TSubclassOf<UFGItemDescriptor> FuelItemClass = Generator->GetCurrentFuelClass();
 		float EnergyValue = UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetEnergyValue(FuelItemClass), UFGItemDescriptor::GetForm(FuelItemClass));
-		float ProductionCapacity = Generator->GetCurrentPotential();
+		float ProductionCapacity = Generator->GetPowerProductionCapacity();
 		float Productivity = Generator->GetProductivity();
 		
 		float MaxFuelConsumption = 60 * (SafeDivide_Float(ProductionCapacity, EnergyValue));
 		float FuelConsumption = MaxFuelConsumption * Productivity;
 
-		if (CurrentProduced.Contains(FuelItemClass)) {
+		if (CurrentConsumed.Contains(FuelItemClass)) {
 			CurrentConsumed.Add(FuelItemClass) = FuelConsumption + CurrentConsumed.FindRef(FuelItemClass);
 			TotalConsumed.Add(FuelItemClass) = MaxFuelConsumption + TotalConsumed.FindRef(FuelItemClass);
 		}
@@ -298,7 +298,7 @@ void USession::getProdStats(UObject* WorldContext, FRequestData RequestData, TAr
 			float Consumption = Generator->GetSupplementalConsumptionRateCurrent() * 60;
 			float MaxConsumption = Generator->GetSupplementalConsumptionRateMaximum() * 60;
 
-			if (CurrentProduced.Contains(SupplementalItemClass)) {
+			if (CurrentConsumed.Contains(SupplementalItemClass)) {
 				CurrentConsumed.Add(SupplementalItemClass) = Consumption + CurrentConsumed.FindRef(SupplementalItemClass);
 				TotalConsumed.Add(SupplementalItemClass) = MaxConsumption + TotalConsumed.FindRef(SupplementalItemClass);
 			}
