@@ -342,7 +342,12 @@ TArray<TSharedPtr<FJsonValue>> UPower::getGenerators_Helper(UObject* WorldContex
 
 				TSharedPtr<FJsonObject> JFuel = MakeShared<FJsonObject>();
 
-				float EnergyValue = UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetEnergyValue(FuelClass), UFGItemDescriptor::GetForm(FuelClass));
+				// MJ per item; fluids are MJ per liter in the game data, so report MJ per m3 like other fluid amounts
+				float EnergyValue = UFGItemDescriptor::GetEnergyValue(FuelClass);
+				const EResourceForm FuelClassForm = UFGItemDescriptor::GetForm(FuelClass);
+				if (FuelClassForm == EResourceForm::RF_LIQUID || FuelClassForm == EResourceForm::RF_GAS) {
+					EnergyValue *= 1000.f;
+				}
 
 				JFuel->Values.Add("Name", MakeShared<FJsonValueString>(UFGItemDescriptor::GetItemName(FuelClass).ToString()));
 				JFuel->Values.Add("ClassName", MakeShared<FJsonValueString>(UKismetSystemLibrary::GetClassDisplayName(FuelClass.Get())));
