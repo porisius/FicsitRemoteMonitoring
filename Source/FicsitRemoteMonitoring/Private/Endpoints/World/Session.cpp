@@ -310,7 +310,7 @@ void USession::getProdStats(UObject* WorldContext, FRequestData RequestData, TAr
 	};
 
 	TArray<TSubclassOf<UFGItemDescriptor>> ClassNames;
-	GetAllDescriptorsSorted(WorldContext->GetWorld(), ClassNames);
+	GetAllDescriptorsSorted(WorldContext->GetWorld(), ClassNames, /*includeFluids*/ true);
 
 	for (TSubclassOf<UFGItemDescriptor> ClassName : ClassNames) {
 
