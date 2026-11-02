@@ -276,7 +276,13 @@ void USession::getProdStats(UObject* WorldContext, FRequestData RequestData, TAr
 	for (AFGBuildableGeneratorFuel* Generator : GeneratorBuildables) {
 
 		TSubclassOf<UFGItemDescriptor> FuelItemClass = Generator->GetCurrentFuelClass();
-		float EnergyValue = UFGInventoryLibrary::GetAmountConvertedByForm(UFGItemDescriptor::GetEnergyValue(FuelItemClass), UFGItemDescriptor::GetForm(FuelItemClass));
+		// Energy value is MJ per item, or MJ per liter for fluids. Fluid rates here are in m3, so scale to MJ per m3.
+		// (GetAmountConvertedByForm takes an int32, which truncated fluid energy values like 0.75 to 0.)
+		float EnergyValue = UFGItemDescriptor::GetEnergyValue(FuelItemClass);
+		const EResourceForm FuelForm = UFGItemDescriptor::GetForm(FuelItemClass);
+		if (FuelForm == EResourceForm::RF_LIQUID || FuelForm == EResourceForm::RF_GAS) {
+			EnergyValue *= 1000.f;
+		}
 		float ProductionCapacity = Generator->GetPowerProductionCapacity();
 		float Productivity = Generator->GetProductivity();
 		
