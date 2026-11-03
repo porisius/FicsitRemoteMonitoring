@@ -1,5 +1,5 @@
 /*
- * Authored by Alex Hultman, 2018-2020.
+ * Authored by Alex Hultman, 2018-2026.
  * Intellectual property of third-party.
 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -73,6 +73,32 @@ private:
         Super::write(buf, length);
     }
 
+    /* Switch to chunked encoding and terminate headers if we have not already.
+     * The header/body separator is written here, once. Chunks themselves always
+     * include their own trailing CRLF (RFC 9112). */
+    void ensureChunkedBodyStarted() {
+        HttpResponseData<SSL> *httpResponseData = getHttpResponseData();
+
+        if (!(httpResponseData->state & HttpResponseData<SSL>::HTTP_WRITE_CALLED)) {
+            writeMark();
+            writeHeader("Transfer-Encoding", "chunked");
+            httpResponseData->state |= HttpResponseData<SSL>::HTTP_WRITE_CALLED;
+
+            /* Start of the body */
+            Super::write("\r\n", 2);
+        }
+    }
+
+    /* Emit one complete chunk: chunk-size CRLF chunk-data CRLF.
+     * Super::write reports failed=true for backpressure even when all bytes
+     * were queued, so the trailer must still be written. */
+    bool writeChunk(std::string_view data) {
+        writeUnsignedHex((unsigned int) data.length());
+        Super::write("\r\n", 2);
+        Super::write(data.data(), (int) data.length());
+        return !Super::write("\r\n", 2).second;
+    }
+
     /* Called only once per request */
     void writeMark() {
         /* Date is always written */
@@ -121,16 +147,12 @@ private:
 
             /* Do not allow sending 0 chunk here */
             if (data.length()) {
-                Super::write("\r\n", 2);
-                writeUnsignedHex((unsigned int) data.length());
-                Super::write("\r\n", 2);
-
                 /* Ignoring optional for now */
-                Super::write(data.data(), (int) data.length());
+                writeChunk(data);
             }
 
             /* Terminating 0 chunk */
-            Super::write("\r\n0\r\n\r\n", 7);
+            Super::write("0\r\n\r\n", 5);
 
             httpResponseData->markDone();
 
@@ -196,8 +218,11 @@ private:
                 Super::timeout(HTTP_TIMEOUT_S);
             }
 
-            /* Remove onAborted function if we reach the end */
-            if (httpResponseData->offset == totalSize) {
+            /* Remove onAborted, onWritable function and mark done if we reach the end, or if we were given no data (faked size like in HEAD response) */
+            /* I need to figure out if this line should rather be simply httpResponseData->offset == data.length() */
+            /* No that can't be right, tryEnd with fake length should not complete the response even if the smaller chunk wrote in one go */
+            /* Possibly need  to separate endWithoutBody and tryEnd with fake length into two separate calls with a boolean that explicitly marks isHeadOnly */
+            if (httpResponseData->offset == totalSize || !data.length()) {
                 httpResponseData->markDone();
 
                 /* We need to check if we should close this socket here now */
@@ -228,6 +253,10 @@ public:
 
     std::string_view getProxiedRemoteAddressAsText() {
         return Super::addressAsText(getProxiedRemoteAddress());
+    }
+
+    unsigned int getProxiedRemotePort() {
+        return getHttpResponseData()->proxyParser.getSourcePort();
     }
 #endif
 
@@ -355,6 +384,7 @@ public:
     /* See AsyncSocket */
     using Super::getRemoteAddress;
     using Super::getRemoteAddressAsText;
+    using Super::getRemotePort;
     using Super::getNativeHandle;
 
     /* Throttle reads and writes */
@@ -419,6 +449,15 @@ public:
         return this;
     }
 
+    /* Begin writing the response body. Useful for chunked encodings whose first chunk is not yet known */
+    void beginWrite() {
+        /* Write status if not already done */
+        writeStatus(HTTP_200_OK);
+
+        /* Terminate headers now; later write()/end() emit complete chunks only */
+        ensureChunkedBodyStarted();
+    }
+
     /* End without a body (no content-length) or end with a spoofed content-length. */
     void endWithoutBody(std::optional<size_t> reportedContentLength = std::nullopt, bool closeConnection = false) {
         if (reportedContentLength.has_value()) {
@@ -436,7 +475,8 @@ public:
     /* Try and end the response. Returns [true, true] on success.
      * Starts a timeout in some cases. Returns [ok, hasResponded] */
     std::pair<bool, bool> tryEnd(std::string_view data, uintmax_t totalSize = 0, bool closeConnection = false) {
-        return {internalEnd(data, totalSize, true, true, closeConnection), hasResponded()};
+        bool ok = internalEnd(data, totalSize, true, true, closeConnection);
+        return {ok, hasResponded()};
     }
 
     /* Write parts of the response in chunking fashion. Starts timeout if failed. */
@@ -449,27 +489,15 @@ public:
             return true;
         }
 
-        HttpResponseData<SSL> *httpResponseData = getHttpResponseData();
+        ensureChunkedBodyStarted();
 
-        if (!(httpResponseData->state & HttpResponseData<SSL>::HTTP_WRITE_CALLED)) {
-            /* Write mark on first call to write */
-            writeMark();
-
-            writeHeader("Transfer-Encoding", "chunked");
-            httpResponseData->state |= HttpResponseData<SSL>::HTTP_WRITE_CALLED;
-        }
-
-        Super::write("\r\n", 2);
-        writeUnsignedHex((unsigned int) data.length());
-        Super::write("\r\n", 2);
-
-        auto [written, failed] = Super::write(data.data(), (int) data.length());
-        if (failed) {
+        bool ok = writeChunk(data);
+        if (!ok) {
             Super::timeout(HTTP_TIMEOUT_S);
         }
 
         /* If we did not fail the write, accept more */
-        return !failed;
+        return ok;
     }
 
     /* Get the current byte write offset for this Http response */
@@ -477,6 +505,13 @@ public:
         HttpResponseData<SSL> *httpResponseData = getHttpResponseData();
 
         return httpResponseData->offset;
+    }
+
+    /* Get the remaining body length if set via content-length, UINT64_MAX if transfer-encoding is chunked, or 0 if no body */
+    uint64_t maxRemainingBodyLength() {
+        HttpResponseData<SSL> *httpResponseData = getHttpResponseData();
+
+        return httpResponseData->maxRemainingBodyLength();
     }
 
     /* If you are messing around with sendfile you might want to override the offset. */
@@ -497,6 +532,9 @@ public:
     HttpResponse *cork(MoveOnlyFunction<void()> &&handler) {
         if (!Super::isCorked() && Super::canCork()) {
             LoopData *loopData = Super::getLoopData();
+            /* Remember our socket context so we can detect a WebSocket upgrade in the
+             * handler even when the poll realloc kept our address (see below). */
+            struct us_socket_context_t *preCorkContext = us_socket_context(SSL, (struct us_socket_t *) this);
             Super::cork();
             handler();
 
@@ -517,7 +555,11 @@ public:
 
             /* If we are no longer an HTTP socket then early return the new "this".
              * We don't want to even overwrite timeout as it is set in upgrade already. */
-            if (this != newCorkedSocket) {
+            /* The pointer check alone is not enough: us_socket_context_adopt_socket() can
+             * realloc the poll in place, leaving the upgraded WebSocket at our old address
+             * (this == newCorkedSocket). The socket context always changes on upgrade. */
+            if (this != newCorkedSocket ||
+                us_socket_context(SSL, (struct us_socket_t *) newCorkedSocket) != preCorkContext) {
                 return static_cast<HttpResponse *>(newCorkedSocket);
             }
 
@@ -565,6 +607,17 @@ public:
 
     /* Attach a read handler for data sent. Will be called with FIN set true if last segment. */
     void onData(MoveOnlyFunction<void(std::string_view, bool)> &&handler) {
+        if (handler) {
+            onDataV2([handler = std::move(handler)](std::string_view chunk, uint64_t maxRemainingBodyLength) mutable {
+                handler(chunk, maxRemainingBodyLength == 0);
+            });
+        } else {
+            onDataV2(nullptr);
+        }
+    }
+
+    /* Attach a read handler for data sent. Will be called with maxRemainingBodyLength. maxRemainingBodyLength == 0 is the same as isLast. */
+    void onDataV2(MoveOnlyFunction<void(std::string_view, uint64_t)> &&handler) {
         HttpResponseData<SSL> *data = getHttpResponseData();
         data->inStream = std::move(handler);
 

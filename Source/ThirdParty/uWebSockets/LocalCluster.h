@@ -34,14 +34,16 @@ struct LocalCluster {
 
                 cb(*app);
                 
-                app->preOpen([](LIBUS_SOCKET_DESCRIPTOR fd) -> LIBUS_SOCKET_DESCRIPTOR {
+                app->preOpen([](struct us_socket_context_t *context, LIBUS_SOCKET_DESCRIPTOR fd, char *ip, int ip_length) -> LIBUS_SOCKET_DESCRIPTOR {
+
+                    std::ignore = context;
 
                     /* Distribute this socket in round robin fashion */
                     //std::cout << "About to load balance " << fd << " to " << roundRobin << std::endl;
 
                     auto receivingApp = apps[roundRobin];
-                    apps[roundRobin]->getLoop()->defer([fd, receivingApp]() {
-                        receivingApp->adoptSocket(fd);
+                    apps[roundRobin]->getLoop()->defer([fd, ipStore = std::string(ip, ip + ip_length), receivingApp]() {
+                        receivingApp->adoptSocket(fd, std::string_view(ipStore));
                     });
 
                     roundRobin = (roundRobin + 1) % hardwareConcurrency;

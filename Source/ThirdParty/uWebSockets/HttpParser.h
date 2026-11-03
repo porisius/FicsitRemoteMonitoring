@@ -1,5 +1,5 @@
 /*
- * Authored by Alex Hultman, 2018-2024.
+ * Authored by Alex Hultman, 2018-2026.
  * Intellectual property of third-party.
 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -110,6 +110,17 @@ public:
     /* If you do not want to handle this route */
     void setYield(bool yield) {
         didYield = yield;
+    }
+
+    bool areIdentical(std::string_view lowerCasedHeader, std::string_view expectedValue) {
+        for (Header *h = headers; (++h)->key.length(); ) {
+            if (h->key.length() == lowerCasedHeader.length() && !strncmp(h->key.data(), lowerCasedHeader.data(), lowerCasedHeader.length())) {
+                if (expectedValue != h->value) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     std::string_view getHeader(std::string_view lowerCasedHeader) {
@@ -290,12 +301,15 @@ private:
     }
 
     /* Puts method as key, target as value and returns non-null (or nullptr on error). */
-    static inline char *consumeRequestLine(char *data, HttpRequest::Header &header) {
+    static inline char *consumeRequestLine(char *data, char *end, HttpRequest::Header &header) {
         /* Scan until single SP, assume next is / (origin request) */
         char *start = data;
         /* This catches the post padded CR and fails */
         while (data[0] > 32) data++;
-        if (data[0] == 32 && data[1] == '/') {
+        if (&data[1] == end) [[unlikely]] {
+            return nullptr;
+        }
+        if (data[0] == 32 && data[1] == '/') [[likely]] {
             header.key = {start, (size_t) (data - start)};
             data++;
             /* Scan for less than 33 (catches post padded CR and fails) */
@@ -308,14 +322,30 @@ private:
                     /* Now we stand on space */
                     header.value = {start, (size_t) (data - start)};
                     /* Check that the following is http 1.1 */
+                    if (data + 11 >= end) {
+                        /* Whatever we have must be part of the version string */
+                        if (memcmp(" HTTP/1.1\r\n", data, std::min<unsigned int>(11, (unsigned int) (end - data))) == 0) {
+                            return nullptr;
+                        }
+                        return (char *) 0x1;
+                    }
                     if (memcmp(" HTTP/1.1\r\n", data, 11) == 0) {
                         return data + 11;
                     }
-                    return nullptr;
+                    /* If we stand at the post padded CR, we have fragmented input so try again later */
+                    if (data[0] == '\r') {
+                        return nullptr;
+                    }
+                    /* This is an error */
+                    return (char *) 0x1;
                 }
             }
         }
-        return nullptr;
+        /* If we stand at the post padded CR, we have fragmented input so try again later */
+        if (data[0] == '\r') {
+            return nullptr;
+        }
+        return (char *) 0x1;
     }
 
     /* RFC 9110: 5.5 Field Values (TLDR; anything above 31 is allowed; htab (9) is also allowed)
@@ -364,14 +394,12 @@ private:
          * which is then removed, and our counters to flip due to overflow and we end up with a crash */
 
         /* The request line is different from the field names / field values */
-        postPaddedBuffer = consumeRequestLine(postPaddedBuffer, headers[0]);
-        if (!postPaddedBuffer) {
+        if ((char *) 2 > (postPaddedBuffer = consumeRequestLine(postPaddedBuffer, end, headers[0]))) {
             /* Error - invalid request line */
-            /* Assuming it is 505 HTTP Version Not Supported */
-            err = HTTP_ERROR_505_HTTP_VERSION_NOT_SUPPORTED;
+            /* Assuming it is 400 Bad Request */
+            err = postPaddedBuffer ? HTTP_ERROR_400_BAD_REQUEST : 0;
             return 0;
         }
-
         headers++;
 
         for (unsigned int i = 1; i < UWS_HTTP_MAX_HEADERS_COUNT - 1; i++) {
@@ -381,8 +409,14 @@ private:
             headers->key = std::string_view(preliminaryKey, (size_t) (postPaddedBuffer - preliminaryKey));
 
             /* We should not accept whitespace between key and colon, so colon must foloow immediately */
-            if (postPaddedBuffer[0] != ':') {
+            /* We also cannot accept empty strings as keys */
+            if (postPaddedBuffer[0] != ':' || preliminaryKey == postPaddedBuffer) {
+                /* If we stand at the end, we are fragmented */
+                if (postPaddedBuffer == end) {
+                    return 0;
+                }
                 /* Error: invalid chars in field name */
+                err = HTTP_ERROR_400_BAD_REQUEST;
                 return 0;
             }
             postPaddedBuffer++;
@@ -399,6 +433,7 @@ private:
                         continue;
                     }
                     /* Error - invalid chars in field value */
+                    err = HTTP_ERROR_400_BAD_REQUEST;
                     return 0;
                 }
                 break;
@@ -430,6 +465,9 @@ private:
                         return (unsigned int) ((postPaddedBuffer + 2) - start);
                     } else {
                         /* \r\n\r plus non-\n letter is malformed request, or simply out of search space */
+                        if (postPaddedBuffer + 1 < end) {
+                            err = HTTP_ERROR_400_BAD_REQUEST;
+                        }
                         return 0;
                     }
                 }
@@ -439,15 +477,26 @@ private:
             }
         }
         /* We ran out of header space, too large request */
+        err = HTTP_ERROR_400_BAD_REQUEST;//HTTP_ERROR_431_REQUEST_HEADER_FIELDS_TOO_LARGE;
         return 0;
     }
 
+    bool isInvalidHost(std::string_view host) {
+        for (char c : host) {
+            unsigned char uc = static_cast<unsigned char>(c);
+            if (uc < 33 || c == ',' || c == '@') {
+                return true; // Invalid character found
+            }
+        }
+        return false;
+    }
+    
     /* This is the only caller of getHeaders and is thus the deepest part of the parser.
      * From here we return either [consumed, user] for "keep going",
       * or [consumed, nullptr] for "break; I am closed or upgraded to websocket"
       * or [whatever, fullptr] for "break and close me, I am a parser error!" */
     template <int CONSUME_MINIMALLY>
-    std::pair<unsigned int, void *> fenceAndConsumePostPadded(char *data, unsigned int length, void *user, void *reserved, HttpRequest *req, MoveOnlyFunction<void *(void *, HttpRequest *)> &requestHandler, MoveOnlyFunction<void *(void *, std::string_view, bool)> &dataHandler) {
+    std::pair<unsigned int, void *> fenceAndConsumePostPadded(char *data, unsigned int length, void *user, void *reserved, HttpRequest *req, MoveOnlyFunction<void *(void *, HttpRequest *)> &requestHandler, MoveOnlyFunction<void *(void *, std::string_view, uint64_t)> &dataHandler) {
 
         /* How much data we CONSUMED (to throw away) */
         unsigned int consumedTotal = 0;
@@ -458,21 +507,14 @@ private:
         data[length] = '\r';
         data[length + 1] = 'a'; /* Anything that is not \n, to trigger "invalid request" */
 
-        //for (unsigned int consumed; length && (consumed = getHeaders(data, data + length, req->headers, reserved, err)); ) {
-        unsigned int consumed;
-        while (length) {
-            consumed = getHeaders(data, data + length, req->headers, reserved, err);
-            if (!consumed) {
-                break;
-            }
-
+        for (unsigned int consumed; length && (consumed = getHeaders(data, data + length, req->headers, reserved, err)); ) {
             data += consumed;
             length -= consumed;
             consumedTotal += consumed;
 
             /* Even if we could parse it, check for length here as well */
             if (consumed > MAX_FALLBACK_SIZE) {
-                return {HTTP_ERROR_431_REQUEST_HEADER_FIELDS_TOO_LARGE, FULLPTR};
+                return {HTTP_ERROR_400_BAD_REQUEST /*HTTP_ERROR_431_REQUEST_HEADER_FIELDS_TOO_LARGE*/, FULLPTR};
             }
 
             /* Store HTTP version (ancient 1.0 or 1.1) */
@@ -481,11 +523,22 @@ private:
             /* Add all headers to bloom filter */
             req->bf.reset();
             for (HttpRequest::Header *h = req->headers; (++h)->key.length(); ) {
+                if (req->bf.mightHave(h->key)) [[unlikely]] {
+                    /* Host header is not allowed twice */
+                    if (h->key == "host" && req->getHeader("host").data()) {
+                        return {HTTP_ERROR_400_BAD_REQUEST, FULLPTR};
+                    }
+                }
                 req->bf.add(h->key);
             }
             
-            /* Break if no host header (but we can have empty string which is different from nullptr) */
-            if (!req->getHeader("host").data()) {
+            /* Break if no host header or empty string */
+            if (!req->getHeader("host").length()) {
+                return {HTTP_ERROR_400_BAD_REQUEST, FULLPTR};
+            }
+
+            /* Break if invalid host */
+            if (isInvalidHost(req->getHeader("host"))) {
                 return {HTTP_ERROR_400_BAD_REQUEST, FULLPTR};
             }
 
@@ -496,7 +549,7 @@ private:
             * ought to be handled as an error. */
             std::string_view transferEncodingString = req->getHeader("transfer-encoding");
             std::string_view contentLengthString = req->getHeader("content-length");
-            if (transferEncodingString.length() && contentLengthString.length()) {
+            if (transferEncodingString.data() != nullptr && contentLengthString.data() != nullptr) {
                 /* Returning fullptr is the same as calling the errorHandler */
                 /* We could be smart and set an error in the context along with this, to indicate what 
                  * http error response we might want to return */
@@ -525,7 +578,12 @@ private:
             /* RFC 9112 6.3
              * If a message is received with both a Transfer-Encoding and a Content-Length header field,
              * the Transfer-Encoding overrides the Content-Length. */
-            if (transferEncodingString.length()) {
+            if (transferEncodingString.data() != nullptr) {
+
+                /* We only support chunked */
+                if (transferEncodingString != "chunked") {
+                    return {HTTP_ERROR_400_BAD_REQUEST, FULLPTR};
+                }
 
                 /* If a proxy sent us the transfer-encoding header that 100% means it must be chunked or else the proxy is
                  * not RFC 9112 compliant. Therefore it is always better to assume this is the case, since that entirely eliminates 
@@ -545,26 +603,32 @@ private:
                     /* Go ahead and parse it (todo: better heuristics for emitting FIN to the app level) */
                     std::string_view dataToConsume(data, length);
                     for (auto chunk : uWS::ChunkIterator(&dataToConsume, &remainingStreamingBytes)) {
-                        dataHandler(user, chunk, chunk.length() == 0);
+                        dataHandler(user, chunk, chunk.length() ? UINT64_MAX : 0);
                     }
                     if (isParsingInvalidChunkedEncoding(remainingStreamingBytes)) {
                         return {HTTP_ERROR_400_BAD_REQUEST, FULLPTR};
                     }
-                    consumed = (length - (unsigned int) dataToConsume.length());
+                    unsigned int consumed = (length - (unsigned int) dataToConsume.length());
                     data = (char *) dataToConsume.data();
                     length = (unsigned int) dataToConsume.length();
                     consumedTotal += consumed;
                 }
-            } else if (contentLengthString.length()) {
+            } else if (contentLengthString.data() != nullptr) {
+
+                /* Content-Length must be the same */
+                if (!req->areIdentical("content-length", contentLengthString)) {
+                    return {HTTP_ERROR_400_BAD_REQUEST, FULLPTR};
+                }
+                
                 remainingStreamingBytes = toUnsignedInteger(contentLengthString);
-                if (remainingStreamingBytes == UINT64_MAX) {
+                if (remainingStreamingBytes == UINT64_MAX || contentLengthString.length() == 0) {
                     /* Parser error */
                     return {HTTP_ERROR_400_BAD_REQUEST, FULLPTR};
                 }
 
                 if (!CONSUME_MINIMALLY) {
                     unsigned int emittable = (unsigned int) std::min<uint64_t>(remainingStreamingBytes, length);
-                    dataHandler(user, std::string_view(data, emittable), emittable == remainingStreamingBytes);
+                    dataHandler(user, std::string_view(data, emittable), remainingStreamingBytes - emittable);
                     remainingStreamingBytes -= emittable;
 
                     data += emittable;
@@ -573,7 +637,7 @@ private:
                 }
             } else {
                 /* If we came here without a body; emit an empty data chunk to signal no data */
-                dataHandler(user, {}, true);
+                dataHandler(user, {}, 0);
             }
 
             /* Consume minimally should break as easrly as possible */
@@ -589,7 +653,7 @@ private:
     }
 
 public:
-    std::pair<unsigned int, void *> consumePostPadded(char *data, unsigned int length, void *user, void *reserved, MoveOnlyFunction<void *(void *, HttpRequest *)> &&requestHandler, MoveOnlyFunction<void *(void *, std::string_view, bool)> &&dataHandler) {
+    std::pair<unsigned int, void *> consumePostPadded(char *data, unsigned int length, void *user, void *reserved, MoveOnlyFunction<void *(void *, HttpRequest *)> &&requestHandler, MoveOnlyFunction<void *(void *, std::string_view, uint64_t)> &&dataHandler) {
 
         /* This resets BloomFilter by construction, but later we also reset it again.
          * Optimize this to skip resetting twice (req could be made global) */
@@ -601,7 +665,8 @@ public:
             if (isParsingChunkedEncoding(remainingStreamingBytes)) {
                 std::string_view dataToConsume(data, length);
                 for (auto chunk : uWS::ChunkIterator(&dataToConsume, &remainingStreamingBytes)) {
-                    dataHandler(user, chunk, chunk.length() == 0);
+                    /* If we got the zero size chunk, maxRemainingBodyLength is 0, else it is practically infinity */
+                    dataHandler(user, chunk, chunk.length() ? UINT64_MAX : 0);
                 }
                 if (isParsingInvalidChunkedEncoding(remainingStreamingBytes)) {
                     return {HTTP_ERROR_400_BAD_REQUEST, FULLPTR};
@@ -612,11 +677,11 @@ public:
                 // this is exactly the same as below!
                 // todo: refactor this
                 if (remainingStreamingBytes >= length) {
-                    void *returnedUser = dataHandler(user, std::string_view(data, length), remainingStreamingBytes == length);
+                    void *returnedUser = dataHandler(user, std::string_view(data, length), remainingStreamingBytes - length);
                     remainingStreamingBytes -= length;
                     return {0, returnedUser};
                 } else {
-                    void *returnedUser = dataHandler(user, std::string_view(data, remainingStreamingBytes), true);
+                    void *returnedUser = dataHandler(user, std::string_view(data, remainingStreamingBytes), 0);
 
                     data += (unsigned int) remainingStreamingBytes;
                     length -= (unsigned int) remainingStreamingBytes;
@@ -658,7 +723,7 @@ public:
                     if (isParsingChunkedEncoding(remainingStreamingBytes)) {
                         std::string_view dataToConsume(data, length);
                         for (auto chunk : uWS::ChunkIterator(&dataToConsume, &remainingStreamingBytes)) {
-                            dataHandler(user, chunk, chunk.length() == 0);
+                            dataHandler(user, chunk, chunk.length() ? UINT64_MAX : 0);
                         }
                         if (isParsingInvalidChunkedEncoding(remainingStreamingBytes)) {
                             return {HTTP_ERROR_400_BAD_REQUEST, FULLPTR};
@@ -668,11 +733,11 @@ public:
                     } else {
                         // this is exactly the same as above!
                         if (remainingStreamingBytes >= (unsigned int) length) {
-                            void *returnedUser = dataHandler(user, std::string_view(data, length), remainingStreamingBytes == (unsigned int) length);
+                            void *returnedUser = dataHandler(user, std::string_view(data, length), remainingStreamingBytes - (unsigned int) length);
                             remainingStreamingBytes -= length;
                             return {0, returnedUser};
                         } else {
-                            void *returnedUser = dataHandler(user, std::string_view(data, remainingStreamingBytes), true);
+                            void *returnedUser = dataHandler(user, std::string_view(data, remainingStreamingBytes), 0);
 
                             data += (unsigned int) remainingStreamingBytes;
                             length -= (unsigned int) remainingStreamingBytes;
@@ -688,7 +753,7 @@ public:
 
             } else {
                 if (fallback.length() == MAX_FALLBACK_SIZE) {
-                    return {HTTP_ERROR_431_REQUEST_HEADER_FIELDS_TOO_LARGE, FULLPTR};
+                    return {HTTP_ERROR_400_BAD_REQUEST /*HTTP_ERROR_431_REQUEST_HEADER_FIELDS_TOO_LARGE*/, FULLPTR};
                 }
                 return {0, user};
             }
@@ -706,7 +771,7 @@ public:
             if (length < MAX_FALLBACK_SIZE) {
                 fallback.append(data, length);
             } else {
-                return {HTTP_ERROR_431_REQUEST_HEADER_FIELDS_TOO_LARGE, FULLPTR};
+                return {HTTP_ERROR_400_BAD_REQUEST /*HTTP_ERROR_431_REQUEST_HEADER_FIELDS_TOO_LARGE*/, FULLPTR};
             }
         }
 

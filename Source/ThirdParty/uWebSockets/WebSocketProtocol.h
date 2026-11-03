@@ -25,14 +25,20 @@
 #include <cstdlib>
 #include <string_view>
 
+#ifdef UWS_USE_SIMDUTF
+  #include <simdutf.h>
+#endif
+
 namespace uWS {
 
 /* We should not overcomplicate these */
-const std::string_view ERR_TOO_BIG_MESSAGE("Received too big message");
-const std::string_view ERR_WEBSOCKET_TIMEOUT("WebSocket timed out from inactivity");
-const std::string_view ERR_INVALID_TEXT("Received invalid UTF-8");
-const std::string_view ERR_TOO_BIG_MESSAGE_INFLATION("Received too big message, or other inflation error");
-const std::string_view ERR_INVALID_CLOSE_PAYLOAD("Received invalid close payload");
+constexpr std::string_view ERR_TOO_BIG_MESSAGE("Received too big message");
+constexpr std::string_view ERR_WEBSOCKET_TIMEOUT("WebSocket timed out from inactivity");
+constexpr std::string_view ERR_INVALID_TEXT("Received invalid UTF-8");
+constexpr std::string_view ERR_TOO_BIG_MESSAGE_INFLATION("Received too big message, or other inflation error");
+constexpr std::string_view ERR_INVALID_CLOSE_PAYLOAD("Received invalid close payload");
+constexpr std::string_view ERR_PROTOCOL("Received invalid WebSocket frame");
+constexpr std::string_view ERR_TCP_FIN("Received TCP FIN before WebSocket close frame");
 
 enum OpCode : unsigned char {
     CONTINUATION = 0,
@@ -93,34 +99,45 @@ T bit_cast(char *c) {
 /* Byte swap for little-endian systems */
 template <typename T>
 T cond_byte_swap(T value) {
+    static_assert(std::is_trivially_copyable<T>::value, "T must be trivially copyable");
     uint32_t endian_test = 1;
-    if (*((char *)&endian_test)) {
-        union {
-            T i;
-            uint8_t b[sizeof(T)];
-        } src = { value }, dst{};
+    if (*reinterpret_cast<char*>(&endian_test)) {
+        uint8_t src[sizeof(T)];
+        uint8_t dst[sizeof(T)];
 
-        for (unsigned int i = 0; i < sizeof(value); i++) {
-            dst.b[i] = src.b[sizeof(value) - 1 - i];
+        std::memcpy(src, &value, sizeof(T));
+        for (size_t i = 0; i < sizeof(T); ++i) {
+            dst[i] = src[sizeof(T) - 1 - i];
         }
 
-        return dst.i;
+        T result;
+        std::memcpy(&result, dst, sizeof(T));
+        return result;
     }
     return value;
 }
 
+#ifdef UWS_USE_SIMDUTF
+
+static bool isValidUtf8(unsigned char *s, size_t length)
+{
+    return simdutf::validate_utf8((const char *)s, length);
+}
+
+#else
 // Based on utf8_check.c by Markus Kuhn, 2005
 // https://www.cl.cam.ac.uk/~mgk25/ucs/utf8_check.c
 // Optimized for predominantly 7-bit content by Alex Hultman, 2016
 // Licensed as Zlib, like the rest of this project
+// This runs about 40% faster than simdutf with g++ -mavx
 static bool isValidUtf8(unsigned char *s, size_t length)
 {
     for (unsigned char *e = s + length; s != e; ) {
-        if (s + 4 <= e) {
-            uint32_t tmp;
-            memcpy(&tmp, s, 4);
-            if ((tmp & 0x80808080) == 0) {
-                s += 4;
+        if (s + 16 <= e) {
+            uint64_t tmp[2];
+            memcpy(tmp, s, 16);
+            if (((tmp[0] & 0x8080808080808080) | (tmp[1] & 0x8080808080808080)) == 0) {
+                s += 16;
                 continue;
             }
         }
@@ -155,6 +172,8 @@ static bool isValidUtf8(unsigned char *s, size_t length)
     return true;
 }
 
+#endif
+
 struct CloseFrame {
     uint16_t code;
     char *message;
@@ -170,7 +189,7 @@ static inline CloseFrame parseClosePayload(char *src, size_t length) {
         if (cf.code < 1000 || cf.code > 4999 || (cf.code > 1011 && cf.code < 4000) ||
             (cf.code >= 1004 && cf.code <= 1006) || !isValidUtf8((unsigned char *) cf.message, cf.length)) {
             /* Even though we got a WebSocket close frame, it in itself is abnormal */
-            return {1006, nullptr, 0};
+            return {1006, (char *) ERR_INVALID_CLOSE_PAYLOAD.data(), ERR_INVALID_CLOSE_PAYLOAD.length()};
         }
     }
     return cf;
@@ -340,12 +359,12 @@ protected:
     static inline bool consumeMessage(T payLength, char *&src, unsigned int &length, WebSocketState<isServer> *wState, void *user) {
         if (getOpCode(src)) {
             if (wState->state.opStack == 1 || (!wState->state.lastFin && getOpCode(src) < 2)) {
-                Impl::forceClose(wState, user);
+                Impl::forceClose(wState, user, ERR_PROTOCOL);
                 return true;
             }
             wState->state.opCode[++wState->state.opStack] = (OpCode) getOpCode(src);
         } else if (wState->state.opStack == -1) {
-            Impl::forceClose(wState, user);
+            Impl::forceClose(wState, user, ERR_PROTOCOL);
             return true;
         }
         wState->state.lastFin = isFin(src);
@@ -468,7 +487,7 @@ public:
                 // invalid reserved bits / invalid opcodes / invalid control frames / set compressed frame
                 if ((rsv1(src) && !Impl::setCompressed(wState, user)) || rsv23(src) || (getOpCode(src) > 2 && getOpCode(src) < 8) ||
                     getOpCode(src) > 10 || (getOpCode(src) > 2 && (!isFin(src) || payloadLength(src) > 125))) {
-                    Impl::forceClose(wState, user);
+                    Impl::forceClose(wState, user, ERR_PROTOCOL);
                     return;
                 }
 
