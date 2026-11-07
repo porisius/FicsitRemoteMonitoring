@@ -30,6 +30,7 @@ include::../Models/_location.adoc[]
 | RegulatedDemandProd | Float | Regulated Production
 | IsFullBlast | Boolean | Generator Running at Full Blast
 | CanStart | Boolean | Can Generator Start
+| IsPaused | Boolean | Is paused?
 | ProdPowerComsumption | Float | Produced Power being Consumed
 | CurrentPotential | Float | Speed Potential (Power Slug)
 | ProductionCapacity | Float | Production Capacity
@@ -90,6 +91,7 @@ include::../Models/_features.adoc[]
       "RegulatedDemandProd": 75,
       "IsFullBlast": true,
       "CanStart": true,
+      "IsPaused": false,
       "LoadPercentage": 1,
       "ProdPowerComsumption": 0,
       "CurrentPotential": 1,
@@ -152,6 +154,7 @@ include::../Models/_features.adoc[]
       "RegulatedDemandProd": 150,
       "IsFullBlast": true,
       "CanStart": true,
+      "IsPaused": false,
       "LoadPercentage": 1,
       "ProdPowerComsumption": 0,
       "CurrentPotential": 1,
