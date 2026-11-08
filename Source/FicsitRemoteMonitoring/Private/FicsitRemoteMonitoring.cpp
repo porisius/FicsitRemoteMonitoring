@@ -37,9 +37,24 @@
 #include "Patching/NativeHookManager.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
+#include "Misc/ScopeExit.h"
 
 us_listen_socket_t* SocketListener;
-bool SocketRunning = false;
+
+// True while a uWS server thread is alive, from launch until app.run() returns.
+std::atomic<bool> SocketRunning{false};
+
+// The running server's event loop and app, set by the uWS thread for as long as
+// app.run() is running. uSockets is not thread-safe: the game thread must not
+// close sockets itself, it hands the close to the loop with Loop::defer().
+static FCriticalSection GFRMServerLock;
+static uWS::Loop* GFRMServerLoop = nullptr;
+static uWS::App* GFRMServerApp = nullptr;
+
+// The subsystem actor that started the running server. Only that actor stops it,
+// so an old session's actor being destroyed later can't shut down the server
+// that the next session started.
+static std::atomic<const AFicsitRemoteMonitoring*> GFRMServerOwner{nullptr};
 
 // Set as soon as teardown begins, cleared when a server starts. Deliberately a
 // file-scope atomic rather than a member: once teardown starts, the subsystem
@@ -211,12 +226,25 @@ void AFicsitRemoteMonitoring::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AFicsitRemoteMonitoring::StopWebSocketServer()
 {
+	bShouldStop = true;
+
+	// clear endpoint subscribers
+	EndpointSubscribers.Empty();
+
+	// Only the actor that started the server stops it. Another instance (one that
+	// never started it, or an old session's actor destroyed after the next session
+	// started its own server) must leave the running server alone.
+	const AFicsitRemoteMonitoring* ExpectedOwner = this;
+	if (!GFRMServerOwner.compare_exchange_strong(ExpectedOwner, nullptr))
+	{
+		return;
+	}
+
 	// Raise the shutdown barrier FIRST, before anything is torn down, so any
 	// request already inside the uWS worker thread bails out with 503 instead
-	// of walking into a half-destroyed world.
+	// of walking into a half-destroyed world. It stays raised until a new server
+	// is launched, which only happens once this one's thread has finished.
 	GFRMShuttingDown.store(true, std::memory_order_release);
-
-	bShouldStop = true;
 
     // Signal the WebSocket server to stop
     if (WebServer.IsValid())
@@ -224,23 +252,22 @@ void AFicsitRemoteMonitoring::StopWebSocketServer()
         WebServer.Reset();
     }
 
-    // Close WebSocket listener
-    if (SocketListener)
-    {
-        UE_LOGFMT(LogHttpServer, Log, "Stopping uWS listener");
-        us_listen_socket_close(0, SocketListener);
-        SocketListener = nullptr;
+	// Close the listener and every HTTP and WebSocket connection on the server's
+	// own thread. Closing them from here races the uWS loop, and leaves keep-alive
+	// connections open: those keep app.run() going, so the old thread would keep
+	// serving requests with handlers bound to this (soon destroyed) actor.
+	{
+		FScopeLock Lock(&GFRMServerLock);
+		if (GFRMServerLoop && GFRMServerApp)
+		{
+			UE_LOGFMT(LogHttpServer, Log, "Stopping uWS server and closing all connections");
+			uWS::App* App = GFRMServerApp;
+			GFRMServerLoop->defer([App]() { App->close(); });
+		}
+	}
 
-        UE_LOG(LogHttpServer, Log, TEXT("Closing all %d connections"), ConnectedClients.Num());
-        for (const auto ConnectedClient : ConnectedClients)
-        {
-            ConnectedClient->close();
-        }
-        ConnectedClients.Empty();
-    }
-
-    // clear endpoint subscribers
-    EndpointSubscribers.Empty();
+	SocketListener = nullptr;
+	ConnectedClients.Empty();
 }
 
 FArduinoConfig AFicsitRemoteMonitoring::GetSerialConfig()
@@ -260,35 +287,46 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 {
     UE_LOGFMT(LogHttpServer, Log, "Initializing WebSocket Service");
 
-	// Lower the shutdown barrier: a previous StopWebSocketServer() raised it, and
-	// without this a server restarted in the same session (e.g. `/frm http start`
-	// after a stop) would answer 503 to every request forever.
-	GFRMShuttingDown.store(false, std::memory_order_release);
-
     if (SocketRunning)
     {
-	    if (bSkipIfRunning)
+	    // A server that is still serving (not stopped) is a live one: nothing to do.
+	    if (bSkipIfRunning && !GFRMShuttingDown.load(std::memory_order_acquire))
     	{
 	    	UE_LOG(LogHttpServer, Log, TEXT("Websocket Thread is already running. Stop start process."));
 
 	    	return;
     	}
 
-        UE_LOG(LogHttpServer, Log, TEXT("Old Websocket Thread is still running, try again in 3 seconds..."));
+        // A stopped server whose thread hasn't finished yet, e.g. the previous
+        // session's after a session reload. Wait for it: the port is still bound,
+        // and lowering the barrier now would let its handlers reach freed objects.
+        UE_LOG(LogHttpServer, Log, TEXT("Old Websocket Thread is still running, try again in 1 second..."));
 
-        AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this]()
+        TWeakObjectPtr<AFicsitRemoteMonitoring> WeakThis(this);
+        AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [WeakThis, bSkipIfRunning]()
         {
             // Sleep for the specified delay
-            FPlatformProcess::Sleep(3.0f);
-        
+            FPlatformProcess::Sleep(1.0f);
+
             // Then switch back to the game thread to run the task
-            AsyncTask(ENamedThreads::GameThread, [this]()
+            AsyncTask(ENamedThreads::GameThread, [WeakThis, bSkipIfRunning]()
             {
-                StartWebSocketServer(true);
+                if (AFicsitRemoteMonitoring* Self = WeakThis.Get())
+                {
+                    Self->StartWebSocketServer(bSkipIfRunning);
+                }
             });
         });
         return;
     }
+
+	// Lower the shutdown barrier: a previous StopWebSocketServer() raised it, and
+	// without this a server restarted in the same session (e.g. `/frm http start`
+	// after a stop) would answer 503 to every request forever. Only done here, once
+	// the previous server thread has finished.
+	GFRMShuttingDown.store(false, std::memory_order_release);
+	GFRMServerOwner.store(this);
+	SocketRunning = true;
 
         // WebSocket server logic runs in a separate thread
         WebServer = Async(EAsyncExecution::Thread, [this]() {
@@ -317,7 +355,10 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                 wsBehavior.compression = uWS::SHARED_COMPRESSOR;
 
                 // Close handler (for when a client disconnects)
+                // The WebSocket callbacks touch this actor. Once stopping has begun it may
+                // already be destroyed (stopping closes every client, which calls close).
                 wsBehavior.close = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, int code, std::string_view message) {
+                    if (GFRMShuttingDown.load(std::memory_order_acquire)) return;
                     ConnectedClients.Remove(ws);
                     UE_LOG(LogHttpServer, Log, TEXT("Client Disconnected. Remaining connections: %d"), ConnectedClients.Num());
                     OnClientDisconnected(ws, code, message);  // Ensure this signature matches
@@ -325,11 +366,13 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
 
                 // Message handler (for when a client sends a message)
                 wsBehavior.message = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws, std::string_view message, uWS::OpCode opCode) {
+                    if (GFRMShuttingDown.load(std::memory_order_acquire)) return;
                     OnMessageReceived(ws, message, opCode);  // Make sure this signature matches
                 };
 
                 wsBehavior.open = [this](uWS::WebSocket<false, true, FWebSocketUserData>* ws)
                 {
+                    if (GFRMShuttingDown.load(std::memory_order_acquire)) return;
                     ConnectedClients.Add(ws);
                     UE_LOG(LogHttpServer, Log, TEXT("Client Disconnected. Connections: %d"), ConnectedClients.Num());
                 };
@@ -526,11 +569,26 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
                     }
                 });
 
-                SocketRunning = true;
-                
-                app.run();
+                // Let StopWebSocketServer() reach this loop; unregistered before app is destroyed.
+                {
+                    FScopeLock Lock(&GFRMServerLock);
+                    GFRMServerLoop = uWS::Loop::get();
+                    GFRMServerApp = &app;
+                }
+                ON_SCOPE_EXIT
+                {
+                    FScopeLock Lock(&GFRMServerLock);
+                    GFRMServerLoop = nullptr;
+                    GFRMServerApp = nullptr;
+                };
 
-                SocketRunning = false;
+                // A stop requested before the loop was registered had nothing to close.
+                if (GFRMShuttingDown.load(std::memory_order_acquire))
+                {
+                    app.close();
+                }
+
+                app.run();
 
                 UE_LOG(LogHttpServer, Log, TEXT("WebSocket Server Thread finished."));
             } catch (const std::exception& e) {
@@ -538,6 +596,8 @@ void AFicsitRemoteMonitoring::StartWebSocketServer(bool bSkipIfRunning)
             } catch (...) {
                 UE_LOG(LogHttpServer, Error, TEXT("Unknown Exception in WebSocket Server"));
             }
+
+            SocketRunning = false;
         });
 
 }
