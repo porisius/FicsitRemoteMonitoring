@@ -18,6 +18,8 @@
 #ifndef UWS_APP_H
 #define UWS_APP_H
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <string>
 #include <charconv>
 #include <string_view>
@@ -102,7 +104,7 @@ public:
             us_socket_context_add_server_name(SSL, (struct us_socket_context_t *) httpContext, hostname_pattern.c_str(), options, domainRouter);
         }
 
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     TemplatedApp &&removeServerName(std::string hostname_pattern) {
@@ -114,7 +116,7 @@ public:
         }
 
         us_socket_context_remove_server_name(SSL, (struct us_socket_context_t *) httpContext, hostname_pattern.c_str());
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     TemplatedApp &&missingServerName(MoveOnlyFunction<void(const char *hostname)> handler) {
@@ -130,7 +132,7 @@ public:
             });
         }
 
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     /* Returns the SSL_CTX of this app, or nullptr. */
@@ -142,13 +144,34 @@ public:
     TemplatedApp &&filter(MoveOnlyFunction<void(HttpResponse<SSL> *, int)> &&filterHandler) {
         httpContext->filter(std::move(filterHandler));
 
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
+    }
+
+    /* Same as publish, but takes a prepared message */
+    bool publishPrepared(std::string_view topic, PreparedMessage &preparedMessage) {
+        if (!topicTree) {
+            return false;
+        }
+
+        /* It is assumed by heuristics that a prepared message ought to be big,
+         * and so there is no fast path for small messages (yet?) as preparing a small message is unlikely */
+
+        return reinterpret_cast<TopicTree<TopicTreeMessage, PreparedMessage *> *>(topicTree)->publishBig(nullptr, topic, &preparedMessage, [](Subscriber *s, PreparedMessage *preparedMessage) {
+            auto *ws = (WebSocket<SSL, true, int> *) s->user;
+
+            /* Send will drain if needed */
+            ws->sendPrepared(*preparedMessage);
+        });
     }
 
     /* Publishes a message to all websocket contexts - conceptually as if publishing to the one single
      * TopicTree of this app (technically there are many TopicTrees, however the concept is that one
      * app has one conceptual Topic tree) */
     bool publish(std::string_view topic, std::string_view message, OpCode opCode, bool compress = false) {
+        if (!topicTree) {
+            return false;
+        }
+
         /* Anything big bypasses corking efforts */
         if (message.length() >= LoopData::CORK_BUFFER_SIZE) {
             return topicTree->publishBig(nullptr, topic, {message, opCode, compress}, [](Subscriber *s, TopicTreeBigMessage &message) {
@@ -166,6 +189,10 @@ public:
      * This function should probably be optimized a lot in future releases,
      * it could be O(1) with a hash map of fullnames and their counts. */
     unsigned int numSubscribers(std::string_view topic) {
+        if (!topicTree) {
+            return 0;
+        }
+
         Topic *t = topicTree->lookupTopic(topic);
         if (t) {
             return (unsigned int) t->size();
@@ -187,12 +214,12 @@ public:
 
         /* Delete TopicTree */
         if (topicTree) {
-            delete topicTree;
-
             /* And unregister loop callbacks */
             /* We must unregister any loop post handler here */
             Loop::get()->removePostHandler(topicTree);
             Loop::get()->removePreHandler(topicTree);
+
+        delete topicTree;
         }
     }
 
@@ -219,9 +246,18 @@ public:
 
         /* Register default handler for 404 (can be overridden by user) */
         this->any("/*", [](auto *res, auto */*req*/) {
-		    res->writeStatus("404 File Not Found");
-	        res->end("<html><body><h1>File Not Found</h1><hr><i>uWebSockets/20 Server</i></body></html>");
+            res->writeStatus("404 File Not Found");
+            res->end("<html><body><h1>File Not Found</h1><hr><i>uWebSockets/20 Server</i></body></html>");
         });
+    }
+
+    TemplatedApp& operator=(const TemplatedApp&) = delete;
+
+    TemplatedApp& operator=(TemplatedApp&& other) {
+        std::swap(this->httpContext, other.httpContext);
+        std::swap(this->topicTree, other.topicTree);
+        std::swap(this->webSocketContextDeleters, other.webSocketContextDeleters);
+        std::swap(this->webSocketContexts, other.webSocketContexts);
     }
 
     bool constructorFailed() {
@@ -263,7 +299,7 @@ public:
             us_socket_context_close(SSL, (struct us_socket_context_t *) webSocketContext);
         }
 
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     template <typename UserData>
@@ -273,7 +309,7 @@ public:
         "µWebSockets cannot satisfy UserData alignment requirements. You need to recompile µSockets with LIBUS_EXT_ALIGNMENT adjusted accordingly.");
 
         if (!httpContext) {
-            return std::move(*this);
+            return std::move(static_cast<TemplatedApp &&>(*this));
         }
 
         /* Terminate on misleading idleTimeout values */
@@ -382,14 +418,7 @@ public:
         webSocketContext->getExt()->droppedHandler = std::move(behavior.dropped);
         webSocketContext->getExt()->drainHandler = std::move(behavior.drain);
         webSocketContext->getExt()->subscriptionHandler = std::move(behavior.subscription);
-        webSocketContext->getExt()->closeHandler = std::move([closeHandler = std::move(behavior.close)](WebSocket<SSL, true, UserData> *ws, int code, std::string_view message) mutable {
-            if (closeHandler) {
-                closeHandler(ws, code, message);
-            }
-
-            /* Destruct user data after returning from close handler */
-            ((UserData *) ws->getUserData())->~UserData();
-        });
+        webSocketContext->getExt()->closeHandler = std::move(behavior.close);
         webSocketContext->getExt()->pingHandler = std::move(behavior.ping);
         webSocketContext->getExt()->pongHandler = std::move(behavior.pong);
 
@@ -443,7 +472,7 @@ public:
                 req->setYield(true);
             }
         }, true);
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     /* Browse to a server name, changing the router to this domain */
@@ -459,70 +488,70 @@ public:
             httpContextData->currentRouter = &httpContextData->router;
         }
     
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     TemplatedApp &&get(std::string pattern, MoveOnlyFunction<void(HttpResponse<SSL> *, HttpRequest *)> &&handler) {
         if (httpContext) {
             httpContext->onHttp("GET", pattern, std::move(handler));
         }
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     TemplatedApp &&post(std::string pattern, MoveOnlyFunction<void(HttpResponse<SSL> *, HttpRequest *)> &&handler) {
         if (httpContext) {
             httpContext->onHttp("POST", pattern, std::move(handler));
         }
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     TemplatedApp &&options(std::string pattern, MoveOnlyFunction<void(HttpResponse<SSL> *, HttpRequest *)> &&handler) {
         if (httpContext) {
             httpContext->onHttp("OPTIONS", pattern, std::move(handler));
         }
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     TemplatedApp &&del(std::string pattern, MoveOnlyFunction<void(HttpResponse<SSL> *, HttpRequest *)> &&handler) {
         if (httpContext) {
             httpContext->onHttp("DELETE", pattern, std::move(handler));
         }
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     TemplatedApp &&patch(std::string pattern, MoveOnlyFunction<void(HttpResponse<SSL> *, HttpRequest *)> &&handler) {
         if (httpContext) {
             httpContext->onHttp("PATCH", pattern, std::move(handler));
         }
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     TemplatedApp &&put(std::string pattern, MoveOnlyFunction<void(HttpResponse<SSL> *, HttpRequest *)> &&handler) {
         if (httpContext) {
             httpContext->onHttp("PUT", pattern, std::move(handler));
         }
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     TemplatedApp &&head(std::string pattern, MoveOnlyFunction<void(HttpResponse<SSL> *, HttpRequest *)> &&handler) {
         if (httpContext) {
             httpContext->onHttp("HEAD", pattern, std::move(handler));
         }
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     TemplatedApp &&connect(std::string pattern, MoveOnlyFunction<void(HttpResponse<SSL> *, HttpRequest *)> &&handler) {
         if (httpContext) {
             httpContext->onHttp("CONNECT", pattern, std::move(handler));
         }
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     TemplatedApp &&trace(std::string pattern, MoveOnlyFunction<void(HttpResponse<SSL> *, HttpRequest *)> &&handler) {
         if (httpContext) {
             httpContext->onHttp("TRACE", pattern, std::move(handler));
         }
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     /* This one catches any method */
@@ -530,7 +559,7 @@ public:
         if (httpContext) {
             httpContext->onHttp("*", pattern, std::move(handler));
         }
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     /* Host, port, callback */
@@ -539,7 +568,7 @@ public:
             return listen(port, std::move(handler));
         }
         handler(httpContext ? httpContext->listen(host.c_str(), port, 0) : nullptr);
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     /* Host, port, options, callback */
@@ -548,48 +577,99 @@ public:
             return listen(port, options, std::move(handler));
         }
         handler(httpContext ? httpContext->listen(host.c_str(), port, options) : nullptr);
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     /* Port, callback */
     TemplatedApp &&listen(int port, MoveOnlyFunction<void(us_listen_socket_t *)> &&handler) {
         handler(httpContext ? httpContext->listen(nullptr, port, 0) : nullptr);
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     /* Port, options, callback */
     TemplatedApp &&listen(int port, int options, MoveOnlyFunction<void(us_listen_socket_t *)> &&handler) {
         handler(httpContext ? httpContext->listen(nullptr, port, options) : nullptr);
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     /* options, callback, path to unix domain socket */
     TemplatedApp &&listen(int options, MoveOnlyFunction<void(us_listen_socket_t *)> &&handler, std::string path) {
         handler(httpContext ? httpContext->listen(path.c_str(), options) : nullptr);
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     /* callback, path to unix domain socket */
     TemplatedApp &&listen(MoveOnlyFunction<void(us_listen_socket_t *)> &&handler, std::string path) {
         handler(httpContext ? httpContext->listen(path.c_str(), 0) : nullptr);
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     /* Register event handler for accepted FD. Can be used together with adoptSocket. */
-    TemplatedApp &&preOpen(LIBUS_SOCKET_DESCRIPTOR (*handler)(LIBUS_SOCKET_DESCRIPTOR)) {
+    TemplatedApp &&preOpen(LIBUS_SOCKET_DESCRIPTOR (*handler)(struct us_socket_context_t *, LIBUS_SOCKET_DESCRIPTOR, char *, int)) {
         httpContext->onPreOpen(handler);
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
+    }
+
+    TemplatedApp &&removeChildApp(TemplatedApp *app) {
+        /* Remove this app from httpContextData list over child apps and reset round robin */
+        auto &childApps = httpContext->getSocketContextData()->childApps;
+        childApps.erase(
+            std::remove(childApps.begin(), childApps.end(), (void *) app),
+            childApps.end()
+        );
+        httpContext->getSocketContextData()->roundRobin = 0;
+        
+        return std::move(static_cast<TemplatedApp &&>(*this));
+    }
+
+    TemplatedApp &&addChildApp(TemplatedApp *app) {
+        /* Add this app to httpContextData list over child apps and set onPreOpen */
+        httpContext->getSocketContextData()->childApps.push_back((void *) app);
+        
+        httpContext->onPreOpen([](struct us_socket_context_t *context, LIBUS_SOCKET_DESCRIPTOR fd, char *ip, int ip_length) -> LIBUS_SOCKET_DESCRIPTOR {
+            
+            HttpContext<SSL> *httpContext = (HttpContext<SSL> *) context;
+
+            if (httpContext->getSocketContextData()->childApps.empty()) {
+                return fd;
+            }
+
+            //std::cout << "Distributing fd: " << fd << " from context: " << context << std::endl;
+
+            unsigned int *roundRobin = &httpContext->getSocketContextData()->roundRobin;
+
+            //std::cout << "Round robin is: " << *roundRobin << " and size of apps is: " << httpContext->getSocketContextData()->childApps.size() << std::endl;
+
+            TemplatedApp *receivingApp = (TemplatedApp *) httpContext->getSocketContextData()->childApps[*roundRobin];
+
+
+            //std::cout << "Loop is " << receivingApp->getLoop() << std::endl;
+
+
+            receivingApp->getLoop()->defer([fd, ipStore = std::string(ip, ip + ip_length), receivingApp]() {
+                //std::cout << "About to adopt socket " << fd << " on receivingApp " << receivingApp << std::endl;
+                receivingApp->adoptSocket(fd, std::string_view(ipStore));
+                //std::cout << "Done " << std::endl;
+            });
+
+            if (++(*roundRobin) == httpContext->getSocketContextData()->childApps.size()) {
+                *roundRobin = 0;
+            }
+
+            return fd + 1;
+        });
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     /* adopt an externally accepted socket */
-    TemplatedApp &&adoptSocket(LIBUS_SOCKET_DESCRIPTOR accepted_fd) {
-        httpContext->adoptAcceptedSocket(accepted_fd);
-        return std::move(*this);
+    TemplatedApp &&adoptSocket(LIBUS_SOCKET_DESCRIPTOR accepted_fd, std::string_view ip = std::string_view()) {
+        httpContext->adoptAcceptedSocket(accepted_fd, (char *) ip.data(), (int) ip.length());
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     TemplatedApp &&run() {
         uWS::run();
-        return std::move(*this);
+        return std::move(static_cast<TemplatedApp &&>(*this));
     }
 
     Loop *getLoop() {
@@ -598,9 +678,11 @@ public:
 
 };
 
-typedef TemplatedApp<false> App;
-typedef TemplatedApp<true> SSLApp;
+}
 
+namespace uWS {
+    typedef uWS::TemplatedApp<false> App;
+    typedef uWS::TemplatedApp<true> SSLApp;
 }
 
 #endif // UWS_APP_H
