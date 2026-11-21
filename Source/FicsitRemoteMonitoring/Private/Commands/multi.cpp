@@ -27,7 +27,7 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 			"/frm http <start/stop>\n"
 			"/frm serial <start/stop>\n"
 			"/frm config <setting> <value>\n"
-			"/frm test <webhook/endpoints>\n"
+			"/frm test <webhooks/endpoints>\n"
 			"/frm icon"
 		);
 
@@ -219,6 +219,12 @@ FChatReturn AFRMCommand::RemoteMonitoringCommand(UObject* WorldContext, UCommand
 
 	if (command == "test")
 	{
+		ChatReturn.Chat = TEXT("Usage: /frm test <webhooks/endpoints>");
+
+		if (argumentsNum < 2) {
+			return ChatReturn;
+		}
+
 		FString arg1 = Arguments[1].ToLower();
 		
 		if (arg1 == "webhooks")

@@ -410,6 +410,7 @@ TArray<TSharedPtr<FJsonValue>> UPower::getGenerators_Helper(UObject* WorldContex
 		JGenerator->Values.Add("RegulatedDemandProd", MakeShared<FJsonValueNumber>(RegDynamicProduction));
 		JGenerator->Values.Add("IsFullSpeed", MakeShared<FJsonValueBoolean>(PowerInfo->IsFullBlast()));
 		JGenerator->Values.Add("CanStart", MakeShared<FJsonValueBoolean>(Generator->CanStartPowerProduction()));
+		JGenerator->Values.Add("IsPaused", MakeShared<FJsonValueBoolean>(Generator->IsProductionPaused()));
 		JGenerator->Values.Add("LoadPercentage", MakeShared<FJsonValueNumber>(Generator->GetLoadPercentage() * 100));
 		JGenerator->Values.Add("ProdPowerConsumption", MakeShared<FJsonValueNumber>(Generator->GetProducingPowerConsumption()));
 		JGenerator->Values.Add("CurrentPotential", MakeShared<FJsonValueNumber>(Potential * 100));
