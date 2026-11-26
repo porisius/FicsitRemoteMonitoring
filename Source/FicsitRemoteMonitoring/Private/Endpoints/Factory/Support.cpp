@@ -102,18 +102,24 @@ void USupport::getSpaceElevator(UObject* WorldContext, FRequestData RequestData,
 	TMap<TSubclassOf<UFGItemDescriptor>, int32> CurrentProduced;
 
 	AFGBuildableSubsystem* BuildableSubsystem = AFGBuildableSubsystem::Get(WorldContext->GetWorld());
+	if (!IsValid(BuildableSubsystem)) { return; }
+
 	TArray<AFGBuildableSpaceElevator*> SpaceElevators;
 	BuildableSubsystem->GetTypedBuildable<AFGBuildableSpaceElevator>(SpaceElevators);
 
+	AFGGamePhaseManager* GamePhaseManager = AFGGamePhaseManager::Get(WorldContext->GetWorld());
+	TArray<FRemainingPhaseCost> RemainingPhaseCost;
+	if (IsValid(GamePhaseManager)) {
+		GamePhaseManager->GetRemainingPhaseCosts(RemainingPhaseCost);
+	}
+
 	for (AFGBuildableSpaceElevator* SpaceElevator : SpaceElevators) {
 
-		TSharedPtr<FJsonObject> JSpaceElevator = CreateBuildableBaseJsonObject(SpaceElevator);
-		
-		TArray<TSharedPtr<FJsonValue>> JCurrentPhaseArray;
-		TArray<FRemainingPhaseCost> RemainingPhaseCost;
+		if (!IsValid(SpaceElevator)) continue;
 
-		AFGGamePhaseManager* GamePhaseManager = AFGGamePhaseManager::Get(WorldContext->GetWorld());
-		GamePhaseManager->GetRemainingPhaseCosts(RemainingPhaseCost);
+		TSharedPtr<FJsonObject> JSpaceElevator = CreateBuildableBaseJsonObject(SpaceElevator);
+
+		TArray<TSharedPtr<FJsonValue>> JCurrentPhaseArray;
 
 		for (FRemainingPhaseCost CurrentPhase : RemainingPhaseCost) {
 
